@@ -1,0 +1,37 @@
+{
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "source": {
+        "include": [
+            "src/js/"
+        ],
+        "includePattern": ".js$",
+        "excludePattern": "index.js$"
+    },
+    "sourceType": "module",
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false
+    },
+    "opts": {
+        "template": "node_modules/docdash",
+        "recurse": true,
+        "destination": "./docs/"
+    },
+    "docdash": {
+        "openGraph": {
+            "title": "AXUI",
+            "type": "website",
+            "image": "https://www.axui.cn/images/logo.png",
+            "site_name": "AXUI official website",
+            "url": "https://www.axui.cn/"
+        },
+        "meta": {
+            "title": "AXUI",
+            "description": "",
+            "keyword": ""
+        },
+        "search": true
+    }
+}

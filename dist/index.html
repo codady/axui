@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-touch-fullscreen" content="yes"/>
+    <meta name="format-detection" content="email=no" />
+    <meta name="wap-font-scale"  content="no" />
+    <meta name="viewport" content="user-scalable=no, width=device-width" />
+    <meta content="telephone=no" name="format-detection" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>AXUI打包测试页面</title>
+   <!--  <link href="https://src.axui.cn/v2.0/dist/css/ax.css" rel="stylesheet" type="text/css" >
+    <link href="https://src.axui.cn/v2.0/dist/css/ax-response.css" rel="stylesheet" type="text/css" > -->
+    <style>
+        .cp_embed_wrapper{
+            position: relative;
+        }
+        .cp_embed_wrapper:before{
+            content:'';
+            pointer-events: none;
+            position: absolute;
+            width:120px;
+            height:50px;
+            background-color: red;
+            right:0;
+            top: 0;
+        }
+        .cp_embed_wrapper iframe .embed-nav .result-button-list li:first-child a{
+            color: red!important;
+        }
+    </style>
+</head>
+<body>
+页面内容
+<div class="test" name="big"></div>
+<p class="codepen" data-height="300" data-theme-id="light" data-default-tab="html,result" data-slug-hash="OJdXdxM" data-editable="true" data-user="axui" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+    <span>See the Pen <a href="https://codepen.io/axui/pen/OJdXdxM">
+    Untitled</a> by codady (<a href="https://codepen.io/axui">@axui</a>)
+    on <a href="https://codepen.io">CodePen</a>.</span>
+  </p>
+  <script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+<script src="https://unpkg.com/axui-xx@1.0.0/dist/js/ax.js" type="text/javascript" charset="utf-8"></script>
+<script type='text/javascript'>
+    document.addEventListener("DOMContentLoaded", function () {
+    let y ='我'
+        let x = `${y}爱你<#this.name#>`
+        console.log(ax.renderTpl(x,{name:'中国'}))
+        
+    });
+</script>
+</body>
+</html>

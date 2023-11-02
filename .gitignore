@@ -1,0 +1,19 @@
+### Ignore the specified suffix file ###
+*.log
+*.tmp
+*.cache
+*.diff
+
+### Ignore the specified file ###
+.DS_Store
+package-lock.json
+
+### Ignore a specified folder ###
+node_modules
+dev
+test
+.git
+.history
+.vscode
+.idea
+
