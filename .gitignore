@@ -1,20 +1,22 @@
-###忽略指定后缀文件###
+### Ignore the specified suffix file ###
 *.log
 *.tmp
 *.cache
 *.diff
 
-###忽略指定文件夹###
+### Ignore the specified file ###
+.DS_Store
+package-lock.json
+
+### Ignore a specified folder ###
 node_modules
 dev
 test
 docs/fonts
 docs/scripts
 docs/styles
+.git
 .history
 .vscode
 .idea
 
-###忽略指定文件###
-.DS_Store
-package-lock.json
