@@ -26,11 +26,7 @@
     "dist/js/",
     "dist/index.html",
     "LICENSE",
-    "CHANGELOG.md",
-    "package.json",
-    "README.md",
-    "tsconfig.json",
-    "rollup.config.js"
+    "CHANGELOG.md"
   ],
   "type": "module",
   "devDependencies": {
@@ -41,6 +37,7 @@
     "clean-css": "^5.3.2",
     "clean-css-cli": "^5.6.2",
     "docdash": "^2.0.2",
+    "element-ui": "^2.15.13",
     "terser": "^5.19.2"
   },
   "repository": {
