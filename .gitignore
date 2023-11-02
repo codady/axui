@@ -12,9 +12,6 @@ package-lock.json
 node_modules
 dev
 test
-docs/fonts
-docs/scripts
-docs/styles
 .git
 .history
 .vscode
