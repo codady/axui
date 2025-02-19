@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-19 15:15:12
+ * @since Last modified: 2025-2-19 18:15:32
  * @name AXUI front-end framework.
- * @version 3.0.7
+ * @version 3.0.8
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
