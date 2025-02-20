@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-19 18:15:32
+ * @since Last modified: 2025-2-20 22:37:58
  * @name AXUI front-end framework.
- * @version 3.0.8
+ * @version 3.0.9
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -9887,7 +9887,7 @@ const prompt = (options) => {
                 this.contEl.appendChild(frags);
             },
             onConfirmed: () => {
-                let maps = data.map((k) => { return { type: k.type, label: k.label, value: k.field.value }; }), vals = maps.map((k) => k.value).filter(Boolean).join(), params = { value: vals, fields: maps };
+                let maps = data.map((k) => { return { type: k.type, label: k.label, value: k.field.value }; }), vals = maps.map((k) => k.value), params = { value: vals, fields: maps };
                 opts.yes && opts.yes(params);
                 resolve(params);
             },
@@ -33709,6 +33709,13 @@ class InputElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldE
         this.type = 'text-comp';
         this.getRawData();
         this.fillWrap(this.propsProxy);
+        this.select = () => this.inputEl.select();
+        this.btnEvt = (evt) => {
+            if (evt.code === 'Enter' && elState(this.btnEl).isVisible && this.btnEl.click && !this.propsProxy.blocked) {
+                preventDft(evt);
+                this.btnEl.click();
+            }
+        };
     }
     static custAttrs = ['name', 'placeholder', 'type', 'size', 'limit', 'tools', 'icon', 'cube', 'disk', 'image', 'btn', 'action', 'label', 'unit', 'custom', 'mean', 'task', ...super.evtsArr];
     static boolAttrs = ['disabled', 'readonly', 'blocked', 'full'];
@@ -33884,9 +33891,11 @@ class InputElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldE
             if (elState(this.btnEl).isVirtual) {
                 elState(this.unitEl).isVisible ? this.unitEl.insertAdjacentElement('beforebegin', this.btnEl) : this.wrapEl.appendChild(this.btnEl);
             }
+            this.inputEl.addEventListener('keydown', this.btnEvt, false);
         }
         else {
             this.btnEl.remove();
+            this.inputEl.removeEventListener('keydown', this.btnEvt);
         }
     }
     changedAction(opt) {
@@ -33949,6 +33958,7 @@ class TextareaElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFie
         this.type = 'textarea-comp';
         this.getRawData();
         this.fillWrap(this.propsProxy);
+        this.select = () => this.inputEl.select();
     }
     static custAttrs = ['name', 'placeholder', 'size', 'tools', 'limit', 'label', 'mean', 'task', ...super.evtsArr];
     static boolAttrs = ['disabled', 'readonly', 'single', 'full'];
@@ -34534,6 +34544,7 @@ class NumberElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubField
         this.type = 'number-comp';
         this.getRawData();
         this.fillWrap(this.propsProxy);
+        this.select = () => this.inputEl.select();
         this.on('input', (value) => {
             let step = this.propsProxy.step || 1;
             if (this.propsProxy.max) {
@@ -35376,6 +35387,7 @@ class DatetimeElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFie
         super();
         this.type = 'datetime-comp';
         this.getRawData();
+        this.select = () => this.ins.inputEl.select();
     }
     static custAttrs = [...optDatetime.filter((k) => keyCond(k.attr) && typeof k.value !== 'boolean').map((k) => k.attr)];
     static boolAttrs = optDatetime.filter((k) => keyCond(k.attr) && typeof k.value === 'boolean').map((k) => k.attr);
@@ -35557,6 +35569,7 @@ class EditorElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubField
         super();
         this.type = 'editor-comp';
         this.getRawData();
+        this.select = () => this.ins.inputEl.select();
     }
     static custAttrs = [...optEditor.filter((k) => keyCond(k.attr) && typeof k.value !== 'boolean').map((k) => k.attr)];
     static boolAttrs = optEditor.filter((k) => keyCond(k.attr) && typeof k.value === 'boolean').map((k) => k.attr);

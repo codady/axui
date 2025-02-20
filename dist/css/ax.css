@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-19 18:15:32
+ * @since Last modified: 2025-2-20 22:37:58
  * @name AXUI front-end framework.
- * @version 3.0.8
+ * @version 3.0.9
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -1952,7 +1952,7 @@
   content: "\e62f";
 }
 /*
- *Last modified: 2025-02-19 02:09:57
+ *Last modified: 2025-02-20 18:00:06
  */
 html {
   font-size: var(--_fs-root);
@@ -5611,7 +5611,7 @@ AX-DIVIDER[size=lg] {
   top: 0;
   z-index: 3;
 }
-._field:where(._field-embed)._flexable > ._field-cont {
+._field:where(._field-embed)._flexible > ._field-cont {
   flex: auto;
 }
 ._field:where(._field-embed) > ._field-cont > ._field-input input:where(:not([embed]):not([type="radio"], [type="checkbox"], [type="range"], [type="reset"], [type="submit"])),
