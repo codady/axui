@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-21 23:33:25
+ * @since Last modified: 2025-2-25 1:35:15
  * @name AXUI front-end framework.
- * @version 3.0.10
+ * @version 3.0.11
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -20,9 +20,11 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ax = {}));
 })(this, (function (exports) { 'use strict';
 
-    const prefix = getComputedStyle(document.documentElement).getPropertyValue(`--PREFIX`).trim();
+    const getComputedVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
-    const alias = getComputedStyle(document.documentElement).getPropertyValue(`--ALIAS`).trim();
+    const prefix = getComputedVar(`--PREFIX`);
+
+    const alias = getComputedVar(`--ALIAS`);
 
     const lang = {
         name: 'zh-CN',
@@ -531,8 +533,17 @@
     };
 
     const getDataType = (obj) => {
-        let tmp = Object.prototype.toString.call(obj).slice(8, -1);
-        return (tmp === 'Object' && Object.getPrototypeOf(obj) !== Object.prototype) ? 'Instance' : tmp;
+        let tmp = Object.prototype.toString.call(obj).slice(8, -1), result;
+        if (tmp === 'Function' && /^\s*class\s+/.test(obj.toString())) {
+            result = 'Class';
+        }
+        else if (tmp === 'Object' && Object.getPrototypeOf(obj) !== Object.prototype) {
+            result = 'Instance';
+        }
+        else {
+            result = tmp;
+        }
+        return result;
     };
 
     const isEmpty = (data) => {
@@ -720,10 +731,6 @@
             vue.config.globalProperties.$ax = this;
         }
     };
-    document.addEventListener("DOMContentLoaded", () => {
-        for (let k of ax.tasks)
-            k();
-    });
 
     const fieldTypes = ['input', 'file', 'textarea', 'range', 'number', 'datetime', 'upload', 'select', 'radio', 'checkbox', 'radios', 'checkboxes'];
 
@@ -753,7 +760,7 @@
         return result;
     };
 
-    const screenSize = getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}SCREEN`).trim();
+    const getScreenSize = () => getComputedVar(`--${prefix}SCREEN`);
 
     const startUpper = (str) => {
         str = str.trim();
@@ -859,7 +866,7 @@
         if (!data) {
             return result;
         }
-        multiple = multiple || parseInt(getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}fs-base`).trim()) || 10;
+        multiple = multiple || parseInt(getComputedVar(`--${prefix}fs-base`)) || 10;
         if (typeof data === 'string') {
             data = data.trim();
             if (data.endsWith('rem') || data.endsWith('REM')) {
@@ -911,18 +918,10 @@
             warn: `<svg class="${prefix}svg-warn" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${prefix}line ${prefix}bg" d="M43.4611 7.24c2.8081,0.0924 4.39,1.7 5.3045,3.1159l17.4543 29.9414 17.3445 29.7538c0.5448,1.0193 1.596,4.0544 0.1109,6.4168 -1.4849,2.3626 -3.6815,2.9155 -5.3768,2.992l-34.9082 0.0002 -34.6892 -0.0002c-1.1636,-0.0421 -4.3433,-0.6583 -5.6666,-3.1131 -1.3232,-2.4549 -0.7085,-4.6157 0.0723,-6.1078l17.454 -29.9417 17.3449 -29.7537c0.6185,-0.977 2.7471,-3.396 5.5554,-3.3036z"></path><path class="${prefix}line ${prefix}out" d="M43.4611 7.24c2.8081,0.0924 4.39,1.7 5.3045,3.1159l17.4543 29.9414 17.3445 29.7538c0.5448,1.0193 1.596,4.0544 0.1109,6.4168 -1.4849,2.3626 -3.6815,2.9155 -5.3768,2.992l-34.9082 0.0002 -34.6892 -0.0002c-1.1636,-0.0421 -4.3433,-0.6583 -5.6666,-3.1131 -1.3232,-2.4549 -0.7085,-4.6157 0.0723,-6.1078l17.454 -29.9417 17.3449 -29.7537c0.6185,-0.977 2.7471,-3.396 5.5554,-3.3036z"></path><path class="${prefix}line ${prefix}in-1" d="M43.3493,27.8713L43.3493,57.2858"></path><circle class="${prefix}circle ${prefix}in-2" cx="43.3492" cy="64.3337" r="2.1166"></circle></svg>`,
             info: `<svg class="${prefix}svg-info" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${prefix}line ${prefix}bg" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}out" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}in-1" d="M43.3493,65.0602L43.3493,30.9723"></path><circle class="${prefix}circle ${prefix}in-2" cx="43.3492" cy="23.5856" r="2.1166"></circle></svg>`,
             issue: `<svg class="${prefix}svg-issue" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${prefix}line ${prefix}bg" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}out" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}in-1" d="M32.3757 35.7255c-0.2203,-11.823 12.5789,-14.1087 18.4056,-9.4189 5.4663,4.3995 4.7426,12.804 -3.1088,17.9938 -3.0015,1.9839 -3.0003,3.8403 -3.0003,10.1707"></path><circle class="${prefix}circle ${prefix}in-2" cx="44.6612" cy="60.5502" r="2.1166"></circle></svg>`,
-        },
-        image: {
-            spin: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}spin`).trim().split('"')[1],
-            spinDk: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}spin-dk`).trim().split('"')[1],
-            blank: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}blank`).trim().split('"')[1],
-            avatar: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}avatar`).trim().split('"')[1],
-            empty: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}empty`).trim().split('"')[1],
-            none: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}none`).trim().split('"')[1],
         }
     };
 
-    const fullGap = getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}g-full`).trim();
+    const getFullGap = () => getComputedVar(`--${prefix}g-full`);
 
     const propsMap = {
         x: { axis: 'x', position: 'left', overflow: 'overflowX', inner: 'clientWidth', outer: 'offsetWidth', scroll: 'scrollLeft', client: 'clientX', size: 'width', index: 4, offset: 'offsetLeft', gap: 'marginLeft' },
@@ -2141,1102 +2140,6 @@
         return result;
     };
 
-    class PubBase {
-        targetEl;
-        targetData;
-        options;
-        destroyed;
-        timestamp;
-        renderCount;
-        respSource;
-        initialized;
-        constructor() {
-            this.timestamp = Date.now();
-            this.respSource = null;
-            this.initialized = false;
-            this.renderCount = 0;
-            
-            this.targetEl = null;
-            
-            this.targetData = null;
-            
-            this.options = {};
-            
-            this.destroyed = false;
-        }
-        
-        async init(cb) { }
-        
-        destroy(cb) { }
-    }
-
-    const pipe = (...args) => {
-        args = args.filter(Boolean);
-        return (initial) => args.reduce((prev, cur) => cur(prev), initial);
-    };
-
-    const plan = {
-        handle: (name, type, cb) => {
-            let nameArr = [];
-            if (type === 'String') {
-                name = trim(name);
-                nameArr = name.includes(',') ? name.split(',') : name.split(' ');
-            }
-            else if (type === 'Array') {
-                nameArr = name.map((k) => trim(k));
-            }
-            if (nameArr.length > 0) {
-                for (let k of nameArr) {
-                    cb(k);
-                }
-            }
-        },
-        
-        add: function (name, instance, content) {
-            let nameType = getDataType(name), handle = (str) => {
-                if (!instance.plans.hasOwnProperty(str)) {
-                    instance.plans[str] = [];
-                }
-                let newValue = content.toString().replace(/\s/g, '').replace(/\;/g, '').match(/{(\S*)}/), oldValue = instance.plans[str].toString().replace(/\s/g, '').replace(/\;/g, '');
-                newValue && !oldValue.includes(newValue[1]) ? instance.plans[str].push(content) : null;
-            };
-            this.handle(name, nameType, (item) => handle(item));
-            return this;
-        },
-        
-        remove: function (name, instance, content) {
-            let nameType = getDataType(name), handle = (str) => {
-                if (!instance.plans.hasOwnProperty(str)) {
-                    return console.warn(`The ${str} event is invalid or unusable!`);
-                }
-                if (!content) {
-                    delete instance.plans[str];
-                }
-                else {
-                    let index = instance.plans[str].findIndex((k) => k === content);
-                    if (index < 0) {
-                        return console.warn(`The ${str} event is not bound!`);
-                    }
-                    instance.plans[str].splice(index, 1);
-                    instance.plans[str].length === 0 ? delete instance.plans[str] : null;
-                }
-            };
-            this.handle(name, nameType, (item) => handle(item));
-            return this;
-        },
-        
-        do: function (name, instance, ...params) {
-            let nameType = getDataType(name), handle = (str) => {
-                if (!instance.plans.hasOwnProperty(str)) {
-                    return console.warn(`The ${str} event is unregistered or unusable!`);
-                }
-                instance.plans[str].forEach((k) => {
-                    k.call(instance, ...params);
-                });
-            };
-            this.handle(name, nameType, (item) => handle(item));
-            return this;
-        }
-    };
-
-    const PubListen = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            
-            plans = {};
-            
-            listen({ name, params = [], cb } = {}) {
-                name && this.plans.hasOwnProperty(name) ? this.emit(name, ...params) : null;
-                name && this.options[`on${startUpper(name)}`] && this.options[`on${startUpper(name)}`].call(this, ...params);
-                cb && cb.call(this, ...params);
-            }
-            
-            on(type, handler) {
-                plan.add(type, this, handler);
-                return this;
-            }
-            
-            emit(type, ...params) {
-                plan.do(type, this, ...params);
-                return this;
-            }
-            
-            off(type, handler) {
-                plan.remove(type, this, handler);
-                return this;
-            }
-        };
-    };
-
-    const isDateStr = (str) => (typeof str === 'string' && !isNaN(Date.parse(str)));
-
-    const getUTCTimestamp = (value) => {
-        let date, offset, dateTamp, valType = getDataType(value);
-        if (valType === 'Date') {
-            date = value;
-        }
-        else if (valType === 'String') {
-            if (isDateStr(value)) {
-                date = new Date(value);
-            }
-            else {
-                date = new Date();
-            }
-        }
-        else if (valType === 'Number') {
-            date = new Date(value);
-        }
-        else {
-            date = new Date();
-        }
-        dateTamp = date.getTime();
-        offset = date.getTimezoneOffset() * 60000;
-        return dateTamp + offset;
-    };
-
-    const getExpiration = (type = 'd', value = 365, output = 'locale') => {
-        let dateExp;
-        if (isDateStr(value)) {
-            dateExp = new Date(value);
-        }
-        else {
-            dateExp = new Date();
-            switch (type) {
-                case 's':
-                    dateExp.setSeconds(dateExp.getSeconds() + ~~value);
-                    break;
-                case 'm':
-                    dateExp.setMinutes(dateExp.getMinutes() + ~~value);
-                    break;
-                case 'h':
-                    dateExp.setHours(dateExp.getHours() + ~~value);
-                    break;
-                default:
-                    dateExp.setDate(dateExp.getDate() + ~~value);
-            }
-        }
-        return output === 'utc' ? getUTCTimestamp(dateExp) : dateExp.getTime();
-    };
-
-    const storage = {
-        
-        set: function (key, value, opts) {
-            if (isEmpty(key) && typeof key !== 'string')
-                return;
-            let options = Object.assign({ unit: 'd', expires: 0, override: true, type: 'local' }, opts), newValue = deepClone(value), valType = getDataType(value), stor = options.type === 'session' ? window.sessionStorage : window.localStorage, filterProps = (obj) => {
-                Object.keys(obj).forEach(k => {
-                    let val = obj[k], type = getDataType(val);
-                    ['Array', 'Object'].includes(type) && filterProps(val);
-                    (type.includes('HTML') || type.includes('Function') || ['Promise', 'Symbol', 'Instance'].includes(type)) && delete obj[k];
-                });
-                return obj;
-            };
-            if (['Array', 'Object'].includes(valType) && !isEmpty(newValue)) {
-                filterProps(newValue);
-            }
-            let expires = options.expires !== 0 ? getExpiration(options.unit, options.expires) : 0, oldValue = this.get(key, options.type), valueExp = {
-                data: (!options.override && this.get(key, options.type)) ? extend({ target: oldValue, source: newValue }) : newValue,
-                expires,
-            };
-            if (((typeof options.expires === 'number' && options.expires < 0) || newValue === null) && this.get(key, options.type)) {
-                this.remove(key, options.type);
-            }
-            else {
-                stor.setItem(key, JSON.stringify(valueExp));
-            }
-            return this;
-        },
-        
-        get: function (key, type = 'local') {
-            if (isEmpty(key) || typeof key !== 'string') {
-                return false;
-            }
-            let now = Date.now(), stor = type === 'session' ? window.sessionStorage : window.localStorage, valueStr = stor.getItem(key);
-            if (valueStr) {
-                let valueExp = (new Function('"use strict";return ' + valueStr))();
-                if (valueExp.expires === 0 || now <= valueExp.expires) {
-                    return valueExp.data;
-                }
-                else {
-                    stor.removeItem(key);
-                    return null;
-                }
-            }
-            else {
-                return null;
-            }
-        },
-        
-        remove: function (key, type = 'local') {
-            if (isEmpty(key) || typeof key !== 'string') {
-                return false;
-            }
-            let stor = type === 'session' ? window.sessionStorage : window.localStorage;
-            stor.removeItem(key);
-            return this;
-        },
-        
-        clear: function (type = 'local') {
-            let stor = type === 'session' ? window.sessionStorage : window.localStorage;
-            stor.clear();
-            return this;
-        }
-    };
-
-    const optBase = [
-        {
-            attr: 'ins-name',
-            prop: 'insName',
-            value: '',
-        },
-        {
-            attr: 'stor-name',
-            prop: 'storName',
-            value: '',
-        },
-        {
-            attr: 'stor-keys',
-            prop: 'storKeys',
-            value: [],
-        },
-        {
-            attr: 'breakpoints',
-            prop: 'breakpoints',
-            value: {},
-        },
-        {
-            attr: 'lang',
-            prop: 'lang',
-            value: {},
-        },
-        {
-            attr: 'b4-init',
-            prop: 'b4Init',
-            value: null,
-        },
-        {
-            attr: 'on-ready',
-            prop: 'onReady',
-            value: null,
-        },
-        {
-            attr: 'on-initiate',
-            prop: 'onInitiate',
-            value: null,
-        },
-        {
-            attr: 'on-destroyed',
-            prop: 'onDestroyed',
-            value: null,
-        },
-        {
-            attr: 'on-error',
-            prop: 'onError',
-            value: null,
-        },
-        {
-            attr: 'on-reset',
-            prop: 'onReset',
-            value: null,
-        },
-        {
-            attr: 'on-updated',
-            prop: 'onUpdated',
-            value: null,
-        },
-        {
-            attr: 'on-save',
-            prop: 'onSave',
-            value: null,
-        },
-        {
-            attr: 'on-clearedcache',
-            prop: 'onClearedCache',
-            value: null,
-        },
-    ];
-
-    const unique = (data, prop) => {
-        let result;
-        if (!isEmpty(data)) {
-            result = [...new Set(data)];
-            if (typeof result[0] === 'object' && prop) {
-                let map = new Map();
-                for (let k of result) {
-                    !map.has(k[prop]) && map.set(k[prop], k);
-                }
-                result = [...map.values()];
-            }
-        }
-        else {
-            result = [...data];
-        }
-        return result;
-    };
-
-    const optObserve = unique([
-        {
-            attr: 'deep',
-            prop: 'deep',
-            value: {
-                enable: false,
-                include: [],
-                exclude: [],
-            },
-        },
-        {
-            attr: 'filter',
-            prop: 'filter',
-            value: null,
-        },
-        {
-            attr: 'tpyes',
-            prop: 'tpyes',
-            value: ['Object', 'Array', 'Function'],
-        },
-        {
-            attr: 'accept',
-            prop: 'accept',
-            value: true,
-        },
-        {
-            attr: 'once',
-            prop: 'once',
-            value: false,
-        },
-        {
-            attr: 'methods',
-            prop: 'methods',
-            value: ['set', 'delete'],
-        },
-        {
-            attr: 'on-added',
-            prop: 'onAdded',
-            value: null,
-        },
-        {
-            attr: 'on-edited',
-            prop: 'onEdited',
-            value: null,
-        },
-        {
-            attr: 'on-setted',
-            prop: 'onSetted',
-            value: null,
-        },
-        {
-            attr: 'on-deleted',
-            prop: 'onDeleted',
-            value: null,
-        },
-        {
-            attr: 'on-crud',
-            prop: 'onCrud',
-            value: null,
-        },
-        {
-            attr: 'on-new',
-            prop: 'onNew',
-            value: null,
-        },
-        {
-            attr: 'on-applied',
-            prop: 'onApplied',
-            value: null,
-        },
-        {
-            attr: 'on-trigger',
-            prop: 'onTrigger',
-            value: null,
-        },
-        {
-            attr: 'on-completed',
-            prop: 'onCompleted',
-            value: null,
-        },
-        ...optBase
-    ], 'attr');
-
-    const deepEqual = (a, b) => {
-        let typeA = getDataType(a), typeB = getDataType(b);
-        if (typeA === typeB && typeA === 'Object') {
-            let getStr = (data) => {
-                let cache = new Set();
-                return JSON.stringify(data, (key, val) => {
-                    if (typeof val === 'object' && val !== null) {
-                        if (cache.has(val))
-                            return;
-                        cache.add(val);
-                    }
-                    return val;
-                });
-            };
-            return getStr(a) === getStr(b);
-        }
-        else {
-            return false;
-        }
-    };
-
-    const isProxy = (obj) => obj?._isProxy === true;
-
-    const breakpoints = (obj, points) => {
-        if (isEmpty(obj)) {
-            return false;
-        }
-        let valids = [], assign = {}, width = document.body.clientWidth, validFun = (key, value) => {
-            let _key = ~~key;
-            if (_key === 0) {
-                if (key.startsWith('screen')) {
-                    screenSize === key.split('-')[1] ? valids.push(value) : null;
-                }
-                else if (key.startsWith('width')) {
-                    ~~key.split('-')[1] > width ? valids.push(value) : null;
-                }
-                else if (key.startsWith('mobile')) {
-                    JSON.parse(key.split('-')[1]) === isMobi ? valids.push(value) : null;
-                }
-            }
-            else {
-                _key > width ? valids.push(value) : null;
-            }
-        };
-        for (let k in points) {
-            if (points.hasOwnProperty(k)) {
-                Reflect.deleteProperty(points[k], 'breakpoints');
-                validFun(k, points[k]);
-            }
-        }
-        if (valids.length === 0) {
-            return false;
-        }
-        assign = Object.assign({}, ...valids);
-        extend({ target: obj, source: assign });
-    };
-
-    const spreadBool = (host, params) => {
-        let result = host, hostType = getDataType(host), paramsType = getDataType(params);
-        if (paramsType === 'Object') {
-            if (hostType === 'Boolean') {
-                Reflect.deleteProperty(params, 'enable');
-                result = { enable: host, ...params };
-            }
-            else if (hostType === 'Object') {
-                if (host.hasOwnProperty('enable')) {
-                    host = Object.assign({}, params, host);
-                }
-                else {
-                    for (let k in params) {
-                        if (params.hasOwnProperty(k) && host.hasOwnProperty(k)) {
-                            host[k] = spreadBool(host[k], params[k]);
-                        }
-                    }
-                }
-            }
-        }
-        return result;
-    };
-
-    const elProps = (el) => {
-        let target = getEl(el), result = null;
-        if (target) {
-            !target.hasOwnProperty('ax') ? target.ax = {} : null;
-            result = {
-                add: (key, value = true) => {
-                    key && (target.ax[key] = value);
-                    return target;
-                },
-                remove: (key) => {
-                    key && (delete target.ax[key]);
-                    return target;
-                }
-            };
-        }
-        return result;
-    };
-
-    const attrJoinVal = (attr, value, map) => {
-        let item = map ? map.find((k) => k.attr === attr) : null, isFn = () => {
-            let tmp = attr.trim(), condition = item ? typeof item?.value === 'function' : false;
-            return (tmp.startsWith('on-') || tmp.startsWith('b4-')) || condition;
-        }, addFnShell = (str) => {
-            let tmp = str.trim(), result = (!(tmp.startsWith('function') || tmp.startsWith('(')) && !tmp.endsWith('}')) ? `function(){${str}}` : str;
-            return result;
-        }, fnVal = isFn() ? addFnShell(value) : value, fnStr = '"use strict";return ';
-        try {
-            if (item) {
-                if (value === null) {
-                    return { [item.prop]: item.value };
-                }
-                else {
-                    let valType = getDataType(item.value), trim = value.trim(), trueVals = ['', '1', 'true', true], falseVals = [null, 'null', 'undefined', '0', 'false', 'NaN'];
-                    return (valType === 'String') ? { [item.prop]: value } :
-                        (valType === 'Number') ? { [item.prop]: parseFloat(value) } :
-                            (valType === 'Boolean' && trueVals.includes(trim)) ? { [item.prop]: true } :
-                                (valType === 'Boolean' && falseVals.includes(trim)) ? { [item.prop]: false } :
-                                    (valType === 'Object' && item.value.hasOwnProperty('enable') && trueVals.includes(trim)) ? { [item.prop]: true } :
-                                        (valType === 'Object' && item.value.hasOwnProperty('enable') && item.value.hasOwnProperty('children') && trim.startsWith('[') && trim.endsWith(']')) ? { [item.prop]: { enable: true, children: new Function(fnStr + `${value}`)() } } :
-                                            (valType === 'Object' && value.includes(':')) ? { [item.prop]: strToJson(value) } :
-                                                new Function(fnStr + `{"${item.prop}":${fnVal}}`)();
-                }
-            }
-            else {
-                return value === '' ? { [attr]: '' } : new Function(fnStr + `{"${attr}":${fnVal}}`)();
-            }
-        }
-        catch (e) {
-            return { [attr]: value };
-        }
-    };
-
-    const keyCond = (key) => {
-        return !/^(stor-keys|ins-name|stor-name|storKeys|insName|storName|on-|b4-|on[A-Z]|b4[A-Z])/.test(key);
-    };
-
-    const PubComm = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            rawHtml = '';
-            rawEl = null;
-            optMap = [];
-            moduleName = this.constructor.name.toLowerCase();
-            
-            getOptsFromMap(map) {
-                let options = {};
-                for (let k of map) {
-                    options[k.prop] = k.value;
-                }
-                return options;
-            }
-            
-            isComp(elem) {
-                return elem.getAttribute(alias) === 'slot-host';
-            }
-            
-            getElOptsMap(elem) {
-                if (isEmpty(elem)) {
-                    return { el: null, attr: {} };
-                }
-                else {
-                    let isComp = this.isComp(elem), el = isComp ? elem.parentNode : elem, attr = isComp ? 'initiated' : `ax-${this.moduleName}`;
-                    return { el, attr };
-                }
-            }
-            
-            mergeOpts({ source = {}, map = [], el = null, component = false }) {
-                let target = getEl(el), elMap = this.getElOptsMap(target), options = deepClone(this.getOptsFromMap(map));
-                this.rawOpts = deepClone(options);
-                !isEmpty(config.lang[this.moduleName]) && (options.lang = extend({ target: deepClone(config.lang[this.moduleName]), source: options.lang }));
-                extend({ target: options, source: config[this.moduleName] || {} });
-                extend({ target: options, source, host: elMap.el, attr: elMap.attr });
-                component ? extend({ target: options, source: this.mergeCompAttrs(target, map) }) : null;
-                this.dftOpts = deepClone(options);
-                return options;
-            }
-            
-            mergeCompAttrs(elem, map) {
-                let options = {};
-                if (this.isComp(elem)) {
-                    let target = elem.parentNode, attributes = target?.attributes;
-                    if (!target || !target.nodeName.startsWith('AX-') || !attributes)
-                        return {};
-                    for (let k of attributes) {
-                        let item = map.find((i) => i.attr === k.name);
-                        if (item) {
-                            
-                            let keyVal = attrJoinVal(item.attr, k.value, [item]);
-                            Object.assign(options, keyVal);
-                        }
-                    }
-                }
-                return options;
-            }
-            
-            getOptsAttr(elem) {
-                return elem.nodeName === `AX-${this.moduleName.toUpperCase()}` ? 'options' : `ax-${this.moduleName}`;
-            }
-            
-            getStrFromContent(str) {
-                let el = getEl(str);
-                return el ? el.innerHTML : str;
-            }
-            
-            revertHtml(elem) {
-                this.rawHtml ? elem.innerHTML = this.rawHtml : null;
-                elem.children.length === 1 && (this.rawEl = elem.children[0]);
-            }
-            replaceMult(str = '', arr, opts = {}) {
-                let options = Object.assign({ ignore: true, nodename: 'i' }, opts), regx = new RegExp(`(${arr.join('|')})`, `g${options.ignore ? 'i' : ''}`), tmp = `<${options.nodename} ${alias}="mark"${options.classes ? ' class="' + options.classes + '"' : ''}>$1</${options.nodename}>`;
-                return (str + '').replace(regx, tmp);
-                
-            }
-            parseLayout(host = this.targetEl, template = '', map = {}) {
-                let target = getEl(host), holder = createEl('i', { [alias]: 'holder' }), gap = createEl('i', { [alias]: 'gap' }), condition = (key) => key === 'holder' ? holder.cloneNode(true) : key === 'gap' ? gap.cloneNode(true) : map[key], getNodes = (str) => str.split('|').map(condition).filter(Boolean);
-                if (!target || !template || isEmpty(map))
-                    return;
-                if (template.includes('(') && template.includes(')')) {
-                    let startIdx = template.indexOf('('), endIdx = template.indexOf(')'), strL = template.slice(0, startIdx), strC = template.slice(startIdx + 1, endIdx), strR = template.slice(endIdx + 1), nodesL = getNodes(strL), nodesC = getNodes(strC), nodesR = getNodes(strR);
-                    nodesL.length && target.append(...nodesL);
-                    if (map.group) {
-                        target.appendChild(map.group);
-                        nodesC.length && map.group.append(...nodesC);
-                    }
-                    nodesR.length && target.append(...nodesR);
-                }
-                else {
-                    let nodes = getNodes(template);
-                    
-                    target.append(...nodes);
-                }
-            }
-            
-            updateOpts(spread) {
-                this.optsMergeStorage && this.optsMergeStorage();
-                !isEmpty(this.options.breakpoints) ? breakpoints(this.options, this.options.breakpoints) : null;
-                if (Array.isArray(spread) && spread.length > 0) {
-                    let obj = {};
-                    for (let k of spread) {
-                        obj[k] = this.rawOpts[k];
-                    }
-                    spreadBool(this.options, obj);
-                }
-            }
-            
-            getStorageKeys() {
-                let result = [];
-                if (Array.isArray(this.options.storKeys) && this.options.storKeys.length > 0) {
-                    result = this.options.storKeys;
-                }
-                else {
-                    result = Object.keys(this.options).filter((k) => keyCond(k));
-                }
-                return result;
-            }
-            
-            single2Els(data, parent) {
-                let result = [];
-                if (data) {
-                    let dataType = getDataType(data);
-                    if (dataType === 'Array') {
-                        result = data;
-                    }
-                    else if (dataType.includes('HTML')) {
-                        result.push(data);
-                    }
-                    else {
-                        result = getEls(data, parent);
-                    }
-                }
-                return result.filter(Boolean);
-            }
-            
-            useTpl() {
-                let tplEl = getEl(this.options.tplStr);
-                this.tplEng = this.options.tplEng || renderTpl;
-                this.tplStr = tplEl?.innerHTML || this.options.tplStr;
-            }
-            getTplcont(data, str = this.tplStr, eng = this.tplEng) {
-                let tmp = eng || renderTpl;
-                return tmp.name === 'template' ? tmp(this.tplStr)(data) : tmp(str, data);
-            }
-            
-            
-            
-            ready({ type, options = {}, maps = [], host, component = false, spread = [], }) {
-                let hostType = getDataType(host), tmpType = '';
-                if (type) {
-                    tmpType = type;
-                }
-                else {
-                    if (!isNull(host)) {
-                        tmpType = (hostType === 'String' || hostType.includes('HTML')) ? 'node' : 'data';
-                    }
-                    else {
-                        tmpType = 'none';
-                    }
-                }
-                this.propsMap = maps;
-                if (tmpType === 'node') {
-                    this.targetEl = getEl(host);
-                    if (!this.targetEl)
-                        throw new Error('The target element is required!');
-                    elProps(this.targetEl)?.add(this.moduleName);
-                    this.options = this.mergeOpts({
-                        source: options,
-                        map: this.propsMap,
-                        el: this.targetEl,
-                        component,
-                    });
-                    this.rawHtml = this.targetEl.innerHTML;
-                    this.targetEl.children.length === 1 && (this.rawEl = this.targetEl.children[0]);
-                    this.compAttrs = [];
-                }
-                else {
-                    if (tmpType === 'data') {
-                        this.targetData = host;
-                        if (!this.targetData)
-                            throw new Error('The target data is required!');
-                    }
-                    this.options = this.mergeOpts({
-                        source: options,
-                        map: this.propsMap,
-                    });
-                }
-                this.storKeys = this.getStorageKeys();
-                this.createProxy && this.createProxy();
-                this.plans = {};
-                instance.push(this, this.options.insName, this.moduleName);
-                this.on('initiate', () => {
-                    this.destroyed = false;
-                    this.updateOpts(spread);
-                    this.targetEl && this.targetEl.classList.add(`${prefix}initiated`);
-                    this.options.hasOwnProperty('tplStr') && this.useTpl();
-                });
-                this.on('initiated', () => {
-                    this.initialized = true;
-                    this.initCount++;
-                });
-                this.on('destroyed', () => {
-                    this.clearCache && this.clearCache();
-                    this.destroyed = true;
-                });
-                this.initCount = 0;
-            }
-            moreExceed({ data, source, sliced = true, min = this.options.min, max = this.options.max }) {
-                return new Promise((resolve, reject) => {
-                    let curLen = source.length, newLen = data.length, totalLen = curLen + newLen, param = { min, max, cur: curLen, val: newLen };
-                    if (max && totalLen > max) {
-                        this.listen({ name: 'tooMany', params: [param] });
-                        let tmp = max - curLen;
-                        if (!tmp) {
-                            reject();
-                            console.warn(`The maximum quantity (${max}) has been reached, no more new data can be added!`);
-                        }
-                        else {
-                            if (sliced) {
-                                resolve(data.slice(0, tmp));
-                                console.warn('The amount of newly added data is too much, only part of it has been added!');
-                            }
-                            else {
-                                reject();
-                                console.warn('The amount of newly added data is too much, further additions have been prevented!');
-                            }
-                        }
-                    }
-                    else if (totalLen < min) {
-                        console.warn('The amount of newly added data is too little, please continue adding!');
-                        this.listen({ name: 'tooFew', params: [param] });
-                        resolve(null);
-                    }
-                    else {
-                        resolve(null);
-                    }
-                });
-            }
-            lessExceed({ data, source, sliced = true, min = this.options.min, max = this.options.max }) {
-                return new Promise((resolve, reject) => {
-                    let curLen = source.length, newLen = data.length, totalLen = curLen - newLen, param = { min, max, cur: curLen, val: newLen };
-                    if (max && totalLen > max) {
-                        console.warn('The current data is still too much, please continue deleting!');
-                        this.listen({ name: 'tooMany', params: [param] });
-                        resolve(null);
-                    }
-                    else if (totalLen < min) {
-                        this.listen({ name: 'tooFew', params: [param] });
-                        let tmp = curLen - min;
-                        if (!tmp) {
-                            reject();
-                            console.warn(`The minimum quantity (${min}) has been reached, no more data can be deleted!`);
-                        }
-                        else {
-                            if (sliced) {
-                                resolve(data.slice(0, tmp));
-                                console.warn('The amount of deleted data is too much, only part of it has been deleted!');
-                            }
-                            else {
-                                reject();
-                                console.warn('The amount of deleted data is too much, further deletion has been prevented!');
-                            }
-                        }
-                    }
-                    else {
-                        resolve(null);
-                    }
-                });
-            }
-            
-            async reset(cb) {
-                this.options = deepClone(this.dftOpts);
-                this.revertHtml && this.targetEl && this.revertHtml(this.targetEl);
-                await this.init();
-                this.clearCache && this.clearCache();
-                this.listen && this.listen({ name: 'reset', cb });
-                return this;
-            }
-            
-            async update(settings, cb) {
-                if (this.destroyed)
-                    return this;
-                if (!isEmpty(settings)) {
-                    this.updateCache && this.updateCache(settings);
-                    extend({ target: this.options, source: settings });
-                    await this.init();
-                }
-                this.listen && this.listen({ name: 'updated', cb, params: [settings] });
-                return this;
-            }
-            
-            async updateCont(data, cb) {
-                if (this.destroyed)
-                    return this;
-                if (this.options.hasOwnProperty('content') && !isNull(data)) {
-                    this.options.content = data;
-                    await this.init();
-                    this.updateCache({ content: data });
-                    this.listen({ name: 'updatedCont', cb, params: [data] });
-                    return this;
-                }
-            }
-        };
-    };
-
-    class Observe extends pipe(PubListen, PubComm)(PubBase) {
-        options = {};
-        dataType;
-        completedCount;
-        reactCount;
-        proxys;
-        fullMethods;
-        methods;
-        output;
-        targetData;
-        static hostType = 'data';
-        static optMaps = optObserve;
-        constructor(data, options, initial = true) {
-            super();
-            this.ready({
-                type: Observe.hostType,
-                options,
-                maps: Observe.optMaps,
-                host: data,
-                spread: ['deep'],
-            });
-            this.proxys = [];
-            this.targetData && initial && this.init();
-        }
-        async init(cb) {
-            super.listen({ name: 'initiate' });
-            try {
-                this.options.b4Init && await this.options.b4Init.call(this);
-            }
-            catch {
-                console.warn(config.warn.init);
-                return this;
-            }
-            
-            this.completedCount = 0;
-            
-            this.reactCount = 0;
-            this.canProxy = (type, value) => (this.types.includes(type) && !isProxy(value));
-            this.hasProp = (key) => (isEmpty(this.options.deep.include) || this.options.deep.include.includes(key)) && (isEmpty(this.options.deep.exclude) || !this.options.deep.exclude.includes(key));
-            this.canDeep = (type, value) => this.canProxy(type, value) && this.options.deep.enable;
-            this.canRun = (key) => this.options.filter ? this.options.filter(key) : true;
-            
-            this.keys = { getted: [], setted: [], deleted: [] };
-            
-            this.fullMethods = {
-                get: (target, key, proxy) => {
-                    if (!this.canRun(key))
-                        return;
-                    if (key === '_isProxy')
-                        return;
-                    let value = target[key], baseProps = { target, key, value, raw: value, proxy };
-                    !this.keys.getted.includes(key) && this.keys.getted.push(key);
-                    super.listen({ name: 'getted', params: [{ ...baseProps, type: 'getted' }] });
-                    super.listen({ name: 'crud', params: [{ ...baseProps, type: 'getted' }] });
-                    super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'getted' }] });
-                    return Reflect.get(target, key, proxy);
-                },
-                set: (target, key, value, proxy) => {
-                    if (!this.canRun(key))
-                        return true;
-                    if (deepEqual(target[key], value))
-                        return true;
-                    let raw = target[key], baseProps = { target, key, value, raw, proxy }, handleType = target[key] === undefined ? 'added' : 'edited';
-                    value = this.deepProxy(value);
-                    if (this.options.accept) {
-                        Reflect.set(target, key, value);
-                    }
-                    !this.keys.setted.includes(key) && this.keys.setted.push(key);
-                    super.listen({ name: 'crud', params: [{ ...baseProps, type: 'setted' }] });
-                    super.listen({ name: 'setted', params: [{ ...baseProps, type: 'setted' }] });
-                    super.listen({ name: handleType, params: [{ ...baseProps, type: handleType }] });
-                    super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'setted' }] });
-                    this.reactCount++;
-                    this.complete(this.reactCount);
-                    return true;
-                },
-                delete: (target, key) => {
-                    if (!this.canRun(key))
-                        return true;
-                    let value = target[key], baseProps = { target, key, value, raw: value };
-                    if (this.options.accept) {
-                        Reflect.deleteProperty(target, key);
-                    }
-                    !this.keys.deleted.includes(key) && this.keys.deleted.push(key);
-                    super.listen({ name: 'deleted', params: [{ ...baseProps, type: 'deleted' }] });
-                    super.listen({ name: 'crud', params: [{ ...baseProps, type: 'deleted' }] });
-                    super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'deleted' }] });
-                    this.reactCount++;
-                    this.complete(this.reactCount);
-                    return true;
-                },
-                construct: (target, args, proxy) => {
-                    let baseProps = { target, args, proxy };
-                    super.listen({ name: 'new', params: [{ ...baseProps, type: 'new' }] });
-                    super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'new' }] });
-                    this.reactCount++;
-                    this.complete(this.reactCount);
-                    return Reflect.construct(target, args, proxy);
-                },
-                apply: (target, pointer, args) => {
-                    let baseProps = { target, pointer, args };
-                    super.listen({ name: 'applied', params: [{ ...baseProps, type: 'applied' }] });
-                    super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'applied' }] });
-                    this.reactCount++;
-                    this.complete(this.reactCount);
-                    return Reflect.apply(target, pointer, args);
-                }
-            };
-            
-            this.methods = {};
-            for (let k in this.fullMethods) {
-                let key = k === 'delete' ? 'deleteProperty' : k;
-                this.methods[key] = this.fullMethods[k];
-            }
-            this.types = isEmpty(this.options.types) ? ['Object', 'Array', 'Function'] : this.options.types;
-            this.dataType = getDataType(this.targetData);
-            if (!this.types.includes(this.dataType)) {
-                console.warn(`The target data type should be an ${this.types.join('/')}, but failed to proxy the data!`);
-                this.proxy = this.targetData;
-            }
-            else {
-                
-                this.hostProxy = this.options.deep.enable ? this.deepProxy(this.targetData) : this.addProxy(this.targetData);
-                this.proxy = this.hostProxy;
-            }
-            super.listen({ name: 'initiated', cb });
-            return this;
-        }
-        deepProxy(data) {
-            let dateType = getDataType(data);
-            if (this.canDeep(dateType, data)) {
-                for (let k in data) {
-                    if (!this.hasProp(k))
-                        continue;
-                    let val = data[k], valType = getDataType(val);
-                    if (data.hasOwnProperty(k) && this.canDeep(valType, val)) {
-                        data[k] = this.deepProxy(val);
-                    }
-                }
-                return this.addProxy(data);
-            }
-            return data;
-        }
-        addProxy(obj) {
-            if (obj['_isProxy']) {
-                this.proxys.push(obj);
-                return obj;
-            }
-            else {
-                let revProxy = Proxy.revocable(obj, this.methods);
-                this.proxys.push(revProxy);
-                return revProxy.proxy;
-            }
-        }
-        complete(nowReact) {
-            setTimeout(() => {
-                if (nowReact === this.reactCount) {
-                    if (this.options.once && this.completedCount !== 0)
-                        return;
-                    for (let i in this.keys) {
-                        this.keys[i] = unique(this.keys[i].filter((k) => typeof k !== 'symbol'));
-                    }
-                    super.listen({ name: 'completed', params: [{ count: this.completedCount, target: this.targetData, proxy: this.hostProxy, keys: this.keys, type: 'completed' }] });
-                    this.completedCount++;
-                    this.keys = { getted: [], setted: [], deleted: [] };
-                }
-            }, 0);
-        }
-        destroy() {
-            this.proxys.forEach((k) => {
-                k.revoke();
-            });
-        }
-    }
-
-    const PubCache = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            storKeys = [];
-            storObs;
-            storTmp;
-            
-            createProxy() {
-                
-                this.storTmp = {};
-                
-                this.storObs = new Observe(this.storTmp);
-            }
-            
-            clearCache(cb) {
-                if (this.options.storName) {
-                    for (let k in this.storObs.proxy) {
-                        Reflect.deleteProperty(this.storObs.proxy, k);
-                    }
-                    this.listen && this.listen({ name: 'clearedCache', cb });
-                    this.save();
-                }
-                return this;
-            }
-            
-            updateCache(value, cb) {
-                if (this.options.storName && !isEmpty(value)) {
-                    let temp = {};
-                    for (let k in value) {
-                        value.hasOwnProperty(k) && this.storKeys.includes(k) && (temp[k] = value[k]);
-                    }
-                    deepMerge(this.storObs.proxy, temp, {});
-                    this.listen && this.listen({ name: 'updatedCache', cb });
-                    this.save();
-                }
-                return this;
-            }
-            
-            optsMergeStorage() {
-                if (this.options.storName) {
-                    let storageVal = storage.get(this.options.storName);
-                    if (!isEmpty(storageVal)) {
-                        this.updateCache(storageVal);
-                        extend({ target: this.options, source: storageVal });
-                    }
-                    else {
-                        this.clearCache();
-                    }
-                }
-            }
-            
-            save(cb) {
-                if (this.destroyed || !this.options.storName)
-                    return;
-                let value = !isEmpty(this.storTmp) ? deepClone(this.storTmp) : {};
-                storage.set(this.options.storName, value);
-                this.listen && this.listen({ name: 'saved', cb, params: [value] });
-                return this;
-            }
-        };
-    };
-
     const getClasses = (data) => {
         let dataType = getDataType(data), separator, result = [];
         if (dataType === 'Array') {
@@ -3327,6 +2230,80 @@
         return result;
     };
 
+    const optBase = [
+        {
+            attr: 'ins-name',
+            prop: 'insName',
+            value: '',
+        },
+        {
+            attr: 'stor-name',
+            prop: 'storName',
+            value: '',
+        },
+        {
+            attr: 'stor-keys',
+            prop: 'storKeys',
+            value: [],
+        },
+        {
+            attr: 'breakpoints',
+            prop: 'breakpoints',
+            value: {},
+        },
+        {
+            attr: 'lang',
+            prop: 'lang',
+            value: {},
+        },
+        {
+            attr: 'b4-init',
+            prop: 'b4Init',
+            value: null,
+        },
+        {
+            attr: 'on-ready',
+            prop: 'onReady',
+            value: null,
+        },
+        {
+            attr: 'on-initiate',
+            prop: 'onInitiate',
+            value: null,
+        },
+        {
+            attr: 'on-destroyed',
+            prop: 'onDestroyed',
+            value: null,
+        },
+        {
+            attr: 'on-error',
+            prop: 'onError',
+            value: null,
+        },
+        {
+            attr: 'on-reset',
+            prop: 'onReset',
+            value: null,
+        },
+        {
+            attr: 'on-updated',
+            prop: 'onUpdated',
+            value: null,
+        },
+        {
+            attr: 'on-save',
+            prop: 'onSave',
+            value: null,
+        },
+        {
+            attr: 'on-clearedcache',
+            prop: 'onClearedCache',
+            value: null,
+        },
+    ];
+
+    let AXTMP_actClass = config.actClass;
     const optBubble = [
         {
             attr: 'heading',
@@ -3399,7 +2376,7 @@
         {
             attr: 'act-class',
             prop: 'actClass',
-            value: config.actClass,
+            value: AXTMP_actClass,
         },
         {
             attr: 'tpl-str',
@@ -3606,7 +2583,7 @@
         ...optBase
     ];
 
-    const optDrawer = unique([
+    const optDrawer = [
         {
             attr: 'placement',
             prop: 'placement',
@@ -3649,7 +2626,930 @@
             },
         },
         ...optBubble
-    ], 'attr');
+    ];
+
+    const getEvtTarget = (evt) => {
+        
+        if (!evt.targetTouches) {
+            return evt.target;
+        }
+        else {
+            let tmp = evt.targetTouches[0] || evt.changedTouches[0];
+            return document.elementFromPoint(tmp.clientX, tmp.clientY);
+        }
+    };
+
+    const removeStyle = (el, prop) => {
+        let target = getEl(el);
+        if (!target || !prop)
+            return;
+        target.style.cssText = target.style.cssText.replace(`${prop}:`, '');
+    };
+
+    const addStyle = (el, key, value) => {
+        let target = getEl(el);
+        key = (key + '').toLowerCase();
+        value = value + '';
+        if (!target || !key || !value)
+            return;
+        let prop = key.replace(/-([a-z])/g, (match, k) => k.toUpperCase());
+        target.style[prop] = value;
+    };
+
+    const isDateStr = (str) => (typeof str === 'string' && !isNaN(Date.parse(str)));
+
+    const getUTCTimestamp = (value) => {
+        let date, offset, dateTamp, valType = getDataType(value);
+        if (valType === 'Date') {
+            date = value;
+        }
+        else if (valType === 'String') {
+            if (isDateStr(value)) {
+                date = new Date(value);
+            }
+            else {
+                date = new Date();
+            }
+        }
+        else if (valType === 'Number') {
+            date = new Date(value);
+        }
+        else {
+            date = new Date();
+        }
+        dateTamp = date.getTime();
+        offset = date.getTimezoneOffset() * 60000;
+        return dateTamp + offset;
+    };
+
+    const getExpiration = (type = 'd', value = 365, output = 'locale') => {
+        let dateExp;
+        if (isDateStr(value)) {
+            dateExp = new Date(value);
+        }
+        else {
+            dateExp = new Date();
+            switch (type) {
+                case 's':
+                    dateExp.setSeconds(dateExp.getSeconds() + ~~value);
+                    break;
+                case 'm':
+                    dateExp.setMinutes(dateExp.getMinutes() + ~~value);
+                    break;
+                case 'h':
+                    dateExp.setHours(dateExp.getHours() + ~~value);
+                    break;
+                default:
+                    dateExp.setDate(dateExp.getDate() + ~~value);
+            }
+        }
+        return output === 'utc' ? getUTCTimestamp(dateExp) : dateExp.getTime();
+    };
+
+    const storage = {
+        
+        set: function (key, value, opts) {
+            if (isEmpty(key) && typeof key !== 'string')
+                return;
+            let options = Object.assign({ unit: 'd', expires: 0, override: true, type: 'local' }, opts), newValue = deepClone(value), valType = getDataType(value), stor = options.type === 'session' ? window.sessionStorage : window.localStorage, filterProps = (obj) => {
+                Object.keys(obj).forEach(k => {
+                    let val = obj[k], type = getDataType(val);
+                    ['Array', 'Object'].includes(type) && filterProps(val);
+                    (type.includes('HTML') || type.includes('Function') || ['Promise', 'Symbol', 'Instance'].includes(type)) && delete obj[k];
+                });
+                return obj;
+            };
+            if (['Array', 'Object'].includes(valType) && !isEmpty(newValue)) {
+                filterProps(newValue);
+            }
+            let expires = options.expires !== 0 ? getExpiration(options.unit, options.expires) : 0, oldValue = this.get(key, options.type), valueExp = {
+                data: (!options.override && this.get(key, options.type)) ? extend({ target: oldValue, source: newValue }) : newValue,
+                expires,
+            };
+            if (((typeof options.expires === 'number' && options.expires < 0) || newValue === null) && this.get(key, options.type)) {
+                this.remove(key, options.type);
+            }
+            else {
+                stor.setItem(key, JSON.stringify(valueExp));
+            }
+            return this;
+        },
+        
+        get: function (key, type = 'local') {
+            if (isEmpty(key) || typeof key !== 'string') {
+                return false;
+            }
+            let now = Date.now(), stor = type === 'session' ? window.sessionStorage : window.localStorage, valueStr = stor.getItem(key);
+            if (valueStr) {
+                let valueExp = (new Function('"use strict";return ' + valueStr))();
+                if (valueExp.expires === 0 || now <= valueExp.expires) {
+                    return valueExp.data;
+                }
+                else {
+                    stor.removeItem(key);
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        },
+        
+        remove: function (key, type = 'local') {
+            if (isEmpty(key) || typeof key !== 'string') {
+                return false;
+            }
+            let stor = type === 'session' ? window.sessionStorage : window.localStorage;
+            stor.removeItem(key);
+            return this;
+        },
+        
+        clear: function (type = 'local') {
+            let stor = type === 'session' ? window.sessionStorage : window.localStorage;
+            stor.clear();
+            return this;
+        }
+    };
+
+    const optObserve = [
+        {
+            attr: 'deep',
+            prop: 'deep',
+            value: {
+                enable: false,
+                include: [],
+                exclude: [],
+            },
+        },
+        {
+            attr: 'filter',
+            prop: 'filter',
+            value: null,
+        },
+        {
+            attr: 'tpyes',
+            prop: 'tpyes',
+            value: ['Object', 'Array', 'Function'],
+        },
+        {
+            attr: 'accept',
+            prop: 'accept',
+            value: true,
+        },
+        {
+            attr: 'once',
+            prop: 'once',
+            value: false,
+        },
+        {
+            attr: 'methods',
+            prop: 'methods',
+            value: ['set', 'delete'],
+        },
+        {
+            attr: 'on-added',
+            prop: 'onAdded',
+            value: null,
+        },
+        {
+            attr: 'on-edited',
+            prop: 'onEdited',
+            value: null,
+        },
+        {
+            attr: 'on-setted',
+            prop: 'onSetted',
+            value: null,
+        },
+        {
+            attr: 'on-deleted',
+            prop: 'onDeleted',
+            value: null,
+        },
+        {
+            attr: 'on-crud',
+            prop: 'onCrud',
+            value: null,
+        },
+        {
+            attr: 'on-new',
+            prop: 'onNew',
+            value: null,
+        },
+        {
+            attr: 'on-applied',
+            prop: 'onApplied',
+            value: null,
+        },
+        {
+            attr: 'on-trigger',
+            prop: 'onTrigger',
+            value: null,
+        },
+        {
+            attr: 'on-completed',
+            prop: 'onCompleted',
+            value: null,
+        },
+        ...optBase
+    ];
+
+    const deepEqual = (a, b) => {
+        let typeA = getDataType(a), typeB = getDataType(b);
+        if (typeA === typeB && typeA === 'Object') {
+            let getStr = (data) => {
+                let cache = new Set();
+                return JSON.stringify(data, (key, val) => {
+                    if (typeof val === 'object' && val !== null) {
+                        if (cache.has(val))
+                            return;
+                        cache.add(val);
+                    }
+                    return val;
+                });
+            };
+            return getStr(a) === getStr(b);
+        }
+        else {
+            return false;
+        }
+    };
+
+    const isProxy = (obj) => obj?._isProxy === true;
+
+    const unique = (data, prop) => {
+        let result;
+        if (!isEmpty(data)) {
+            result = [...new Set(data)];
+            if (typeof result[0] === 'object' && prop) {
+                let map = new Map();
+                for (let k of result) {
+                    !map.has(k[prop]) && map.set(k[prop], k);
+                }
+                result = [...map.values()];
+            }
+        }
+        else {
+            result = [...data];
+        }
+        return result;
+    };
+
+    const plan = {
+        handle: (name, type, cb) => {
+            let nameArr = [];
+            if (type === 'String') {
+                name = trim(name);
+                nameArr = name.includes(',') ? name.split(',') : name.split(' ');
+            }
+            else if (type === 'Array') {
+                nameArr = name.map((k) => trim(k));
+            }
+            if (nameArr.length > 0) {
+                for (let k of nameArr) {
+                    cb(k);
+                }
+            }
+        },
+        
+        add: function (name, instance, content) {
+            let nameType = getDataType(name), handle = (str) => {
+                if (!instance.plans.hasOwnProperty(str)) {
+                    instance.plans[str] = [];
+                }
+                let newValue = content.toString().replace(/\s/g, '').replace(/\;/g, '').match(/{(\S*)}/), oldValue = instance.plans[str].toString().replace(/\s/g, '').replace(/\;/g, '');
+                newValue && !oldValue.includes(newValue[1]) ? instance.plans[str].push(content) : null;
+            };
+            this.handle(name, nameType, (item) => handle(item));
+            return this;
+        },
+        
+        remove: function (name, instance, content) {
+            let nameType = getDataType(name), handle = (str) => {
+                if (!instance.plans.hasOwnProperty(str)) {
+                    return console.warn(`The ${str} event is invalid or unusable!`);
+                }
+                if (!content) {
+                    delete instance.plans[str];
+                }
+                else {
+                    let index = instance.plans[str].findIndex((k) => k === content);
+                    if (index < 0) {
+                        return console.warn(`The ${str} event is not bound!`);
+                    }
+                    instance.plans[str].splice(index, 1);
+                    instance.plans[str].length === 0 ? delete instance.plans[str] : null;
+                }
+            };
+            this.handle(name, nameType, (item) => handle(item));
+            return this;
+        },
+        
+        do: function (name, instance, ...params) {
+            let nameType = getDataType(name), handle = (str) => {
+                if (!instance.plans.hasOwnProperty(str)) {
+                    return console.warn(`The ${str} event is unregistered or unusable!`);
+                }
+                instance.plans[str].forEach((k) => {
+                    k.call(instance, ...params);
+                });
+            };
+            this.handle(name, nameType, (item) => handle(item));
+            return this;
+        }
+    };
+
+    class ModBase {
+        targetEl;
+        targetData;
+        options;
+        destroyed;
+        timestamp;
+        renderCount;
+        respSource;
+        initialized;
+        moduleName;
+        dftOpts;
+        rawOpts;
+        rawHtml;
+        rawEl;
+        tplStr;
+        tplEng;
+        initCount;
+        constructor() {
+            this.timestamp = Date.now();
+            this.respSource = null;
+            this.initialized = false;
+            this.initCount = 0;
+            this.renderCount = 0;
+            
+            this.targetEl = null;
+            
+            this.targetData = null;
+            
+            this.rawOpts = {};
+            this.dftOpts = {};
+            this.options = {};
+            this.rawHtml = '';
+            this.rawEl = null;
+            
+            this.destroyed = false;
+            this.moduleName = this.constructor.name.toLowerCase();
+            this.tplStr = '';
+            this.tplEng = null;
+        }
+        
+        getOptsFromMap(map) {
+            let options = {};
+            for (let k of map) {
+                options[k.prop] = k.value;
+            }
+            return options;
+        }
+        
+        isComp(elem) {
+            return elem.getAttribute(alias) === 'slot-host';
+        }
+        
+        getElOptsMap(elem) {
+            if (isEmpty(elem)) {
+                return { el: null, attr: {} };
+            }
+            else {
+                let isComp = this.isComp(elem), el = isComp ? elem.parentNode : elem, attr = isComp ? 'initiated' : `ax-${this.moduleName}`;
+                return { el, attr };
+            }
+        }
+        
+        mergeOpts({ source = {}, map = [], el = null, component = false }) {
+            let target = getEl(el), elMap = this.getElOptsMap(target), options = deepClone(this.getOptsFromMap(map));
+            this.rawOpts = deepClone(options);
+            !isEmpty(config.lang[this.moduleName]) && (options.lang = extend({ target: deepClone(config.lang[this.moduleName]), source: options.lang }));
+            extend({ target: options, source: config[this.moduleName] || {} });
+            extend({ target: options, source, host: elMap.el, attr: elMap.attr });
+            component ? extend({ target: options, source: this.mergeCompAttrs(target, map) }) : null;
+            this.dftOpts = deepClone(options);
+            return options;
+        }
+        
+        mergeCompAttrs(elem, map) {
+            let options = {};
+            if (this.isComp(elem)) {
+                let target = elem.parentNode, attributes = target?.attributes;
+                if (!target || !target.nodeName.startsWith('AX-') || !attributes)
+                    return {};
+                for (let k of attributes) {
+                    let item = map.find((i) => i.attr === k.name);
+                    if (item) {
+                        
+                        let keyVal = attrJoinVal$1(item.attr, k.value, [item]);
+                        Object.assign(options, keyVal);
+                    }
+                }
+            }
+            return options;
+        }
+        
+        getOptsAttr(elem) {
+            return elem.nodeName === `AX-${this.moduleName.toUpperCase()}` ? 'options' : `ax-${this.moduleName}`;
+        }
+        
+        getStrFromContent(str) {
+            let el = getEl(str);
+            return el ? el.innerHTML : str;
+        }
+        
+        revertHtml(elem) {
+            this.rawHtml ? elem.innerHTML = this.rawHtml : '';
+            elem.children.length === 1 && (this.rawEl = elem.children[0]);
+        }
+        replaceMult(str = '', arr, opts = {}) {
+            let options = Object.assign({ ignore: true, nodename: 'i' }, opts), regx = new RegExp(`(${arr.join('|')})`, `g${options.ignore ? 'i' : ''}`), tmp = `<${options.nodename} ${alias}="mark"${options.classes ? ' class="' + options.classes + '"' : ''}>$1</${options.nodename}>`;
+            return (str + '').replace(regx, tmp);
+            
+        }
+        parseLayout(host = this.targetEl, template = '', map = {}) {
+            let target = getEl(host), holder = createEl('i', { [alias]: 'holder' }), gap = createEl('i', { [alias]: 'gap' }), condition = (key) => key === 'holder' ? holder.cloneNode(true) : key === 'gap' ? gap.cloneNode(true) : map[key], getNodes = (str) => str.split('|').map(condition).filter(Boolean);
+            if (!target || !template || isEmpty(map))
+                return;
+            if (template.includes('(') && template.includes(')')) {
+                let startIdx = template.indexOf('('), endIdx = template.indexOf(')'), strL = template.slice(0, startIdx), strC = template.slice(startIdx + 1, endIdx), strR = template.slice(endIdx + 1), nodesL = getNodes(strL), nodesC = getNodes(strC), nodesR = getNodes(strR);
+                nodesL.length && target.append(...nodesL);
+                if (map.group) {
+                    target.appendChild(map.group);
+                    nodesC.length && map.group.append(...nodesC);
+                }
+                nodesR.length && target.append(...nodesR);
+            }
+            else {
+                let nodes = getNodes(template);
+                
+                target.append(...nodes);
+            }
+        }
+        
+        updateOpts(spread) {
+            this.optsMergeStorage && this.optsMergeStorage();
+            !isEmpty(this.options.breakpoints) ? breakpoints$1(this.options, this.options.breakpoints) : null;
+            if (Array.isArray(spread) && spread.length > 0) {
+                let obj = {};
+                for (let k of spread) {
+                    obj[k] = this.rawOpts[k];
+                }
+                spreadBool$1(this.options, obj);
+            }
+        }
+        
+        getStorageKeys() {
+            let result = [];
+            if (Array.isArray(this.options.storKeys) && this.options.storKeys.length > 0) {
+                result = this.options.storKeys;
+            }
+            else {
+                result = Object.keys(this.options).filter((k) => keyCond$1(k));
+            }
+            return result;
+        }
+        
+        single2Els(data, parent) {
+            let result = [];
+            if (data) {
+                let dataType = getDataType(data);
+                if (dataType === 'Array') {
+                    result = data;
+                }
+                else if (dataType.includes('HTML')) {
+                    result.push(data);
+                }
+                else {
+                    result = getEls(data, parent);
+                }
+            }
+            return result.filter(Boolean);
+        }
+        
+        useTpl() {
+            let tplEl = getEl(this.options.tplStr);
+            this.tplEng = this.options.tplEng || renderTpl;
+            this.tplStr = tplEl?.innerHTML || this.options.tplStr;
+        }
+        getTplcont(data, str = this.tplStr, eng = this.tplEng) {
+            let tmp = eng || renderTpl;
+            return tmp.name === 'template' ? tmp(this.tplStr)(data) : tmp(str, data);
+        }
+        
+        
+        
+        ready({ type = 'node', options = {}, maps = [], host, component = false, spread = [], }) {
+            getDataType(host); let moreParams = {};
+            this.propsMap = maps;
+            if (type === 'node') {
+                this.targetEl = getEl(host);
+                if (this.targetEl) {
+                    elProps$1(this.targetEl)?.add(this.moduleName);
+                    moreParams = {
+                        el: this.targetEl,
+                        component,
+                    };
+                    this.rawHtml = this.targetEl.innerHTML;
+                    this.targetEl.children.length === 1 && (this.rawEl = this.targetEl.children[0]);
+                    this.compAttrs = [];
+                }
+            }
+            else {
+                type === 'data' && (this.targetData = host);
+            }
+            this.options = this.mergeOpts({
+                source: options,
+                map: this.propsMap,
+                ...moreParams,
+            });
+            this.storKeys = this.getStorageKeys();
+            this.createProxy && this.createProxy();
+            this.plans = {};
+            instance.push(this, this.options.insName, this.moduleName);
+            this.on('initiate', () => {
+                this.destroyed = false;
+                this.updateOpts(spread);
+                this.targetEl && this.targetEl.classList.add(`${prefix}initiated`);
+                this.options.hasOwnProperty('tplStr') && this.useTpl();
+            });
+            this.on('initiated', () => {
+                this.initialized = true;
+                this.initCount++;
+            });
+            this.on('destroyed', () => {
+                this.clearCache && this.clearCache();
+                this.destroyed = true;
+            });
+        }
+        moreExceed({ data, source, sliced = true, min = this.options.min, max = this.options.max }) {
+            return new Promise((resolve, reject) => {
+                let curLen = source.length, newLen = data.length, totalLen = curLen + newLen, param = { min, max, cur: curLen, val: newLen };
+                if (max && totalLen > max) {
+                    this.listen({ name: 'tooMany', params: [param] });
+                    let tmp = max - curLen;
+                    if (!tmp) {
+                        reject();
+                        console.warn(`The maximum quantity (${max}) has been reached, no more new data can be added!`);
+                    }
+                    else {
+                        if (sliced) {
+                            resolve(data.slice(0, tmp));
+                            console.warn('The amount of newly added data is too much, only part of it has been added!');
+                        }
+                        else {
+                            reject();
+                            console.warn('The amount of newly added data is too much, further additions have been prevented!');
+                        }
+                    }
+                }
+                else if (totalLen < min) {
+                    console.warn('The amount of newly added data is too little, please continue adding!');
+                    this.listen({ name: 'tooFew', params: [param] });
+                    resolve(null);
+                }
+                else {
+                    resolve(null);
+                }
+            });
+        }
+        lessExceed({ data, source, sliced = true, min = this.options.min, max = this.options.max }) {
+            return new Promise((resolve, reject) => {
+                let curLen = source.length, newLen = data.length, totalLen = curLen - newLen, param = { min, max, cur: curLen, val: newLen };
+                if (max && totalLen > max) {
+                    console.warn('The current data is still too much, please continue deleting!');
+                    this.listen({ name: 'tooMany', params: [param] });
+                    resolve(null);
+                }
+                else if (totalLen < min) {
+                    this.listen({ name: 'tooFew', params: [param] });
+                    let tmp = curLen - min;
+                    if (!tmp) {
+                        reject();
+                        console.warn(`The minimum quantity (${min}) has been reached, no more data can be deleted!`);
+                    }
+                    else {
+                        if (sliced) {
+                            resolve(data.slice(0, tmp));
+                            console.warn('The amount of deleted data is too much, only part of it has been deleted!');
+                        }
+                        else {
+                            reject();
+                            console.warn('The amount of deleted data is too much, further deletion has been prevented!');
+                        }
+                    }
+                }
+                else {
+                    resolve(null);
+                }
+            });
+        }
+        
+        async reset(cb) {
+            this.options = deepClone(this.dftOpts);
+            this.revertHtml && this.targetEl && this.revertHtml(this.targetEl);
+            await this.init();
+            this.clearCache && this.clearCache();
+            this.listen && this.listen({ name: 'reset', cb });
+            return this;
+        }
+        
+        async update(settings, cb) {
+            if (this.destroyed)
+                return this;
+            if (!isEmpty(settings)) {
+                this.updateCache && this.updateCache(settings);
+                extend({ target: this.options, source: settings });
+                await this.init();
+            }
+            this.listen && this.listen({ name: 'updated', cb, params: [settings] });
+            return this;
+        }
+        
+        async updateCont(data, cb) {
+            if (this.destroyed)
+                return this;
+            if (this.options.hasOwnProperty('content') && !isNull(data)) {
+                this.options.content = data;
+                await this.init();
+                this.updateCache({ content: data });
+                this.listen({ name: 'updatedCont', cb, params: [data] });
+                return this;
+            }
+        }
+        
+        async init(cb) { }
+        
+        destroy(cb) { }
+    }
+
+    class ModBaseListen extends ModBase {
+        
+        plans = {};
+        
+        listen({ name, params = [], cb } = {}) {
+            name && this.plans.hasOwnProperty(name) ? this.emit(name, ...params) : null;
+            name && this.options[`on${startUpper(name)}`] && this.options[`on${startUpper(name)}`].call(this, ...params);
+            cb && cb.call(this, ...params);
+        }
+        
+        on(type, handler) {
+            plan.add(type, this, handler);
+            return this;
+        }
+        
+        emit(type, ...params) {
+            plan.do(type, this, ...params);
+            return this;
+        }
+        
+        off(type, handler) {
+            plan.remove(type, this, handler);
+            return this;
+        }
+    }
+
+    class Observe extends ModBaseListen {
+        options = {};
+        dataType;
+        completedCount;
+        reactCount;
+        proxys;
+        fullMethods;
+        methods;
+        output;
+        canProxy;
+        hasProp;
+        canDeep;
+        canRun;
+        keys;
+        types;
+        proxy;
+        hostProxy;
+        static hostType = 'data';
+        static optMaps = optObserve;
+        constructor(data, options = {}, initial = true) {
+            super();
+            super.ready({
+                type: Observe.hostType,
+                options,
+                maps: Observe.optMaps,
+                host: data,
+                spread: ['deep'],
+            });
+            this.proxys = [];
+            this.targetData && initial && this.init();
+        }
+        async init(cb) {
+            super.listen({ name: 'initiate' });
+            try {
+                this.options.b4Init && await this.options.b4Init.call(this);
+            }
+            catch {
+                console.warn(config.warn.init);
+                return this;
+            }
+            
+            this.completedCount = 0;
+            
+            this.reactCount = 0;
+            this.canProxy = (type, value) => (this.types.includes(type) && !isProxy(value));
+            this.hasProp = (key) => (isEmpty(this.options.deep.include) || this.options.deep.include.includes(key)) && (isEmpty(this.options.deep.exclude) || !this.options.deep.exclude.includes(key));
+            this.canDeep = (type, value) => this.canProxy(type, value) && this.options.deep.enable;
+            this.canRun = (key) => this.options.filter ? this.options.filter(key) : true;
+            
+            this.keys = { getted: [], setted: [], deleted: [] };
+            
+            this.fullMethods = {
+                get: (target, key, proxy) => {
+                    if (!this.canRun(key))
+                        return;
+                    if (key === '_isProxy')
+                        return;
+                    let value = target[key], baseProps = { target, key, value, raw: value, proxy };
+                    !this.keys.getted.includes(key) && this.keys.getted.push(key);
+                    super.listen({ name: 'getted', params: [{ ...baseProps, type: 'getted' }] });
+                    super.listen({ name: 'crud', params: [{ ...baseProps, type: 'getted' }] });
+                    super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'getted' }] });
+                    return Reflect.get(target, key, proxy);
+                },
+                set: (target, key, value, proxy) => {
+                    if (!this.canRun(key))
+                        return true;
+                    if (deepEqual(target[key], value))
+                        return true;
+                    let raw = target[key], baseProps = { target, key, value, raw, proxy }, handleType = target[key] === undefined ? 'added' : 'edited';
+                    value = this.deepProxy(value);
+                    if (this.options.accept) {
+                        Reflect.set(target, key, value);
+                    }
+                    !this.keys.setted.includes(key) && this.keys.setted.push(key);
+                    super.listen({ name: 'crud', params: [{ ...baseProps, type: 'setted' }] });
+                    super.listen({ name: 'setted', params: [{ ...baseProps, type: 'setted' }] });
+                    super.listen({ name: handleType, params: [{ ...baseProps, type: handleType }] });
+                    super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'setted' }] });
+                    this.reactCount++;
+                    this.complete(this.reactCount);
+                    return true;
+                },
+                delete: (target, key) => {
+                    if (!this.canRun(key))
+                        return true;
+                    let value = target[key], baseProps = { target, key, value, raw: value };
+                    if (this.options.accept) {
+                        Reflect.deleteProperty(target, key);
+                    }
+                    !this.keys.deleted.includes(key) && this.keys.deleted.push(key);
+                    super.listen({ name: 'deleted', params: [{ ...baseProps, type: 'deleted' }] });
+                    super.listen({ name: 'crud', params: [{ ...baseProps, type: 'deleted' }] });
+                    super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'deleted' }] });
+                    this.reactCount++;
+                    this.complete(this.reactCount);
+                    return true;
+                },
+                construct: (target, args, proxy) => {
+                    let baseProps = { target, args, proxy };
+                    super.listen({ name: 'new', params: [{ ...baseProps, type: 'new' }] });
+                    super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'new' }] });
+                    this.reactCount++;
+                    this.complete(this.reactCount);
+                    return Reflect.construct(target, args, proxy);
+                },
+                apply: (target, pointer, args) => {
+                    let baseProps = { target, pointer, args };
+                    super.listen({ name: 'applied', params: [{ ...baseProps, type: 'applied' }] });
+                    super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'applied' }] });
+                    this.reactCount++;
+                    this.complete(this.reactCount);
+                    return Reflect.apply(target, pointer, args);
+                }
+            };
+            
+            this.methods = {};
+            for (let k in this.fullMethods) {
+                let key = k === 'delete' ? 'deleteProperty' : k;
+                this.methods[key] = this.fullMethods[k];
+            }
+            this.types = isEmpty(this.options.types) ? ['Object', 'Array', 'Function'] : this.options.types;
+            this.dataType = getDataType(this.targetData);
+            if (!this.types.includes(this.dataType)) {
+                console.warn(`The target data type should be an ${this.types.join('/')}, but failed to proxy the data!`);
+                this.proxy = this.targetData;
+            }
+            else {
+                
+                this.hostProxy = this.options.deep.enable ? this.deepProxy(this.targetData) : this.addProxy(this.targetData);
+                this.proxy = this.hostProxy;
+            }
+            super.listen({ name: 'initiated', cb });
+            return this;
+        }
+        deepProxy(data) {
+            let dateType = getDataType(data);
+            if (this.canDeep(dateType, data)) {
+                for (let k in data) {
+                    if (!this.hasProp(k))
+                        continue;
+                    let val = data[k], valType = getDataType(val);
+                    if (data.hasOwnProperty(k) && this.canDeep(valType, val)) {
+                        data[k] = this.deepProxy(val);
+                    }
+                }
+                return this.addProxy(data);
+            }
+            return data;
+        }
+        addProxy(obj) {
+            if (obj['_isProxy']) {
+                this.proxys.push(obj);
+                return obj;
+            }
+            else {
+                let revProxy = Proxy.revocable(obj, this.methods);
+                this.proxys.push(revProxy);
+                return revProxy.proxy;
+            }
+        }
+        complete(nowReact) {
+            setTimeout(() => {
+                if (nowReact === this.reactCount) {
+                    if (this.options.once && this.completedCount !== 0)
+                        return;
+                    for (let i in this.keys) {
+                        this.keys[i] = unique(this.keys[i].filter((k) => typeof k !== 'symbol'));
+                    }
+                    super.listen({ name: 'completed', params: [{ count: this.completedCount, target: this.targetData, proxy: this.hostProxy, keys: this.keys, type: 'completed' }] });
+                    this.completedCount++;
+                    this.keys = { getted: [], setted: [], deleted: [] };
+                }
+            }, 0);
+        }
+        destroy() {
+            this.proxys.forEach((k) => {
+                k.revoke();
+            });
+        }
+    }
+
+    class ModBaseListenCache extends ModBaseListen {
+        storKeys = [];
+        storObs;
+        storTmp;
+        
+        createProxy() {
+            
+            this.storTmp = {};
+            
+            this.storObs = new Observe(this.storTmp);
+        }
+        
+        clearCache(cb) {
+            if (this.options.storName) {
+                for (let k in this.storObs.proxy) {
+                    Reflect.deleteProperty(this.storObs.proxy, k);
+                }
+                this.listen && this.listen({ name: 'clearedCache', cb });
+                this.save();
+            }
+            return this;
+        }
+        
+        updateCache(value, cb) {
+            if (this.options.storName && !isEmpty(value)) {
+                let temp = {};
+                for (let k in value) {
+                    value.hasOwnProperty(k) && this.storKeys.includes(k) && (temp[k] = value[k]);
+                }
+                deepMerge(this.storObs.proxy, temp, {});
+                this.listen && this.listen({ name: 'updatedCache', cb });
+                this.save();
+            }
+            return this;
+        }
+        
+        optsMergeStorage() {
+            if (this.options.storName) {
+                let storageVal = storage.get(this.options.storName);
+                if (!isEmpty(storageVal)) {
+                    this.updateCache(storageVal);
+                    extend({ target: this.options, source: storageVal });
+                }
+                else {
+                    this.clearCache();
+                }
+            }
+        }
+        
+        save(cb) {
+            if (this.destroyed || !this.options.storName)
+                return;
+            let value = !isEmpty(this.storTmp) ? deepClone(this.storTmp) : {};
+            storage.set(this.options.storName, value);
+            this.listen && this.listen({ name: 'saved', cb, params: [value] });
+            return this;
+        }
+    }
 
     const bulletTools = {
         
@@ -3889,11 +3789,35 @@
         return wrapEl;
     };
 
+    const spreadBool = (host, params) => {
+        let result = host, hostType = getDataType(host), paramsType = getDataType(params);
+        if (paramsType === 'Object') {
+            if (hostType === 'Boolean') {
+                Reflect.deleteProperty(params, 'enable');
+                result = { enable: host, ...params };
+            }
+            else if (hostType === 'Object') {
+                if (host.hasOwnProperty('enable')) {
+                    host = Object.assign({}, params, host);
+                }
+                else {
+                    for (let k in params) {
+                        if (params.hasOwnProperty(k) && host.hasOwnProperty(k)) {
+                            host[k] = spreadBool(host[k], params[k]);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    };
+    var spreadBool$1 = spreadBool;
+
     const createFooter = ({ nodeName = 'div', layout = 'center', attrs, tips = false, divider = false, padding = false, children = [] }, parent, refer) => {
         
-        divider = spreadBool(divider, {});
-        padding = spreadBool(padding, {});
-        tips = spreadBool(tips, { html: config.lang.placehold.tips });
+        divider = spreadBool$1(divider, {});
+        padding = spreadBool$1(padding, {});
+        tips = spreadBool$1(tips, { html: config.lang.placehold.tips });
         let target = getEl(parent), outer, footerEl = createEl(nodeName, Object.assign({ class: `${prefix}bubble-footer`, layout }, attrs)), dividerEl = divider.enable ? createEl(divider.nodeName || 'ax-line', Object.assign({ [alias]: 'divider' }, divider.attrs)) : null, paddingEl = padding.enable ? createEl(padding.nodeName || 'div', Object.assign({ class: `${prefix}p`, [alias]: 'padding' }, padding.attrs)) : null, tipsEl = tips.enable ? createEl(tips.nodeName || 'div', Object.assign({ [alias]: 'tips' }, tips.attrs), tips.html) : null, wrapEl = createEl('div', { class: `${prefix}bubble-footer-wrap` });
         footerEl.setAttribute('layout', layout);
         dividerEl && footerEl.appendChild(dividerEl);
@@ -4205,7 +4129,7 @@
         return elem || null;
     };
 
-    const optMessage = unique([
+    const optMessage = [
         {
             attr: 'heading',
             prop: 'heading',
@@ -4257,11 +4181,6 @@
             value: false,
         },
         {
-            attr: 'lang',
-            prop: 'lang',
-            value: {},
-        },
-        {
             attr: 'icon-show',
             prop: 'iconShow',
             value: false,
@@ -4287,16 +4206,20 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Message extends pipe(PubListen, PubComm)(PubBase) {
+    class Message extends ModBaseListen {
         options = {};
+        parentEl;
+        template;
+        shown;
         static hostType = 'none';
         static optMaps = optMessage;
         constructor(options, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
+                type: Message.hostType,
                 maps: Message.optMaps,
             });
             
@@ -4960,119 +4883,111 @@
         }
     };
 
-    const Bubble = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            static hostType = 'node';
-            
-            formEl = null;
-            canTrigger = false;
-            lastShowTime = 0;
-            bullets = { nodes: [], value: '' };
-            setEmpty() {
-                if (this.bubbleType === 'popup') {
-                    this.positionIns && this.positionIns.destroy();
-                    this.hoverIns && this.hoverIns.destroy();
-                }
-                this.mainEl && this.mainEl.remove();
-                
-                this.state = 'hidden';
+    class ModBaseListenCacheBubble extends ModBaseListenCache {
+        bubbleType;
+        positionIns;
+        hoverIns;
+        mainEl;
+        state;
+        footEl;
+        data;
+        submitXhr;
+        contEl;
+        template;
+        wrapEl;
+        bodyEl;
+        headEl;
+        maskEl;
+        toggleShow;
+        triggerClose;
+        contXhr;
+        triggerShow;
+        wings;
+        static hostType = 'node';
+        
+        formEl = null;
+        canTrigger = false;
+        lastShowTime = 0;
+        bullets = { nodes: [], value: '' };
+        setEmpty() {
+            if (this.bubbleType === 'popup') {
+                this.positionIns && this.positionIns.destroy();
+                this.hoverIns && this.hoverIns.destroy();
             }
-            handleFooter() {
-                if (this.footEl) {
-                    let isBullets = this.options.bullet.enable && ['checkboxes', 'radios', 'select-single', 'select-multi'].includes(this.options.bullet.type);
-                    this.options.footer.children.forEach((k) => {
-                        if (k.name === 'confirm') {
-                            if (k.action) {
-                                k.action.call(this, k);
-                            }
-                            else {
-                                if (!k?.attrs?.href) {
-                                    k.el.onclick = async (e) => {
-                                        this.options.b4Confirm && await this.options.b4Confirm.call(this, k);
-                                        let inputEl = getEl(this.options.autoFill.inputSel) || this.targetEl, childEl = getEl(this.options.autoFill.childSel, inputEl), vals;
-                                        if (isCompField(this.options.contType)) {
-                                            let value = this.data.value;
-                                            this.options.autoFill.enable && inputEl && this.setTargetVals(value, inputEl, childEl);
-                                            !this.options.keepShow && this.hide();
-                                            vals = value;
+            this.mainEl && this.mainEl.remove();
+            
+            this.state = 'hidden';
+        }
+        async hide(param) { }
+        handleFooter() {
+            if (this.footEl) {
+                let isBullets = this.options.bullet.enable && ['checkboxes', 'radios', 'select-single', 'select-multi'].includes(this.options.bullet.type);
+                this.options.footer.children.forEach((k) => {
+                    if (k.name === 'confirm') {
+                        if (k.action) {
+                            k.action.call(this, k);
+                        }
+                        else {
+                            if (!k?.attrs?.href) {
+                                k.el.onclick = async (e) => {
+                                    this.options.b4Confirm && await this.options.b4Confirm.call(this, k);
+                                    let inputEl = getEl(this.options.autoFill.inputSel) || this.targetEl, childEl = getEl(this.options.autoFill.childSel, inputEl), vals;
+                                    if (isCompField(this.options.contType)) {
+                                        let value = this.data.value;
+                                        this.options.autoFill.enable && inputEl && this.setTargetVals(value, inputEl, childEl);
+                                        !this.options.keepShow && this.hide();
+                                        vals = value;
+                                    }
+                                    else if (isBullets) {
+                                        if (this.targetEl) {
+                                            this.bullets.value = this.getBulletsChecked();
+                                            this.setTargetVals(this.bullets.value, this.targetEl, childEl);
                                         }
-                                        else if (isBullets) {
-                                            if (this.targetEl) {
-                                                this.bullets.value = this.getBulletsChecked();
-                                                this.setTargetVals(this.bullets.value, this.targetEl, childEl);
-                                            }
-                                            !this.options.keepShow && this.hide();
-                                            vals = this.bullets.value;
-                                        }
-                                        else {
-                                            if (k.event === 'submit') {
-                                                if (this.formEl) {
-                                                    formTools.submit(this.formEl, {
-                                                        url: k.url,
-                                                        invalid: () => {
-                                                            this.listen({ name: 'invalidated' });
-                                                        },
-                                                        valid: () => {
-                                                            this.listen({ name: 'validated' });
-                                                        }
-                                                    });
-                                                }
-                                                else {
-                                                    throw new Error('Form node is required!');
-                                                }
-                                            }
-                                            else if (k.event === 'async') {
-                                                if (this.formEl && k.url) {
-                                                    formTools.submit(this.formEl, {
-                                                        url: k.url,
-                                                        button: {
-                                                            selector: k.el,
-                                                            attr: { key: 'check', value: 'ing' },
-                                                        },
-                                                        opened: (resp) => {
-                                                            this.submitXhr = resp.xhr;
-                                                        },
-                                                        invalid: () => {
-                                                            this.listen({ name: 'invalidated' });
-                                                        },
-                                                        valid: () => {
-                                                            this.listen({ name: 'validated' });
-                                                        },
-                                                        success: (resp) => {
-                                                            this.listen({ name: 'sended', params: [resp.content] });
-                                                        }
-                                                    });
-                                                }
-                                                else {
-                                                    throw new Error('The request url and form node are required!');
-                                                }
-                                            }
-                                            else if (k.event === 'prevent') {
-                                                preventDft(e);
+                                        !this.options.keepShow && this.hide();
+                                        vals = this.bullets.value;
+                                    }
+                                    else {
+                                        if (k.event === 'submit') {
+                                            if (this.formEl) {
+                                                formTools.submit(this.formEl, {
+                                                    url: k.url,
+                                                    invalid: () => {
+                                                        this.listen({ name: 'invalidated' });
+                                                    },
+                                                    valid: () => {
+                                                        this.listen({ name: 'validated' });
+                                                    }
+                                                });
                                             }
                                             else {
-                                                !this.options.keepShow && this.hide();
+                                                throw new Error('Form node is required!');
                                             }
                                         }
-                                        this.listen({ name: 'confirmed', cb: k.cb, params: [k, vals] });
-                                    };
-                                }
-                            }
-                        }
-                        else if (k.name === 'cancel') {
-                            if (k.action) {
-                                k.action.call(this, k);
-                            }
-                            else {
-                                if (!k?.attrs?.href) {
-                                    k.el.onclick = async (e) => {
-                                        this.options.b4Cancel && await this.options.b4Cancel.call(this, k);
-                                        if (k.event === 'zero') {
-                                            this.formEl && formTools.reset(this.formEl, true);
-                                        }
-                                        else if (k.event === 'reset') {
-                                            this.formEl && formTools.reset(this.formEl, false);
+                                        else if (k.event === 'async') {
+                                            if (this.formEl && k.url) {
+                                                formTools.submit(this.formEl, {
+                                                    url: k.url,
+                                                    button: {
+                                                        selector: k.el,
+                                                        attr: { key: 'check', value: 'ing' },
+                                                    },
+                                                    opened: (resp) => {
+                                                        this.submitXhr = resp.xhr;
+                                                    },
+                                                    invalid: () => {
+                                                        this.listen({ name: 'invalidated' });
+                                                    },
+                                                    valid: () => {
+                                                        this.listen({ name: 'validated' });
+                                                    },
+                                                    success: (resp) => {
+                                                        this.listen({ name: 'sended', params: [resp.content] });
+                                                    }
+                                                });
+                                            }
+                                            else {
+                                                throw new Error('The request url and form node are required!');
+                                            }
                                         }
                                         else if (k.event === 'prevent') {
                                             preventDft(e);
@@ -5080,442 +4995,436 @@
                                         else {
                                             !this.options.keepShow && this.hide();
                                         }
-                                        this.listen({ name: 'canceled', cb: k.cb, params: [k] });
-                                    };
-                                }
-                            }
-                        }
-                        else if (k.name === 'close') {
-                            if (k.action) {
-                                k.action.call(this, k);
-                            }
-                            else {
-                                k.el.onclick = () => {
-                                    this.hide();
+                                    }
+                                    this.listen({ name: 'confirmed', cb: k.cb, params: [k, vals] });
                                 };
                             }
-                            this.listen({ name: 'closed', cb: k.cb, params: [k] });
                         }
-                        else if (k.name === 'clear') {
-                            if (k.action) {
-                                k.action.call(this, k);
-                            }
-                            else {
-                                k.el.onclick = () => {
-                                    if (isCompField(this.options.contType)) {
-                                        fieldTools.reset({ target: this.data, zero: true });
-                                    }
-                                    else if (isBullets) {
-                                        this.clearBulletsChecked();
-                                    }
-                                    this.listen({ name: 'cleared', cb: k.cb, params: [k] });
-                                };
-                            }
+                    }
+                    else if (k.name === 'cancel') {
+                        if (k.action) {
+                            k.action.call(this, k);
                         }
                         else {
-                            k.action && k.action.call(this, k);
+                            if (!k?.attrs?.href) {
+                                k.el.onclick = async (e) => {
+                                    this.options.b4Cancel && await this.options.b4Cancel.call(this, k);
+                                    if (k.event === 'zero') {
+                                        this.formEl && formTools.reset(this.formEl, true);
+                                    }
+                                    else if (k.event === 'reset') {
+                                        this.formEl && formTools.reset(this.formEl, false);
+                                    }
+                                    else if (k.event === 'prevent') {
+                                        preventDft(e);
+                                    }
+                                    else {
+                                        !this.options.keepShow && this.hide();
+                                    }
+                                    this.listen({ name: 'canceled', cb: k.cb, params: [k] });
+                                };
+                            }
+                        }
+                    }
+                    else if (k.name === 'close') {
+                        if (k.action) {
+                            k.action.call(this, k);
+                        }
+                        else {
+                            k.el.onclick = () => {
+                                this.hide();
+                            };
+                        }
+                        this.listen({ name: 'closed', cb: k.cb, params: [k] });
+                    }
+                    else if (k.name === 'clear') {
+                        if (k.action) {
+                            k.action.call(this, k);
+                        }
+                        else {
+                            k.el.onclick = () => {
+                                if (isCompField(this.options.contType)) {
+                                    fieldTools.reset({ target: this.data, zero: true });
+                                }
+                                else if (isBullets) {
+                                    this.clearBulletsChecked();
+                                }
+                                this.listen({ name: 'cleared', cb: k.cb, params: [k] });
+                            };
+                        }
+                    }
+                    else {
+                        k.action && k.action.call(this, k);
+                    }
+                });
+            }
+        }
+        getBulletsTpl() {
+            return !this.options.tplStr && this.options.bullet.enable ? bulletTools.getBulletsTpl(this.options.bullet) : '';
+        }
+        handleData(data) {
+            let result = data;
+            if (!this.options.bullet.enable)
+                return result;
+            if (Array.isArray(data) && typeof data[0] === 'string') {
+                result = data.map((k) => { return { label: k }; });
+            }
+            else if (typeof data === 'string' && !data.includes(`${prefix}bullet-body`)) {
+                result = data.split(',').filter(Boolean).map((k) => { return { label: k }; });
+            }
+            return result;
+        }
+        async renderContent(data) {
+            isEmpty(data) && console.warn('No insertable content!');
+            this.data = this.handleData(data);
+            if (this.options.b4Fill) {
+                let resp = await this.options.b4Fill.call(this, this.data, this.contEl);
+                resp && (this.data = resp);
+            }
+            this.listen({ name: 'render', params: [this.data] });
+            let dataType = getDataType(this.data), tplEl = getEl(this.options.tplStr), template = tplEl?.innerHTML || this.options.tplStr || this.getBulletsTpl();
+            if (dataType.includes('HTML') && ['image', 'iframe', 'audio', 'video'].includes(this.options.contType)) {
+                this.options.media.caption && this.data.insertAdjacentHTML('afterbegin', `<div ${alias}="caption">${this.options.media.caption}</div>`);
+                this.options.media.brief && this.data.insertAdjacentHTML('beforeend', `<div ${alias}="brief">${this.options.media.brief}</div>`);
+            }
+            setContent({
+                content: this.data,
+                target: this.contEl,
+                engine: this.options.tplEng,
+                template,
+            });
+            this.formEl = this.contEl.querySelector('form');
+            this.listen({ name: 'rendered', params: [this.data] });
+        }
+        renderBubble(name = 'popup') {
+            
+            this.template = renderTpl(this.getTpl(name), this.options);
+            
+            this.mainEl = tplToEl(this.template);
+            
+            this.wrapEl = this.mainEl.querySelector(`.${prefix}${name}-wrap`);
+            
+            this.contEl = this.mainEl.querySelector(`.${prefix}${name}-cont`);
+            
+            this.bodyEl = this.mainEl.querySelector(`.${prefix}${name}-body`);
+            
+            this.headEl = this.mainEl.querySelector(`.${prefix}${name}-head`);
+            
+            this.footEl = this.mainEl.querySelector(`.${prefix}${name}-foot`);
+            
+            this.maskEl = this.mainEl.querySelector(`.${prefix}${name}-mask`);
+            if (this.options.tools.enable) {
+                createTools(this.options.tools.children, this.wrapEl, this);
+            }
+            if (this.footEl) {
+                if (this.options.footer.layout !== 'plain') {
+                    this.options.footer.children = this.options.footer.children.map((k) => {
+                        if (k === 'confirm') {
+                            return { name: 'confirm', attrs: { theme: 'prim' } };
+                        }
+                        else if (k?.name === 'confirm') {
+                            if (k.attrs) {
+                                !k.attrs.theme && (k.attrs.theme = 'prim');
+                            }
+                            else {
+                                k.attrs = { theme: 'prim' };
+                            }
+                            return k;
+                        }
+                        else {
+                            return k;
                         }
                     });
                 }
+                createFooter(this.options.footer, this.footEl, this);
             }
-            getBulletsTpl() {
-                return !this.options.tplStr && this.options.bullet.enable ? bulletTools.getBulletsTpl(this.options.bullet) : '';
-            }
-            handleData(data) {
-                let result = data;
-                if (!this.options.bullet.enable)
-                    return result;
-                if (Array.isArray(data) && typeof data[0] === 'string') {
-                    result = data.map((k) => { return { label: k }; });
-                }
-                else if (typeof data === 'string' && !data.includes(`${prefix}bullet-body`)) {
-                    result = data.split(',').filter(Boolean).map((k) => { return { label: k }; });
-                }
-                return result;
-            }
-            async renderContent(data) {
-                isEmpty(data) && console.warn('No insertable content!');
-                this.data = this.handleData(data);
-                if (this.options.b4Fill) {
-                    let resp = await this.options.b4Fill.call(this, this.data, this.contEl);
-                    resp && (this.data = resp);
-                }
-                this.listen({ name: 'render', params: [this.data] });
-                let dataType = getDataType(this.data), tplEl = getEl(this.options.tplStr), template = tplEl?.innerHTML || this.options.tplStr || this.getBulletsTpl();
-                if (dataType.includes('HTML') && ['image', 'iframe', 'audio', 'video'].includes(this.options.contType)) {
-                    this.options.media.caption && this.data.insertAdjacentHTML('afterbegin', `<div ${alias}="caption">${this.options.media.caption}</div>`);
-                    this.options.media.brief && this.data.insertAdjacentHTML('beforeend', `<div ${alias}="brief">${this.options.media.brief}</div>`);
-                }
-                setContent({
-                    content: this.data,
-                    target: this.contEl,
-                    engine: this.options.tplEng,
-                    template,
-                });
-                this.formEl = this.contEl.querySelector('form');
-                this.listen({ name: 'rendered', params: [this.data] });
-            }
-            renderBubble(name = 'popup') {
-                
-                this.template = renderTpl(this.getTpl(name), this.options);
-                
-                this.mainEl = tplToEl(this.template);
-                
-                this.wrapEl = this.mainEl.querySelector(`.${prefix}${name}-wrap`);
-                
-                this.contEl = this.mainEl.querySelector(`.${prefix}${name}-cont`);
-                
-                this.bodyEl = this.mainEl.querySelector(`.${prefix}${name}-body`);
-                
-                this.headEl = this.mainEl.querySelector(`.${prefix}${name}-head`);
-                
-                this.footEl = this.mainEl.querySelector(`.${prefix}${name}-foot`);
-                
-                this.maskEl = this.mainEl.querySelector(`.${prefix}${name}-mask`);
-                if (this.options.tools.enable) {
-                    createTools(this.options.tools.children, this.wrapEl, this);
-                }
-                if (this.footEl) {
-                    if (this.options.footer.layout !== 'plain') {
-                        this.options.footer.children = this.options.footer.children.map((k) => {
-                            if (k === 'confirm') {
-                                return { name: 'confirm', attrs: { theme: 'prim' } };
-                            }
-                            else if (k?.name === 'confirm') {
-                                if (k.attrs) {
-                                    !k.attrs.theme && (k.attrs.theme = 'prim');
-                                }
-                                else {
-                                    k.attrs = { theme: 'prim' };
-                                }
-                                return k;
-                            }
-                            else {
-                                return k;
-                            }
-                        });
-                    }
-                    createFooter(this.options.footer, this.footEl, this);
-                }
-            }
-            getTpl(name = 'popup') {
-                return `
-                                {{let noPadding = (this.padding.enable  && !this.bullet.enable) || (this.padding.enable && this.bullet.enable && this.bullet.cols>0 && this.bullet.lines==='fluid');/}}
-                                <div class="${prefix}${name}">
-                                    {{ if(this?.mask?.enable){ /}}<div class="${prefix}${name}-mask"></div>{{ } /}}
-                                    <div class="${prefix}${name}-wrap">
-                                        {{ if(this.heading){ /}}
-                                            <div class="${prefix}${name}-head">{{ this.heading }}</div>
-                                            {{ } /}}
-                                        {{ if(this.divider){ /}}
-                                            <ax-line></ax-line>
-                                            {{ } /}}
-                                        <div class="${prefix}${name}-body">
-                                            {{ if(this.padding.enable){ /}}
-                                                <div class="${prefix}${name}-padding {{ this.padding.value || '${prefix}p' }} "> 
-                                            {{ }else if(noPadding){ /}}
-                                                <div class="${prefix}${name}-padding"> 
-                                            {{ } /}}
-                                                    <div class="${prefix}${name}-cont"></div>
-                                            {{ if(noPadding || this.padding.enable){ /}}
-                                                </div>
-                                                {{ } /}}
-                                        </div>
-                                        {{ if((!this.bullet.enable && this.footer.enable) || (this.bullet.enable && ['custom','checkboxes','select-multi'].includes(this.bullet.type) && this.footer.enable)){ /}}
-                                        <div class="${prefix}${name}-foot {{ this.footer.layout !=='plain'? this.padding.value || '${prefix}p':'' }} "></div>
+        }
+        getTpl(name = 'popup') {
+            return `
+                            {{let noPadding = (this.padding.enable  && !this.bullet.enable) || (this.padding.enable && this.bullet.enable && this.bullet.cols>0 && this.bullet.lines==='fluid');/}}
+                            <div class="${prefix}${name}">
+                                {{ if(this?.mask?.enable){ /}}<div class="${prefix}${name}-mask"></div>{{ } /}}
+                                <div class="${prefix}${name}-wrap">
+                                    {{ if(this.heading){ /}}
+                                        <div class="${prefix}${name}-head">{{ this.heading }}</div>
                                         {{ } /}}
+                                    {{ if(this.divider){ /}}
+                                        <ax-line></ax-line>
+                                        {{ } /}}
+                                    <div class="${prefix}${name}-body">
+                                        {{ if(this.padding.enable){ /}}
+                                            <div class="${prefix}${name}-padding {{ this.padding.value || '${prefix}p' }} "> 
+                                        {{ }else if(noPadding){ /}}
+                                            <div class="${prefix}${name}-padding"> 
+                                        {{ } /}}
+                                                <div class="${prefix}${name}-cont"></div>
+                                        {{ if(noPadding || this.padding.enable){ /}}
+                                            </div>
+                                            {{ } /}}
                                     </div>
+                                    {{ if((!this.bullet.enable && this.footer.enable) || (this.bullet.enable && ['custom','checkboxes','select-multi'].includes(this.bullet.type) && this.footer.enable)){ /}}
+                                    <div class="${prefix}${name}-foot {{ this.footer.layout !=='plain'? this.padding.value || '${prefix}p':'' }} "></div>
+                                    {{ } /}}
                                 </div>
-                                `;
+                            </div>
+                            `;
+        }
+        
+        initBullets() {
+            this.on('show', () => {
+                this.options.autoFill.enable && this.options.autoFill.detectable && this.presetFromTarget();
+            });
+            if (!this.options.bullet.enable)
+                return;
+            if (this.targetEl) {
+                isNull(this.targetEl.readOnly) ? this.targetEl.toggleAttribute('readonly', true) : this.targetEl.readOnly = true;
             }
-            
-            initBullets() {
-                this.on('show', () => {
-                    this.options.autoFill.enable && this.options.autoFill.detectable && this.presetFromTarget();
-                });
-                if (!this.options.bullet.enable)
-                    return;
-                if (this.targetEl) {
-                    isNull(this.targetEl.readOnly) ? this.targetEl.toggleAttribute('readonly', true) : this.targetEl.readOnly = true;
-                }
-                this.bullets.nodes = bulletTools.getChildNodes(this.contEl);
-                if (this.options.autoFill.enable) {
-                    let vals = this.getTargetVals();
-                    bulletTools.setChecked(vals, this.bullets.nodes);
-                }
-                let childEl = getEl(this.options.autoFill.childSel, this.targetEl), fill2Hide = () => {
-                    if (this.targetEl) {
-                        this.bullets.value = this.getBulletsChecked();
-                        this.setTargetVals(this.bullets.value, this.targetEl, childEl);
-                    }
-                    this.hide();
-                };
-                for (let [i, k] of this.bullets.nodes.entries()) {
-                    if (this.options.bullet.type.includes('select')) {
-                        k.onclick = () => {
-                            bulletTools.toggleChecked(k, this.bullets.nodes, this.options.bullet.type);
-                            (this.options.bullet.type === 'select-single') && fill2Hide();
-                        };
-                    }
-                    else if (this.options.bullet.type === 'radios') {
-                        k.onclick = () => fill2Hide();
-                    }
-                    this.options.bullet.action && this.options.bullet.action.call(this, { el: k, data: Array.isArray(this.data) ? this.data[i] : null });
-                }
-            }
-            presetFromTarget() {
-                if (!this.options.autoFill.enable)
-                    return;
+            this.bullets.nodes = bulletTools.getChildNodes(this.contEl);
+            if (this.options.autoFill.enable) {
                 let vals = this.getTargetVals();
-                if (isCompField(this.options.contType)) {
-                    let isComp = this.data?.nodeName && this.data.nodeName.startsWith('AX-'), isEqual = vals === this.data.value;
-                    isComp && !isEqual && fieldTools.setVals({ target: this.data, value: vals, key: this.options.autoFill.key });
+                bulletTools.setChecked(vals, this.bullets.nodes);
+            }
+            let childEl = getEl(this.options.autoFill.childSel, this.targetEl), fill2Hide = () => {
+                if (this.targetEl) {
+                    this.bullets.value = this.getBulletsChecked();
+                    this.setTargetVals(this.bullets.value, this.targetEl, childEl);
+                }
+                this.hide();
+            };
+            for (let [i, k] of this.bullets.nodes.entries()) {
+                if (this.options.bullet.type.includes('select')) {
+                    k.onclick = () => {
+                        bulletTools.toggleChecked(k, this.bullets.nodes, this.options.bullet.type);
+                        (this.options.bullet.type === 'select-single') && fill2Hide();
+                    };
+                }
+                else if (this.options.bullet.type === 'radios') {
+                    k.onclick = () => fill2Hide();
+                }
+                this.options.bullet.action && this.options.bullet.action.call(this, { el: k, data: Array.isArray(this.data) ? this.data[i] : null });
+            }
+        }
+        presetFromTarget() {
+            if (!this.options.autoFill.enable)
+                return;
+            let vals = this.getTargetVals();
+            if (isCompField(this.options.contType)) {
+                let isComp = this.data?.nodeName && this.data.nodeName.startsWith('AX-'), isEqual = vals === this.data.value;
+                isComp && !isEqual && fieldTools.setVals({ target: this.data, value: vals, key: this.options.autoFill.key });
+            }
+            else {
+                (vals !== this.bullets.value) && bulletTools.setChecked(vals, this.bullets.nodes);
+            }
+        }
+        setBulletsChecked(vals) {
+            if (!this.options.bullet.enable)
+                return;
+            bulletTools.setChecked(vals, this.bullets.nodes);
+            if (this.options.autoFill.enable && ['radios', 'select-single'].includes(this.options.bullet.type)) {
+                this.setTargetVals(this.getBulletsChecked());
+            }
+            this.listen({ name: 'bulletsChecked', params: [vals] });
+        }
+        getBulletsChecked() {
+            if (!this.options.bullet.enable)
+                return '';
+            return bulletTools.getChecked(this.bullets.nodes);
+        }
+        toggleBulletsChecked(el, type = 'select-single') {
+            let target = getEl(el);
+            if (!target)
+                return;
+            bulletTools.toggleChecked(target, this.bullets.nodes, type);
+        }
+        clearBulletsChecked() {
+            bulletTools.clearChecked(this.bullets.nodes);
+        }
+        checkedBulletsAll() {
+            if (['radios', 'select-single'].includes(this.options.bullet.type))
+                return;
+            for (let k of this.bullets.nodes) {
+                let input = k.querySelector('AX-CHECKBOX');
+                if (input) {
+                    (!k.hasAttribute('disabled') && !input.hasAttribute('disabled')) && input.setAttribute('check', 'ed');
                 }
                 else {
-                    (vals !== this.bullets.value) && bulletTools.setChecked(vals, this.bullets.nodes);
+                    !k.hasAttribute('disabled') && k.setAttribute('checked', '');
                 }
             }
-            setBulletsChecked(vals) {
-                if (!this.options.bullet.enable)
-                    return;
-                bulletTools.setChecked(vals, this.bullets.nodes);
-                if (this.options.autoFill.enable && ['radios', 'select-single'].includes(this.options.bullet.type)) {
-                    this.setTargetVals(this.getBulletsChecked());
-                }
-                this.listen({ name: 'bulletsChecked', params: [vals] });
-            }
-            getBulletsChecked() {
-                if (!this.options.bullet.enable)
-                    return '';
-                return bulletTools.getChecked(this.bullets.nodes);
-            }
-            toggleBulletsChecked(el, type = 'select-single') {
-                let target = getEl(el);
-                if (!target)
-                    return;
-                bulletTools.toggleChecked(target, this.bullets.nodes, type);
-            }
-            clearBulletsChecked() {
-                bulletTools.clearChecked(this.bullets.nodes);
-            }
-            checkedBulletsAll() {
-                if (['radios', 'select-single'].includes(this.options.bullet.type))
-                    return;
-                for (let k of this.bullets.nodes) {
-                    let input = k.querySelector('AX-CHECKBOX');
-                    if (input) {
-                        (!k.hasAttribute('disabled') && !input.hasAttribute('disabled')) && input.setAttribute('check', 'ed');
-                    }
-                    else {
-                        !k.hasAttribute('disabled') && k.setAttribute('checked', '');
-                    }
-                }
-            }
-            setBulletsSelected(value) {
-                bulletTools.setSelected(value, this.bullets.nodes);
-                this.listen({ name: 'bulletsSelected', params: [value] });
-            }
-            getBulletsSelected() {
-                return bulletTools.getSelected(this.bullets.nodes);
-            }
-            clearBulletsSelected() {
-                bulletTools.clearSelected(this.bullets.nodes);
-            }
-            toggleBulletsSelected(el) {
-                let target = getEl(el);
-                target && bulletTools.toggleSelected(target, this.bullets.nodes);
-            }
-            getTargetVals() {
-                if (!this.targetEl)
-                    return '';
-                return fieldTools.getVals({ target: this.targetEl, child: getEl(this.options.autoFill.childSel, this.targetEl), key: this.options.autoFill.key });
-            }
-            setTargetVals(value = this.getBulletsChecked(), target = this.targetEl, child = getEl(this.options.autoFill.childSel, this.targetEl)) {
-                if (!target)
-                    return;
-                fieldTools.setVals({ target, value, child, key: this.options.autoFill.key });
-                this.listen({ name: 'targetSetted', params: [value] });
-            }
-            
-            
-            async reset(cb) {
-                this.options = deepClone(this.dftOpts);
-                await this.init();
-                this.clearCache();
-                this.listen && this.listen({ name: 'reset', cb });
+        }
+        setBulletsSelected(value) {
+            bulletTools.setSelected(value, this.bullets.nodes);
+            this.listen({ name: 'bulletsSelected', params: [value] });
+        }
+        getBulletsSelected() {
+            return bulletTools.getSelected(this.bullets.nodes);
+        }
+        clearBulletsSelected() {
+            bulletTools.clearSelected(this.bullets.nodes);
+        }
+        toggleBulletsSelected(el) {
+            let target = getEl(el);
+            target && bulletTools.toggleSelected(target, this.bullets.nodes);
+        }
+        getTargetVals() {
+            if (!this.targetEl)
+                return '';
+            return fieldTools.getVals({ target: this.targetEl, child: getEl(this.options.autoFill.childSel, this.targetEl), key: this.options.autoFill.key });
+        }
+        setTargetVals(value = this.getBulletsChecked(), target = this.targetEl, child = getEl(this.options.autoFill.childSel, this.targetEl)) {
+            if (!target)
+                return;
+            fieldTools.setVals({ target, value, child, key: this.options.autoFill.key });
+            this.listen({ name: 'targetSetted', params: [value] });
+        }
+        
+        
+        async reset(cb) {
+            this.options = deepClone(this.dftOpts);
+            await this.init();
+            this.clearCache();
+            this.listen && this.listen({ name: 'reset', cb });
+            return this;
+        }
+        
+        async update(settings, cb) {
+            if (this.destroyed || isEmpty(settings)) {
                 return this;
             }
-            
-            async update(settings, cb) {
-                if (this.destroyed || isEmpty(settings)) {
-                    return this;
-                }
-                if (!isEmpty(settings)) {
-                    this.updateCache(settings);
-                    extend({ target: this.options, source: settings });
-                    if (this.state !== 'ing') {
-                        let tmp = this.state;
-                        await this.init().then((res) => {
-                            tmp === 'shown' && res.show();
-                        });
-                    }
-                }
-                this.listen({ name: 'updated', cb, params: [settings] });
-                return this;
-            }
-            
-            async updateCont(content, cb) {
-                if (this.destroyed || content === this.options.content)
-                    return this;
-                await getContent.call(this, {
-                    content,
-                    contType: this.options.contType,
-                    contData: this.options.contData,
-                    ajax: {
-                        xhrName: 'contXhr',
-                        spinSel: this.contEl,
-                        ...this.options.ajax
-                    },
-                    request: (data) => {
-                        this.listen({ name: 'request', params: [data] });
-                    },
-                    cb: (data) => {
-                        this.data = this.handleData(data);
-                        this.renderContent(data);
-                        this.updateCache({ content });
-                        this.listen({ name: 'updatedCont', cb, params: [data] });
-                    }
-                });
-                return this;
-            }
-            replaceCont(content, cb) {
-                if (this.destroyed)
-                    return this;
-                let contType = getDataType(content);
-                contType.includes('HTML') ? (this.contEl.innerHTML = '', this.contEl.appendChild(content)) : (this.contEl.innerHTML = content);
-                this.listen({ name: 'replacedCont', cb, params: [content] });
-            }
-            
-            async transfer(el, cb) {
-                if (this.destroyed)
-                    return this;
-                let host = getEl(el);
-                if (host && host !== this.targetEl) {
-                    let initialized = this.initialized;
-                    if (!initialized) {
-                        this.targetEl = host;
-                        await this.init();
-                    }
-                    else {
-                        this.unbindTrigger('host');
-                        this.targetEl = host;
-                        this.bindTrigger();
-                    }
-                    if (this.bubbleType === 'popup' && initialized) {
-                        this.positionIns.transfer(host, (target) => {
-                            this.listen({ name: 'transferred', cb, params: [target] });
-                        });
-                    }
-                    else {
-                        this.listen({ name: 'transferred', cb, params: [host] });
-                    }
-                }
-                return this;
-            }
-            
-            destroy(cb) {
-                if (this.destroyed)
-                    return this;
-                this.mainEl.remove();
-                if (this.bubbleType === 'popup') {
-                    this.positionIns && this.positionIns.destroy();
-                    this.hoverIns && this.hoverIns.destroy();
-                    this.toggleShow && document.removeEventListener('click', this.toggleShow);
-                }
-                if (this.options.trigger === 'click' || this.options.trigger === 'input') {
-                    this.targetEl.removeEventListener(this.options.trigger, this.triggerShow);
-                    this.wings.forEach((i) => {
-                        i.removeEventListener(this.options.wing.trigger || this.options.trigger, this.triggerShow);
+            if (!isEmpty(settings)) {
+                this.updateCache(settings);
+                extend({ target: this.options, source: settings });
+                if (this.state !== 'ing') {
+                    let tmp = this.state;
+                    await this.init().then((res) => {
+                        tmp === 'shown' && res.show();
                     });
                 }
-                if (this.maskEl && this.options.mask.closable) {
-                    this.maskEl.removeEventListener('click', this.triggerShow);
-                }
-                this.contEl.querySelectorAll(`[${alias}="closebubble"]`).forEach((k) => {
-                    k.removeEventListener('click', this.triggerClose);
-                });
-                if (this.bubbleType === 'dialog' && ['confirm', 'alert'].includes(this.options.feature)) {
-                    this.removePulseEvt();
-                    this.addPulseEvt();
-                }
-                this.canTrigger = false;
-                this.contXhr && this.contXhr.abort();
-                this.submitXhr && this.submitXhr.abort();
-                this.destroyed = true;
-                this.listen({ name: 'destroyed', cb });
-                return this;
             }
-        };
-    };
-
-    const getEvtTarget = (evt) => {
+            this.listen({ name: 'updated', cb, params: [settings] });
+            return this;
+        }
         
-        if (!evt.targetTouches) {
-            return evt.target;
+        async updateCont(content, cb) {
+            if (this.destroyed || content === this.options.content)
+                return this;
+            await getContent.call(this, {
+                content,
+                contType: this.options.contType,
+                contData: this.options.contData,
+                ajax: {
+                    xhrName: 'contXhr',
+                    spinSel: this.contEl,
+                    ...this.options.ajax
+                },
+                request: (data) => {
+                    this.listen({ name: 'request', params: [data] });
+                },
+                cb: (data) => {
+                    this.data = this.handleData(data);
+                    this.renderContent(data);
+                    this.updateCache({ content });
+                    this.listen({ name: 'updatedCont', cb, params: [data] });
+                }
+            });
+            return this;
         }
-        else {
-            let tmp = evt.targetTouches[0] || evt.changedTouches[0];
-            return document.elementFromPoint(tmp.clientX, tmp.clientY);
+        replaceCont(content, cb) {
+            if (this.destroyed)
+                return this;
+            let contType = getDataType(content);
+            contType.includes('HTML') ? (this.contEl.innerHTML = '', this.contEl.appendChild(content)) : (this.contEl.innerHTML = content);
+            this.listen({ name: 'replacedCont', cb, params: [content] });
         }
-    };
+        unbindTrigger(str) {
+        }
+        bindTrigger(str) {
+        }
+        
+        async transfer(el, cb) {
+            if (this.destroyed)
+                return this;
+            let host = getEl(el);
+            if (host && host !== this.targetEl) {
+                let initialized = this.initialized;
+                if (!initialized) {
+                    this.targetEl = host;
+                    await this.init();
+                }
+                else {
+                    this.unbindTrigger('host');
+                    this.targetEl = host;
+                    this.bindTrigger();
+                }
+                if (this.bubbleType === 'popup' && initialized) {
+                    this.positionIns.transfer(host, (target) => {
+                        this.listen({ name: 'transferred', cb, params: [target] });
+                    });
+                }
+                else {
+                    this.listen({ name: 'transferred', cb, params: [host] });
+                }
+            }
+            return this;
+        }
+        addPulseEvt() {
+        }
+        removePulseEvt() {
+        }
+        
+        destroy(cb) {
+            if (this.destroyed)
+                return this;
+            this.mainEl.remove();
+            if (this.bubbleType === 'popup') {
+                this.positionIns && this.positionIns.destroy();
+                this.hoverIns && this.hoverIns.destroy();
+                this.toggleShow && document.removeEventListener('click', this.toggleShow);
+            }
+            if (this.options.trigger === 'click' || this.options.trigger === 'input') {
+                this.targetEl.removeEventListener(this.options.trigger, this.triggerShow);
+                this.wings.forEach((i) => {
+                    i.removeEventListener(this.options.wing.trigger || this.options.trigger, this.triggerShow);
+                });
+            }
+            if (this.maskEl && this.options.mask.closable) {
+                this.maskEl.removeEventListener('click', this.triggerShow);
+            }
+            this.contEl.querySelectorAll(`[${alias}="closebubble"]`).forEach((k) => {
+                k.removeEventListener('click', this.triggerClose);
+            });
+            if (this.bubbleType === 'dialog' && ['confirm', 'alert'].includes(this.options.feature)) {
+                this.removePulseEvt();
+                this.addPulseEvt();
+            }
+            this.canTrigger = false;
+            this.contXhr && this.contXhr.abort();
+            this.submitXhr && this.submitXhr.abort();
+            this.destroyed = true;
+            this.listen({ name: 'destroyed', cb });
+            return this;
+        }
+    }
 
-    const removeStyle = (el, prop) => {
-        let target = getEl(el);
-        if (!target || !prop)
-            return;
-        target.style.cssText = target.style.cssText.replace(`${prop}:`, '');
-    };
-
-    const addStyle = (el, key, value) => {
-        let target = getEl(el);
-        key = (key + '').toLowerCase();
-        value = value + '';
-        if (!target || !key || !value)
-            return;
-        let prop = key.replace(/-([a-z])/g, (match, k) => k.toUpperCase());
-        target.style[prop] = value;
-    };
-
-    class Drawer extends pipe(Bubble, PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Drawer extends ModBaseListenCacheBubble {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        mainEl;
-        contEl;
-        formEl;
-        wrapEl;
-        bodyEl;
-        headEl;
-        footEl;
+        parentEl;
+        sizeProp;
+        lastSize;
+        lastPlace;
+        bubbleType;
+        timestamp;
+        lastShowTime;
         confirmEl;
         cancelEl;
         closeEl;
-        state;
         triggerShow;
-        toggleShow;
-        wings;
         content;
-        template;
         duration;
         wrapHeight;
-        contXhr;
-        submitXhr;
+        wrapSize;
+        sequenceShow;
+        sequenceHide;
         static optMaps = optDrawer;
         constructor(elem, options = {}, initial = true) {
             super();
@@ -5855,6 +5764,76 @@
         return type;
     };
 
+    const attrJoinVal = (attr, value, map) => {
+        let item = map ? map.find((k) => k.attr === attr) : null, isFn = () => {
+            let tmp = attr.trim(), condition = item ? typeof item?.value === 'function' : false;
+            return (tmp.startsWith('on-') || tmp.startsWith('b4-')) || condition;
+        }, addFnShell = (str) => {
+            let tmp = str.trim(), result = (!(tmp.startsWith('function') || tmp.startsWith('(')) && !tmp.endsWith('}')) ? `function(){${str}}` : str;
+            return result;
+        }, fnVal = isFn() ? addFnShell(value) : value, fnStr = '"use strict";return ';
+        try {
+            if (item) {
+                if (value === null) {
+                    return { [item.prop]: item.value };
+                }
+                else {
+                    let valType = getDataType(item.value), trim = value.trim(), trueVals = ['', '1', 'true', true], falseVals = [null, 'null', 'undefined', '0', 'false', 'NaN'];
+                    return (valType === 'String') ? { [item.prop]: value } :
+                        (valType === 'Number') ? { [item.prop]: parseFloat(value) } :
+                            (valType === 'Boolean' && trueVals.includes(trim)) ? { [item.prop]: true } :
+                                (valType === 'Boolean' && falseVals.includes(trim)) ? { [item.prop]: false } :
+                                    (valType === 'Object' && item.value.hasOwnProperty('enable') && trueVals.includes(trim)) ? { [item.prop]: true } :
+                                        (valType === 'Object' && item.value.hasOwnProperty('enable') && item.value.hasOwnProperty('children') && trim.startsWith('[') && trim.endsWith(']')) ? { [item.prop]: { enable: true, children: new Function(fnStr + `${value}`)() } } :
+                                            (valType === 'Object' && value.includes(':')) ? { [item.prop]: strToJson(value) } :
+                                                new Function(fnStr + `{"${item.prop}":${fnVal}}`)();
+                }
+            }
+            else {
+                return value === '' ? { [attr]: '' } : new Function(fnStr + `{"${attr}":${fnVal}}`)();
+            }
+        }
+        catch (e) {
+            return { [attr]: value };
+        }
+    };
+    var attrJoinVal$1 = attrJoinVal;
+
+    const breakpoints = (obj, points) => {
+        if (isEmpty(obj)) {
+            return false;
+        }
+        let valids = [], assign = {}, width = document.body.clientWidth, screenSize = getScreenSize(), validFun = (key, value) => {
+            let _key = ~~key;
+            if (_key === 0) {
+                if (key.startsWith('screen')) {
+                    screenSize === key.split('-')[1] ? valids.push(value) : null;
+                }
+                else if (key.startsWith('width')) {
+                    ~~key.split('-')[1] > width ? valids.push(value) : null;
+                }
+                else if (key.startsWith('mobile')) {
+                    JSON.parse(key.split('-')[1]) === isMobi ? valids.push(value) : null;
+                }
+            }
+            else {
+                _key > width ? valids.push(value) : null;
+            }
+        };
+        for (let k in points) {
+            if (points.hasOwnProperty(k)) {
+                Reflect.deleteProperty(points[k], 'breakpoints');
+                validFun(k, points[k]);
+            }
+        }
+        if (valids.length === 0) {
+            return false;
+        }
+        assign = Object.assign({}, ...valids);
+        extend({ target: obj, source: assign });
+    };
+    var breakpoints$1 = breakpoints;
+
     const purifyHtml = (str) => trim(str.replace(/<[^>]+>/g, ''));
 
     const offset = (elem) => {
@@ -6101,15 +6080,6 @@
         return target;
     };
 
-    const curveVars = {
-        linear: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}bez-linear`).trim(),
-        ease: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}bez-ease`).trim(),
-        easeOut: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}bez-eo`).trim(),
-        easeIn: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}bez-ei`).trim(),
-        easeInOut: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}bez-eio`).trim(),
-        easeOutIn: getComputedStyle(document.documentElement).getPropertyValue(`--${prefix}bez-eoi`).trim(),
-    };
-
     let easeHeight = ({ el, height, type = 'down', doing, done, duration, curve = 'easeOut', cut = true }) => {
         let target = getEl(el);
         if (!target) {
@@ -6267,6 +6237,11 @@
         return target;
     };
 
+    const pipe = (...args) => {
+        args = args.filter(Boolean);
+        return (initial) => args.reduce((prev, cur) => cur(prev), initial);
+    };
+
     const regExps = {
         email: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/,
         ip: /^\d+\.\d+\.\d+\.\d+$/,
@@ -6405,6 +6380,25 @@
             return handler;
         }
     };
+
+    const elProps = (el) => {
+        let target = getEl(el), result = null;
+        if (target) {
+            !target.hasOwnProperty('ax') ? target.ax = {} : null;
+            result = {
+                add: (key, value = true) => {
+                    key && (target.ax[key] = value);
+                    return target;
+                },
+                remove: (key) => {
+                    key && (delete target.ax[key]);
+                    return target;
+                }
+            };
+        }
+        return result;
+    };
+    var elProps$1 = elProps;
 
     const convertByte = ({ val, to = '', places = 2, outer = 'span', inner = 'i', units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'] }) => {
         val = clampVal({ val, min: 0, max: '' });
@@ -6658,12 +6652,12 @@
             name ? storage.set(name, hslaObj) : null;
         },
         get: function () {
-            let style = getComputedStyle(document.documentElement), getValue = (type) => {
+            let getValue = (type) => {
                 return [
-                    style.getPropertyValue(`--${prefix}h-${type}`),
-                    style.getPropertyValue(`--${prefix}s-${type}`),
-                    style.getPropertyValue(`--${prefix}l-${type}`),
-                    style.getPropertyValue(`--${prefix}a-${type}`)
+                    getComputedVar(`--${prefix}h-${type}`),
+                    getComputedVar(`--${prefix}s-${type}`),
+                    getComputedVar(`--${prefix}l-${type}`),
+                    getComputedVar(`--${prefix}a-${type}`),
                 ].map(k => {
                     let val = k.trim();
                     return val.includes('%') ? val : Number(val);
@@ -6773,7 +6767,7 @@
         cb && cb(result.filter(Boolean));
     };
 
-    const scrollObj = navigator.userAgent.indexOf("Firefox") > 0 ? { event: 'DOMMouseScroll', detail: 'detail' } : { event: 'mousewheel', detail: 'wheelDelta' };
+    const getScrollObj = () => navigator.userAgent.indexOf("Firefox") > 0 ? { event: 'DOMMouseScroll', detail: 'detail' } : { event: 'mousewheel', detail: 'wheelDelta' };
 
     const transformTools = {
         
@@ -6885,7 +6879,7 @@
         },
     };
 
-    const isScrollUp = (event, detailName = scrollObj.detail) => {
+    const isScrollUp = (event, detailName = getScrollObj().detail) => {
         let mouseDetail = event[detailName], isUp;
         if (navigator.userAgent.indexOf("Firefox") > 0) {
             isUp = mouseDetail > 0 ? true : false;
@@ -7321,13 +7315,13 @@
     };
 
     const createModule = (options) => {
-        let opts = Object.assign({ optMaps: [], component: false, spread: [], methods: {}, ready: null, init: null, augment: false, initial: true }, options), modName = opts.name || 'Module' + Date.now(), hasHost = ['node', 'data'].includes(opts.type), hostType = hasHost ? opts.type : 'none', str = `"use strict";
-            return class ${modName} extends pipe(PubListen, PubCache, PubComm)(PubBase) {
+        let opts = Object.assign({ type: 'none', optMaps: [], component: false, spread: [], methods: {}, ready: null, init: null, augment: false, initial: true }, options), modName = opts.name || 'Module' + Date.now(), hasHost = ['node', 'data'].includes(opts.type), hostType = hasHost ? opts.type : 'none', str = `"use strict";
+            return class ${modName} extends ModBaseListenCache {
                 static hostType = "${hostType}";
                 static optMaps =  optMaps;
                 constructor(${hasHost ? 'host,' : ''}options, eager = initial) {
                     super();
-                    this.ready({ type:"${hostType}",${hasHost ? 'host,' : ''} options, optMaps:${modName}.optMaps,  component, spread });
+                    super.ready({ type:"${hostType}",${hasHost ? 'host,' : ''} options, optMaps:${modName}.optMaps,  component, spread });
                     constructed && constructed.call(this);
                     super.listen({ name: 'constructed' });
                     eager && this.init();
@@ -7345,7 +7339,7 @@
                     return this;
                 }
             }
-        `, module = new Function('optMaps', 'component', 'spread', 'constructed', 'initiated', 'initial', 'pipe', 'PubListen', 'PubCache', 'PubComm', 'PubBase', 'config', str)(opts.optMaps, opts.component, opts.spread, opts.constructed, opts.initiated, opts.initial, pipe, PubListen, PubCache, PubComm, PubBase, config);
+        `, module = new Function('optMaps', 'component', 'spread', 'constructed', 'initiated', 'initial', 'ModBaseListenCache', 'config', str)(opts.optMaps, opts.component, opts.spread, opts.constructed, opts.initiated, opts.initial, ModBaseListenCache, config);
         for (let k in opts.methods) {
             module.prototype[k] = opts.methods[k];
         }
@@ -7353,7 +7347,7 @@
         return module;
     };
 
-    class PubBaseElem extends HTMLElement {
+    class CompBase extends HTMLElement {
         shadowEl;
         slotEl;
         propsRaw;
@@ -7373,6 +7367,7 @@
         rawHtml;
         canListen;
         sourceEl;
+        ins;
         constructor() {
             super();
             this.properties = {};
@@ -7481,137 +7476,112 @@
                 else {
                     if (!map)
                         throw new Error(`Setting ${name} is invalid , Please use a module and set the map for options!`);
-                    value = attrJoinVal(name, newVal, map);
+                    value = attrJoinVal$1(name, newVal, map);
                 }
                 deepMerge(this.propsProxy, value, {});
             }
         }
-        render(data) {
+    }
+
+    class CompBaseComm extends CompBase {
+        constructor() {
+            super();
+            this.reset = function () {
+                this.innerHTML = '';
+                this.fillWrap(this.propsRaw);
+                this.restoreAttrs();
+                this.render(this.propsRaw);
+            };
+            this.clear = () => {
+                this.removeAttribute('value');
+            };
+            this.set = (data) => {
+                if (isEmpty(data))
+                    return;
+                let tmp = (typeof data === 'string') ? strToJson(data) : data;
+                setAttrs(this, tmp, (resp) => {
+                    this.listen({ name: 'setted', params: [resp] });
+                });
+            };
+            this.on('disconnected', () => {
+                this.connCount = 0;
+                this.innerHTML = this.rawHtml;
+            });
+            this.on('adopted', () => {
+                this.connCount = 0;
+                this.innerHTML = this.rawHtml;
+            });
+            this.on('connected', () => {
+                this.setAttribute(ax.compSign, '');
+                this.setCache();
+            });
+            this.on('reset', () => {
+                this.clearCache();
+            });
+            this.propsObs.on('setted', (data) => {
+                this.connected && this.updateCache({ [data.key]: data.value });
+            });
         }
-        listen(data) {
+        listen({ name, params = [], cb } = {}) {
+            name && this.plans.hasOwnProperty(name) ? this.emit(name, ...params) : null;
+            if (name && this.propsProxy[`on-${name.toLowerCase()}`]) {
+                let value = this.propsProxy[`on-${name.toLowerCase()}`], addFnShell = (str) => {
+                    let tmp = str.trim(), result = (!(tmp.startsWith('function') || tmp.startsWith('(')) && !tmp.endsWith('}')) ? `function(){${str}}` : str;
+                    return result;
+                }, fn = new Function('"use strict";return ' + addFnShell(value))();
+                fn && fn.call(this, ...params);
+            }
+            cb && cb.call(this, ...params);
+        }
+        on(type, handler) {
+            plan.add(type, this, handler);
+            return this;
+        }
+        emit(type, ...params) {
+            plan.do(type, this, ...params);
+            return this;
+        }
+        off(type, handler) {
+            plan.remove(type, this, handler);
+            return this;
+        }
+        setCache() {
+            let storName = this.propsProxy['stor-name'], cache = storage.get(storName);
+            if (!storName || !cache)
+                return;
+            let copyCache = deepClone(cache), dataCache = copyCache['data'], hasData = copyCache.hasOwnProperty('data');
+            if (hasData) {
+                dataCache ? setAttr(this, 'data', dataCache) : this.removeAttribute('data');
+                Reflect.deleteProperty(copyCache, 'data');
+            }
+            for (let k in copyCache) {
+                setAttr(this, k, copyCache[k]);
+            }
+        }
+        updateCache(data) {
+            let storName = this.propsProxy['stor-name'];
+            if (!storName)
+                return;
+            let cache = storage.get(storName) || {};
+            Object.assign(cache, data);
+            storage.set(storName, cache);
+        }
+        clearCache() {
+            let storName = this.propsProxy['stor-name'];
+            if (!storName)
+                return;
+            storage.clear(storName);
         }
     }
 
-    const PubCommElem = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            constructor() {
-                super();
-                this.reset = () => {
-                    this.innerHTML = '';
-                    this.fillWrap(this.propsRaw);
-                    this.restoreAttrs();
-                    this.render(this.propsRaw);
-                };
-                this.clear = () => {
-                    this.removeAttribute('value');
-                };
-                this.set = (data) => {
-                    if (isEmpty(data))
-                        return;
-                    let tmp = (typeof data === 'string') ? strToJson(data) : data;
-                    setAttrs(this, tmp, (resp) => {
-                        this.listen({ name: 'setted', params: [resp] });
-                    });
-                };
-                this.on('disconnected', () => {
-                    this.connCount = 0;
-                    this.innerHTML = this.rawHtml;
-                });
-                this.on('adopted', () => {
-                    this.connCount = 0;
-                    this.innerHTML = this.rawHtml;
-                });
-                this.on('connected', () => {
-                    this.setAttribute(ax.compSign, '');
-                    this.setCache();
-                });
-                this.on('reset', () => {
-                    this.clearCache();
-                });
-                this.propsObs.on('setted', (data) => {
-                    this.connected && this.updateCache({ [data.key]: data.value });
-                });
-            }
-        };
-    };
-
-    const PubListenElem = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            constructor() {
-                super();
-                this.on('connected', () => {
-                    this.setAttribute(ax.compSign, '');
-                });
-            }
-            listen({ name, params = [], cb } = {}) {
-                name && this.plans.hasOwnProperty(name) ? this.emit(name, ...params) : null;
-                if (name && this.propsProxy[`on-${name.toLowerCase()}`]) {
-                    let value = this.propsProxy[`on-${name.toLowerCase()}`], addFnShell = (str) => {
-                        let tmp = str.trim(), result = (!(tmp.startsWith('function') || tmp.startsWith('(')) && !tmp.endsWith('}')) ? `function(){${str}}` : str;
-                        return result;
-                    }, fn = new Function('"use strict";return ' + addFnShell(value))();
-                    fn && fn.call(this, ...params);
-                }
-                cb && cb.call(this, ...params);
-            }
-            on(type, handler) {
-                plan.add(type, this, handler);
-                return this;
-            }
-            emit(type, ...params) {
-                plan.do(type, this, ...params);
-                return this;
-            }
-            off(type, handler) {
-                plan.remove(type, this, handler);
-                return this;
-            }
-        };
-    };
-
-    const PubCacheElem = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            setCache() {
-                let storName = this.propsProxy['stor-name'], cache = storage.get(storName);
-                if (!storName || !cache)
-                    return;
-                let copyCache = deepClone(cache), dataCache = copyCache['data'], hasData = copyCache.hasOwnProperty('data');
-                if (hasData) {
-                    dataCache ? setAttr(this, 'data', dataCache) : this.removeAttribute('data');
-                    Reflect.deleteProperty(copyCache, 'data');
-                }
-                for (let k in copyCache) {
-                    setAttr(this, k, copyCache[k]);
-                }
-            }
-            updateCache(data) {
-                let storName = this.propsProxy['stor-name'];
-                if (!storName)
-                    return;
-                let cache = storage.get(storName) || {};
-                Object.assign(cache, data);
-                storage.set(storName, cache);
-            }
-            clearCache() {
-                let storName = this.propsProxy['stor-name'];
-                if (!storName)
-                    return;
-                storage.clear(storName);
-            }
-        };
-    };
-
     const createComp = (options) => {
-        let opts = Object.assign({ attrs: [], methods: {}, augment: false, autoUpdate: true, excludeAttrs: [], modOpts: {}, autoIns: true }, options), elem = window.customElements.get(opts.tagName);
+        let opts = Object.assign({ attrs: [], methods: {}, augment: false, autoUpdate: true, excludeAttrs: [], modOpts: {}, autoIns: true, register: true }, options), elem = window.customElements.get(opts.tagName);
         if (elem) {
             console.warn(`${opts.tagName} is already defined!`);
             return elem;
         }
-        let compName = opts.compName || 'Comp' + Date.now(), hostName = opts.hostName || 'div', attrs = opts.module ? [...opts.module.optMaps.map((k) => k.attr), ...opts.attrs] : opts.attrs, optMaps = opts.module ? opts.module.optMaps : [], str = `"use strict";
-            return class ${compName} extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
+        let compName = opts.compName || 'Comp' + Date.now(), hostName = opts.hostName || 'div', optMaps = opts.module ? opts.module.optMaps : [], attrs = opts.module ? [...optMaps.map((k) => k.attr), ...opts.attrs] : opts.attrs, str = `"use strict";
+            return class ${compName} extends CompBaseComm {
                 constructor() {
                     super();
                     this.createShadow();
@@ -7654,8 +7624,8 @@
                     });
                 }
             }
-        `, component = new Function('constructed', 'connected', 'changed', 'updated', 'autoUpdate', 'autoIns', 'excludeAttrs', 'module', 'modOpts', 'pipe', 'PubCacheElem', ' PubListenElem', 'PubCommElem', 'PubBaseElem', 'createEl', 'attrs', 'optMaps', 'methods', str)(opts.constructed, opts.connected, opts.changed, opts.updated, opts.autoUpdate, opts.autoIns, opts.excludeAttrs, opts.module, opts.modOpts, pipe, PubCacheElem, PubListenElem, PubCommElem, PubBaseElem, createEl, attrs, optMaps, opts.methods);
-        window.customElements.define(opts.tagName, component);
+        `, component = new Function('constructed', 'connected', 'changed', 'updated', 'autoUpdate', 'autoIns', 'excludeAttrs', 'module', 'modOpts', 'CompBaseComm', 'createEl', 'attrs', 'optMaps', 'methods', str)(opts.constructed, opts.connected, opts.changed, opts.updated, opts.autoUpdate, opts.autoIns, opts.excludeAttrs, opts.module, opts.modOpts, CompBaseComm, createEl, attrs, optMaps, opts.methods);
+        opts.register && window.customElements.define(opts.tagName, component);
         opts.augment && (ax[compName] = component);
         return component;
     };
@@ -7701,16 +7671,13 @@
         }
     };
 
-    const fragment = {
-        entity: document.createDocumentFragment(),
-        append: function ({ parent, nodes, reverse = false, prepend = false }) {
-            let fragment = this.entity, tmp = Array.isArray(nodes) ? nodes : [nodes], data = tmp.filter((k) => k && k.nodeType && (k.nodeType === k.ELEMENT_NODE)), host = getEl(parent);
-            if (!host || !data.length)
-                return;
-            for (let k of data)
-                reverse ? fragment.prepend(k) : fragment.appendChild(k);
-            prepend ? host.prepend(fragment) : host.appendChild(fragment);
-        }
+    const appendEls = ({ parent, nodes, reverse = false, prepend = false }) => {
+        let fragment = document.createDocumentFragment(), tmp = Array.isArray(nodes) ? nodes : [nodes], data = tmp.filter((k) => k && k.nodeType && (k.nodeType === k.ELEMENT_NODE)), host = getEl(parent);
+        if (!host || !data.length)
+            return;
+        for (let k of data)
+            reverse ? fragment.prepend(k) : fragment.appendChild(k);
+        prepend ? host.prepend(fragment) : host.appendChild(fragment);
     };
 
     const decompTask = ({ tasks, run, count = 20, cb }) => {
@@ -7766,7 +7733,7 @@
         };
     };
 
-    const optPopup$1 = unique([
+    const optPopup$1 = [
         {
             attr: 'placement',
             prop: 'placement',
@@ -7844,9 +7811,9 @@
             },
         },
         ...optBubble
-    ], 'attr');
+    ];
 
-    const optGesture = unique([
+    const optGesture = [
         {
             attr: 'parent',
             prop: 'parent',
@@ -8089,9 +8056,18 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    const optAlert$1 = unique([
+    const curveVars = {
+        linear: getComputedVar(`--${prefix}bez-linear`),
+        ease: getComputedVar(`--${prefix}bez-ease`),
+        easeOut: getComputedVar(`--${prefix}bez-eo`),
+        easeIn: getComputedVar(`--${prefix}bez-ei`),
+        easeInOut: getComputedVar(`--${prefix}bez-eio`),
+        easeOutIn: getComputedVar(`--${prefix}bez-eoi`),
+    };
+
+    const optSpy = [
         {
             attr: 'margin',
             prop: 'margin',
@@ -8115,7 +8091,7 @@
         {
             attr: 'nav-sel',
             prop: 'navSel',
-            value: false,
+            value: '',
         },
         {
             attr: 'sub-sel',
@@ -8207,31 +8183,35 @@
             value: null,
         },
         {
-            attr: 'on-add',
-            prop: 'onAdd',
+            attr: 'on-added',
+            prop: 'onAdded',
             value: null,
         },
         {
-            attr: 'on-remove',
-            prop: 'onRemove',
+            attr: 'on-removed',
+            prop: 'onRemoved',
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Spy extends pipe(PubListen, PubComm)(PubBase) {
+    class Spy extends ModBaseListen {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
         storObs;
         storTmp;
-        rawOpts;
+        navEl;
+        subEls;
+        items;
+        interactIns;
+        rootEl;
+        actIsAttr;
+        active;
+        hide2Debounce;
         static hostType = 'node';
-        static optMaps = optAlert$1;
-        constructor(elem, options) {
+        static optMaps = optSpy;
+        constructor(elem, options = {}) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: Spy.optMaps,
                 host: elem,
@@ -8497,13 +8477,60 @@
         }
     }
 
-    class Gesture extends pipe(PubListen, PubComm)(PubBase) {
+    class Gesture extends ModBaseListen {
         options = {};
+        started;
+        eventState;
+        scrollObj;
+        evtTarget;
+        isMobi;
+        startTime;
+        diffTime;
+        jitterClick;
+        jitterTrans;
+        clickCount;
+        preventEase;
+        holdHandler;
+        dragEls;
+        canTrans;
+        transType;
+        stepVal;
+        moveVals;
+        diffVals;
+        startCoord;
+        triangleVals;
+        moveCount;
+        touchesMoveCount;
+        paramsFormat;
+        params;
+        endParams;
+        driftListen;
+        sizes;
+        viewRange;
+        viewportEl;
+        parentEl;
+        initialVals;
+        spyIns;
+        lastVals;
+        nowVals;
+        startVals;
+        totalTrans;
+        startFn;
+        moveFn;
+        endFn;
+        stepFn;
+        wheelFn;
+        keyboardFn;
+        cancelFn;
+        menuFn;
+        triggerFn;
+        transitionendFn;
+        preventDft;
         static hostType = 'node';
         static optMaps = optGesture;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 host: elem,
                 maps: Gesture.optMaps,
@@ -8523,7 +8550,7 @@
             let _this = this;
             this.started = false;
             this.eventState = 'end';
-            this.scrollObj = scrollObj;
+            this.scrollObj = getScrollObj();
             this.evtTarget = null;
             this.isMobi = isMobi;
             this.startTime = 0;
@@ -9444,36 +9471,27 @@
         }
     }
 
-    class Dialog extends pipe(Bubble, PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Dialog extends ModBaseListenCacheBubble {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        mainEl;
-        contEl;
-        formEl;
-        wrapEl;
-        bodyEl;
-        headEl;
-        footEl;
+        timestamp;
+        bubbleType;
+        parentEl;
+        lastPlace;
+        lastSize;
+        lastPlacement;
+        gestureIns;
+        wrapSize;
         confirmEl;
         cancelEl;
         closeEl;
-        state;
         triggerShow;
-        toggleShow;
-        wings;
         content;
-        template;
         duration;
         wrapHeight;
-        contXhr;
-        submitXhr;
+        aniIn;
+        aniOut;
+        addPulseAnim;
+        removePulseAnim;
         static optMaps = optPopup$1;
         constructor(elem, options = {}, initial = true) {
             super();
@@ -9868,7 +9886,7 @@
     };
 
     const prompt = (options) => {
-        let opts = Object.assign({ fields: [{ type: 'input' }] }, options), data = Array.isArray(opts.fields) ? opts.fields : [opts.fields], frags = fragment.entity;
+        let opts = Object.assign({ fields: [{ type: 'input' }] }, options), data = Array.isArray(opts.fields) ? opts.fields : [opts.fields], frags = document.createDocumentFragment();
         for (let k of data) {
             let label = k.label ? `<div class="${prefix}field-label">${k.label}</div>` : '', note = k.note ? `<div  class="${prefix}field-note">${k.note}</div>` : '', attrs = Object.assign(k.type === 'upload' ? { feature: 'gallery' } : k.type === 'datetime' ? { display: 'inline', 'auto-fill': true, } : {}, k.attrs), input = createEl(`ax-${k.type || 'input'}`, { ...attrs }), tpl = `
             <section class="${prefix}field ${prefix}field-apart">
@@ -9905,6 +9923,11 @@
         });
     };
 
+    const keyCond = (key) => {
+        return !/^(stor-keys|ins-name|stor-name|storKeys|insName|storName|on-|b4-|on[A-Z]|b4[A-Z])/.test(key);
+    };
+    var keyCond$1 = keyCond;
+
     const removeStyles = (el, props) => {
         let target = getEl(el);
         if (!target || isEmpty(props))
@@ -9922,234 +9945,258 @@
         }
     };
 
-    const Nest = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            initCheckeds() {
-                if (!this.options.check.enable)
-                    return;
-                let vals = valToArr(this.options.check.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => k.checked);
-                for (let k of items)
-                    k.checked = false;
-                this.check([...items, ...vals]);
-            }
-            initReadonlys() {
-                this.readonly(valToArr(this.options.readonly));
-            }
-            initDisableds() {
-                this.disable(valToArr(this.options.disable));
-            }
-            getReadonlys() {
-                return this.flatData.filter((k) => k.readonly);
-            }
-            getDisableds() {
-                return this.flatData.filter((k) => k.disabled);
-            }
-            getExpandeds() {
-                return this.flatData.filter((k) => k.expanded);
-            }
-            getCheckeds() {
-                return this.flatData.filter((k) => k.checked);
-            }
-            getUncheckeds() {
-                return this.flatData.filter((k) => !k.checked);
-            }
-            getArrowEl(item) {
-                if (!this.options.arrow.enable)
-                    return;
-                item.arrowEl = createEl('i', { [alias]: 'arrow' });
-                this.updateArrowEl(item);
-            }
-            toggleArrow(val, item) {
-                let map = val ? { new: 'show', old: 'hide', action: 'add' } : { new: 'hide', old: 'show', action: 'remove' };
-                item.headEl.toggleAttribute('expanded', val);
-                if (this.options.arrow.type === 'image') {
-                    item.arrowEl.style.backgroundImage = `url("${this.options.arrow[map.new]}")`;
-                }
-                else {
-                    if (this.options.arrow.show === this.options.arrow.hide) {
-                        item.arrowEl.classList[map.action](this.options.arrow.anim);
-                    }
-                    else {
-                        classes(item.arrowEl).replace(this.options.arrow[map.old], this.options.arrow[map.new]);
-                    }
-                }
-            }
-            async collapse(data, cb) {
-                if (this.destroyed)
-                    return;
-                let tmp = Array.isArray(data) ? data : [data];
-                for (let k of tmp) {
-                    await this.eachCollapse(k);
-                }
-                cb && cb.call(this, this.getExpandeds());
-                return this;
-            }
-            async expand(data, cb) {
-                if (this.destroyed)
-                    return;
-                let tmp = Array.isArray(data) ? data : [data];
-                for (let k of tmp) {
-                    await this.eachExpand(k);
-                }
-                cb && cb.call(this, this.getExpandeds());
-                return this;
-            }
-            collapseAll(cb) {
-                if (this.destroyed)
-                    return;
-                for (let k of this.getExpandeds())
-                    this.eachCollapse(k);
-                this.listen({ name: 'collapsedAll', cb });
-                return this;
-            }
-            expandAll(cb) {
-                if (this.destroyed)
-                    return;
-                for (let k of this.flatData) {
-                    k.children && !k.expanded && this.eachExpand(k);
-                }
-                this.listen({ name: 'expandedAll', cb });
-                return this;
-            }
-            passivate(cb) {
-                if (this.destroyed)
-                    return;
-                this.targetEl.toggleAttribute('inert', true);
-                this.treeInputEl.disabled = true;
-                this.listen({ name: 'passivated', cb });
-                return this;
-            }
-            activate(cb) {
-                if (this.destroyed)
-                    return;
-                this.targetEl.toggleAttribute('inert', false);
-                this.treeInputEl.disabled = false;
-                this.listen({ name: 'activated', cb });
-                return this;
-            }
-            readonly(data, cb) {
-                if (this.destroyed)
-                    return;
-                let tmp = isNull(data) ? this.flatData : (Array.isArray(data) ? data : [data]), items = tmp.map((k) => findItem(k, this.flatData)).filter(Boolean);
-                for (let k of items)
-                    k.readonly = true;
-                this.listen({ name: 'readonly', cb, params: [items] });
-                return this;
-            }
-            readonlyAll(cb) {
-                if (this.destroyed)
-                    return;
-                for (let k of this.flatData)
-                    k.readonly = true;
-                this.listen({ name: 'readonlyAll', cb });
-                return this;
-            }
-            disable(data, cb) {
-                if (this.destroyed)
-                    return;
-                let tmp = isNull(data) ? this.flatData : (Array.isArray(data) ? data : [data]), items = tmp.map((k) => findItem(k, this.flatData)).filter(Boolean);
-                for (let k of items)
-                    k.disabled = true;
-                this.listen({ name: 'disabled', cb, params: [items] });
-                return this;
-            }
-            disableAll(cb) {
-                if (this.destroyed)
-                    return;
-                for (let k of this.flatData)
-                    k.disabled = true;
-                this.listen({ name: 'disabledAll', cb });
-                return this;
-            }
-            enable(data, cb) {
-                if (this.destroyed)
-                    return;
-                let tmp = isNull(data) ? this.flatData : (Array.isArray(data) ? data : [data]), items = tmp.map((k) => findItem(k, this.flatData)).filter((k) => k && (k.disabled || k.readonly));
-                for (let k of items) {
-                    k.hasOwnProperty('disabled') && (k.disabled = false);
-                    k.hasOwnProperty('readonly') && (k.readonly = false);
-                }
-                this.listen({ name: 'enabled', cb, params: [items] });
-                return this;
-            }
-            enableAll(cb) {
-                if (this.destroyed)
-                    return;
-                this.enable(this.flatData);
-                this.listen({ name: 'enabledAll', cb });
-                return this;
-            }
-            toggleCheck(item) {
-                item.checked ? this.check(item, false) : this.check(item, true);
-            }
-            uncheckAll(cb) {
-                if (this.destroyed || !this.options.check.enable)
-                    return;
-                for (let k of this.flatData) {
-                    k.checked = false;
-                }
-                this.listen({ name: 'uncheckedAll', cb });
-                return this;
-            }
-            getSiblings(item) {
-                return this.flatData.filter((k) => k.pId == item.pId && k !== item);
-            }
-            updateElCont(item, value, type = 'brief') {
-                let prop = type === 'content' ? 'cont' : type, val = isNull(value) ? item[type] : value, valType = getDataType(val);
-                valType.includes('HTML') ? (item[prop + 'El'].innerHTML = '', item[prop + 'El'].appendChild(val)) : (item[prop + 'El'].innerHTML = val);
-            }
-            async getElCont({ target, data = {}, prop = 'brief', cb }) {
-                let elProp = prop === 'content' ? 'contEl' : `${prop}El`;
-                await getContent.call(this, {
-                    content: data?.content || target[prop],
-                    contType: data?.contType || 'text',
-                    contData: data?.contData || { ...target },
-                    ajax: {
-                        xhrName: 'contXhr',
-                        target: target[elProp],
-                        ...(data?.ajax || {})
-                    },
-                    request: (data) => {
-                        this.listen({ name: 'request', params: [data] });
-                    },
-                    cb: async (resp) => {
-                        let content = ['Array', 'Object'].includes(getDataType(resp)) ? { ...target, [prop]: resp } : resp;
-                        setContent({
-                            content,
-                            template: data?.tplStr || this.tplStr,
-                            engine: data?.tplEng || this.tplEng,
-                            prevent: (cont) => {
-                                cb && cb(cont, target);
-                            }
-                        });
-                    }
-                });
-            }
-            async setElCont({ item, data = {}, prop = 'brief', cb }) {
-                let target = findItem(item, this.flatData);
-                if (!target)
-                    return;
-                elState(target.bodyEl).isVirtual && target.headEl.insertAdjacentElement('afterend', target.bodyEl);
-                await this.getElCont({
-                    target,
-                    data,
-                    cb: (cont) => {
-                        if (target[prop] === cont) {
-                            this.updateElCont(target, cont, prop);
-                        }
-                        else {
-                            target[prop] = cont;
-                            !isProxy(target) && this.updateElCont(target, cont, prop);
-                        }
-                        cb && cb(cont, target);
-                    }
-                });
-            }
-        };
+    const regElem = (comp) => {
+        if (!comp || getDataType(comp) !== 'Class')
+            return;
+        window.customElements.define(`ax-${comp.name.replace('Elem', '').toLowerCase()}`, comp);
     };
 
-    const optMore = unique([
+    const getImgSpin = () => getComputedVar(`--${prefix}spin`).split('"')[1];
+
+    const getImgSpinDk = () => getComputedVar(`--${prefix}spin-dk`).split('"')[1];
+
+    const getImgNone = () => getComputedVar(`--${prefix}none`).split('"')[1];
+
+    const getImgEmpty = () => getComputedVar(`--${prefix}empty`).split('"')[1];
+
+    const getImgAvatar = () => getComputedVar(`--${prefix}avatar`).split('"')[1];
+
+    class ModBaseListenCacheNest extends ModBaseListenCache {
+        flatData;
+        treeInputEl;
+        check(param, bool) {
+        }
+        updateArrowEl(param) {
+        }
+        eachCollapse(param) {
+        }
+        eachExpand(param) {
+        }
+        initCheckeds() {
+            if (!this.options.check.enable)
+                return;
+            let vals = valToArr(this.options.check.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => k.checked);
+            for (let k of items)
+                k.checked = false;
+            this.check([...items, ...vals]);
+        }
+        initReadonlys() {
+            this.readonly(valToArr(this.options.readonly));
+        }
+        initDisableds() {
+            this.disable(valToArr(this.options.disable));
+        }
+        getReadonlys() {
+            return this.flatData.filter((k) => k.readonly);
+        }
+        getDisableds() {
+            return this.flatData.filter((k) => k.disabled);
+        }
+        getExpandeds() {
+            return this.flatData.filter((k) => k.expanded);
+        }
+        getCheckeds() {
+            return this.flatData.filter((k) => k.checked);
+        }
+        getUncheckeds() {
+            return this.flatData.filter((k) => !k.checked);
+        }
+        getArrowEl(item) {
+            if (!this.options.arrow.enable)
+                return;
+            item.arrowEl = createEl('i', { [alias]: 'arrow' });
+            this.updateArrowEl(item);
+        }
+        toggleArrow(val, item) {
+            let map = val ? { new: 'show', old: 'hide', action: 'add' } : { new: 'hide', old: 'show', action: 'remove' };
+            item.headEl.toggleAttribute('expanded', val);
+            if (this.options.arrow.type === 'image') {
+                item.arrowEl.style.backgroundImage = `url("${this.options.arrow[map.new]}")`;
+            }
+            else {
+                if (this.options.arrow.show === this.options.arrow.hide) {
+                    item.arrowEl.classList[map.action](this.options.arrow.anim);
+                }
+                else {
+                    classes(item.arrowEl).replace(this.options.arrow[map.old], this.options.arrow[map.new]);
+                }
+            }
+        }
+        async collapse(data, cb) {
+            if (this.destroyed)
+                return;
+            let tmp = Array.isArray(data) ? data : [data];
+            for (let k of tmp) {
+                await this.eachCollapse(k);
+            }
+            cb && cb.call(this, this.getExpandeds());
+            return this;
+        }
+        async expand(data, cb) {
+            if (this.destroyed)
+                return;
+            let tmp = Array.isArray(data) ? data : [data];
+            for (let k of tmp) {
+                await this.eachExpand(k);
+            }
+            cb && cb.call(this, this.getExpandeds());
+            return this;
+        }
+        collapseAll(cb) {
+            if (this.destroyed)
+                return;
+            for (let k of this.getExpandeds())
+                this.eachCollapse(k);
+            this.listen({ name: 'collapsedAll', cb });
+            return this;
+        }
+        expandAll(cb) {
+            if (this.destroyed)
+                return;
+            for (let k of this.flatData) {
+                k.children && !k.expanded && this.eachExpand(k);
+            }
+            this.listen({ name: 'expandedAll', cb });
+            return this;
+        }
+        passivate(cb) {
+            if (this.destroyed)
+                return;
+            this.targetEl.toggleAttribute('inert', true);
+            this.treeInputEl.disabled = true;
+            this.listen({ name: 'passivated', cb });
+            return this;
+        }
+        activate(cb) {
+            if (this.destroyed)
+                return;
+            this.targetEl.toggleAttribute('inert', false);
+            this.treeInputEl.disabled = false;
+            this.listen({ name: 'activated', cb });
+            return this;
+        }
+        readonly(data, cb) {
+            if (this.destroyed)
+                return;
+            let tmp = isNull(data) ? this.flatData : (Array.isArray(data) ? data : [data]), items = tmp.map((k) => findItem(k, this.flatData)).filter(Boolean);
+            for (let k of items)
+                k.readonly = true;
+            this.listen({ name: 'readonly', cb, params: [items] });
+            return this;
+        }
+        readonlyAll(cb) {
+            if (this.destroyed)
+                return;
+            for (let k of this.flatData)
+                k.readonly = true;
+            this.listen({ name: 'readonlyAll', cb });
+            return this;
+        }
+        disable(data, cb) {
+            if (this.destroyed)
+                return;
+            let tmp = isNull(data) ? this.flatData : (Array.isArray(data) ? data : [data]), items = tmp.map((k) => findItem(k, this.flatData)).filter(Boolean);
+            for (let k of items)
+                k.disabled = true;
+            this.listen({ name: 'disabled', cb, params: [items] });
+            return this;
+        }
+        disableAll(cb) {
+            if (this.destroyed)
+                return;
+            for (let k of this.flatData)
+                k.disabled = true;
+            this.listen({ name: 'disabledAll', cb });
+            return this;
+        }
+        enable(data, cb) {
+            if (this.destroyed)
+                return;
+            let tmp = isNull(data) ? this.flatData : (Array.isArray(data) ? data : [data]), items = tmp.map((k) => findItem(k, this.flatData)).filter((k) => k && (k.disabled || k.readonly));
+            for (let k of items) {
+                k.hasOwnProperty('disabled') && (k.disabled = false);
+                k.hasOwnProperty('readonly') && (k.readonly = false);
+            }
+            this.listen({ name: 'enabled', cb, params: [items] });
+            return this;
+        }
+        enableAll(cb) {
+            if (this.destroyed)
+                return;
+            this.enable(this.flatData);
+            this.listen({ name: 'enabledAll', cb });
+            return this;
+        }
+        toggleCheck(item) {
+            item.checked ? this.check(item, false) : this.check(item, true);
+        }
+        uncheckAll(cb) {
+            if (this.destroyed || !this.options.check.enable)
+                return;
+            for (let k of this.flatData) {
+                k.checked = false;
+            }
+            this.listen({ name: 'uncheckedAll', cb });
+            return this;
+        }
+        getSiblings(item) {
+            return this.flatData.filter((k) => k.pId == item.pId && k !== item);
+        }
+        updateElCont(item, value, type = 'brief') {
+            let prop = type === 'content' ? 'cont' : type, val = isNull(value) ? item[type] : value, valType = getDataType(val);
+            valType.includes('HTML') ? (item[prop + 'El'].innerHTML = '', item[prop + 'El'].appendChild(val)) : (item[prop + 'El'].innerHTML = val);
+        }
+        async getElCont({ target, data = {}, prop = 'brief', cb }) {
+            let elProp = prop === 'content' ? 'contEl' : `${prop}El`;
+            await getContent.call(this, {
+                content: data?.content || target[prop],
+                contType: data?.contType || 'text',
+                contData: data?.contData || { ...target },
+                ajax: {
+                    xhrName: 'contXhr',
+                    target: target[elProp],
+                    ...(data?.ajax || {})
+                },
+                request: (data) => {
+                    this.listen({ name: 'request', params: [data] });
+                },
+                cb: async (resp) => {
+                    let content = ['Array', 'Object'].includes(getDataType(resp)) ? { ...target, [prop]: resp } : resp;
+                    setContent({
+                        content,
+                        template: data?.tplStr || this.tplStr,
+                        engine: data?.tplEng || this.tplEng,
+                        prevent: (cont) => {
+                            cb && cb(cont, target);
+                        }
+                    });
+                }
+            });
+        }
+        async setElCont({ item, data = {}, prop = 'brief', cb }) {
+            let target = findItem(item, this.flatData);
+            if (!target)
+                return;
+            elState(target.bodyEl).isVirtual && target.headEl.insertAdjacentElement('afterend', target.bodyEl);
+            await this.getElCont({
+                target,
+                data,
+                cb: (cont) => {
+                    if (target[prop] === cont) {
+                        this.updateElCont(target, cont, prop);
+                    }
+                    else {
+                        target[prop] = cont;
+                        !isProxy(target) && this.updateElCont(target, cont, prop);
+                    }
+                    cb && cb(cont, target);
+                }
+            });
+        }
+    }
+
+    let AXTMP_textFold = config.lang.more.fold, AXTMP_textUnfold = config.lang.more.unfold;
+    const optMore = [
         {
             attr: 'stor-keys',
             prop: 'storKeys',
@@ -10173,12 +10220,12 @@
         {
             attr: 'text-fold',
             prop: 'textFold',
-            value: config.lang.more.fold,
+            value: AXTMP_textFold,
         },
         {
             attr: 'text-unfold',
             prop: 'textUnfold',
-            value: config.lang.more.unfold,
+            value: AXTMP_textUnfold,
         },
         {
             attr: 'class-fold',
@@ -10206,22 +10253,14 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class More extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class More extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
         intercepted;
         button;
         content;
         folded;
-        compAttrs;
         handlers;
         html;
         pureHtml;
@@ -10230,9 +10269,9 @@
         ell;
         static hostType = 'node';
         static optMaps = optMore;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: More.optMaps,
                 host: elem,
@@ -10273,9 +10312,7 @@
         
         
         setAttrs() {
-            if (!super.customized(this.targetEl)) {
-                this.targetEl.classList.add(`${prefix}${this.constructor.name}`);
-            }
+            
         }
         
         toggle(type) {
@@ -10313,26 +10350,26 @@
                 return this;
             }
             this.button.onclick = null;
-            super.clearCache();
+            this.clearCache();
             this.destroyed = true;
             super.listen({ name: 'destroyed', cb });
             return this;
         }
         
         
-        updateCont(text, cb) {
+        async updateCont(text, cb) {
             if (this.destroyed) {
                 return this;
             }
             this.options.content = text;
-            this.init();
+            await this.init();
             super.updateCache({ content: this.content });
             super.listen({ name: 'updatedCont', cb, params: [this.content] });
             return this;
         }
     }
 
-    const optPosition = unique([
+    const optPosition = [
         {
             attr: 'enable',
             prop: 'enable',
@@ -10401,13 +10438,10 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Position extends pipe(PubListen, PubComm)(PubBase) {
-        targetEl;
+    class Position extends ModBaseListen {
         options = {};
-        destroyed;
-        plans;
         bubbleEl;
         arrowEl;
         gap;
@@ -10416,28 +10450,34 @@
         observerCount;
         completeCount;
         trigger;
-        targetAttrsObserver;
-        targetSizeObserver;
-        bubbleAttrsObserver;
-        bubbleSizeObserver;
-        parentObserver;
-        targetData;
+        targetAttrsObs;
+        targetSizeObs;
+        bubbleAttrsObs;
+        bubbleSizeObs;
+        parentObs;
         bubbleData;
         browserData;
+        bodyData;
+        regularPlaces;
+        specialPlaces;
+        places;
+        timer;
+        fullGap;
         static hostType = 'none';
         static optMaps = optPosition;
-        constructor(target, bubble, options, initial = config.initial) {
+        constructor(target, bubble, options = {}, initial = config.initial) {
             super();
-            this.ready({
+            super.ready({
+                type: Position.hostType,
                 options,
                 host: target,
                 maps: Position.optMaps,
                 spread: ['arrow', 'parentMutation', 'targetObs', 'bubbleObs']
             });
-            this.timestamp = Date.now();
             
+            this.targetEl = getEl(target);
             this.bubbleEl = getEl(bubble);
-            if (!this.bubbleEl) {
+            if (!this.targetEl || !this.bubbleEl) {
                 throw new Error(`The host element and guest element must be exist!`);
             }
             
@@ -10506,7 +10546,7 @@
             if (!this.places.includes(this.placement))
                 return this;
             this.options.placement = this.placement;
-            this.fullGap = fullGap;
+            this.fullGap = getFullGap();
             !['center', 'center-max'].includes(this.placement) && this.createArrow();
             this.setAttrs();
             this.resetPlacement();
@@ -10997,7 +11037,7 @@
         }
     }
 
-    const optHover = unique([
+    const optHover = [
         {
             attr: 'timeout',
             prop: 'timeout',
@@ -11039,12 +11079,10 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Hover extends pipe(PubListen, PubComm)(PubBase) {
-        targetEl;
+    class Hover extends ModBaseListen {
         options = {};
-        plans;
         curX;
         curY;
         preX;
@@ -11063,9 +11101,9 @@
         leaveHold;
         static hostType = 'node';
         static optMaps = optHover;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: Hover.optMaps,
                 host: elem,
@@ -11196,7 +11234,7 @@
         }
     }
 
-    const optPopup = unique([
+    const optPopup = [
         {
             attr: 'theme',
             prop: 'theme',
@@ -11277,13 +11315,13 @@
             value: null,
         },
         ...optBubble
-    ], 'attr');
+    ];
 
     const ceils = {
-        xs: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--_ceil-xs').trim()) || 500,
-        sm: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--_ceil-sm').trim()) || 900,
-        md: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--_ceil-md').trim()) || 1200,
-        lg: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--_ceil-lg').trim()) || 1500,
+        xs: parseInt(getComputedVar('--_ceil-xs')) || 500,
+        sm: parseInt(getComputedVar('--_ceil-sm')) || 900,
+        md: parseInt(getComputedVar('--_ceil-md')) || 1200,
+        lg: parseInt(getComputedVar('--_ceil-lg')) || 1500,
     };
 
     const getClientType = () => {
@@ -11294,40 +11332,21 @@
         return result;
     };
 
-    class Popup extends pipe(Bubble, PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Popup extends ModBaseListenCacheBubble {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        mainEl;
-        contEl;
-        formEl;
-        wrapEl;
-        bodyEl;
-        headEl;
-        footEl;
         confirmEl;
         cancelEl;
         closeEl;
-        state;
-        canTrigger;
         triggerShow;
         toggleShow;
-        wings;
         content;
-        positionIns;
-        template;
-        hoverIns;
         duration;
         wrapHeight;
-        contXhr;
-        submitXhr;
-        data;
+        bubbleType;
+        aniIn;
+        aniOut;
+        initialPlace;
+        isCompField;
         static optMaps = optPopup;
         constructor(elem, options = {}, initial = config.initial) {
             super();
@@ -11412,8 +11431,8 @@
             }
             this.setEmpty();
             this.options.placement = this.options.placement || 'top';
-            this.isComp = fieldTypes.includes(this.options.contType.toLowerCase());
-            if (this.isComp) {
+            this.isCompField = fieldTypes.includes(this.options.contType.toLowerCase());
+            if (this.isCompField) {
                 this.options.tools.placement = 'outside';
             }
             
@@ -11701,32 +11720,38 @@
         }
     }
 
-    const optDodge = unique([
+    const optDodge = [
         {
             attr: 'placeholder',
             prop: 'placeholder',
             value: '',
         },
         {
-            attr: 'on-set',
-            prop: 'onSet',
+            attr: 'on-setted',
+            prop: 'onSetted',
             value: null,
         },
         {
-            attr: 'on-cancel',
-            prop: 'onCancel',
+            attr: 'on-canceled',
+            prop: 'onCanceled',
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Dodge extends pipe(PubListen, PubCache, PubComm)(PubBase) {
+    class Dodge extends ModBaseListenCache {
         options = {};
+        inputEl;
+        labelEl;
+        isFocus;
+        toggle;
+        timestamp;
+        placeholder;
         static hostType = 'node';
         static optMaps = optDodge;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 host: elem,
                 maps: Dodge.optMaps,
@@ -11822,7 +11847,7 @@
             else {
                 this.inputEl.focus();
             }
-            super.listen({ name: 'set', cb, parmas: [value] });
+            super.listen({ name: 'set', cb, params: [value] });
             return this;
         }
         
@@ -11850,272 +11875,7 @@
         }
     }
 
-    const optAlert = unique([
-        {
-            attr: 'stor-keys',
-            prop: 'storKeys',
-            value: [],
-        },
-        {
-            attr: 'caption',
-            prop: 'caption',
-            value: ''
-        },
-        {
-            attr: 'content',
-            prop: 'content',
-            value: ''
-        },
-        {
-            attr: 'theme',
-            prop: 'theme',
-            value: 'issue',
-        },
-        {
-            attr: 'asleep',
-            prop: 'asleep',
-            value: false,
-        },
-        {
-            attr: 'borderless',
-            prop: 'borderless',
-            value: false,
-        },
-        {
-            attr: 'square',
-            prop: 'square',
-            value: false,
-        },
-        {
-            attr: 'classes',
-            prop: 'classes',
-            value: '',
-        },
-        {
-            attr: 'icon',
-            prop: 'icon',
-            value: '',
-        },
-        {
-            attr: 'closable',
-            prop: 'closable',
-            value: false,
-        },
-        {
-            attr: 'notable',
-            prop: 'notable',
-            value: false,
-        },
-        {
-            attr: 'display',
-            prop: 'display',
-            value: '',
-        },
-        {
-            attr: 'b4-hide',
-            prop: 'b4Hide',
-            value: null,
-        },
-        {
-            attr: 'on-shown',
-            prop: 'onShown',
-            value: null,
-        },
-        {
-            attr: 'on-hidden',
-            prop: 'onHidden',
-            value: null,
-        },
-        {
-            attr: 'on-cleared',
-            prop: 'onCleared',
-            value: null,
-        },
-        {
-            attr: 'on-updatedcont',
-            prop: 'onUpdatedCont',
-            value: null,
-        },
-        ...optBase
-    ], 'attr');
-
-    class Alert extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
-        static hostType = 'node';
-        static optMaps = optAlert;
-        constructor(elem, options, initial = config.initial) {
-            super();
-            this.ready({
-                options,
-                maps: Alert.optMaps,
-                host: elem,
-                component: true,
-            });
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            this.contEl = null;
-            
-            this.content = '';
-            
-            this.closeEl = null;
-            
-            this.iconEl = null;
-            
-            this.bodyEl = null;
-            
-            this.captionEl = null;
-            super.listen({ name: 'constructed' });
-            initial && this.init();
-        }
-        
-        async init(cb) {
-            super.listen({ name: 'initiate' });
-            try {
-                this.options.b4Init && await this.options.b4Init.call(this);
-            }
-            catch {
-                console.warn(config.warn.init);
-                return this;
-            }
-            this.setEmpty();
-            
-            this.shown = this.options.asleep ? false : true;
-            this.getContent();
-            this.render();
-            this.setAttrs();
-            if (this.closeEl) {
-                this.closeEl.onclick = async () => {
-                    this.options.b4Hide && await this.options.b4Hide.call(this);
-                    this.hide();
-                };
-            }
-            super.listen({ name: 'initiated', cb });
-            return this;
-        }
-        getContent() {
-            if (this.options.content && typeof this.options.content === 'string') {
-                this.content = super.getStrFromContent(this.options.content);
-            }
-            else {
-                this.content = this.rawHtml ? this.rawHtml : this.targetEl.innerHTML;
-            }
-        }
-        render() {
-            if (this.content.includes('ref="body"') && this.content.includes('ref="content"')) {
-                this.targetEl.innerHTML = this.content;
-            }
-            else {
-                this.targetEl.innerHTML = `
-            ${this.options.icon ? '<i class="' + this.options.icon + '" ' + alias + '="icon"></i>' : ''}
-                        <div ${alias}="body">
-                            ${this.options.caption ? '<div ' + alias + '="caption">' + this.options.caption + '</div>' : ''}
-                            <div ${alias}="content">${this.content}</div>
-                        </div>
-                        ${this.options.closable ? '<i ' + alias + '="close" class="' + prefix + 'icon-close"></i>' : ''}
-            `;
-            }
-            this.closeEl = this.targetEl.querySelector(`[${alias}="close"]`);
-            this.iconEl = this.targetEl.querySelector(`[${alias}="icon"]`);
-            this.bodyEl = this.targetEl.querySelector(`[${alias}="body"]`);
-            this.captionEl = this.targetEl.querySelector(`[${alias}="caption"]`);
-            this.contEl = this.targetEl.querySelector(`[${alias}="content"]`);
-        }
-        setAttrs() {
-            this.targetEl.classList.add(`${prefix}alert`);
-            classes(this.targetEl).add(this.options.classes);
-            this.options.asleep ? addStyle(this.targetEl, 'display', 'none') : removeStyle(this.targetEl, 'display');
-            this.options.theme ? this.targetEl.setAttribute('theme', this.options.theme) : this.targetEl.removeAttribute('theme');
-            this.targetEl.toggleAttribute('borderless', this.options.borderless);
-            this.targetEl.toggleAttribute('notable', this.options.notable);
-            this.targetEl.toggleAttribute('square', this.options.square);
-            this.targetEl.toggleAttribute('plain', this.options.plain);
-        }
-        setEmpty() {
-            this.removeAttrs();
-            this.targetEl.innerHTML = '';
-        }
-        removeAttrs() {
-            this.targetEl.classList.remove(`${prefix}alert`);
-            classes(this.targetEl).remove(this.options.classes);
-            this.targetEl.removeAttribute('theme');
-            this.targetEl.removeAttribute('borderless');
-            this.targetEl.removeAttribute('square');
-            this.targetEl.removeAttribute('plain');
-            this.targetEl.removeAttribute('notable');
-            this.targetEl.style = this.targetEl.style.cssText.replace('display: none;', '');
-            this.options.display ? this.targetEl.style = this.targetEl.style.cssText.replace(`display: ${this.options.display};`, '') : null;
-        }
-        
-        updateCont(html, cb) {
-            if (this.destroyed) {
-                return this;
-            }
-            this.contEl.innerHTML = html;
-            super.updateCache({ content: html });
-            super.listen({ name: 'updatedCont', cb, params: [html] });
-            return this;
-        }
-        
-        show(cb) {
-            if (this.destroyed || this.shown || this.options.asleep) {
-                return this;
-            }
-            if (this.options.display) {
-                this.targetEl.style.display = this.options.display;
-            }
-            else {
-                this.targetEl.style.cssText = this.targetEl.style.cssText.replace('display: none;', '');
-            }
-            this.shown = true;
-            super.listen({ name: 'shown', cb });
-            return this;
-        }
-        
-        hide(cb) {
-            if (this.destroyed || !this.shown) {
-                return this;
-            }
-            this.targetEl.style.display = 'none';
-            this.shown = false;
-            super.listen({ name: 'hidden', cb });
-            return this;
-        }
-        
-        clear(cb) {
-            if (this.destroyed) {
-                return this;
-            }
-            this.setEmpty();
-            super.listen({ name: 'cleared', cb });
-            return this;
-        }
-        
-        destroy(cb) {
-            this.closeEl ? this.closeEl.onclick = null : null;
-            this.destroyed = true;
-            super.listen({ name: 'destroyed', cb });
-            return this;
-        }
-    }
-
-    const optValid = unique([
+    const optValid = [
         {
             attr: 'label',
             prop: 'label',
@@ -12232,29 +11992,47 @@
             value: null,
         },
         {
-            attr: 'on-show',
-            prop: 'onShow',
+            attr: 'on-shown',
+            prop: 'onShown',
             value: null
         },
         {
-            attr: 'on-hide',
-            prop: 'onHide',
+            attr: 'on-hidden',
+            prop: 'onHidden',
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Valid extends pipe(PubListen, PubCache, PubComm)(PubBase) {
+    class Valid extends ModBaseListenCache {
         options = {};
-        targetEl;
         useRules;
         dftRules;
         inputEl;
+        timestamp;
+        name;
+        label;
+        parentEl;
+        valid;
+        hostValid;
+        msgEl;
+        otherBox;
+        checkFun;
+        types;
+        userRules;
+        result;
+        output;
+        msgIcon;
+        msgText;
+        popupIns;
+        msgIns;
+        obsProps;
+        observer;
         static hostType = 'node';
         static optMaps = optValid;
-        constructor(elem, options, initial = config.initial) {
+        constructor(elem, options = {}, initial = config.initial) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 host: elem,
                 maps: Valid.optMaps,
@@ -12715,7 +12493,8 @@
         }
     }
 
-    const optMenu$1 = unique([
+    let AXTMP_rootStart$1 = config.rootStart, AXTMP_idStart$1 = config.idStart, AXTMP_floorStart$1 = config.floorStart, AXTMP_pathHyphen$1 = config.pathHyphen;
+    const optMenu$1 = [
         {
             attr: 'scheme',
             prop: 'scheme',
@@ -12784,22 +12563,22 @@
         {
             attr: 'root-start',
             prop: 'rootStart',
-            value: config.rootStart,
+            value: AXTMP_rootStart$1,
         },
         {
             attr: 'id-start',
             prop: 'idStart',
-            value: config.idStart,
+            value: AXTMP_idStart$1,
         },
         {
             attr: 'floor-start',
             prop: 'floorStart',
-            value: config.floorStart,
+            value: AXTMP_floorStart$1,
         },
         {
             attr: 'path-hyphen',
             prop: 'pathHyphen',
-            value: config.pathHyphen,
+            value: AXTMP_pathHyphen$1,
         },
         {
             attr: 'duration',
@@ -13002,26 +12781,27 @@
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Menu extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Menu extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        rawHtml;
         flatData;
         treeData;
+        expandEvt;
+        selectEvt;
+        pageEvt;
+        lastExpanded;
+        treeDataOrig;
+        drawerHost;
+        drawerIns;
+        hoverIns;
+        contXhr;
+        observeIns;
         static hostType = 'node';
         static optMaps = optMenu$1;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 host: elem,
                 maps: Menu.optMaps,
@@ -13823,7 +13603,7 @@
         }
     }
 
-    const optMenu = unique([
+    const optMenu = [
         {
             attr: 'content',
             prop: 'content',
@@ -14016,25 +13796,24 @@
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Tab extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Tab extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        rawHtml;
         treeData;
+        actEvt;
+        trigger;
+        dataOrig;
+        observeIns;
+        headsEl;
+        bodysEl;
+        headLayout;
+        contXhr;
         static hostType = 'node';
         static optMaps = optMenu;
         constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 host: elem,
                 maps: Tab.optMaps,
@@ -14579,7 +14358,7 @@
         default: Tooltip
     });
 
-    const optDropdown = unique([
+    const optDropdown = [
         {
             attr: 'content',
             prop: 'content',
@@ -14666,9 +14445,10 @@
             value: {},
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Dropdown extends pipe(PubListen, PubCache, PubComm)(PubBase) {
+    class Dropdown extends ModBaseListenCache {
+        popupIns;
         static hostType = 'node';
         static optMaps = optDropdown;
         constructor(elem, options = {}, initial = config.initial) {
@@ -14763,7 +14543,8 @@
         }
     }
 
-    const optTags = unique([
+    let AXTMP_emptyTpl = `<i class="${prefix}c-ignore">${config.lang.tags.emptyholder}</i>`, AXTMP_editorHolder = config.lang.tags.placeholder, AXTMP_separator$4 = config.splitHyphen;
+    const optTags = [
         {
             attr: 'ajax',
             prop: 'ajax',
@@ -14848,7 +14629,7 @@
             prop: 'empty',
             value: {
                 enable: true,
-                content: `<i class="${prefix}c-ignore">${config.lang.tags.emptyholder}</i>`,
+                content: AXTMP_emptyTpl,
             }
         },
         {
@@ -14859,7 +14640,7 @@
                 addable: true,
                 deletable: true,
                 selector: '',
-                placeholder: config.lang.tags.placeholder,
+                placeholder: AXTMP_editorHolder,
             },
         },
         {
@@ -14870,7 +14651,7 @@
         {
             attr: 'separator',
             prop: 'separator',
-            value: config.splitHyphen,
+            value: AXTMP_separator$4,
         },
         {
             attr: 'b4-fill',
@@ -14933,23 +14714,29 @@
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Tags extends pipe(PubListen, PubCache, PubComm)(PubBase) {
+    class Tags extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
+        emptyEl;
+        content;
+        editEvent;
+        toggleSelected;
+        output;
+        maxIndex;
+        dataOrig;
+        dataObs;
+        data;
+        editEl;
+        last;
+        labelEl;
         static hostType = 'node';
-        static propMap = optTags;
+        static optMaps = optTags;
         constructor(elem, options = {}, initial = config.initial) {
             super();
-            this.ready({
+            super.ready({
                 options,
-                maps: Tags.propMap,
+                maps: Tags.optMaps,
                 host: elem,
                 component: true,
                 spread: ['edit', 'unique', 'empty']
@@ -15211,20 +14998,21 @@
             this.targetEl.innerHTML = '';
         }
         useLegend(obj) {
+            let imgNone = getImgNone();
             if (obj.hasOwnProperty('icon')) {
                 obj.iconEl = createEl('i', { [alias]: 'icon', class: `${obj.icon}` });
                 obj.labelEl.insertAdjacentElement('beforebegin', obj.iconEl);
             }
             if (obj.hasOwnProperty('disk')) {
-                obj.diskEl = createEl('img', { [alias]: 'disk', src: `${obj.disk || icons.image.none}` });
+                obj.diskEl = createEl('img', { [alias]: 'disk', src: `${obj.disk || imgNone}` });
                 obj.labelEl.insertAdjacentElement('beforebegin', obj.diskEl);
             }
             if (obj.hasOwnProperty('cube')) {
-                obj.cubeEl = createEl('img', { [alias]: 'cube', src: `${obj.cube || icons.image.none}` });
+                obj.cubeEl = createEl('img', { [alias]: 'cube', src: `${obj.cube || imgNone}` });
                 obj.labelEl.insertAdjacentElement('beforebegin', obj.cubeEl);
             }
             if (obj.hasOwnProperty('image')) {
-                obj.imageEl = createEl('img', { [alias]: 'image', src: `${obj.image || icons.image.none}` });
+                obj.imageEl = createEl('img', { [alias]: 'image', src: `${obj.image || imgNone}` });
                 obj.labelEl.insertAdjacentElement('beforebegin', obj.imageEl);
             }
         }
@@ -15454,7 +15242,8 @@
         }
     }
 
-    const optRetrieval = unique([
+    let AXTMP_hyphen$3 = config.splitHyphen;
+    const optRetrieval = [
         {
             attr: 'keys',
             prop: 'keys',
@@ -15488,7 +15277,7 @@
         {
             attr: 'hyphen',
             prop: 'hyphen',
-            value: config.splitHyphen,
+            value: AXTMP_hyphen$3,
         },
         {
             attr: 'null-handle',
@@ -15616,25 +15405,26 @@
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Retrieval extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Retrieval extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
         mainEl;
+        inputEl;
+        statusEl;
+        inputEvt;
+        keys;
+        data;
+        output;
+        contXhr;
+        editorEl;
         static hostType = 'none';
         static optMaps = optRetrieval;
         constructor(options = {}, initial = true) {
             super();
             super.ready({
                 options,
+                type: Retrieval.hostType,
                 maps: Retrieval.optMaps,
                 component: false,
                 spread: ['status', 'highlight']
@@ -15917,7 +15707,7 @@
         }
     }
 
-    const optAutocomplete = unique([
+    const optAutocomplete = [
         {
             attr: 'field',
             prop: 'field',
@@ -15994,19 +15784,15 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Autocomplete extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Autocomplete extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
         mainEl;
+        rendered;
+        popupIns;
+        retrievalIns;
+        contXhr;
         static hostType = 'node';
         static optMaps = optAutocomplete;
         constructor(elem, options = {}, initial = config.initial) {
@@ -16174,7 +15960,7 @@
         }
     }
 
-    const optScroll = unique([
+    const optScroll = [
         {
             attr: 'wrapper',
             prop: 'wrapper',
@@ -16397,15 +16183,55 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Scroll extends pipe(PubListen, PubCache, PubComm)(PubBase) {
+    class Scroll extends ModBaseListenCache {
         options = {};
+        forwardMap;
+        reverseMap;
+        wrapEl;
+        snappeds;
+        unsnappeds;
+        snapped;
+        started;
+        scrolled;
+        cross;
+        isMobi;
+        childAvgSize;
+        resizeCount;
+        mutateCount;
+        canResize;
+        canMutate;
+        initialResize;
+        key2Trans;
+        resizeListener;
+        mutationListener;
+        targetSize;
+        reverseSize;
+        wrapSize;
+        paddingStart;
+        paddingEnd;
+        rangeEnd;
+        rangeStart;
+        activeSize;
+        baseSize;
+        isBaby;
+        transNow;
+        transLast;
+        gap;
+        barSize;
+        progress;
+        trackEl;
+        thumbEl;
+        barIns;
+        gestureIns;
+        wrapStyleObs;
+        sizeObs;
         static hostType = 'node';
         static optMaps = optScroll;
         constructor(elem, options = {}, initial = config.initial) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 host: elem,
                 maps: Scroll.optMaps,
@@ -17121,7 +16947,7 @@
         }
     }
 
-    const optDrag = unique([
+    const optDrag = [
         {
             attr: 'drops',
             prop: 'drops',
@@ -17173,7 +16999,7 @@
             prop: 'arrow',
             value: {
                 enable: false,
-                icon: '_icon-right',
+                icon: `${prefix}icon-right`,
                 placement: 'left',
                 selector: '',
             },
@@ -17229,12 +17055,11 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Drag extends pipe(PubListen, PubComm)(PubBase) {
+    class Drag extends ModBaseListen {
         targetEl;
         options = {};
-        plans;
         curX;
         curY;
         preX;
@@ -17251,10 +17076,26 @@
         leaveEvent;
         enterHold;
         leaveHold;
+        dragHolder;
+        dropHolder;
+        dropArrow;
+        orgHolder;
+        drops;
+        lastDrop;
+        lastPoint;
+        dftParams;
+        dropOver;
+        dropEnd;
+        targetTag;
+        holderAttr;
+        orgVal;
+        nowVal;
+        orgStyle;
+        gestureIns;
         static hostType = 'node';
         constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: optDrag,
                 host: elem,
@@ -17519,7 +17360,7 @@
         }
     }
 
-    const optMasonry = unique([
+    const optMasonry = [
         {
             attr: 'gap',
             prop: 'gap',
@@ -17589,18 +17430,18 @@
             value: null,
         },
         {
-            attr: 'on-add',
-            prop: 'onAdd',
+            attr: 'on-added',
+            prop: 'onAdded',
             value: null,
         },
         {
-            attr: 'on-remove',
-            prop: 'onRemove',
+            attr: 'on-removed',
+            prop: 'onRemoved',
             value: null,
         },
         {
-            attr: 'on-clear',
-            prop: 'onClear',
+            attr: 'on-cleared',
+            prop: 'onCleared',
             value: null,
         },
         {
@@ -17609,22 +17450,20 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Masonry extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Masonry extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
+        itemsTmp;
+        itemsObs;
+        items;
+        itemSizeObs;
+        gap;
         static hostType = 'node';
         static optMaps = optMasonry;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: Masonry.optMaps,
                 host: elem,
@@ -17724,15 +17563,15 @@
         destroy(cb) {
             if (this.destroyed)
                 return this;
-            this.button.onclick = null;
-            super.clearCache();
+            this.clearCache();
             this.destroyed = true;
             super.listen({ name: 'destroyed', cb });
             return this;
         }
     }
 
-    const optSwipe = unique([
+    let AXTMP_hyphen$2 = config.splitHyphen;
+    const optSwipe = [
         {
             attr: 'axis',
             prop: 'axis',
@@ -17924,7 +17763,7 @@
         {
             attr: 'hyphen',
             prop: 'hyphen',
-            value: config.splitHyphen,
+            value: AXTMP_hyphen$2,
         },
         {
             attr: 'tpl-str',
@@ -17970,7 +17809,7 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
     const getSlidersData = async function (opts) {
         let wrapEl = getEl(opts.wrap), parentEl = getEl(opts.parent), grossData = [];
@@ -18076,7 +17915,7 @@
         return result;
     };
 
-    const optProgress = unique([
+    const optProgress = [
         {
             attr: 'type',
             prop: 'type',
@@ -18223,25 +18062,40 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Progress extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Progress extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
         vals;
         valNow;
         barNow;
+        range;
+        barSize;
+        steps;
+        completeEl;
+        textEl;
+        controlEl;
+        obsIns;
+        obs;
+        labelTpl;
+        trackEl;
+        wrapEl;
+        barEl;
+        labelEl;
+        numEl;
+        unitEl;
+        tipsEl;
+        animFrame;
+        durRest;
+        initVals;
+        startVals;
+        endVals;
+        toggleCtrl;
         static hostType = 'node';
         static optMaps = optProgress;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: Progress.optMaps,
                 host: elem,
@@ -18362,7 +18216,7 @@
                 let value, ratio, tmp;
                 if (isNull(val)) {
                     value = this.vals.val;
-                    ratio = this.ratio;
+                    ratio = this.vals.ratio;
                 }
                 else {
                     value = clampVal({ val: val, min: this.range[0], max: this.range[1] });
@@ -18713,31 +18567,61 @@
         }
     }
 
-    class Swipe extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Swipe extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
         intercepted;
         button;
         content;
         folded;
-        compAttrs;
         handlers;
         html;
         pureHtml;
         event;
         text;
         ell;
+        countdownEl;
+        intervalEvt;
+        startClone;
+        endClone;
+        sliderTpl;
+        prepareListen;
+        resetListener;
+        setBulletActive;
+        spyIns;
+        slidersTmp;
+        bulletsTmp;
+        paused;
+        scrollOpt;
+        scrollIns;
+        wrapEl;
+        navEl;
+        pgnEl;
+        pgnIns;
+        prevEl;
+        nextEl;
+        totalEl;
+        numEl;
+        denomEl;
+        bullets;
+        bulletSeq;
+        interval;
+        countdownIns;
+        toolsEl;
+        keyToSwipe;
+        sliders;
+        group;
+        actIdx;
+        slidersObs;
+        bulletsObs;
+        slideSize;
+        slideSizeDivide;
+        slides;
+        totalClone;
         static hostType = 'node';
         static optMaps = optSwipe;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: Swipe.optMaps,
                 host: elem,
@@ -19676,7 +19560,8 @@
         }
     }
 
-    const optLazy = unique([
+    let AXTMP_hyphen$1 = config.splitHyphen;
+    const optLazy = [
         {
             attr: 'root',
             prop: 'root',
@@ -19705,7 +19590,7 @@
         {
             attr: 'hyphen',
             prop: 'hyphen',
-            value: config.splitHyphen,
+            value: AXTMP_hyphen$1,
         },
         {
             attr: 'tpl-str',
@@ -19733,22 +19618,21 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Lazy extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    const getImgBlank = () => getComputedVar(`--${prefix}blank`).split('"')[1];
+
+    class Lazy extends ModBaseListenCache {
+        nodeName;
+        resType;
+        spyIns;
+        removeAttrFn;
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
         static hostType = 'node';
         static optMaps = optLazy;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: Lazy.optMaps,
                 host: elem,
@@ -19773,7 +19657,7 @@
             }
             this.resType = this.options.type || (this.targetEl.hasAttribute('src') ? 'src' : 'async');
             if (this.resType === 'src') {
-                this.targetEl.src = icons.image.blank;
+                this.targetEl.src = getImgBlank();
                 !this.targetEl.hasAttribute('lazy-src') && this.targetEl.setAttribute('lazy-src', '');
             }
             this.spyIns = new Spy(this.targetEl, extend({
@@ -19791,7 +19675,7 @@
                                 this.targetEl.onload = this.removeAttrFn;
                             }
                             else {
-                                this.this.removeAttrFn();
+                                this.removeAttrFn();
                             }
                         }
                         else if (this.resType === 'async') {
@@ -19832,7 +19716,7 @@
         }
     }
 
-    const optInfinite = unique([
+    const optInfinite = [
         {
             attr: 'trigger',
             prop: 'trigger',
@@ -19929,22 +19813,26 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Infinite extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Infinite extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
+        content;
+        index;
+        contReq;
+        contXhr;
+        statusEl;
+        spinEl;
+        nextEl;
+        nextBtn;
+        tipsEl;
+        listSpyIns;
+        statusSpyIns;
         static hostType = 'node';
         static optMaps = optInfinite;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: Infinite.optMaps,
                 host: elem,
@@ -20177,7 +20065,7 @@
         }
     }
 
-    const optVirtualize = unique([
+    const optVirtualize = [
         {
             attr: 'axis',
             prop: 'axis',
@@ -20290,7 +20178,7 @@
         },
         {
             attr: 'on-updateItem',
-            prop: 'onUpdateItem',
+            prop: 'onUpdatedItem',
             value: null,
         },
         {
@@ -20304,22 +20192,43 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Virtualize extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Virtualize extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
+        propsMap;
+        contReq;
+        autoRenderEvt;
+        obsRenderEvt;
+        avgSize;
+        targetSize;
+        wrapEl;
+        contEl;
+        listEl;
+        startSpaceEl;
+        endSpaceEl;
+        sizesObs;
+        itemSizes;
+        startSpyIns;
+        endSpyIns;
+        itemObs;
+        targetObs;
+        listSize;
+        paddingStart;
+        startIdx;
+        endIdx;
+        offsetVal;
+        scrollVal;
+        nodes;
+        paddingEnd;
+        wrapSize;
+        contXhr;
+        content;
         static hostType = 'node';
         static optMaps = optVirtualize;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: Virtualize.optMaps,
                 host: elem,
@@ -20743,7 +20652,7 @@
         }
     }
 
-    const optPagination = unique([
+    const optPagination = [
         {
             attr: 'list-sel',
             prop: 'listSel',
@@ -20887,22 +20796,38 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Pagination extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Pagination extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
+        listEl;
+        mainEl;
+        pagesEl;
+        firstEl;
+        lastEl;
+        prevEl;
+        nextEl;
+        totalEl;
+        tipsEl;
+        locateEl;
+        countEl;
+        ellEl;
+        locateInput;
+        locateBtn;
+        countInput;
+        countBtn;
+        items;
+        outputObs;
+        output;
+        content;
+        data;
+        nodes;
+        spyIns;
         static hostType = 'node';
         static optMaps = optPagination;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: Pagination.optMaps,
                 host: elem,
@@ -21324,7 +21249,8 @@
         }
     }
 
-    const optRange = unique([
+    let AXTMP_separator$3 = config.rangeHyphen, AXTMP_hyphen = config.rangeHyphen;
+    const optRange = [
         {
             attr: 'name',
             prop: 'name',
@@ -21429,12 +21355,12 @@
         {
             attr: 'separator',
             prop: 'separator',
-            value: config.rangeHyphen,
+            value: AXTMP_separator$3,
         },
         {
             attr: 'hyphen',
             prop: 'hyphen',
-            value: config.rangeHyphen,
+            value: AXTMP_hyphen,
         },
         {
             attr: 'axis',
@@ -21477,17 +21403,44 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Range extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Range extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
+        inputEl;
+        axisCoef;
+        resizeObs;
+        sizes;
+        keyEvt;
+        focusEvt;
+        focusHandle;
+        handles;
+        gestures;
+        fence;
+        resultParent;
+        initVal;
+        rawVal;
+        places;
+        output;
+        decrEl;
+        incrEl;
+        resultEl;
+        wrapEl;
+        mainEl;
+        trackEl;
+        thumbEl;
+        baseEl;
+        bubbleEl;
+        bubbles;
+        handleEl;
+        rulerEl;
+        tickEl;
+        tmpRatios;
+        offset;
+        ceilValue;
+        ticks;
+        fenceEl;
+        propsMap;
         static hostType = 'node';
         static optMaps = optRange;
         constructor(elem, options = {}, initial = true) {
@@ -21509,7 +21462,7 @@
                 tmp.innerHTML = '';
                 host.appendChild(this.inputEl);
             }
-            this.ready({
+            super.ready({
                 options,
                 maps: Range.optMaps,
                 host,
@@ -21637,12 +21590,12 @@
                 }
                 if (this.bubbles.min) {
                     this.bubbles.min.onclick = () => {
-                        this.toMin();
+                        this.toEnd();
                     };
                 }
                 if (this.bubbles.max) {
                     this.bubbles.max.onclick = () => {
-                        this.toMax();
+                        this.toStart();
                     };
                 }
                 if (this.options.keyboard) {
@@ -22167,7 +22120,8 @@
         }
     }
 
-    const optDatetime = unique([
+    let AXTMP_placeholder = config.lang.form.placeholder;
+    const optDatetime = [
         {
             attr: 'name',
             prop: 'name',
@@ -22214,7 +22168,7 @@
         }, {
             attr: 'placeholder',
             prop: 'placeholder',
-            value: config.lang.form.placeholder,
+            value: AXTMP_placeholder,
         },
         {
             attr: 'label',
@@ -22511,31 +22465,73 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Datetime extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Datetime extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
+        value;
+        raw;
+        client;
+        output;
+        data;
+        format;
+        spreadFooter;
+        separator;
+        selectedsProxy;
+        selecteds;
+        resultIns;
+        bubbleEl;
+        bubbleIns;
+        canClick;
+        inputEl;
+        positionEl;
+        childEl;
+        monthStr;
+        panelIdx;
+        datespan;
+        timespan;
+        wrapEl;
+        menuEl;
+        resultEl;
+        outerEl;
+        prevEl;
+        nextEl;
+        mainEl;
+        panelsEl;
+        footEl;
+        bubbleFootEl;
+        footBtnsEl;
+        footTipsEl;
+        confirmEl;
+        clearEl;
+        closeEl;
+        cancelEl;
+        nowEl;
+        daytimeBtnEl;
+        yearSearchEl;
+        rangeChkEl;
+        detailEl;
+        headingEl;
+        eventEl;
+        lunarEl;
+        detailIns;
+        timePanelsEl;
+        prevYearEl;
+        prevMonthEl;
+        nextYearEl;
+        nextMonthEl;
         static hostType = 'node';
         static optMaps = optDatetime;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 maps: Datetime.optMaps,
                 host: elem,
                 component: true,
                 spread: ['lunar', 'events', 'footer', 'manual', 'tools']
             });
-            this.triggerShow = () => {
-                this.active(this);
-            };
+            
             this.value = [];
             this.raw = [];
             this.monthStr = repeatStr(`<li><span ${alias}="content"><i ${alias}="label">{{this.data[this.index-1]}}</i></span></li>`, 12, this.options.lang.month);
@@ -24193,14 +24189,14 @@
             this.detailIns && (this.detailIns.destroy(), this.detailIns = null);
             this.resultIns && (this.resultIns.destroy(), this.resultIns = null);
         }
-        update(settings, cb) {
+        async update(settings, cb) {
             if (this.destroyed)
                 return;
             this.removeIns();
             if (!isEmpty(settings)) {
                 this.updateCache && this.updateCache(settings);
                 extend({ target: this.options, source: settings });
-                this.init();
+                await this.init();
             }
             super.listen({ name: 'updated', cb, params: [this.options] });
             return this;
@@ -24369,7 +24365,8 @@
         }
     }
 
-    const optTree = unique([
+    let AXTMP_connector = config.labelHyphen, AXTMP_separator$2 = config.splitHyphen, AXTMP_rootStart = config.rootStart, AXTMP_idStart = config.idStart, AXTMP_floorStart = config.floorStart, AXTMP_pathHyphen = config.pathHyphen;
+    const optTree = [
         {
             attr: 'name',
             prop: 'name',
@@ -24504,8 +24501,8 @@
             value: {
                 enable: true,
                 target: '',
-                connector: config.labelHyphen,
-                separator: config.splitHyphen,
+                connector: AXTMP_connector,
+                separator: AXTMP_separator$2,
                 type: '',
                 from: 'selected',
                 field: 'label',
@@ -24595,22 +24592,22 @@
         {
             attr: 'root-start',
             prop: 'rootStart',
-            value: config.rootStart,
+            value: AXTMP_rootStart,
         },
         {
             attr: 'id-start',
             prop: 'idStart',
-            value: config.idStart,
+            value: AXTMP_idStart,
         },
         {
             attr: 'floor-start',
             prop: 'floorStart',
-            value: config.floorStart,
+            value: AXTMP_floorStart,
         },
         {
             attr: 'path-hyphen',
             prop: 'pathHyphen',
-            value: config.pathHyphen,
+            value: AXTMP_pathHyphen,
         },
         {
             attr: 'duration',
@@ -24879,26 +24876,44 @@
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Tree extends pipe(Nest, PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Tree extends ModBaseListenCacheNest {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        rawHtml;
-        flatData;
+        treeDataOrig;
+        searchs;
+        ignores;
+        editorEl;
+        lastExpanded;
+        dropTag;
+        pagination;
+        searchEl;
+        resultIns;
+        resultEl;
+        inputEl;
+        output;
+        value;
+        expandEvt;
+        selectEvt;
+        searchEvgt;
+        lineEvt;
+        bubbleIns;
+        receiver;
+        hoverIns;
+        contXhr;
         treeData;
+        floorMax;
+        chainChecking;
+        seqItems;
+        maxIndex;
+        excludeDrags;
+        rawData;
+        observeIns;
         static hostType = 'node';
         static optMaps = optTree;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 host: elem,
                 maps: Tree.optMaps,
@@ -25465,17 +25480,18 @@
             item.indentFootEl = createEl('span', { [alias]: 'indent' });
             item.indentHeadEl.innerHTML = item.indentBodyEl.innerHTML = item.indentFootEl.innerHTML = this.getIndentHtml(item.floor);
             this.options.arrow.enable && super.getArrowEl(item);
+            let imgNone = getImgNone();
             if (!item.iconEl) {
                 item.iconEl = item.hasOwnProperty('icon') ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
             }
             if (!item.diskEl) {
-                item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || icons.image.none }) : null;
+                item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || imgNone }) : null;
             }
             if (!item.cubeEl) {
-                item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || icons.image.none }) : null;
+                item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || imgNone }) : null;
             }
             if (!item.imageEl) {
-                item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || icons.image.none }) : null;
+                item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || imgNone }) : null;
             }
             if (!item.badgeEl) {
                 item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge', label: item.badge.toString().trim() }) : null;
@@ -26582,7 +26598,8 @@
         }
     }
 
-    const optRate = unique([
+    let AXTMP_tipTpl = config.lang.rate.template.tooltip, AXTMP_resultTpl = config.lang.rate.template.result;
+    const optRate = [
         {
             attr: 'name',
             prop: 'name',
@@ -26623,7 +26640,7 @@
             prop: 'tooltip',
             value: {
                 enable: false,
-                format: config.lang.rate.template.tooltip,
+                format: AXTMP_tipTpl,
             },
         },
         {
@@ -26631,7 +26648,7 @@
             prop: 'result',
             value: {
                 enable: false,
-                format: config.lang.rate.template.result,
+                format: AXTMP_resultTpl,
             },
         },
         {
@@ -26713,17 +26730,25 @@
             value: null,
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Rate extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Rate extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        rawOpts;
+        inputEl;
+        current;
+        evtMap;
+        useMap;
+        outputIns;
+        output;
+        rawVal;
+        wrapEl;
+        tooltipIns;
+        tooltipEl;
+        clearEl;
+        items;
+        legends;
+        headEl;
+        resultEl;
         static hostType = 'node';
         static optMaps = optRate;
         constructor(elem, options = {}, initial = true) {
@@ -26742,7 +26767,7 @@
                 host.classList.add(`${prefix}rate`);
                 this.inputEl = createEl('input', { type: 'range' });
             }
-            this.ready({
+            super.ready({
                 options,
                 maps: Rate.optMaps,
                 host,
@@ -27038,7 +27063,8 @@
         }
     }
 
-    const optAccordion = unique([
+    let AXTMP_separator$1 = config.splitHyphen;
+    const optAccordion = [
         {
             attr: 'name',
             prop: 'name',
@@ -27125,7 +27151,7 @@
             value: {
                 enable: true,
                 target: '',
-                separator: config.splitHyphen,
+                separator: AXTMP_separator$1,
                 prop: 'label',
             },
         },
@@ -27404,26 +27430,26 @@
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Accordion extends pipe(Nest, PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
-        options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        rawHtml;
-        flatData;
+    class Accordion extends ModBaseListenCacheNest {
         treeData;
+        expandEvt;
+        lineEvt;
+        treeDataOrig;
+        receiver;
+        rawData;
+        observeIns;
+        chainChecking;
+        hoverIns;
+        inputEl;
+        value;
+        contXhr;
         static hostType = 'node';
         static optMaps = optAccordion;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 host: elem,
                 maps: Accordion.optMaps,
@@ -27579,12 +27605,8 @@
                         obj.proxy.checkEl.setAttribute('check', obj.value ? 'ed' : '');
                     }
                     else if (obj.key === 'children') {
-                        if (!obj.raw && obj.value) {
-                            this.child2Parent(obj.proxy);
-                        }
-                        else if (obj.raw && !obj.value) {
-                            this.parent2Child(obj.proxy);
-                        }
+                        if (!obj.raw && obj.value) ;
+                        else if (obj.raw && !obj.value) ;
                     }
                 },
                 onDeleted: (obj) => {
@@ -27663,17 +27685,18 @@
             item.target && (item.labelEl.target = item.target);
             item.groupEl = createEl('div', { [alias]: 'group' });
             super.getArrowEl(item);
+            let imgNone = getImgNone();
             if (!item.iconEl) {
                 item.iconEl = item.hasOwnProperty('icon') ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
             }
             if (!item.diskEl) {
-                item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || icons.image.none }) : null;
+                item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || imgNone }) : null;
             }
             if (!item.cubeEl) {
-                item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || icons.image.none }) : null;
+                item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || imgNone }) : null;
             }
             if (!item.imageEl) {
-                item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || icons.image.none }) : null;
+                item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || imgNone }) : null;
             }
             if (!item.badgeEl) {
                 item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge', label: item.badge.toString().trim() }) : null;
@@ -27688,7 +27711,6 @@
             item.disabled && item.headEl.toggleAttribute('disabled', true);
             item.readonly && item.headEl.toggleAttribute('readonly', true);
             item.checked && item.headEl.toggleAttribute('checked', true);
-            this.options.drag.enable && item.headEl.toggleAttribute([this.dropTag], true);
             if (this.options.check.enable) {
                 item.checkEl = createEl(`ax-${this.options.check.type}`, { [alias]: 'check' });
             }
@@ -27808,9 +27830,7 @@
                     !this.chainChecking && val.checked !== k.checked && this.check(k, val.checked);
                 });
             }
-            if (this.options.drag.enable) {
-                !k.dragIns && this.setDragDrop(k);
-            }
+            if (this.options.drag.enable) ;
             k.action && k.action.call(this, k);
         }
         renderFinish() {
@@ -28231,7 +28251,7 @@
         }
     }
 
-    const optEditor = unique([
+    const optEditor = [
         {
             attr: 'name',
             prop: 'name',
@@ -28386,24 +28406,33 @@
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Editor extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Editor extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        rawHtml;
         flatData;
         treeData;
+        inputEl;
+        headEl;
+        bodyEl;
+        contEl;
+        footEl;
+        pathEl;
+        stateEl;
+        maskEl;
+        toolsEl;
+        output;
+        tmpRaw;
+        contXhr;
+        keyupEvt;
+        pointerEvt;
+        inputEvt;
+        pasteEvt;
+        readonlyEvt;
+        tools;
         static hostType = 'node';
         static optMaps = optEditor;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
             let tmp = getEl(elem), host;
             if (!tmp)
@@ -28419,7 +28448,7 @@
                 host.classList.add(`${prefix}editor`);
                 this.inputEl = createEl('textarea', { class: `${prefix}editor-source` });
             }
-            this.ready({
+            super.ready({
                 options,
                 host,
                 maps: Editor.optMaps,
@@ -29273,7 +29302,7 @@
         }
     }
 
-    const optSelect = unique([
+    const optSelect = [
         {
             attr: 'name',
             prop: 'name',
@@ -29651,24 +29680,34 @@
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Select extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Select extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        rawHtml;
         flatData;
         selectData;
+        inputEl;
+        tagsEl;
+        arrowEl;
+        toolsEl;
+        listEl;
+        wrapEl;
+        searchEl;
+        resultEl;
+        keysEl;
+        checkEl;
+        statsEl;
+        statusEl;
+        statusHolderEl;
+        popupIns;
+        tagsIns;
+        treeIns;
+        output;
+        rawHmtl;
+        clearVals;
         static hostType = 'node';
         static optMaps = optSelect;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
             let tmp = getEl(elem), host;
             if (!tmp)
@@ -29684,7 +29723,7 @@
                 host.classList.add(`${prefix}select`);
                 this.inputEl = createEl('input', { type: 'hidden' });
             }
-            this.ready({
+            super.ready({
                 options,
                 host,
                 maps: Select.optMaps,
@@ -30097,7 +30136,8 @@
         }
     }
 
-    const optUpload = unique([
+    let AXTMP_separator = config.splitHyphen;
+    const optUpload = [
         {
             attr: 'name',
             prop: 'name',
@@ -30253,7 +30293,7 @@
         {
             attr: 'separator',
             prop: 'separator',
-            value: config.splitHyphen,
+            value: AXTMP_separator,
         },
         {
             attr: 'classes',
@@ -30395,26 +30435,50 @@
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Upload extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Upload extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        rawHtml;
         flatData;
         treeData;
+        dftTypes;
+        fileChangeEvt;
+        chooseEvt;
+        clearEvt;
+        uploadEvt;
+        dragLeaveEvt;
+        dragOverEvt;
+        dragEnterEvt;
+        dropEvt;
+        tipsEl;
+        summaryEl;
+        infoEl;
+        listEl;
+        tableEl;
+        theadEl;
+        fileEl;
+        inputEl;
+        footEl;
+        headEl;
+        chooseBtn;
+        uploadBtn;
+        clearBtn;
+        ctrlvEl;
+        tipsText;
+        name;
+        singleSizeLimit;
+        fileTypes;
+        passedItems;
+        allItems;
+        output;
+        files;
+        value;
+        validItems;
         static hostType = 'node';
         static optMaps = optUpload;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 host: elem,
                 maps: Upload.optMaps,
@@ -31319,7 +31383,7 @@
         }
     }
 
-    const optPanel = unique([
+    const optPanel = [
         {
             attr: 'content',
             prop: 'content',
@@ -31528,26 +31592,42 @@
             value: null
         },
         ...optBase
-    ], 'attr');
+    ];
 
-    class Panel extends pipe(PubListen, PubCache, PubComm)(PubBase) {
-        targetEl;
+    class Panel extends ModBaseListenCache {
         options = {};
-        destroyed;
-        plans;
-        storKeys;
-        storObs;
-        storTmp;
-        dftOpts;
-        rawOpts;
-        rawHtml;
         flatData;
         treeData;
+        wrapEl;
+        headEl;
+        innerEl;
+        captionEl;
+        groupEl;
+        labelEl;
+        iconEl;
+        diskEl;
+        cubeEl;
+        imageEl;
+        briefEl;
+        annotEl;
+        badgeEl;
+        tipsEl;
+        customEl;
+        toolsEl;
+        arrowEl;
+        bodyEl;
+        contEl;
+        closeEl;
+        tabIns;
+        contXhr;
+        transmitioned;
+        data;
+        closeEvt;
         static hostType = 'node';
         static optMaps = optPanel;
-        constructor(elem, options, initial = true) {
+        constructor(elem, options = {}, initial = true) {
             super();
-            this.ready({
+            super.ready({
                 options,
                 host: elem,
                 maps: Panel.optMaps,
@@ -31859,6 +31939,164 @@
         }
     }
 
+    class CompBaseCommField extends CompBaseComm {
+        name;
+        value;
+        disabled;
+        readOnly;
+        checked;
+        multiple;
+        events;
+        inputEl;
+        zeroEvt;
+        evtsArr;
+        toolsEl;
+        constructor() {
+            super();
+            this.focus = () => {
+                this.inputEl.focus();
+            };
+            this.blur = () => {
+                this.inputEl.blur();
+            };
+            this.zeroEvt = new Event('input');
+            this.reset = () => {
+                for (let k in this.propsRaw) {
+                    (this.propsRaw[k] !== null && this.propsRaw[k] !== false) ? this.setAttribute(k, this.propsRaw[k]) : this.removeAttribute(k);
+                }
+                this.inputEl && this.inputEl.dispatchEvent(this.zeroEvt);
+                this.listen({ name: 'reset' });
+            };
+            this.clear = () => {
+                if (this.inputEl) {
+                    this.inputEl.value = '';
+                    this.inputEl.dispatchEvent(this.zeroEvt);
+                }
+                this.listen({ name: 'cleared' });
+            };
+            this.on('connected', () => {
+                this.setAttribute(ax.compSign, '');
+                this.setCache();
+            });
+            this.on('reset', () => {
+                this.clearCache();
+            });
+        }
+        static evtsArr = ['on-connected', 'on-disconnected', 'on-adopted', 'on-reset', 'on-cleared', 'on-changed', 'on-input', 'on-setted'];
+        connectedCallback() {
+            if (this.inputEl) {
+                this.addEvts(['blur', 'focus']);
+                for (let k in this.events) {
+                    this.inputEl.addEventListener(k, () => {
+                        this.dispatchEvent(this.events[k].event);
+                    });
+                }
+            }
+            this.connectedRender();
+        }
+        addEvts(evts) {
+            this.events = {};
+            if (isEmpty(evts))
+                return;
+            for (let k of evts) {
+                this.events[k] = createEvt({ target: this, name: k });
+            }
+        }
+        getToolsEl(data) {
+            if (!isEmpty(data)) {
+                this.toolsEl = createTools(data, null, this);
+                this.toolsEl.setAttribute(alias, 'tools');
+            }
+        }
+        setFieldProps(props) {
+            for (let k of props) {
+                k === 'name' ? this.name = this.propsProxy.name || '' :
+                    k === 'value' ? this.value = this.propsProxy.value || '' :
+                        k === 'disabled' ? this.disabled = this.propsProxy.disabled || false :
+                            k === 'readOnly' ? this.readOnly = this.propsProxy.readonly || false :
+                                k === 'multiple' ? this.multiple = this.propsProxy.multiple || false :
+                                    k === 'check' ? this.checked = (this.propsProxy.check === 'ed' ? true : false) : null;
+            }
+        }
+        getItemsData(data) {
+            let arr;
+            if (isEmpty(data)) {
+                let tmp = createEl('div', null, this.rawHtml), script = tmp.querySelector('script[type="content"]');
+                arr = this.getAttribute('content') ? getAttrArr(this.getAttribute('content')) : getAttrArr((script?.innerHTML || this.rawHtml).replace(/\n/g, '').trim());
+            }
+            else {
+                arr = Array.isArray(data) ? data : getAttrArr(data);
+            }
+            return this.formatData(arr);
+        }
+        formatData(data) {
+            let itemType = typeof data[0];
+            if (itemType === 'string') {
+                return data.map((k) => {
+                    return { label: k, value: k, disabled: false, checked: false };
+                });
+            }
+            else {
+                return data;
+            }
+        }
+        addScrollable(input) {
+            let scrolled = input.scrollHeight > input.clientHeight;
+            this.wrapEl.toggleAttribute('scrollable', scrolled);
+        }
+        setValAttr(data, el) {
+            if (!isNull(data.value)) {
+                el.value = data.value;
+            }
+            else if (isNull(data.value) && data.label) {
+                el.value = data.label;
+            }
+        }
+    }
+
+    class CompBaseCommFieldMixin extends CompBaseCommField {
+        modsOpts;
+        static custAttrs;
+        static boolAttrs;
+        constructor() {
+            super();
+            this.createShadow();
+            this.modsOpts = {};
+            this.on('disconnected', () => {
+                this.ins && this.ins.destroy();
+            });
+            this.on('adopted', () => {
+                this.ins && this.ins.destroy();
+            });
+        }
+        static get observedAttributes() {
+            return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.evtsArr];
+        }
+        connectedCallback() {
+            this.addEvts(['blur', 'focus', 'input', 'change']);
+            this.connectedRender();
+        }
+        mapVals(name, newVal, module, opts) {
+            return module.evtsArr.includes(name) ? newVal :
+                module.boolAttrs.includes(name) ? Object.values(attrJoinVal$1(name, newVal, opts))[0] :
+                    isNull(newVal) ? null : Object.values(attrJoinVal$1(name, newVal, opts))[0];
+        }
+        saveModsOpts(name, opts, module = 'module') {
+            if (!name || !module)
+                return;
+            let tmp = this.propsProxy[name], item = opts.find((k) => k.attr === name);
+            if (!item)
+                return;
+            !this.modsOpts[module] && (this.modsOpts[module] = {});
+            if (isNull(tmp)) {
+                this.connected && (this.modsOpts[module][item.prop] = item.value);
+            }
+            else {
+                this.modsOpts[module][item.prop] = tmp;
+            }
+        }
+    }
+
     class CustomElem extends HTMLElement {
         shadowEl;
         slotEl;
@@ -31905,7 +32143,7 @@
                     value = strToJson(newVal);
                 }
                 else {
-                    value = attrJoinVal(name, newVal, map);
+                    value = attrJoinVal$1(name, newVal, map);
                 }
                 deepMerge(this.propsProxy, value, {});
             }
@@ -31931,7 +32169,6 @@
             return this;
         }
     }
-    window.customElements.define("ax-custom", CustomElem);
 
     class MoreElem extends CustomElem {
         constructor() {
@@ -31965,62 +32202,8 @@
             this.ins = new More(this.wrapEl);
         }
     }
-    window.customElements.define("ax-more", MoreElem);
 
-    const PubModElem = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            constructor() {
-                super();
-                this.createShadow();
-                this.propsObs.on('completed', () => {
-                    this.ins && this.ins.update(this.properties);
-                });
-                this.reset = () => {
-                    this.ins && this.ins.reset();
-                };
-                this.clear = () => {
-                    this.ins && this.ins.clear();
-                };
-            }
-            connectedCallback() {
-                this.connectedRender();
-            }
-            updateProxy(name, newVal, map) {
-                let value;
-                if (newVal === null) {
-                    this.propsProxy[name] = this.ins.rawOpts[name];
-                }
-                else {
-                    if (name === 'options') {
-                        value = strToJson(newVal);
-                    }
-                    else {
-                        value = attrJoinVal(name, newVal, map);
-                    }
-                    deepMerge(this.propsProxy, value, {});
-                }
-            }
-        };
-    };
-
-    class AlertElem extends pipe(PubListenElem, PubModElem)(PubBaseElem) {
-        render() {
-            this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.innerHTML);
-            this.innerHTML = '';
-            this.appendChild(this.wrapEl);
-            this.ins = new Alert(this.wrapEl);
-        }
-        static get observedAttributes() {
-            return [...optAlert.map((k) => k.attr), 'options'];
-        }
-        attributeChangedCallback(name, oldVal, newVal) {
-            super.updateProxy(name, newVal, optAlert);
-        }
-    }
-    window.customElements.define("ax-alert", AlertElem);
-
-    class ResultElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
+    class ResultElem extends CompBaseComm {
         iconEl;
         labelEl;
         constructor() {
@@ -32096,9 +32279,8 @@
             content && (this.iconEl.innerHTML = content);
         }
     }
-    window.customElements.define("ax-result", ResultElem);
 
-    class DeformElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
+    class DeformElem extends CompBaseComm {
         constructor() {
             super();
             this.getRawData();
@@ -32157,130 +32339,12 @@
             }
         }
     }
-    window.customElements.define("ax-deform", DeformElem);
 
-    const PubFieldElem = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            name;
-            value;
-            disabled;
-            readOnly;
-            checked;
-            multiple;
-            events;
-            inputEl;
-            zeroEvt;
-            evtsArr;
-            toolsEl;
-            constructor() {
-                super();
-                this.focus = () => {
-                    this.inputEl.focus();
-                };
-                this.blur = () => {
-                    this.inputEl.blur();
-                };
-                this.zeroEvt = new Event('input');
-                this.reset = () => {
-                    for (let k in this.propsRaw) {
-                        (this.propsRaw[k] !== null && this.propsRaw[k] !== false) ? this.setAttribute(k, this.propsRaw[k]) : this.removeAttribute(k);
-                    }
-                    this.inputEl && this.inputEl.dispatchEvent(this.zeroEvt);
-                    this.listen({ name: 'reset' });
-                };
-                this.clear = () => {
-                    if (this.inputEl) {
-                        this.inputEl.value = '';
-                        this.inputEl.dispatchEvent(this.zeroEvt);
-                    }
-                    this.listen({ name: 'cleared' });
-                };
-                this.on('connected', () => {
-                    this.setAttribute(ax.compSign, '');
-                    this.setCache();
-                });
-                this.on('reset', () => {
-                    this.clearCache();
-                });
-            }
-            static evtsArr = ['on-connected', 'on-disconnected', 'on-adopted', 'on-reset', 'on-cleared', 'on-changed', 'on-input', 'on-setted'];
-            connectedCallback() {
-                if (this.inputEl) {
-                    this.addEvts(['blur', 'focus']);
-                    for (let k in this.events) {
-                        this.inputEl.addEventListener(k, () => {
-                            this.dispatchEvent(this.events[k].event);
-                        });
-                    }
-                }
-                this.connectedRender();
-            }
-            addEvts(evts) {
-                this.events = {};
-                if (isEmpty(evts))
-                    return;
-                for (let k of evts) {
-                    this.events[k] = createEvt({ target: this, name: k });
-                }
-            }
-            getToolsEl(data) {
-                if (!isEmpty(data)) {
-                    this.toolsEl = createTools(data, null, this);
-                    this.toolsEl.setAttribute(alias, 'tools');
-                }
-            }
-            setFieldProps(props) {
-                for (let k of props) {
-                    k === 'name' ? this.name = this.propsProxy.name || '' :
-                        k === 'value' ? this.value = this.propsProxy.value || '' :
-                            k === 'disabled' ? this.disabled = this.propsProxy.disabled || false :
-                                k === 'readOnly' ? this.readOnly = this.propsProxy.readonly || false :
-                                    k === 'multiple' ? this.multiple = this.propsProxy.multiple || false :
-                                        k === 'check' ? this.checked = (this.propsProxy.check === 'ed' ? true : false) : null;
-                }
-            }
-            getItemsData(data) {
-                let arr;
-                if (isEmpty(data)) {
-                    let tmp = createEl('div', null, this.rawHtml), script = tmp.querySelector('script[type="content"]');
-                    arr = this.getAttribute('content') ? getAttrArr(this.getAttribute('content')) : getAttrArr((script?.innerHTML || this.rawHtml).replace(/\n/g, '').trim());
-                }
-                else {
-                    arr = Array.isArray(data) ? data : getAttrArr(data);
-                }
-                return this.formatData(arr);
-            }
-            formatData(data) {
-                let itemType = typeof data[0];
-                if (itemType === 'string') {
-                    return data.map((k) => {
-                        return { label: k, value: k, disabled: false, checked: false };
-                    });
-                }
-                else {
-                    return data;
-                }
-            }
-            addScrollable(input) {
-                let scrolled = input.scrollHeight > input.clientHeight;
-                this.wrapEl.toggleAttribute('scrollable', scrolled);
-            }
-            setValAttr(data, el) {
-                if (!isNull(data.value)) {
-                    el.value = data.value;
-                }
-                else if (isNull(data.value) && data.label) {
-                    el.value = data.label;
-                }
-            }
-        };
-    };
-
-    class RadioElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem)(PubBaseElem) {
+    class RadioElem extends CompBaseCommField {
         labelEl;
         legendEl;
         check;
+        type;
         constructor() {
             super();
             this.type = 'radio-comp';
@@ -32294,7 +32358,7 @@
                 this.setAttribute('check', val);
             };
         }
-        static custAttrs = ['size', 'value', 'name', 'type', 'check', ...super.evtsArr];
+        static custAttrs = ['size', 'value', 'name', 'type', 'check', ...this.evtsArr];
         static boolAttrs = ['disabled'];
         static get observedAttributes() {
             return ['label', ...this.custAttrs, ...this.boolAttrs];
@@ -32374,12 +32438,12 @@
             }, false);
         }
     }
-    window.customElements.define("ax-radio", RadioElem);
 
-    class CheckboxElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem)(PubBaseElem) {
+    class CheckboxElem extends CompBaseCommField {
         labelEl;
         legendEl;
         check;
+        type;
         constructor() {
             super();
             this.type = 'checkbox-comp';
@@ -32393,7 +32457,7 @@
                 this.setAttribute('check', val);
             };
         }
-        static custAttrs = ['size', 'value', 'type', 'name', 'check', ...super.evtsArr];
+        static custAttrs = ['size', 'value', 'type', 'name', 'check', ...this.evtsArr];
         static boolAttrs = ['disabled'];
         static get observedAttributes() {
             return ['label', ...this.custAttrs, ...this.boolAttrs];
@@ -32469,7 +32533,6 @@
             }, false);
         }
     }
-    window.customElements.define("ax-checkbox", CheckboxElem);
 
     class PlainElem extends HTMLElement {
         shadowEl;
@@ -32863,9 +32926,8 @@
             this.appendChild(this.wrapEl);
         }
     }
-    window.customElements.define("ax-btn", BtnElem);
 
-    class LineElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
+    class LineElem extends CompBaseComm {
         labelEl;
         startEl;
         endEl;
@@ -32924,7 +32986,6 @@
             this.appendChild(this.wrapEl);
         }
     }
-    window.customElements.define("ax-line", LineElem);
 
     class AvatarElem extends PlainElem {
         mainEl;
@@ -32987,7 +33048,7 @@
         adoptedCallback() {
         }
         getMainEl(type, src) {
-            return (type === 'text') ? createEl('i', { [alias]: 'main' }, src || 'null') : createEl('img', { [alias]: 'main', src: src || icons.image.avatar });
+            return (type === 'text') ? createEl('i', { [alias]: 'main' }, src || 'null') : createEl('img', { [alias]: 'main', src: src || getImgAvatar() });
         }
         getRawData() {
             this.propsRaw = {
@@ -33020,9 +33081,8 @@
             this.appendChild(this.wrapEl);
         }
     }
-    window.customElements.define("ax-avatar", AvatarElem);
 
-    class FormatElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
+    class FormatElem extends CompBaseComm {
         tipsIns;
         infoEl;
         constructor() {
@@ -33146,9 +33206,8 @@
             return result + '</i>';
         }
     }
-    window.customElements.define("ax-format", FormatElem);
 
-    class FlagElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
+    class FlagElem extends CompBaseComm {
         labelEl;
         constructor() {
             super();
@@ -33190,7 +33249,6 @@
             this.labelEl.innerHTML = opt.newVal || '';
         }
     }
-    window.customElements.define("ax-flag", FlagElem);
 
     class BuoyElem extends PlainElem {
         headEl;
@@ -33291,15 +33349,12 @@
             this.append(this.wrapEl);
         }
     }
-    window.customElements.define("ax-buoy", BuoyElem);
 
-    class GoodElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
-        wrapEl;
+    class GoodElem extends CompBaseComm {
         labelEl;
         iconEl;
         tipsEl;
         valueEl;
-        reset;
         increase;
         constructor() {
             super();
@@ -33366,7 +33421,6 @@
             }
         }
     }
-    window.customElements.define("ax-good", GoodElem);
 
     class AnchorsElem extends PlainElem {
         data;
@@ -33533,7 +33587,6 @@
             this.active(obj.target, active, this.propsProxy.smooth);
         }
     }
-    window.customElements.define("ax-anchors", AnchorsElem);
 
     class MenuElem extends CustomElem {
         constructor() {
@@ -33566,14 +33619,16 @@
             this.ins = new Menu(this.wrapEl);
         }
     }
-    window.customElements.define("ax-menu", MenuElem);
 
-    class FileElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem)(PubBaseElem) {
+    class FileElem extends CompBaseCommField {
         holderEl;
         meanEl;
         clickEvent;
         changeEvt;
         namesEl;
+        type;
+        clickEvt;
+        labelEl;
         constructor() {
             super();
             this.type = 'file-comp';
@@ -33587,7 +33642,7 @@
             };
             this.zeroEvt = new Event('change');
         }
-        static custAttrs = ['name', 'value', 'accept', 'size', 'label', 'tools', ...super.evtsArr];
+        static custAttrs = ['name', 'value', 'accept', 'size', 'label', 'tools', ...this.evtsArr];
         static boolAttrs = ['disabled', 'readonly', 'multiple', 'full'];
         static get observedAttributes() {
             return ['placeholder', ...this.custAttrs, ...this.boolAttrs];
@@ -33698,9 +33753,11 @@
             }
         }
     }
-    window.customElements.define("ax-file", FileElem);
 
-    class InputElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem)(PubBaseElem) {
+    class InputElem extends CompBaseCommField {
+        unitEl;
+        customEl;
+        imageEl;
         labelEl;
         limitEl;
         diskEl;
@@ -33708,6 +33765,9 @@
         iconEl;
         btnEl;
         meanEl;
+        type;
+        select;
+        btnEvt;
         constructor() {
             super();
             this.type = 'text-comp';
@@ -33721,7 +33781,7 @@
                 }
             };
         }
-        static custAttrs = ['name', 'placeholder', 'type', 'size', 'limit', 'tools', 'icon', 'cube', 'disk', 'image', 'btn', 'action', 'label', 'unit', 'custom', 'mean', 'task', ...super.evtsArr];
+        static custAttrs = ['name', 'placeholder', 'type', 'size', 'limit', 'tools', 'icon', 'cube', 'disk', 'image', 'btn', 'action', 'label', 'unit', 'custom', 'mean', 'task', ...this.evtsArr];
         static boolAttrs = ['disabled', 'readonly', 'blocked', 'full'];
         static get observedAttributes() {
             return ['value', ...this.custAttrs, ...this.boolAttrs];
@@ -33797,7 +33857,6 @@
             readonly: this.changedBool,
             blocked: this.changedBool,
             full: this.changedBool,
-            size: this.changedSize,
             name: this.changedName,
             type: this.changedName,
             placeholder: this.changedName,
@@ -33952,11 +34011,14 @@
             }
         }
     }
-    window.customElements.define("ax-input", InputElem);
 
-    class TextareaElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem)(PubBaseElem) {
+    class TextareaElem extends CompBaseCommField {
         labelEl;
         limitEl;
+        type;
+        select;
+        headEl;
+        meanEl;
         constructor() {
             super();
             this.type = 'textarea-comp';
@@ -33964,7 +34026,7 @@
             this.fillWrap(this.propsProxy);
             this.select = () => this.inputEl.select();
         }
-        static custAttrs = ['name', 'placeholder', 'size', 'tools', 'limit', 'label', 'mean', 'task', ...super.evtsArr];
+        static custAttrs = ['name', 'placeholder', 'size', 'tools', 'limit', 'label', 'mean', 'task', ...this.evtsArr];
         static boolAttrs = ['disabled', 'readonly', 'single', 'full'];
         static get observedAttributes() {
             return ['value', ...this.custAttrs, ...this.boolAttrs];
@@ -34134,15 +34196,15 @@
             }
         }
     }
-    window.customElements.define("ax-textarea", TextareaElem);
 
-    class RadiosElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem)(PubBaseElem) {
+    class RadiosElem extends CompBaseCommField {
         labelEl;
         legendEl;
         inputs;
         setVals;
         setLabels;
         check;
+        type;
         valMap;
         constructor() {
             super();
@@ -34193,7 +34255,7 @@
                 }
             });
         }
-        static custAttrs = ['size', 'name', 'type', 'layout', 'cols', 'checked', 'disable', 'content', 'wrap-classes', 'item-classes', 'input-classes', 'on-checked', ...super.evtsArr];
+        static custAttrs = ['size', 'name', 'type', 'layout', 'cols', 'checked', 'disable', 'content', 'wrap-classes', 'item-classes', 'input-classes', 'on-checked', ...this.evtsArr];
         static boolAttrs = ['disabled'];
         static get observedAttributes() {
             return ['content', ...this.custAttrs, ...this.boolAttrs];
@@ -34307,9 +34369,8 @@
             this.appendChild(this.wrapEl);
         }
     }
-    window.customElements.define("ax-radios", RadiosElem);
 
-    class CheckboxesElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem)(PubBaseElem) {
+    class CheckboxesElem extends CompBaseCommField {
         labelEl;
         legendEl;
         inputs;
@@ -34323,6 +34384,7 @@
         valMap;
         checkedMore;
         checkedLess;
+        type;
         constructor() {
             super();
             this.type = 'checkboxes-comp';
@@ -34393,7 +34455,7 @@
             };
         }
         static custAttrs = [
-            'size', 'name', 'type', 'layout', 'cols', 'checked', 'disable', 'content', 'switch', 'wrap-classes', 'item-classes', 'input-classes', 'on-checkedall', ...super.evtsArr
+            'size', 'name', 'type', 'layout', 'cols', 'checked', 'disable', 'content', 'switch', 'wrap-classes', 'item-classes', 'input-classes', 'on-checkedall', ...this.evtsArr
         ];
         static boolAttrs = ['disabled'];
         static get observedAttributes() {
@@ -34535,14 +34597,15 @@
             this.appendChild(this.wrapEl);
         }
     }
-    window.customElements.define("ax-checkboxes", CheckboxesElem);
 
-    class NumberElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem)(PubBaseElem) {
+    class NumberElem extends CompBaseCommField {
         labelEl;
         inputEvt;
         tipsEl;
         incrEl;
         decrEl;
+        type;
+        select;
         constructor() {
             super();
             this.type = 'number-comp';
@@ -34569,7 +34632,7 @@
                 }
             });
         }
-        static custAttrs = ['name', 'placeholder', 'layout', 'size', 'max', 'min', 'step', 'label', 'on-exceeded', ...super.evtsArr];
+        static custAttrs = ['name', 'placeholder', 'layout', 'size', 'max', 'min', 'step', 'label', 'on-exceeded', ...this.evtsArr];
         static boolAttrs = ['tips', 'disabled', 'readonly', 'full'];
         static get observedAttributes() {
             return ['value', ...this.custAttrs, ...this.boolAttrs];
@@ -34710,62 +34773,17 @@
             }, false);
         }
     }
-    window.customElements.define("ax-number", NumberElem);
 
-    const PubMixinElem = (parent) => {
-        return class extends (parent || class Empty {
-        }) {
-            constructor() {
-                super();
-                this.createShadow();
-                this.modsOpts = {};
-                this.on('disconnected', () => {
-                    this.ins && this.ins.destroy();
-                });
-                this.on('adopted', () => {
-                    this.ins && this.ins.destroy();
-                });
-            }
-            static get observedAttributes() {
-                return ['value', ...this.custAttrs, ...this.boolAttrs, ...super.evtsArr];
-            }
-            connectedCallback() {
-                this.addEvts(['blur', 'focus', 'input', 'change']);
-                this.connectedRender();
-            }
-            mapVals(name, newVal, module, opts) {
-                return module.evtsArr.includes(name) ? newVal :
-                    module.boolAttrs.includes(name) ? Object.values(attrJoinVal(name, newVal, opts))[0] :
-                        isNull(newVal) ? null : Object.values(attrJoinVal(name, newVal, opts))[0];
-            }
-            saveModsOpts(name, opts, module = 'module') {
-                if (!name || !module)
-                    return;
-                let tmp = this.propsProxy[name], item = opts.find((k) => k.attr === name);
-                if (!item)
-                    return;
-                !this.modsOpts[module] && (this.modsOpts[module] = {});
-                if (isNull(tmp)) {
-                    this.connected && (this.modsOpts[module][item.prop] = item.value);
-                }
-                else {
-                    this.modsOpts[module][item.prop] = tmp;
-                }
-            }
-        };
-    };
-
-    class RangeElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem, PubMixinElem)(PubBaseElem) {
-        value;
-        name;
-        disabled;
+    class RangeElem extends CompBaseCommFieldMixin {
+        type;
         constructor() {
             super();
             this.type = 'range-comp';
             this.getRawData();
         }
-        static custAttrs = [...optRange.filter((k) => keyCond(k.attr) && k !== 'value' && typeof k.value !== 'boolean').map((k) => k.attr)];
-        static boolAttrs = optRange.filter((k) => keyCond(k.attr) && typeof k.value === 'boolean').map((k) => k.attr);
+        static custAttrs = ['name', 'step', 'max', 'min', 'axis', 'size', 'classes', 'separator', 'hyphen', 'fence', 'button', 'ruler', 'result'];
+        static boolAttrs = ['disabled', 'full', 'limit-show', 'tip-show', 'multiple', 'locked'];
+        
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
@@ -34798,7 +34816,7 @@
             }
             for (let k in this.propsRaw)
                 this.propsProxy[k] = this.propsRaw[k];
-            for (let k of Object.keys(this.properties).filter(keyCond))
+            for (let k of Object.keys(this.properties).filter(keyCond$1))
                 this.saveModsOpts(k, optRange);
             this.setFieldProps(['name', 'value', 'disabled']);
         }
@@ -34857,10 +34875,8 @@
             });
         }
     }
-    window.customElements.define("ax-range", RangeElem);
 
     class StatsElem extends PlainElem {
-        wrapEl;
         mainEl;
         badgeEl;
         tipsEl;
@@ -34996,9 +35012,8 @@
             this.appendChild(this.wrapEl);
         }
     }
-    window.customElements.define("ax-stats", StatsElem);
 
-    class IconElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
+    class IconElem extends CompBaseComm {
         badgeEl;
         tipsEl;
         iconEl;
@@ -35156,7 +35171,6 @@
             this.toggleLegend(opt.newVal);
         }
     }
-    window.customElements.define("ax-icon", IconElem);
 
     class BadgeElem extends PlainElem {
         constructor() {
@@ -35202,17 +35216,14 @@
             this.appendChild(this.wrapEl);
         }
     }
-    window.customElements.define("ax-badge", BadgeElem);
 
-    class DividerElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
-        wrapEl;
+    class DividerElem extends CompBaseComm {
         startEl;
         endEl;
         labelEl;
         constructor() {
             super();
             this.getRawData();
-            this.x = [];
             this.fillWrap(this.propsProxy);
         }
         static custAttrs = ['break', 'size', 'fs'];
@@ -35260,10 +35271,8 @@
             }
         }
     }
-    window.customElements.define("ax-divider", DividerElem);
 
-    class AlarmElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
-        wrapEl;
+    class AlarmElem extends CompBaseComm {
         labelEl;
         iconEl;
         imageEl;
@@ -35348,53 +35357,68 @@
             }
         }
     }
-    window.customElements.define("ax-alarm", AlarmElem);
 
-    const ProgressElem = createComp({
-        tagName: 'ax-progress',
-        compName: 'ProgressElem',
-        module: Progress,
-        augment: true,
-        excludeAttrs: ['value'],
-        changed: function (data) {
-            if (!this.connected)
-                return;
-            if (data.name === 'value') {
-                let duration = this.getAttribute('duration'), value = this.getVal(data.newVal);
+    class ProgressElem extends CompBaseComm {
+        constructor() {
+            super();
+            this.createShadow();
+            super.createPropsObs();
+        }
+        static get observedAttributes() {
+            return [...optProgress.map((k) => k.attr), 'options'];
+        }
+        attributeChangedCallback(name, oldVal, newVal) {
+            if (name === 'value') {
+                if (!this.connected)
+                    return;
+                let duration = this.getAttribute('duration'), value = this.getVal(newVal);
                 if (duration == 0) {
                     this.ins.locateTo(value);
                 }
                 else {
-                    this.ins.animateTo(value, { duration });
+                    !duration ? this.ins.animateTo(value) : this.ins.animateTo(value, { duration });
                 }
             }
-        },
-        methods: {
-            getVal: function (val) {
-                return val == 0 ? 0 : ~~val === 0 ? val : parseFloat(val);
+            else {
+                super.updateProxy(name, newVal, optProgress);
             }
         }
-    });
+        connectedCallback() {
+            this.render();
+            this.connected = true;
+        }
+        createShadow() {
+            this.shadowEl = this.attachShadow({ mode: "open" });
+            this.slotEl = createEl('slot');
+            this.shadowEl.appendChild(this.slotEl);
+        }
+        render() {
+            this.insertSource();
+            this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.rawHtml);
+            this.appendChild(this.wrapEl);
+            this.ins = new Progress(this.wrapEl);
+        }
+        getVal(val) {
+            return val == 0 ? 0 : ~~val === 0 ? val : parseFloat(val);
+        }
+    }
 
-    class DatetimeElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem, PubMixinElem)(PubBaseElem) {
+    class DatetimeElem extends CompBaseCommFieldMixin {
         labelEl;
-        inputEl;
-        toolsEl;
         inputEvt;
-        name;
-        disabled;
-        readOnly;
-        value;
         meanEl;
         datetimeIns;
+        type;
+        select;
         constructor() {
             super();
             this.type = 'datetime-comp';
             this.getRawData();
             this.select = () => this.ins.inputEl.select();
         }
-        static custAttrs = [...optDatetime.filter((k) => keyCond(k.attr) && typeof k.value !== 'boolean').map((k) => k.attr)];
-        static boolAttrs = optDatetime.filter((k) => keyCond(k.attr) && typeof k.value === 'boolean').map((k) => k.attr);
+        static custAttrs = ['name', 'value', 'size', 'format', 'classes', 'mode', 'feature', 'display', 'placeholder', 'label', 'tools',
+            'max-selection', 'min-date', 'max-date', 'datespan', 'timespan', 'rows', 'cols', 'week-start', 'separator', 'btn-sel', 'pos-sel', 'input-sel', 'child-sel', 'lunar', 'events', 'menu', 'bubble', 'footer'];
+        static boolAttrs = ['disabled', 'to-drawer', 'full', 'multiline', 'now-hide', 'now-show', 'clear-show', 'close-show', 'cancel-show', 'confirm-hide', 'auto-fill', 'manual', 'auto-correct', 'required', 'fill-now'];
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
@@ -35408,7 +35432,7 @@
             }
             for (let k in this.propsRaw)
                 this.propsProxy[k] = this.propsRaw[k];
-            for (let k of Object.keys(this.properties).filter(keyCond))
+            for (let k of Object.keys(this.properties).filter(keyCond$1))
                 this.saveModsOpts(k, optDatetime);
             this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
         }
@@ -35486,39 +35510,35 @@
             }
         }
     }
-    window.customElements.define("ax-datetime", DatetimeElem);
 
-    const RateElem = createComp({
-        tagName: 'ax-rate',
-        compName: 'RateElem',
-        module: Rate,
-        augment: true,
-        autoIns: false,
-        connected: function () {
-            this.ins = new Rate(this.wrapEl, {
-                onChanged: (val) => {
-                    this.value = val;
-                }
-            });
-            this.value = parseFloat(this.ins.inputEl.value);
-        },
-        changed: function (data) {
-            if (data.name === 'name') {
-                this.name = data.newVal;
-            }
-            else if (data.name === 'disabled') {
-                this.disabled = getAttrBool(data.newVal);
-            }
-            else if (data.name === 'readonly') {
-                this.readOnly = getAttrBool(data.newVal);
-            }
-        },
-        methods: {
-            getVal: function (val) {
-                return val == 0 ? 0 : ~~val === 0 ? val : parseFloat(val);
-            }
+    class RateElem extends CompBaseComm {
+        constructor() {
+            super();
+            this.createShadow();
+            super.createPropsObs();
         }
-    });
+        static get observedAttributes() {
+            return [...optRate.map((k) => k.attr), 'options'];
+        }
+        attributeChangedCallback(name, oldVal, newVal) {
+            super.updateProxy(name, newVal, optRate);
+        }
+        connectedCallback() {
+            this.render();
+            this.connected = true;
+        }
+        createShadow() {
+            this.shadowEl = this.attachShadow({ mode: "open" });
+            this.slotEl = createEl('slot');
+            this.shadowEl.appendChild(this.slotEl);
+        }
+        render() {
+            this.insertSource();
+            this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.rawHtml);
+            this.appendChild(this.wrapEl);
+            this.ins = new Rate(this.wrapEl);
+        }
+    }
 
     class TreeElem extends CustomElem {
         name;
@@ -35558,25 +35578,47 @@
             this.ins.inputEl.setAttribute(ax.embedSign, '');
         }
     }
-    window.customElements.define("ax-tree", TreeElem);
 
-    const AccordionElem = createComp({
-        tagName: 'ax-accordion',
-        compName: 'AccordionElem',
-        module: Accordion,
-    });
+    class AccordionElem extends CompBaseComm {
+        constructor() {
+            super();
+            this.createShadow();
+            super.createPropsObs();
+        }
+        static get observedAttributes() {
+            return [...optAccordion.map((k) => k.attr), 'options'];
+        }
+        attributeChangedCallback(name, oldVal, newVal) {
+            super.updateProxy(name, newVal, optAccordion);
+        }
+        connectedCallback() {
+            this.render();
+            this.connected = true;
+        }
+        createShadow() {
+            this.shadowEl = this.attachShadow({ mode: "open" });
+            this.slotEl = createEl('slot');
+            this.shadowEl.appendChild(this.slotEl);
+        }
+        render() {
+            this.insertSource();
+            this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.rawHtml);
+            this.appendChild(this.wrapEl);
+            this.ins = new Accordion(this.wrapEl);
+        }
+    }
 
-    class EditorElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem, PubMixinElem)(PubBaseElem) {
-        name;
-        value;
+    class EditorElem extends CompBaseCommFieldMixin {
+        type;
+        select;
         constructor() {
             super();
             this.type = 'editor-comp';
             this.getRawData();
             this.select = () => this.ins.inputEl.select();
         }
-        static custAttrs = [...optEditor.filter((k) => keyCond(k.attr) && typeof k.value !== 'boolean').map((k) => k.attr)];
-        static boolAttrs = optEditor.filter((k) => keyCond(k.attr) && typeof k.value === 'boolean').map((k) => k.attr);
+        static custAttrs = ['name', 'value', 'delay', 'classes', 'content', 'cont-type', 'cont-data', 'ajax', 'appear', 'header', 'mode', 'min-height', 'max-height', 'feature'];
+        static boolAttrs = ['disabled', 'readonly', 'deferred'];
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
@@ -35610,7 +35652,7 @@
             for (let k in this.propsRaw)
                 this.propsProxy[k] = this.propsRaw[k];
             this.propsRaw.value = this.rawHtml || this.propsRaw.value || '';
-            for (let k of Object.keys(this.properties).filter(keyCond))
+            for (let k of Object.keys(this.properties).filter(keyCond$1))
                 this.saveModsOpts(k, optEditor);
             this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
         }
@@ -35673,18 +35715,16 @@
             });
         }
     }
-    window.customElements.define("ax-editor", EditorElem);
 
-    class SelectElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem, PubMixinElem)(PubBaseElem) {
-        name;
-        value;
+    class SelectElem extends CompBaseCommFieldMixin {
+        type;
         constructor() {
             super();
             this.type = 'select-comp';
             this.getRawData();
         }
-        static custAttrs = [...optSelect.filter((k) => keyCond(k.attr) && typeof k.value !== 'boolean').map((k) => k.attr)];
-        static boolAttrs = optSelect.filter((k) => keyCond(k.attr) && typeof k.value === 'boolean').map((k) => k.attr);
+        static custAttrs = ['name', 'value', 'field', 'type', 'exclude', 'min', 'max', 'span', 'content', 'cont-type', 'cont-Data', 'ajax', 'size', 'max-height', 'search', 'tools'];
+        static boolAttrs = ['manual', 'disabled', 'readonly', 'full', 'multiple', 'sliced', 'removable', 'unique', 'collapse', 'status', 'auto-width'];
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
@@ -35716,7 +35756,7 @@
             }
             for (let k in this.propsRaw)
                 this.propsProxy[k] = this.propsRaw[k];
-            for (let k of Object.keys(this.properties).filter(keyCond))
+            for (let k of Object.keys(this.properties).filter(keyCond$1))
                 this.saveModsOpts(k, optSelect);
             this.setFieldProps(['name', 'disabled']);
             this.value = '';
@@ -35765,18 +35805,17 @@
             });
         }
     }
-    window.customElements.define("ax-select", SelectElem);
 
-    class UploadElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem, PubMixinElem)(PubBaseElem) {
-        name;
-        value;
+    class UploadElem extends CompBaseCommFieldMixin {
+        type;
+        focusEl;
         constructor() {
             super();
             this.type = 'upload-comp';
             this.getRawData();
         }
-        static custAttrs = [...optUpload.filter((k) => keyCond(k.attr) && typeof k.value !== 'boolean').map((k) => k.attr)];
-        static boolAttrs = optUpload.filter((k) => keyCond(k.attr) && typeof k.value === 'boolean').map((k) => k.attr);
+        static custAttrs = ['name', 'value', 'url', 'content', 'cont-type', 'cont-data', 'ajax', 'limit', 'accept', 'type', 'feature', 'size', 'table', 'classes', 'status', 'choose-btn', 'upload-btn', 'clear-btn', 'cloud'];
+        static boolAttrs = ['disabled', 'readonly', 'multiple', 'manual', 'pastable'];
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
@@ -35809,7 +35848,7 @@
             }
             for (let k in this.propsRaw)
                 this.propsProxy[k] = this.propsRaw[k];
-            for (let k of Object.keys(this.properties).filter(keyCond))
+            for (let k of Object.keys(this.properties).filter(keyCond$1))
                 this.saveModsOpts(k, optUpload);
             this.setFieldProps(['name', 'value', 'disabled']);
         }
@@ -35858,9 +35897,8 @@
             });
         }
     }
-    window.customElements.define("ax-upload", UploadElem);
 
-    class FieldsElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem)(PubBaseElem) {
+    class FieldsElem extends CompBaseCommField {
         labelEl;
         limitEl;
         diskEl;
@@ -35868,6 +35906,11 @@
         iconEl;
         btnEl;
         meanEl;
+        type;
+        childEls;
+        compEls;
+        fieldsEl;
+        unitEl;
         constructor() {
             super();
             this.type = 'fields-comp';
@@ -35966,9 +36009,8 @@
             }
         }
     }
-    window.customElements.define("ax-fields", FieldsElem);
 
-    class SearchElem extends pipe(PubCacheElem, PubListenElem, PubCommElem, PubFieldElem)(PubBaseElem) {
+    class SearchElem extends CompBaseCommField {
         labelEl;
         limitEl;
         diskEl;
@@ -35976,6 +36018,8 @@
         iconEl;
         btnEl;
         meanEl;
+        type;
+        fieldsEl;
         constructor() {
             super();
             this.type = 'search-comp';
@@ -36051,9 +36095,21 @@
             }
         }
     }
-    window.customElements.define("ax-search", SearchElem);
 
-    class CalloutElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
+    class CalloutElem extends CompBaseComm {
+        resultEl;
+        iconEl;
+        diskEl;
+        cubeEl;
+        imageEl;
+        closeEl;
+        linkEl;
+        maskEl;
+        toolsEl;
+        captEl;
+        contEl;
+        bodyEl;
+        progEl;
         constructor() {
             super();
             this.getRawData();
@@ -36239,9 +36295,8 @@
             }
         }
     }
-    window.customElements.define("ax-callout", CalloutElem);
 
-    class TwilightElem extends pipe(PubCacheElem, PubListenElem, PubCommElem)(PubBaseElem) {
+    class TwilightElem extends CompBaseComm {
         constructor() {
             super();
             this.getRawData();
@@ -36317,11 +36372,10 @@
             opt.newVal ? this.labelEl.remove() : this.wrapEl.insertAdjacentElement('afterbegin', this.labelEl);
         }
     }
-    window.customElements.define("ax-twilight", TwilightElem);
 
     const init = (type, parent) => {
         let parentEl = getEl(parent) || document.body, evalFn = new Function('el', 'module', `"use strict";try {return new module(el)} catch {return null}`), moduleNodeList = [], setProp = (node, module) => {
-            elProps(node)?.add(module);
+            elProps$1(node)?.add(module);
         }, getUsableModules = () => {
             let result = [];
             for (let [key, value] of Object.entries(ax)) {
@@ -36390,208 +36444,8 @@
         return ax;
     };
 
-    Object.assign(ax, {
-        ax,
-        alias,
-        config,
-        fieldTypes,
-        prefix,
-        getDataType,
-        renderTpl,
-        screenSize,
-        sliceStrEnd,
-        delay,
-        toNumber,
-        toPixel,
-        preventDft,
-        isMobi,
-        events,
-        icons,
-        fullGap,
-        propsMap,
-        augment,
-        privacy,
-        support,
-        requireTypes,
-        trim,
-        getSelectorType,
-        isEmpty,
-        isNull,
-        getEl,
-        deepClone,
-        deepMerge,
-        strToJson,
-        attrToJson,
-        attrJoinVal,
-        extend,
-        plan,
-        instance,
-        breakpoints,
-        createEl,
-        purifyHtml,
-        startUpper,
-        storage,
-        isDateStr,
-        getExpiration,
-        ajax,
-        offset,
-        elState,
-        contains,
-        getEls,
-        getContent,
-        setContent,
-        createBtns,
-        createFooter,
-        createTools,
-        tplToEl,
-        tplToEls,
-        getHeights,
-        getWidths,
-        getElSpace,
-        slideDown,
-        slideUp,
-        slideToggle,
-        curveFns,
-        curveVars,
-        ease,
-        easeHeight,
-        fadeIn,
-        fadeOut,
-        fadeToggle,
-        style,
-        show,
-        hide,
-        toggle,
-        pipe,
-        spreadBool,
-        getClasses,
-        classes,
-        validTools,
-        toLocalTime,
-        regExps,
-        replaceFrag,
-        combineArr,
-        sliceFrags,
-        paramToJson,
-        getLast,
-        fieldTools,
-        isSubset,
-        debounce,
-        throttle,
-        elProps,
-        convertByte,
-        clampVal,
-        formTools,
-        fileTools,
-        unique,
-        increaseId,
-        treeTools,
-        valToArr,
-        moveItem,
-        getValsFromAttrs,
-        dlToArr,
-        findItem,
-        findItems,
-        getAttrBool,
-        getAttrArr,
-        theme,
-        attrValBool,
-        getBetweenEls,
-        scrollTo,
-        allToEls,
-        getUTCTimestamp,
-        setAttr,
-        setAttrs,
-        scrollObj,
-        transformTools,
-        isScrollUp,
-        eventMap,
-        getClientObj,
-        bulletTools,
-        arrSearch,
-        arrSort,
-        isProxy,
-        getNestProp,
-        getIntArr,
-        clearRegx,
-        isOutside,
-        getRectPoints,
-        elsSort,
-        getEvtTarget,
-        getStrFromTpl,
-        stdParam,
-        setSingleSel,
-        splitNum,
-        parseUrlArr,
-        getPlaces,
-        dateTools,
-        repeatStr,
-        createModule,
-        createComp,
-        getArrMap,
-        includes,
-        capStart,
-        removeItem,
-        deepEqual,
-        splice,
-        fragment,
-        decompTask,
-        filterPrims,
-        createEvt,
-        confirm,
-        alert,
-        notice,
-        prompt,
-        keyCond,
-        removeStyle,
-        removeStyles,
-        addStyle,
-        addStyles,
-        PubBase,
-        PubListen,
-        PubCache,
-        Bubble,
-        Nest,
-        More,
-        Observe,
-        Position,
-        Hover,
-        Popup,
-        Dodge,
-        Alert,
-        Message,
-        Valid,
-        Menu,
-        Tab,
-        Drawer,
-        Dialog,
-        Spy,
-        Tooltip,
-        Dropdown,
-        Gesture,
-        Tags,
-        Retrieval,
-        Autocomplete,
-        Scroll,
-        Drag,
-        Masonry,
-        Swipe,
-        Lazy,
-        Progress,
-        Infinite,
-        Virtualize,
-        Pagination,
-        Range,
-        Datetime,
-        Tree,
-        Rate,
-        Accordion,
-        Editor,
-        Select,
-        Upload,
-        Panel,
+    let elems = [
         MoreElem,
-        AlertElem,
         ResultElem,
         DeformElem,
         RadioElem,
@@ -36625,31 +36479,250 @@
         EditorElem,
         SelectElem,
         UploadElem,
-        PubFieldElem,
         FieldsElem,
         SearchElem,
         CalloutElem,
         TwilightElem,
-        init,
-    });
-    config.support && support(true);
-    config.privacy && privacy({});
+    ];
+    {
+        for (let k of elems)
+            regElem(k);
+        Object.assign(ax, {
+            alias,
+            config,
+            fieldTypes,
+            prefix,
+            getDataType,
+            renderTpl,
+            getScreenSize,
+            sliceStrEnd,
+            delay,
+            toNumber,
+            toPixel,
+            preventDft,
+            isMobi,
+            events,
+            icons,
+            getFullGap,
+            propsMap,
+            augment,
+            privacy,
+            support,
+            requireTypes,
+            trim,
+            getSelectorType,
+            isEmpty,
+            isNull,
+            getEl,
+            deepClone,
+            deepMerge,
+            strToJson,
+            attrToJson,
+            attrJoinVal: attrJoinVal$1,
+            extend,
+            plan,
+            instance,
+            breakpoints: breakpoints$1,
+            createEl,
+            purifyHtml,
+            startUpper,
+            storage,
+            isDateStr,
+            getExpiration,
+            ajax,
+            offset,
+            elState,
+            contains,
+            getEls,
+            getContent,
+            setContent,
+            createBtns,
+            createFooter,
+            createTools,
+            tplToEl,
+            tplToEls,
+            getHeights,
+            getWidths,
+            getElSpace,
+            slideDown,
+            slideUp,
+            slideToggle,
+            curveFns,
+            ease,
+            easeHeight,
+            fadeIn,
+            fadeOut,
+            fadeToggle,
+            style,
+            show,
+            hide,
+            toggle,
+            pipe,
+            spreadBool: spreadBool$1,
+            getClasses,
+            classes,
+            validTools,
+            toLocalTime,
+            regExps,
+            replaceFrag,
+            combineArr,
+            sliceFrags,
+            paramToJson,
+            getLast,
+            fieldTools,
+            isSubset,
+            debounce,
+            throttle,
+            elProps: elProps$1,
+            convertByte,
+            clampVal,
+            formTools,
+            fileTools,
+            unique,
+            increaseId,
+            treeTools,
+            valToArr,
+            moveItem,
+            getValsFromAttrs,
+            dlToArr,
+            findItem,
+            findItems,
+            getAttrBool,
+            getAttrArr,
+            theme,
+            attrValBool,
+            getBetweenEls,
+            scrollTo,
+            allToEls,
+            getUTCTimestamp,
+            setAttr,
+            setAttrs,
+            getScrollObj,
+            transformTools,
+            isScrollUp,
+            eventMap,
+            getClientObj,
+            bulletTools,
+            arrSearch,
+            arrSort,
+            isProxy,
+            getNestProp,
+            getIntArr,
+            clearRegx,
+            isOutside,
+            getRectPoints,
+            elsSort,
+            getEvtTarget,
+            getStrFromTpl,
+            stdParam,
+            setSingleSel,
+            splitNum,
+            parseUrlArr,
+            getPlaces,
+            dateTools,
+            repeatStr,
+            createModule,
+            createComp,
+            getArrMap,
+            includes,
+            capStart,
+            removeItem,
+            deepEqual,
+            splice,
+            appendEls,
+            decompTask,
+            filterPrims,
+            createEvt,
+            confirm,
+            alert,
+            notice,
+            prompt,
+            keyCond: keyCond$1,
+            removeStyle,
+            removeStyles,
+            addStyle,
+            addStyles,
+            regElem,
+            getComputedVar,
+            getImgSpin,
+            getImgSpinDk,
+            getImgNone,
+            getImgEmpty,
+            getImgAvatar,
+            ModBase,
+            ModBaseListen,
+            ModBaseListenCache,
+            ModBaseListenCacheBubble,
+            ModBaseListenCacheNest,
+            More,
+            Observe,
+            Position,
+            Hover,
+            Popup,
+            Dodge,
+            Message,
+            Valid,
+            Menu,
+            Tab,
+            Drawer,
+            Dialog,
+            Spy,
+            Tooltip,
+            Dropdown,
+            Gesture,
+            Tags,
+            Retrieval,
+            Autocomplete,
+            Scroll,
+            Drag,
+            Masonry,
+            Swipe,
+            Lazy,
+            Progress,
+            Infinite,
+            Virtualize,
+            Pagination,
+            Range,
+            Datetime,
+            Tree,
+            Rate,
+            Accordion,
+            Editor,
+            Select,
+            Upload,
+            Panel,
+            CompBase,
+            CompBaseComm,
+            CompBaseCommField,
+            CompBaseCommFieldMixin,
+            ...elems,
+            init,
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+            for (let k of ax.tasks)
+                k();
+            ax.tasks = [];
+        });
+        config.support && support(true);
+        config.privacy && privacy({});
+    }
 
     exports.Accordion = Accordion;
     exports.AccordionElem = AccordionElem;
     exports.AlarmElem = AlarmElem;
-    exports.Alert = Alert;
-    exports.AlertElem = AlertElem;
     exports.AnchorsElem = AnchorsElem;
     exports.Autocomplete = Autocomplete;
     exports.AvatarElem = AvatarElem;
     exports.BadgeElem = BadgeElem;
     exports.BtnElem = BtnElem;
-    exports.Bubble = Bubble;
     exports.BuoyElem = BuoyElem;
     exports.CalloutElem = CalloutElem;
     exports.CheckboxElem = CheckboxElem;
     exports.CheckboxesElem = CheckboxesElem;
+    exports.CompBase = CompBase;
+    exports.CompBaseComm = CompBaseComm;
+    exports.CompBaseCommField = CompBaseCommField;
+    exports.CompBaseCommFieldMixin = CompBaseCommFieldMixin;
     exports.Datetime = Datetime;
     exports.DatetimeElem = DatetimeElem;
     exports.DeformElem = DeformElem;
@@ -36677,9 +36750,13 @@
     exports.Menu = Menu;
     exports.MenuElem = MenuElem;
     exports.Message = Message;
+    exports.ModBase = ModBase;
+    exports.ModBaseListen = ModBaseListen;
+    exports.ModBaseListenCache = ModBaseListenCache;
+    exports.ModBaseListenCacheBubble = ModBaseListenCacheBubble;
+    exports.ModBaseListenCacheNest = ModBaseListenCacheNest;
     exports.More = More;
     exports.MoreElem = MoreElem;
-    exports.Nest = Nest;
     exports.NumberElem = NumberElem;
     exports.Observe = Observe;
     exports.Pagination = Pagination;
@@ -36688,10 +36765,6 @@
     exports.Position = Position;
     exports.Progress = Progress;
     exports.ProgressElem = ProgressElem;
-    exports.PubBase = PubBase;
-    exports.PubCache = PubCache;
-    exports.PubFieldElem = PubFieldElem;
-    exports.PubListen = PubListen;
     exports.RadioElem = RadioElem;
     exports.RadiosElem = RadiosElem;
     exports.Range = Range;
@@ -36724,14 +36797,15 @@
     exports.alert = alert;
     exports.alias = alias;
     exports.allToEls = allToEls;
+    exports.appendEls = appendEls;
     exports.arrSearch = arrSearch;
     exports.arrSort = arrSort;
-    exports.attrJoinVal = attrJoinVal;
+    exports.attrJoinVal = attrJoinVal$1;
     exports.attrToJson = attrToJson;
     exports.attrValBool = attrValBool;
     exports.augment = augment;
     exports.ax = ax;
-    exports.breakpoints = breakpoints;
+    exports.breakpoints = breakpoints$1;
     exports.bulletTools = bulletTools;
     exports.capStart = capStart;
     exports.clampVal = clampVal;
@@ -36750,7 +36824,6 @@
     exports.createModule = createModule;
     exports.createTools = createTools;
     exports.curveFns = curveFns;
-    exports.curveVars = curveVars;
     exports.dateTools = dateTools;
     exports.debounce = debounce;
     exports.decompTask = decompTask;
@@ -36762,7 +36835,7 @@
     exports.dlToArr = dlToArr;
     exports.ease = ease;
     exports.easeHeight = easeHeight;
-    exports.elProps = elProps;
+    exports.elProps = elProps$1;
     exports.elState = elState;
     exports.elsSort = elsSort;
     exports.eventMap = eventMap;
@@ -36778,14 +36851,13 @@
     exports.findItem = findItem;
     exports.findItems = findItems;
     exports.formTools = formTools;
-    exports.fragment = fragment;
-    exports.fullGap = fullGap;
     exports.getArrMap = getArrMap;
     exports.getAttrArr = getAttrArr;
     exports.getAttrBool = getAttrBool;
     exports.getBetweenEls = getBetweenEls;
     exports.getClasses = getClasses;
     exports.getClientObj = getClientObj;
+    exports.getComputedVar = getComputedVar;
     exports.getContent = getContent;
     exports.getDataType = getDataType;
     exports.getEl = getEl;
@@ -36793,12 +36865,20 @@
     exports.getEls = getEls;
     exports.getEvtTarget = getEvtTarget;
     exports.getExpiration = getExpiration;
+    exports.getFullGap = getFullGap;
     exports.getHeights = getHeights;
+    exports.getImgAvatar = getImgAvatar;
+    exports.getImgEmpty = getImgEmpty;
+    exports.getImgNone = getImgNone;
+    exports.getImgSpin = getImgSpin;
+    exports.getImgSpinDk = getImgSpinDk;
     exports.getIntArr = getIntArr;
     exports.getLast = getLast;
     exports.getNestProp = getNestProp;
     exports.getPlaces = getPlaces;
     exports.getRectPoints = getRectPoints;
+    exports.getScreenSize = getScreenSize;
+    exports.getScrollObj = getScrollObj;
     exports.getSelectorType = getSelectorType;
     exports.getStrFromTpl = getStrFromTpl;
     exports.getUTCTimestamp = getUTCTimestamp;
@@ -36818,7 +36898,7 @@
     exports.isProxy = isProxy;
     exports.isScrollUp = isScrollUp;
     exports.isSubset = isSubset;
-    exports.keyCond = keyCond;
+    exports.keyCond = keyCond$1;
     exports.moveItem = moveItem;
     exports.notice = notice;
     exports.offset = offset;
@@ -36832,6 +36912,7 @@
     exports.prompt = prompt;
     exports.propsMap = propsMap;
     exports.purifyHtml = purifyHtml;
+    exports.regElem = regElem;
     exports.regExps = regExps;
     exports.removeItem = removeItem;
     exports.removeStyle = removeStyle;
@@ -36840,8 +36921,6 @@
     exports.repeatStr = repeatStr;
     exports.replaceFrag = replaceFrag;
     exports.requireTypes = requireTypes;
-    exports.screenSize = screenSize;
-    exports.scrollObj = scrollObj;
     exports.scrollTo = scrollTo;
     exports.setAttr = setAttr;
     exports.setAttrs = setAttrs;
@@ -36855,7 +36934,7 @@
     exports.slideUp = slideUp;
     exports.splice = splice;
     exports.splitNum = splitNum;
-    exports.spreadBool = spreadBool;
+    exports.spreadBool = spreadBool$1;
     exports.startUpper = startUpper;
     exports.stdParam = stdParam;
     exports.storage = storage;
