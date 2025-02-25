@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-25 2:1:4
+ * @since Last modified: 2025-2-25 22:53:32
  * @name AXUI front-end framework.
- * @version 3.0.12
+ * @version 3.0.13
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -2193,6 +2193,7 @@ const classes = (target) => {
             });
             return this;
         },
+        
         replace: function (oldClass, newClass) {
             if (!el || !oldClass)
                 return this;
@@ -2202,6 +2203,7 @@ const classes = (target) => {
             }
             return this;
         },
+        
         has: function (classes) {
             if (!el || isEmpty(classes))
                 return this;
@@ -3357,7 +3359,7 @@ class Observe extends ModBaseListen {
         this.canDeep = (type, value) => this.canProxy(type, value) && this.options.deep.enable;
         this.canRun = (key) => this.options.filter ? this.options.filter(key) : true;
         
-        this.keys = { getted: [], setted: [], deleted: [] };
+        this.keys = { got: [], set: [], deleted: [] };
         
         this.fullMethods = {
             get: (target, key, proxy) => {
@@ -3366,10 +3368,10 @@ class Observe extends ModBaseListen {
                 if (key === '_isProxy')
                     return;
                 let value = target[key], baseProps = { target, key, value, raw: value, proxy };
-                !this.keys.getted.includes(key) && this.keys.getted.push(key);
-                super.listen({ name: 'getted', params: [{ ...baseProps, type: 'getted' }] });
-                super.listen({ name: 'crud', params: [{ ...baseProps, type: 'getted' }] });
-                super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'getted' }] });
+                !this.keys.got.includes(key) && this.keys.got.push(key);
+                super.listen({ name: 'got', params: [{ ...baseProps, type: 'got' }] });
+                super.listen({ name: 'crud', params: [{ ...baseProps, type: 'got' }] });
+                super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'got' }] });
                 return Reflect.get(target, key, proxy);
             },
             set: (target, key, value, proxy) => {
@@ -3382,11 +3384,11 @@ class Observe extends ModBaseListen {
                 if (this.options.accept) {
                     Reflect.set(target, key, value);
                 }
-                !this.keys.setted.includes(key) && this.keys.setted.push(key);
-                super.listen({ name: 'crud', params: [{ ...baseProps, type: 'setted' }] });
-                super.listen({ name: 'setted', params: [{ ...baseProps, type: 'setted' }] });
+                !this.keys.set.includes(key) && this.keys.set.push(key);
+                super.listen({ name: 'crud', params: [{ ...baseProps, type: 'set' }] });
+                super.listen({ name: 'set', params: [{ ...baseProps, type: 'set' }] });
                 super.listen({ name: handleType, params: [{ ...baseProps, type: handleType }] });
-                super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'setted' }] });
+                super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'set' }] });
                 this.reactCount++;
                 this.complete(this.reactCount);
                 return true;
@@ -3479,7 +3481,7 @@ class Observe extends ModBaseListen {
                 }
                 super.listen({ name: 'completed', params: [{ count: this.completedCount, target: this.targetData, proxy: this.hostProxy, keys: this.keys, type: 'completed' }] });
                 this.completedCount++;
-                this.keys = { getted: [], setted: [], deleted: [] };
+                this.keys = { got: [], set: [], deleted: [] };
             }
         }, 0);
     }
@@ -5273,7 +5275,7 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
         if (!target)
             return;
         fieldTools.setVals({ target, value, child, key: this.options.autoFill.key });
-        this.listen({ name: 'targetSetted', params: [value] });
+        this.listen({ name: 'targetSet', params: [value] });
     }
     
     
@@ -12694,8 +12696,8 @@ const optMenu$1 = [
         value: null,
     },
     {
-        attr: 'on-render',
-        prop: 'onRender',
+        attr: 'on-rendered',
+        prop: 'onRendered',
         value: null,
     },
     {
@@ -12704,48 +12706,48 @@ const optMenu$1 = [
         value: null
     },
     {
-        attr: 'on-add',
-        prop: 'onAdd',
+        attr: 'on-added',
+        prop: 'onAdded',
         value: null
     },
     {
-        attr: 'on-edit',
-        prop: 'onEdit',
+        attr: 'on-edited',
+        prop: 'onEdited',
         value: null
     },
     {
-        attr: 'on-remove',
-        prop: 'onRemove',
+        attr: 'on-removed',
+        prop: 'onRemoved',
         value: null
     },
     {
-        attr: 'on-disable',
-        prop: 'onDisable',
+        attr: 'on-disabled',
+        prop: 'onDisabled',
         value: null
     },
     {
-        attr: 'on-enable',
-        prop: 'onEnable',
+        attr: 'on-enabled',
+        prop: 'onEnabled',
         value: null
     },
     {
-        attr: 'on-disableAll',
-        prop: 'onDisableAll',
+        attr: 'on-disabledAll',
+        prop: 'onDisabledAll',
         value: null
     },
     {
-        attr: 'on-enableAll',
-        prop: 'onEnableAll',
+        attr: 'on-enabledAll',
+        prop: 'onEnabledAll',
         value: null
     },
     {
-        attr: 'on-expand',
-        prop: 'onExpand',
+        attr: 'on-expanded',
+        prop: 'onExpanded',
         value: null
     },
     {
-        attr: 'on-collapse',
-        prop: 'onCollapse',
+        attr: 'on-collapsed',
+        prop: 'onCollapsed',
         value: null
     },
     {
@@ -12754,18 +12756,28 @@ const optMenu$1 = [
         value: null
     },
     {
-        attr: 'on-collapseAll',
-        prop: 'onCollapseAll',
+        attr: 'on-collapsedAll',
+        prop: 'onCollapsedAll',
         value: null
     },
     {
-        attr: 'on-select',
-        prop: 'onSelect',
+        attr: 'on-selected',
+        prop: 'onSelected',
         value: null
     },
     {
-        attr: 'on-graft',
-        prop: 'onGraft',
+        attr: 'on-deselected',
+        prop: 'onDeselected',
+        value: null
+    },
+    {
+        attr: 'on-activated',
+        prop: 'onActivated',
+        value: null
+    },
+    {
+        attr: 'on-grafted',
+        prop: 'onGrafted',
         value: null
     },
     {
@@ -12908,7 +12920,7 @@ class Menu extends ModBaseListenCache {
     getObserver(data) {
         this.observeIns = new Observe(data, {
             deep: true,
-            onSetted: (obj) => {
+            onSet: (obj) => {
                 if (obj.key === 'icon' && obj.target.iconEl) {
                     obj.target.iconEl.class = obj.value;
                 }
@@ -13263,7 +13275,7 @@ class Menu extends ModBaseListenCache {
             el: item.childrenEl,
             duration: this.options.duration,
             done: () => {
-                super.listen({ name: 'collapse', cb, params: [item] });
+                super.listen({ name: 'collapsed', cb, params: [item] });
             }
         });
         return this;
@@ -13290,7 +13302,7 @@ class Menu extends ModBaseListenCache {
                 if (!this.options.multiple && this.lastExpanded !== item.id) {
                     this.collapse(item);
                 }
-                super.listen({ name: 'expand', cb, params: [item] });
+                super.listen({ name: 'expanded', cb, params: [item] });
             }
         });
         if (!this.options.multiple) {
@@ -13308,7 +13320,7 @@ class Menu extends ModBaseListenCache {
         this.flatData.filter((k) => k.expanded).forEach((k) => {
             this.collapse(k);
         });
-        super.listen({ name: 'collapseAll', cb });
+        super.listen({ name: 'collapsedAll', cb });
         return this;
     }
     expandAll(cb) {
@@ -13318,7 +13330,7 @@ class Menu extends ModBaseListenCache {
         this.flatData.forEach((k) => {
             this.expand(k);
         });
-        super.listen({ name: 'expandAll', cb });
+        super.listen({ name: 'expandedAll', cb });
         return this;
     }
     expandParents(data) {
@@ -13339,7 +13351,7 @@ class Menu extends ModBaseListenCache {
         }
         let tmp = Array.isArray(data) ? data : [data], arr = tmp.map((k) => findItem(k, this.flatData)).filter(Boolean), fun = (k) => this.toggleDisabled(k, 'disable');
         arr.forEach(k => fun(k));
-        super.listen({ name: 'disable', cb, params: [arr] });
+        super.listen({ name: 'disabled', cb, params: [arr] });
         return this;
     }
     disableAll(cb) {
@@ -13347,7 +13359,7 @@ class Menu extends ModBaseListenCache {
             return this;
         }
         this.disable(this.flatData);
-        super.listen({ name: 'disableAll', cb });
+        super.listen({ name: 'disabledAll', cb });
         return this;
     }
     enable(data, cb) {
@@ -13356,7 +13368,7 @@ class Menu extends ModBaseListenCache {
         }
         let tmp = Array.isArray(data) ? data : [data], arr = tmp.map((k) => findItem(k, this.flatData)).filter((k) => k && k.disabled), fun = (k) => this.toggleDisabled(k, 'enable');
         arr.forEach((k) => fun(k));
-        super.listen({ name: 'enable', cb, params: [arr] });
+        super.listen({ name: 'enabled', cb, params: [arr] });
         return this;
     }
     enableAll(cb) {
@@ -13364,7 +13376,7 @@ class Menu extends ModBaseListenCache {
             return this;
         }
         this.enable(this.flatData);
-        super.listen({ name: 'enableAll', cb });
+        super.listen({ name: 'enabledAll', cb });
         return this;
     }
     select(data, cb) {
@@ -13381,10 +13393,10 @@ class Menu extends ModBaseListenCache {
         others.forEach((i) => {
             i.selected = false;
         });
-        super.listen({ name: 'select', cb, params: [item] });
+        super.listen({ name: 'selected', cb, params: [item] });
         return this;
     }
-    unselect(data, cb) {
+    deselect(data, cb) {
         if (this.destroyed || isNull(data)) {
             return this;
         }
@@ -13393,7 +13405,7 @@ class Menu extends ModBaseListenCache {
             return this;
         }
         item.selected = false;
-        super.listen({ name: 'unselect', cb, params: [item] });
+        super.listen({ name: 'deselected', cb, params: [item] });
         return this;
     }
     active(data, cb) {
@@ -13406,7 +13418,7 @@ class Menu extends ModBaseListenCache {
                     this.collapse(k);
                 });
             }
-            this.getSelected() && this.unselect(this.getSelected());
+            this.getSelected() && this.deselect(this.getSelected());
         }
         let tmp = Array.isArray(data) ? data : [data], arr = unique(tmp.map((k) => findItem(k, this.flatData)).filter(Boolean), 'id'), expandedItems = arr.filter((k) => k.children), expendedItem = (!this.options.multiple) ? expandedItems.slice(-1) : expandedItems, selectedItems = arr.filter((k) => !k.children), selectedItem = selectedItems[selectedItems.length - 1], expands = [];
         expands = expendedItem.filter(Boolean).map((k) => treeTools.getParentsFromPath({ path: k.path, flatData: this.flatData }).parents).flat().filter(Boolean);
@@ -13414,7 +13426,7 @@ class Menu extends ModBaseListenCache {
             this.expand(k);
         });
         selectedItem ? this.select(selectedItem) : null;
-        super.listen({ name: 'active', cb, params: selectedItem ? [...expands, selectedItem] : expands });
+        super.listen({ name: 'activated', cb, params: selectedItem ? [...expands, selectedItem] : expands });
         return this;
     }
     async add({ data, target, isChild = true, brother, isFront = true, repeat = true, cb }) {
@@ -13463,7 +13475,7 @@ class Menu extends ModBaseListenCache {
             this.flatData = treeTools.toFlat(this.treeData);
             this.renderFinish();
         }
-        super.listen({ name: 'add', cb, params: [items] });
+        super.listen({ name: 'added', cb, params: [items] });
         return this;
     }
     async remove(data, cb) {
@@ -13491,7 +13503,7 @@ class Menu extends ModBaseListenCache {
             removeItem(k);
         });
         this.flatData = treeTools.toFlat(this.treeData);
-        super.listen({ name: 'remove', cb, params: [items] });
+        super.listen({ name: 'removed', cb, params: [items] });
         return this;
     }
     async edit({ item, data, cb }) {
@@ -13512,7 +13524,7 @@ class Menu extends ModBaseListenCache {
                 source[k] = val;
             }
         }
-        super.listen({ name: 'edit', cb, params: [source] });
+        super.listen({ name: 'edited', cb, params: [source] });
         return this;
     }
     async graft({ source, target, isFront = true, isChild = true, cb }) {
@@ -13535,9 +13547,9 @@ class Menu extends ModBaseListenCache {
             cb: (obj, refer) => {
                 if (refer && refer.children) {
                     this.expand(refer);
-                    this.unselect(refer);
+                    this.deselect(refer);
                 }
-                super.listen({ name: 'graft', cb, params: [obj] });
+                super.listen({ name: 'grafted', cb, params: [obj] });
                 return this;
             }
         });
@@ -13759,28 +13771,28 @@ const optMenu = [
         value: null
     },
     {
-        attr: 'on-disable',
-        prop: 'onDisable',
+        attr: 'on-disabled',
+        prop: 'onDisabled',
         value: null
     },
     {
-        attr: 'on-enable',
-        prop: 'onEnable',
+        attr: 'on-enabled',
+        prop: 'onEnabled',
         value: null
     },
     {
-        attr: 'on-disableAll',
-        prop: 'onDisableAll',
+        attr: 'on-disabledAll',
+        prop: 'onDisabledAll',
         value: null
     },
     {
-        attr: 'on-enableAll',
-        prop: 'onEnableAll',
+        attr: 'on-enabledAll',
+        prop: 'onEnabledAll',
         value: null
     },
     {
-        attr: 'on-active',
-        prop: 'onActive',
+        attr: 'on-activated',
+        prop: 'onActivated',
         value: null
     },
     {
@@ -13905,7 +13917,7 @@ class Tab extends ModBaseListenCache {
         this.observeIns ? this.observeIns.destroy() : null;
         this.observeIns = new Observe(data, {
             deep: true,
-            onSetted: (obj) => {
+            onSet: (obj) => {
                 if (obj.key === 'icon' && obj.target.iconEl) {
                     obj.target.iconEl.class = obj.value;
                 }
@@ -14118,7 +14130,7 @@ class Tab extends ModBaseListenCache {
         }
         let tmp = Array.isArray(data) ? data : [data], arr = tmp.map((k) => findItem(k, this.treeData)).filter(Boolean), fun = (k) => this.toggleDisabled(k, 'disable');
         arr.forEach(k => fun(k));
-        super.listen({ name: 'disable', cb, params: [arr] });
+        super.listen({ name: 'disabled', cb, params: [arr] });
         return this;
     }
     disableAll(cb) {
@@ -14126,7 +14138,7 @@ class Tab extends ModBaseListenCache {
             return this;
         }
         this.disable(this.treeData);
-        super.listen({ name: 'disableAll', cb });
+        super.listen({ name: 'disabledAll', cb });
         return this;
     }
     enable(data, cb) {
@@ -14135,7 +14147,7 @@ class Tab extends ModBaseListenCache {
         }
         let tmp = Array.isArray(data) ? data : [data], arr = tmp.map((k) => findItem(k, this.treeData)).filter(Boolean), fun = (k) => this.toggleDisabled(k, 'enable');
         arr.forEach(k => fun(k));
-        super.listen({ name: 'enable', cb, params: [arr] });
+        super.listen({ name: 'enabled', cb, params: [arr] });
         return this;
     }
     enableAll(cb) {
@@ -14143,7 +14155,7 @@ class Tab extends ModBaseListenCache {
             return this;
         }
         this.enable(this.treeData);
-        super.listen({ name: 'enableAll', cb });
+        super.listen({ name: 'enabledAll', cb });
         return this;
     }
     active(data, cb) {
@@ -14155,7 +14167,7 @@ class Tab extends ModBaseListenCache {
         other ? other.selected = false : null;
         item.selected = true;
         item.disabled = false;
-        super.listen({ name: 'active', cb, params: [item] });
+        super.listen({ name: 'activated', cb, params: [item] });
         return this;
     }
     add({ data, target, isFront = true, repeat = true, cb }) {
@@ -14840,7 +14852,7 @@ class Tags extends ModBaseListenCache {
         this.dataOrig = [];
         this.dataObs = new Observe(this.dataOrig, {
             deep: true,
-            onSetted: (obj) => {
+            onSet: (obj) => {
                 if (obj.key === this.options.field || obj.key === 'label') {
                     obj.target.labelEl.innerHTML = obj.value;
                 }
@@ -15074,7 +15086,7 @@ class Tags extends ModBaseListenCache {
             value: this.getStrVals(),
             items: [...this.data],
         };
-        super.listen({ name: 'getted', cb, params: [value] });
+        super.listen({ name: 'got', cb, params: [value] });
         return value;
     }
     
@@ -17469,7 +17481,7 @@ class Masonry extends ModBaseListenCache {
         });
         this.itemsTmp = [];
         this.itemsObs = new Observe(this.itemsTmp, {
-            onSetted: (data) => {
+            onSet: (data) => {
                 if (getDataType(data.value).includes('HTML')) {
                     this.targetEl.appendChild(data.value);
                     this.itemSizeObs.observe(data.value);
@@ -18136,7 +18148,7 @@ class Progress extends ModBaseListenCache {
     }
     setObs() {
         this.obsIns = new Observe({ paused: false, completed: false }, {
-            onSetted: (resp) => {
+            onSet: (resp) => {
                 if (resp.key === 'paused') ;
                 else if (resp.key === 'completed') {
                     if (resp.value) {
@@ -18477,7 +18489,7 @@ class Progress extends ModBaseListenCache {
         if (this.vals.val === this.valNow)
             return false;
         this.setAnim(this.vals.val, opts?.duration);
-        super.listen({ name: 'setted', cb: opts?.cb, params: [{ ...this.vals, valNow: this.valNow, barNow: this.barNow }] });
+        super.listen({ name: 'set', cb: opts?.cb, params: [{ ...this.vals, valNow: this.valNow, barNow: this.barNow }] });
         return this;
     }
     async locateTo(val, opts) {
@@ -18497,7 +18509,7 @@ class Progress extends ModBaseListenCache {
         }
         this.watchEnds();
         this.watchSteps();
-        super.listen({ name: 'setted', cb: opts?.cb, params: [{ ...this.vals, valNow: this.valNow, barNow: this.barNow }] });
+        super.listen({ name: 'set', cb: opts?.cb, params: [{ ...this.vals, valNow: this.valNow, barNow: this.barNow }] });
         return this;
     }
     restore(cb) {
@@ -18861,7 +18873,7 @@ class Swipe extends ModBaseListenCache {
     setBulletsObs() {
         this.bulletsObs = new Observe(this.bulletsTmp, {
             deep: true,
-            onSetted: (resp) => {
+            onSet: (resp) => {
                 if (resp.key === 'active' && resp.value === true) {
                     resp.proxy.el.setAttribute('active', '');
                     this.bulletSeq = this.findPrevNextBullet(resp.proxy);
@@ -20764,8 +20776,13 @@ const optPagination = [
         value: null,
     },
     {
-        attr: 'on-locate',
-        prop: 'onLocate',
+        attr: 'on-located',
+        prop: 'onLocated',
+        value: null,
+    },
+    {
+        attr: 'on-gotcont',
+        prop: 'onGotCont',
         value: null,
     },
     {
@@ -20780,17 +20797,17 @@ const optPagination = [
     },
     {
         attr: 'on-exceeded',
-        prop: 'onExceed',
+        prop: 'onExceeded',
         value: null,
     },
     {
-        attr: 'on-renderlist',
-        prop: 'onRenderList',
+        attr: 'on-renderedlist',
+        prop: 'onRenderedList',
         value: null,
     },
     {
-        attr: 'on-renderpages',
-        prop: 'onRenderPages',
+        attr: 'on-renderedpages',
+        prop: 'onRenderedPages',
         value: null,
     },
     ...optBase
@@ -20856,7 +20873,7 @@ class Pagination extends ModBaseListenCache {
     }
     setOutputObs() {
         this.outputObs = new Observe({ current: -1, count: this.options.count, total: 0, pages: -1, }, {
-            onSetted: (data) => {
+            onSet: (data) => {
                 if (['total', 'count'].includes(data.key)) {
                     if (data.key === 'total') {
                         data.proxy.pages = Math.ceil(data.value / (data.proxy.count || 1)) || 1;
@@ -20873,13 +20890,13 @@ class Pagination extends ModBaseListenCache {
                 this.renderTipsEl();
             },
             onCompleted: (data) => {
-                if (!data.keys.setted.includes('pages') && !data.keys.setted.includes('current'))
+                if (!data.keys.set.includes('pages') && !data.keys.set.includes('current'))
                     return;
-                if (isEmpty(this.items) || data.keys.setted.includes('pages')) {
+                if (isEmpty(this.items) || data.keys.set.includes('pages')) {
                     this.renderPagesEl();
                     this.rerenderListEl();
                 }
-                else if (data.keys.setted.includes('current')) {
+                else if (data.keys.set.includes('current')) {
                     if (this.hasEll()) {
                         this.renderPagesEl();
                         this.rerenderListEl();
@@ -20980,7 +20997,7 @@ class Pagination extends ModBaseListenCache {
         else if (this.output.current === this.output.pages) {
             super.listen({ name: 'toLast' });
         }
-        super.listen({ name: 'locate', params: [{ current: this.output.current, data: this.data }] });
+        super.listen({ name: 'located', params: [{ current: this.output.current, data: this.data }] });
     }
     async getData(data, cb) {
         let result = { content: [], source: null };
@@ -21017,7 +21034,7 @@ class Pagination extends ModBaseListenCache {
             this.output.total = result.content.length;
         }
         this.respSource = result.source;
-        super.listen({ name: 'getCont', cb, params: [result] });
+        super.listen({ name: 'gotCont', cb, params: [result] });
         return result;
     }
     isSqlReq(resp = this.respSource) {
@@ -21108,7 +21125,7 @@ class Pagination extends ModBaseListenCache {
             }
         }
         this.pagesEl.append(...this.items);
-        super.listen({ name: 'renderPages', params: [{ nodes: this.items, ...this.output }] });
+        super.listen({ name: 'renderedPages', params: [{ nodes: this.items, ...this.output }] });
     }
     createItem(current) {
         let tmp = createEl(this.options.names.item, { [alias]: 'page', page: current }, current);
@@ -21141,7 +21158,7 @@ class Pagination extends ModBaseListenCache {
         }
         this.listEl.innerHTML = '';
         this.listEl.append(...this.nodes);
-        super.listen({ name: 'renderList', params: [{ nodes: this.nodes, data: this.data, wrap: this.listEl, ...this.output }] });
+        super.listen({ name: 'renderedList', params: [{ nodes: this.nodes, data: this.data, wrap: this.listEl, ...this.output }] });
     }
     toggleSelected(current = this.output.current) {
         let item = this.items.find((k) => k.getAttribute('page') == current);
@@ -21166,7 +21183,7 @@ class Pagination extends ModBaseListenCache {
             wrapEl.innerHTML = '';
             wrapEl.append(...this.nodes);
         }
-        super.listen({ name: 'renderList', params: [{ nodes: this.nodes, data: content, wrap: wrapEl, ...this.output }] });
+        super.listen({ name: 'renderedList', params: [{ nodes: this.nodes, data: content, wrap: wrapEl, ...this.output }] });
     }
     async locate(current, cb) {
         if (this.destroyed)
@@ -21191,7 +21208,7 @@ class Pagination extends ModBaseListenCache {
         else if (this.output.current === this.output.pages) {
             super.listen({ name: 'toLast' });
         }
-        super.listen({ name: 'locate', cb, params: [{ current, data: this.data }] });
+        super.listen({ name: 'located', cb, params: [{ current, data: this.data }] });
     }
     prev() {
         this.locate(this.output.current - 1);
@@ -21863,7 +21880,7 @@ class Range extends ModBaseListenCache {
         this.inputEl.value = this.output.value;
         this.options.result.enable && (this.resultEl.innerHTML = renderTpl(this.options.lang.result, this.output));
         super.listen({ name: 'output', params: [this.output] });
-        super.listen({ name: 'setted', cb, params: [this.output] });
+        super.listen({ name: 'set', cb, params: [this.output] });
         this.endsListen(cb);
         return this;
     }
@@ -23556,7 +23573,7 @@ class Datetime extends ModBaseListenCache {
                         else {
                             this.select(k, curItem, curGrids);
                         }
-                        super.listen({ name: 'setted', params: [k] });
+                        super.listen({ name: 'set', params: [k] });
                     };
                     if (this.detailIns) {
                         k.contEl.onmouseenter = () => {
@@ -24262,7 +24279,7 @@ class Datetime extends ModBaseListenCache {
                 });
             }
         }
-        super.listen({ name: 'setted', cb, params: [objArr] });
+        super.listen({ name: 'set', cb, params: [objArr] });
         return this;
     }
     setRange(data, cb) {
@@ -25159,7 +25176,7 @@ class Tree extends ModBaseListenCacheNest {
                 enable: true,
                 exclude: ['tools'],
             },
-            onSetted: (obj) => {
+            onSet: (obj) => {
                 if (obj.key === 'icon' && obj.proxy.iconEl) {
                     classes(obj.proxy.iconEl).replace(obj.raw, obj.value);
                 }
@@ -25235,9 +25252,9 @@ class Tree extends ModBaseListenCacheNest {
                 }
             },
             onCompleted: (data) => {
-                ((data.keys.setted.includes('selected') && this.options.output.from === 'selected')
+                ((data.keys.set.includes('selected') && this.options.output.from === 'selected')
                     ||
-                        (data.keys.setted.includes('checked') && this.options.output.from === 'checked'))
+                        (data.keys.set.includes('checked') && this.options.output.from === 'checked'))
                     && this.updateVals();
                 if (this.options.check.enable && this.options.check.max) {
                     let checkeds = super.getCheckeds(), uncheckeds = super.getUncheckeds(), setDisabled = (data) => {
@@ -26484,7 +26501,7 @@ class Tree extends ModBaseListenCacheNest {
             return;
         let receiver = getEl(target), val = this.getVals().value;
         fieldTools.setVals({ target: receiver, value: val });
-        super.listen({ name: 'setted', cb, params: [val] });
+        super.listen({ name: 'set', cb, params: [val] });
         return this;
     }
     clearVals(all = false, cb) {
@@ -26520,7 +26537,7 @@ class Tree extends ModBaseListenCacheNest {
             result = tmp.map((k) => k[options.field]);
         }
         let value = options.isStr ? result.join(options.separator) : result;
-        super.listen({ name: 'getted', cb, params: [value] });
+        super.listen({ name: 'got', cb, params: [value] });
         return { value, items };
     }
     getValItems(from = 'selected') {
@@ -26804,7 +26821,7 @@ class Rate extends ModBaseListenCache {
     }
     createOutputIns() {
         this.outputIns = new Observe({ stars: 0, value: 0, title: this.options.lang.title.dft, count: this.options.count, total: this.options.count * this.options.increment }, {
-            onSetted: (data) => {
+            onSet: (data) => {
                 if (data.key === 'value') {
                     let oldVal = parseFloat(this.inputEl.value), newVal = this.output[this.options.fill || 'value'];
                     this.inputEl.value = newVal;
@@ -27032,7 +27049,7 @@ class Rate extends ModBaseListenCache {
         this.output.item = item;
         this.useMap && (this.output.title = this.options.map[Math.ceil(stars) - 1].title);
         super.updateCache({ value });
-        super.listen({ name: 'setted', cb, params: [{ ...this.output }] });
+        super.listen({ name: 'set', cb, params: [{ ...this.output }] });
     }
     restore(cb) {
         if (this.destroyed)
@@ -27378,8 +27395,8 @@ const optAccordion = [
         value: null
     },
     {
-        attr: 'on-getted',
-        prop: 'onGetted',
+        attr: 'on-got',
+        prop: 'onGot',
         value: null
     },
     {
@@ -27552,7 +27569,7 @@ class Accordion extends ModBaseListenCacheNest {
                 enable: true,
                 exclude: ['tools'],
             },
-            onSetted: (obj) => {
+            onSet: (obj) => {
                 if (obj.key === 'icon' && obj.proxy.iconEl) {
                     classes(obj.proxy.iconEl).replace(obj.raw, obj.value);
                 }
@@ -27613,7 +27630,7 @@ class Accordion extends ModBaseListenCacheNest {
                 }
             },
             onCompleted: (data) => {
-                data.keys.setted.includes('checked') && this.updateVals();
+                data.keys.set.includes('checked') && this.updateVals();
                 if (this.options.storName) {
                     let tmp = {
                         check: { value: treeTools.getBoolItems(this.flatData, 'checked').map((k) => k.id) },
@@ -28163,7 +28180,7 @@ class Accordion extends ModBaseListenCacheNest {
             return;
         let receiver = getEl(target), val = this.getVals();
         fieldTools.setVals({ target: receiver, value: val });
-        super.listen({ name: 'setted', cb, params: [val] });
+        super.listen({ name: 'set', cb, params: [val] });
         return this;
     }
     clearVals(cb) {
@@ -28181,7 +28198,7 @@ class Accordion extends ModBaseListenCacheNest {
             return this;
         let options = Object.assign({ ...this.options.output, isStr: true }, opt), items = super.getCheckeds(), result = items.map((k) => k[options.prop]);
         let val = options.isStr ? result.join(options.separator) : result;
-        super.listen({ name: 'getted', cb, params: [val] });
+        super.listen({ name: 'got', cb, params: [val] });
         return val;
     }
     async setContent(item, data = {}, cb) {
@@ -28635,7 +28652,7 @@ class Editor extends ModBaseListenCache {
                         content: content.map((k) => k.label),
                         feature: 'select',
                         popup: {
-                            onTargetSetted: (value) => {
+                            onTargetSet: (value) => {
                                 this.setStyles('fontSize', content.find((k) => k.label === value).value);
                             }
                         }
@@ -28658,7 +28675,7 @@ class Editor extends ModBaseListenCache {
                         content: content.map((k) => k.label),
                         feature: 'select',
                         popup: {
-                            onTargetSetted: (value) => {
+                            onTargetSet: (value) => {
                                 this.setLineStyles('textAlign', content.find((k) => k.label === value).value);
                             }
                         }
@@ -28683,7 +28700,7 @@ class Editor extends ModBaseListenCache {
                         content: content.map((k) => k.label),
                         feature: 'select',
                         popup: {
-                            onTargetSetted: (value) => {
+                            onTargetSet: (value) => {
                                 this.replaceLineTag(content.find((k) => k.label === value).value);
                             }
                         }
@@ -29269,7 +29286,7 @@ class Editor extends ModBaseListenCache {
             return this;
         this.inputEl.value = this.contEl.innerHTML = value;
         this.updateInfo();
-        super.listen({ name: 'setted', cb, params: [value] });
+        super.listen({ name: 'set', cb, params: [value] });
         return this;
     }
     getVals() {
@@ -29623,13 +29640,13 @@ const optSelect = [
         value: null
     },
     {
-        attr: 'on-getted',
-        prop: 'onGetted',
+        attr: 'on-got',
+        prop: 'onGot',
         value: null
     },
     {
-        attr: 'on-setted',
-        prop: 'onSetted',
+        attr: 'on-set',
+        prop: 'onSet',
         value: null
     },
     {
@@ -30063,7 +30080,7 @@ class Select extends ModBaseListenCache {
         if (this.destroyed)
             return this;
         return this.tagsIns.getVals((data) => {
-            super.listen({ name: 'getted', cb, params: [data] });
+            super.listen({ name: 'got', cb, params: [data] });
         });
     }
     async select(vals, cb) {
@@ -31980,7 +31997,7 @@ class CompBaseCommField extends CompBaseComm {
             this.clearCache();
         });
     }
-    static evtsArr = ['on-connected', 'on-disconnected', 'on-adopted', 'on-reset', 'on-cleared', 'on-changed', 'on-input', 'on-setted'];
+    static evtsArr = ['on-connected', 'on-disconnected', 'on-adopted', 'on-reset', 'on-cleared', 'on-changed', 'on-input', 'on-set'];
     connectedCallback() {
         if (this.inputEl) {
             this.addEvts(['blur', 'focus']);
@@ -32565,7 +32582,7 @@ class PlainElem extends HTMLElement {
         };
         this.set = (key, val) => {
             setAttr(this, key, val);
-            this.listen({ name: 'setted', params: [{ key, value: this.getAttribute(key) }] });
+            this.listen({ name: 'set', params: [{ key, value: this.getAttribute(key) }] });
         };
         this.on('connected', () => {
             this.setAttribute(ax.compSign, '');
@@ -32602,7 +32619,7 @@ class PlainElem extends HTMLElement {
     createPropsObs() {
         this.propsObs = new Observe(this.properties);
         this.propsProxy = this.propsObs.proxy;
-        this.propsObs.on('setted', (data) => {
+        this.propsObs.on('set', (data) => {
             this.connected && this.updateCache({ [data.key]: data.value });
         });
     }
@@ -34438,11 +34455,11 @@ class CheckboxesElem extends CompBaseCommField {
                 this.setAttribute('checked', diff.join(','));
             }
         };
-        this.propsObs.on('setted', (data) => {
+        this.propsObs.on('set', (data) => {
             data.key === 'value' && (this.valMap = { newVal: data.value, oldVal: data.raw || '' });
         });
         this.propsObs.on('completed', (data) => {
-            if (data.keys.setted.includes('value')) {
+            if (data.keys.set.includes('value')) {
                 this.referSwitch(data.proxy.value);
                 this.updateCache({ check: data.proxy.value });
                 this.listen({ name: 'changed', params: [this.valMap] });
@@ -35708,7 +35725,7 @@ class EditorElem extends CompBaseCommFieldMixin {
         this.wrapEl = createEl('div', {}, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.propsObs.on('completed', (data) => {
-            let keyArr = [...EditorElem.custAttrs, ...EditorElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'readonly'].includes(k)), intArr = getIntArr([keyArr, data.keys.setted]);
+            let keyArr = [...EditorElem.custAttrs, ...EditorElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'readonly'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
             intArr.length && (this.connCount <= 1 ? this.newIns() : this.ins.update(this.modsOpts['module']));
         });
     }
@@ -36295,6 +36312,9 @@ class CalloutElem extends CompBaseComm {
 }
 
 class TwilightElem extends CompBaseComm {
+    labelEl;
+    legendEl;
+    targetEl;
     constructor() {
         super();
         this.getRawData();
