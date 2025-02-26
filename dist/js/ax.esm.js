@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-25 22:53:32
+ * @since Last modified: 2025-2-27 0:35:35
  * @name AXUI front-end framework.
- * @version 3.0.13
+ * @version 3.0.14
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -2572,8 +2572,8 @@ const optBubble = [
         value: null
     },
     {
-        attr: 'on-targetsetted',
-        prop: 'onTargetSetted',
+        attr: 'on-targetset',
+        prop: 'onTargetSet',
         value: null
     },
     ...optBase
@@ -2955,6 +2955,119 @@ const plan = {
     }
 };
 
+const attrJoinVal = (attr, value, map) => {
+    let item = map ? map.find((k) => k.attr === attr) : null, isFn = () => {
+        let tmp = attr.trim(), condition = item ? typeof item?.value === 'function' : false;
+        return (tmp.startsWith('on-') || tmp.startsWith('b4-')) || condition;
+    }, addFnShell = (str) => {
+        let tmp = str.trim(), result = (!(tmp.startsWith('function') || tmp.startsWith('(')) && !tmp.endsWith('}')) ? `function(){${str}}` : str;
+        return result;
+    }, fnVal = isFn() ? addFnShell(value) : value, fnStr = '"use strict";return ';
+    try {
+        if (item) {
+            if (value === null) {
+                return { [item.prop]: item.value };
+            }
+            else {
+                let valType = getDataType(item.value), trim = value.trim(), trueVals = ['', '1', 'true', true], falseVals = [null, 'null', 'undefined', '0', 'false', 'NaN'];
+                return (valType === 'String') ? { [item.prop]: value } :
+                    (valType === 'Number') ? { [item.prop]: parseFloat(value) } :
+                        (valType === 'Boolean' && trueVals.includes(trim)) ? { [item.prop]: true } :
+                            (valType === 'Boolean' && falseVals.includes(trim)) ? { [item.prop]: false } :
+                                (valType === 'Object' && item.value.hasOwnProperty('enable') && trueVals.includes(trim)) ? { [item.prop]: true } :
+                                    (valType === 'Object' && item.value.hasOwnProperty('enable') && item.value.hasOwnProperty('children') && trim.startsWith('[') && trim.endsWith(']')) ? { [item.prop]: { enable: true, children: new Function(fnStr + `${value}`)() } } :
+                                        (valType === 'Object' && value.includes(':')) ? { [item.prop]: strToJson(value) } :
+                                            new Function(fnStr + `{"${item.prop}":${fnVal}}`)();
+            }
+        }
+        else {
+            return value === '' ? { [attr]: '' } : new Function(fnStr + `{"${attr}":${fnVal}}`)();
+        }
+    }
+    catch (e) {
+        return { [attr]: value };
+    }
+};
+
+const breakpoints = (obj, points) => {
+    if (isEmpty(obj)) {
+        return false;
+    }
+    let valids = [], assign = {}, width = document.body.clientWidth, screenSize = getScreenSize(), validFun = (key, value) => {
+        let _key = ~~key;
+        if (_key === 0) {
+            if (key.startsWith('screen')) {
+                screenSize === key.split('-')[1] ? valids.push(value) : null;
+            }
+            else if (key.startsWith('width')) {
+                ~~key.split('-')[1] > width ? valids.push(value) : null;
+            }
+            else if (key.startsWith('mobile')) {
+                JSON.parse(key.split('-')[1]) === isMobi ? valids.push(value) : null;
+            }
+        }
+        else {
+            _key > width ? valids.push(value) : null;
+        }
+    };
+    for (let k in points) {
+        if (points.hasOwnProperty(k)) {
+            Reflect.deleteProperty(points[k], 'breakpoints');
+            validFun(k, points[k]);
+        }
+    }
+    if (valids.length === 0) {
+        return false;
+    }
+    assign = Object.assign({}, ...valids);
+    extend({ target: obj, source: assign });
+};
+
+const elProps = (el) => {
+    let target = getEl(el), result = null;
+    if (target) {
+        !target.hasOwnProperty('ax') ? target.ax = {} : null;
+        result = {
+            add: (key, value = true) => {
+                key && (target.ax[key] = value);
+                return target;
+            },
+            remove: (key) => {
+                key && (delete target.ax[key]);
+                return target;
+            }
+        };
+    }
+    return result;
+};
+
+const keyCond = (key) => {
+    return !/^(stor-keys|ins-name|stor-name|storKeys|insName|storName|on-|b4-|on[A-Z]|b4[A-Z])/.test(key);
+};
+
+const spreadBool = (host, params) => {
+    let result = host, hostType = getDataType(host), paramsType = getDataType(params);
+    if (paramsType === 'Object') {
+        if (hostType === 'Boolean') {
+            Reflect.deleteProperty(params, 'enable');
+            result = { enable: host, ...params };
+        }
+        else if (hostType === 'Object') {
+            if (host.hasOwnProperty('enable')) {
+                host = Object.assign({}, params, host);
+            }
+            else {
+                for (let k in params) {
+                    if (params.hasOwnProperty(k) && host.hasOwnProperty(k)) {
+                        host[k] = spreadBool(host[k], params[k]);
+                    }
+                }
+            }
+        }
+    }
+    return result;
+};
+
 class ModBase {
     targetEl;
     targetData;
@@ -3038,7 +3151,7 @@ class ModBase {
                 let item = map.find((i) => i.attr === k.name);
                 if (item) {
                     
-                    let keyVal = attrJoinVal$1(item.attr, k.value, [item]);
+                    let keyVal = attrJoinVal(item.attr, k.value, [item]);
                     Object.assign(options, keyVal);
                 }
             }
@@ -3086,13 +3199,13 @@ class ModBase {
     
     updateOpts(spread) {
         this.optsMergeStorage && this.optsMergeStorage();
-        !isEmpty(this.options.breakpoints) ? breakpoints$1(this.options, this.options.breakpoints) : null;
+        !isEmpty(this.options.breakpoints) ? breakpoints(this.options, this.options.breakpoints) : null;
         if (Array.isArray(spread) && spread.length > 0) {
             let obj = {};
             for (let k of spread) {
                 obj[k] = this.rawOpts[k];
             }
-            spreadBool$1(this.options, obj);
+            spreadBool(this.options, obj);
         }
     }
     
@@ -3102,7 +3215,7 @@ class ModBase {
             result = this.options.storKeys;
         }
         else {
-            result = Object.keys(this.options).filter((k) => keyCond$1(k));
+            result = Object.keys(this.options).filter((k) => keyCond(k));
         }
         return result;
     }
@@ -3142,7 +3255,7 @@ class ModBase {
         if (type === 'node') {
             this.targetEl = getEl(host);
             if (this.targetEl) {
-                elProps$1(this.targetEl)?.add(this.moduleName);
+                elProps(this.targetEl)?.add(this.moduleName);
                 moreParams = {
                     el: this.targetEl,
                     component,
@@ -3240,6 +3353,22 @@ class ModBase {
                 resolve(null);
             }
         });
+    }
+    lock(cb) {
+        if (this.destroyed || !this.targetEl)
+            return;
+        this.targetEl.toggleAttribute('inert', true);
+        this.destroyed = true;
+        this.listen({ name: 'locked', cb });
+        return this;
+    }
+    unlock(cb) {
+        if (!this.targetEl)
+            return;
+        this.targetEl.toggleAttribute('inert', false);
+        this.destroyed = false;
+        this.listen({ name: 'unlocked', cb });
+        return this;
     }
     
     async reset(cb) {
@@ -3406,8 +3535,8 @@ class Observe extends ModBaseListen {
             },
             construct: (target, args, proxy) => {
                 let baseProps = { target, args, proxy };
-                super.listen({ name: 'new', params: [{ ...baseProps, type: 'new' }] });
-                super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'new' }] });
+                super.listen({ name: 'constructed', params: [{ ...baseProps, type: 'constructed' }] });
+                super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'constructed' }] });
                 this.reactCount++;
                 this.complete(this.reactCount);
                 return Reflect.construct(target, args, proxy);
@@ -3427,7 +3556,7 @@ class Observe extends ModBaseListen {
             let key = k === 'delete' ? 'deleteProperty' : k;
             this.methods[key] = this.fullMethods[k];
         }
-        this.types = isEmpty(this.options.types) ? ['Object', 'Array', 'Function'] : this.options.types;
+        this.types = isEmpty(this.options.types) ? ['Object', 'Array', 'Function', 'Class'] : this.options.types;
         this.dataType = getDataType(this.targetData);
         if (!this.types.includes(this.dataType)) {
             console.warn(`The target data type should be an ${this.types.join('/')}, but failed to proxy the data!`);
@@ -3785,35 +3914,11 @@ const createBtns = (data, parent, settings = {}, refer) => {
     return wrapEl;
 };
 
-const spreadBool = (host, params) => {
-    let result = host, hostType = getDataType(host), paramsType = getDataType(params);
-    if (paramsType === 'Object') {
-        if (hostType === 'Boolean') {
-            Reflect.deleteProperty(params, 'enable');
-            result = { enable: host, ...params };
-        }
-        else if (hostType === 'Object') {
-            if (host.hasOwnProperty('enable')) {
-                host = Object.assign({}, params, host);
-            }
-            else {
-                for (let k in params) {
-                    if (params.hasOwnProperty(k) && host.hasOwnProperty(k)) {
-                        host[k] = spreadBool(host[k], params[k]);
-                    }
-                }
-            }
-        }
-    }
-    return result;
-};
-var spreadBool$1 = spreadBool;
-
 const createFooter = ({ nodeName = 'div', layout = 'center', attrs, tips = false, divider = false, padding = false, children = [] }, parent, refer) => {
     
-    divider = spreadBool$1(divider, {});
-    padding = spreadBool$1(padding, {});
-    tips = spreadBool$1(tips, { html: config.lang.placehold.tips });
+    divider = spreadBool(divider, {});
+    padding = spreadBool(padding, {});
+    tips = spreadBool(tips, { html: config.lang.placehold.tips });
     let target = getEl(parent), outer, footerEl = createEl(nodeName, Object.assign({ class: `${prefix}bubble-footer`, layout }, attrs)), dividerEl = divider.enable ? createEl(divider.nodeName || 'ax-line', Object.assign({ [alias]: 'divider' }, divider.attrs)) : null, paddingEl = padding.enable ? createEl(padding.nodeName || 'div', Object.assign({ class: `${prefix}p`, [alias]: 'padding' }, padding.attrs)) : null, tipsEl = tips.enable ? createEl(tips.nodeName || 'div', Object.assign({ [alias]: 'tips' }, tips.attrs), tips.html) : null, wrapEl = createEl('div', { class: `${prefix}bubble-footer-wrap` });
     footerEl.setAttribute('layout', layout);
     dividerEl && footerEl.appendChild(dividerEl);
@@ -5760,76 +5865,6 @@ const getSelectorType = (str) => {
     return type;
 };
 
-const attrJoinVal = (attr, value, map) => {
-    let item = map ? map.find((k) => k.attr === attr) : null, isFn = () => {
-        let tmp = attr.trim(), condition = item ? typeof item?.value === 'function' : false;
-        return (tmp.startsWith('on-') || tmp.startsWith('b4-')) || condition;
-    }, addFnShell = (str) => {
-        let tmp = str.trim(), result = (!(tmp.startsWith('function') || tmp.startsWith('(')) && !tmp.endsWith('}')) ? `function(){${str}}` : str;
-        return result;
-    }, fnVal = isFn() ? addFnShell(value) : value, fnStr = '"use strict";return ';
-    try {
-        if (item) {
-            if (value === null) {
-                return { [item.prop]: item.value };
-            }
-            else {
-                let valType = getDataType(item.value), trim = value.trim(), trueVals = ['', '1', 'true', true], falseVals = [null, 'null', 'undefined', '0', 'false', 'NaN'];
-                return (valType === 'String') ? { [item.prop]: value } :
-                    (valType === 'Number') ? { [item.prop]: parseFloat(value) } :
-                        (valType === 'Boolean' && trueVals.includes(trim)) ? { [item.prop]: true } :
-                            (valType === 'Boolean' && falseVals.includes(trim)) ? { [item.prop]: false } :
-                                (valType === 'Object' && item.value.hasOwnProperty('enable') && trueVals.includes(trim)) ? { [item.prop]: true } :
-                                    (valType === 'Object' && item.value.hasOwnProperty('enable') && item.value.hasOwnProperty('children') && trim.startsWith('[') && trim.endsWith(']')) ? { [item.prop]: { enable: true, children: new Function(fnStr + `${value}`)() } } :
-                                        (valType === 'Object' && value.includes(':')) ? { [item.prop]: strToJson(value) } :
-                                            new Function(fnStr + `{"${item.prop}":${fnVal}}`)();
-            }
-        }
-        else {
-            return value === '' ? { [attr]: '' } : new Function(fnStr + `{"${attr}":${fnVal}}`)();
-        }
-    }
-    catch (e) {
-        return { [attr]: value };
-    }
-};
-var attrJoinVal$1 = attrJoinVal;
-
-const breakpoints = (obj, points) => {
-    if (isEmpty(obj)) {
-        return false;
-    }
-    let valids = [], assign = {}, width = document.body.clientWidth, screenSize = getScreenSize(), validFun = (key, value) => {
-        let _key = ~~key;
-        if (_key === 0) {
-            if (key.startsWith('screen')) {
-                screenSize === key.split('-')[1] ? valids.push(value) : null;
-            }
-            else if (key.startsWith('width')) {
-                ~~key.split('-')[1] > width ? valids.push(value) : null;
-            }
-            else if (key.startsWith('mobile')) {
-                JSON.parse(key.split('-')[1]) === isMobi ? valids.push(value) : null;
-            }
-        }
-        else {
-            _key > width ? valids.push(value) : null;
-        }
-    };
-    for (let k in points) {
-        if (points.hasOwnProperty(k)) {
-            Reflect.deleteProperty(points[k], 'breakpoints');
-            validFun(k, points[k]);
-        }
-    }
-    if (valids.length === 0) {
-        return false;
-    }
-    assign = Object.assign({}, ...valids);
-    extend({ target: obj, source: assign });
-};
-var breakpoints$1 = breakpoints;
-
 const purifyHtml = (str) => trim(str.replace(/<[^>]+>/g, ''));
 
 const offset = (elem) => {
@@ -6376,25 +6411,6 @@ const debounce = (fn, options) => {
         return handler;
     }
 };
-
-const elProps = (el) => {
-    let target = getEl(el), result = null;
-    if (target) {
-        !target.hasOwnProperty('ax') ? target.ax = {} : null;
-        result = {
-            add: (key, value = true) => {
-                key && (target.ax[key] = value);
-                return target;
-            },
-            remove: (key) => {
-                key && (delete target.ax[key]);
-                return target;
-            }
-        };
-    }
-    return result;
-};
-var elProps$1 = elProps;
 
 const convertByte = ({ val, to = '', places = 2, outer = 'span', inner = 'i', units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'] }) => {
     val = clampVal({ val, min: 0, max: '' });
@@ -7472,7 +7488,7 @@ class CompBase extends HTMLElement {
             else {
                 if (!map)
                     throw new Error(`Setting ${name} is invalid , Please use a module and set the map for options!`);
-                value = attrJoinVal$1(name, newVal, map);
+                value = attrJoinVal(name, newVal, map);
             }
             deepMerge(this.propsProxy, value, {});
         }
@@ -7496,7 +7512,7 @@ class CompBaseComm extends CompBase {
                 return;
             let tmp = (typeof data === 'string') ? strToJson(data) : data;
             setAttrs(this, tmp, (resp) => {
-                this.listen({ name: 'setted', params: [resp] });
+                this.listen({ name: 'set', params: [resp] });
             });
         };
         this.on('disconnected', () => {
@@ -7514,7 +7530,7 @@ class CompBaseComm extends CompBase {
         this.on('reset', () => {
             this.clearCache();
         });
-        this.propsObs.on('setted', (data) => {
+        this.propsObs.on('set', (data) => {
             this.connected && this.updateCache({ [data.key]: data.value });
         });
     }
@@ -7571,7 +7587,7 @@ class CompBaseComm extends CompBase {
 }
 
 const createComp = (options) => {
-    let opts = Object.assign({ attrs: [], methods: {}, augment: false, autoUpdate: true, excludeAttrs: [], modOpts: {}, autoIns: true, register: true }, options), elem = window.customElements.get(opts.tagName);
+    let opts = Object.assign({ attrs: [], methods: {}, excludeAttrs: [], modOpts: {}, augment: false, autoUpdate: true, autoIns: true, register: true }, options), elem = window.customElements.get(opts.tagName);
     if (elem) {
         console.warn(`${opts.tagName} is already defined!`);
         return elem;
@@ -9919,11 +9935,6 @@ const prompt = (options) => {
     });
 };
 
-const keyCond = (key) => {
-    return !/^(stor-keys|ins-name|stor-name|storKeys|insName|storName|on-|b4-|on[A-Z]|b4[A-Z])/.test(key);
-};
-var keyCond$1 = keyCond;
-
 const removeStyles = (el, props) => {
     let target = getEl(el);
     if (!target || isEmpty(props))
@@ -10055,20 +10066,22 @@ class ModBaseListenCacheNest extends ModBaseListenCache {
         this.listen({ name: 'expandedAll', cb });
         return this;
     }
-    passivate(cb) {
-        if (this.destroyed)
+    lock(cb) {
+        if (this.destroyed || !this.targetEl)
             return;
         this.targetEl.toggleAttribute('inert', true);
+        this.destroyed = true;
         this.treeInputEl.disabled = true;
-        this.listen({ name: 'passivated', cb });
+        this.listen({ name: 'locked', cb });
         return this;
     }
-    activate(cb) {
-        if (this.destroyed)
+    unlock(cb) {
+        if (!this.targetEl)
             return;
         this.targetEl.toggleAttribute('inert', false);
+        this.destroyed = false;
         this.treeInputEl.disabled = false;
-        this.listen({ name: 'activated', cb });
+        this.listen({ name: 'unlocked', cb });
         return this;
     }
     readonly(data, cb) {
@@ -12865,10 +12878,10 @@ class Menu extends ModBaseListenCache {
         }
         this.setAttrs();
         if (this.initCount === 0) {
-            this.active([...this.getActive(), ...valToArr(this.options.active)]);
+            this.activate([...this.getActive(), ...valToArr(this.options.active)]);
         }
         else {
-            this.active(valToArr(this.options.active));
+            this.activate(valToArr(this.options.active));
         }
         this.disable(valToArr(this.options.disable));
         if (this.options.expandAll && this.options.multiple) {
@@ -13404,7 +13417,7 @@ class Menu extends ModBaseListenCache {
         super.listen({ name: 'deselected', cb, params: [item] });
         return this;
     }
-    active(data, cb) {
+    activate(data, cb) {
         if (this.destroyed) {
             return this;
         }
@@ -13846,7 +13859,7 @@ class Tab extends ModBaseListenCache {
             if (item.disabled) {
                 return false;
             }
-            _this.active(item);
+            _this.activate(item);
         };
         this.trigger = this.options.trigger === 'hover' ? 'mouseenter' : 'click';
         this.dataOrig = [];
@@ -13865,7 +13878,7 @@ class Tab extends ModBaseListenCache {
         }
         await this.getDataToRender();
         this.setAttrs();
-        this.active(this.options.active || 0);
+        this.activate(this.options.active || 0);
         this.disable(valToArr(this.options.disabled));
         this.renderFinish();
         super.listen({ name: 'initiated', cb });
@@ -14154,7 +14167,7 @@ class Tab extends ModBaseListenCache {
         super.listen({ name: 'enabledAll', cb });
         return this;
     }
-    active(data, cb) {
+    activate(data, cb) {
         if (this.destroyed || isNull(data))
             return;
         let item = findItem(data, this.treeData), other = this.treeData.find((k) => k !== item && k.selected);
@@ -14216,7 +14229,7 @@ class Tab extends ModBaseListenCache {
             }
         }
         if (this.options.addActive) {
-            this.active(items[items.length - 1]);
+            this.activate(items[items.length - 1]);
         }
         this.renderFinish();
         super.listen({ name: 'added', cb, params: [items] });
@@ -14259,7 +14272,7 @@ class Tab extends ModBaseListenCache {
                 item[k] = val;
             }
             else if (k === 'selected') {
-                val === true ? this.active(item) : item[k] = val;
+                val === true ? this.activate(item) : item[k] = val;
             }
         }
         super.listen({ name: 'edited', cb, params: [item] });
@@ -18048,8 +18061,8 @@ const optProgress = [
         value: null,
     },
     {
-        attr: 'on-setted',
-        prop: 'onSetted',
+        attr: 'on-set',
+        prop: 'onSet',
         value: null,
     },
     {
@@ -21384,8 +21397,8 @@ const optRange = [
         value: false,
     },
     {
-        attr: 'on-setted',
-        prop: 'onSetted',
+        attr: 'on-set',
+        prop: 'onSet',
         value: null,
     },
     {
@@ -21601,12 +21614,12 @@ class Range extends ModBaseListenCache {
             }
             if (this.bubbles.min) {
                 this.bubbles.min.onclick = () => {
-                    this.toEnd();
+                    this.toStart();
                 };
             }
             if (this.bubbles.max) {
                 this.bubbles.max.onclick = () => {
-                    this.toStart();
+                    this.toEnd();
                 };
             }
             if (this.options.keyboard) {
@@ -22427,13 +22440,13 @@ const optDatetime = [
         value: null,
     },
     {
-        attr: 'on-setted',
-        prop: 'onSetted',
+        attr: 'on-set',
+        prop: 'onSet',
         value: null,
     },
     {
-        attr: 'on-settedrange',
-        prop: 'onSettedRange',
+        attr: 'on-setrange',
+        prop: 'onSetRange',
         value: null,
     },
     {
@@ -24832,13 +24845,13 @@ const optTree = [
         value: null
     },
     {
-        attr: 'on-getted',
-        prop: 'onGetted',
+        attr: 'on-got',
+        prop: 'onGot',
         value: null
     },
     {
-        attr: 'on-setted',
-        prop: 'onSetted',
+        attr: 'on-set',
+        prop: 'onSet',
         value: null
     },
     {
@@ -24872,13 +24885,13 @@ const optTree = [
         value: null
     },
     {
-        attr: 'on-passivated',
-        prop: 'onPassivated',
+        attr: 'on-locked',
+        prop: 'onLocked',
         value: null
     },
     {
-        attr: 'on-activated',
-        prop: 'onActivated',
+        attr: 'on-unlocked',
+        prop: 'onUnlocked',
         value: null
     },
     {
@@ -26721,8 +26734,8 @@ const optRate = [
         value: false,
     },
     {
-        attr: 'on-setted',
-        prop: 'onSetted',
+        attr: 'on-set',
+        prop: 'onSet',
         value: null,
     },
     {
@@ -27396,8 +27409,8 @@ const optAccordion = [
         value: null
     },
     {
-        attr: 'on-setted',
-        prop: 'onSetted',
+        attr: 'on-set',
+        prop: 'onSet',
         value: null
     },
     {
@@ -27431,13 +27444,13 @@ const optAccordion = [
         value: null
     },
     {
-        attr: 'on-passivated',
-        prop: 'onPassivated',
+        attr: 'on-locked',
+        prop: 'onLocked',
         value: null
     },
     {
-        attr: 'on-activated',
-        prop: 'onActivated',
+        attr: 'on-unlocked',
+        prop: 'onUnlocked',
         value: null
     },
     ...optBase
@@ -28392,8 +28405,8 @@ const optEditor = [
         value: null
     },
     {
-        attr: 'on-setted',
-        prop: 'onSetted',
+        attr: 'on-set',
+        prop: 'onSet',
         value: null
     },
     {
@@ -29676,13 +29689,13 @@ const optSelect = [
         value: null
     },
     {
-        attr: 'on-passivated',
-        prop: 'onPassivated',
+        attr: 'on-locked',
+        prop: 'onLocked',
         value: null
     },
     {
-        attr: 'on-activated',
-        prop: 'onActivated',
+        attr: 'on-unlocked',
+        prop: 'onUnlocked',
         value: null
     },
     {
@@ -30120,14 +30133,14 @@ class Select extends ModBaseListenCache {
         return this;
     }
     disable(cb) {
-        this.treeIns.passivate();
+        this.treeIns.lock();
         this.targetEl.toggleAttribute('inert', true);
         this.inputEl.disabled = true;
         super.listen({ name: 'disabled', cb });
         return this;
     }
     enable(cb) {
-        this.treeIns.activate();
+        this.treeIns.unlock();
         this.targetEl.toggleAttribute('inert', false);
         this.inputEl.disabled = false;
         super.listen({ name: 'enabled', cb });
@@ -30436,13 +30449,13 @@ const optUpload = [
         value: null
     },
     {
-        attr: 'on-passivated',
-        prop: 'onPassivated',
+        attr: 'on-locked',
+        prop: 'onLocked',
         value: null
     },
     {
-        attr: 'on-activated',
-        prop: 'onActivated',
+        attr: 'on-unlocked',
+        prop: 'onUnlocked',
         value: null
     },
     ...optBase
@@ -31354,24 +31367,30 @@ class Upload extends ModBaseListenCache {
         this.updateInsProg('processing');
         this.saveRaw();
         for (let k of newData) {
-            await fileTools.urlToFile(k.url, k.name, (file) => {
-                if (this.hasSame(file))
-                    return;
-                let item = this.renderItem(file);
-                item.valid = {
-                    passed: true,
-                    msg: this.options.lang.message.single.success
-                };
-                item.data = {
-                    name: file.name,
-                    url: k.url,
-                    time: k.time || file.lastModified,
-                    size: file.size,
-                };
-                this.updateItemProg(item, 'received');
-                this.actOpt(item);
-                result.push(item);
-            });
+            try {
+                await fileTools.urlToFile(k.url, k.name, (file) => {
+                    if (this.hasSame(file))
+                        return;
+                    let item = this.renderItem(file);
+                    item.valid = {
+                        passed: true,
+                        msg: this.options.lang.message.single.success
+                    };
+                    item.data = {
+                        name: file.name,
+                        url: k.url,
+                        time: k.time || file.lastModified,
+                        size: file.size,
+                    };
+                    this.updateItemProg(item, 'received');
+                    this.actOpt(item);
+                    result.push(item);
+                });
+            }
+            catch {
+                console.error(`File address error, or the file may be blocked due to cross-origin restrictions:${k.url}`);
+                continue;
+            }
         }
         this.options.status.includes('summary') && (this.summaryEl.innerHTML = this.getSummary());
         this.setInputVal();
@@ -32089,8 +32108,8 @@ class CompBaseCommFieldMixin extends CompBaseCommField {
     }
     mapVals(name, newVal, module, opts) {
         return module.evtsArr.includes(name) ? newVal :
-            module.boolAttrs.includes(name) ? Object.values(attrJoinVal$1(name, newVal, opts))[0] :
-                isNull(newVal) ? null : Object.values(attrJoinVal$1(name, newVal, opts))[0];
+            module.boolAttrs.includes(name) ? Object.values(attrJoinVal(name, newVal, opts))[0] :
+                isNull(newVal) ? null : Object.values(attrJoinVal(name, newVal, opts))[0];
     }
     saveModsOpts(name, opts, module = 'module') {
         if (!name || !module)
@@ -32154,7 +32173,7 @@ class CustomElem extends HTMLElement {
                 value = strToJson(newVal);
             }
             else {
-                value = attrJoinVal$1(name, newVal, map);
+                value = attrJoinVal(name, newVal, map);
             }
             deepMerge(this.propsProxy, value, {});
         }
@@ -32546,19 +32565,33 @@ class CheckboxElem extends CompBaseCommField {
 }
 
 class PlainElem extends HTMLElement {
+    
     shadowEl;
+    
     propsRaw;
+    
     properties;
+    
     propsProxy;
+    
     propsObs;
+    
     custAttrs;
+    
     boolAttrs;
+    
     reset;
+    
     clear;
+    
     wrapEl;
+    
     plans;
+    
     connected;
+    
     set;
+    
     timestamp;
     constructor() {
         super();
@@ -33277,7 +33310,7 @@ class BuoyElem extends PlainElem {
     static custAttrs = [
         'class',
         'icon', 'label', 'theme', 'size',
-        'on-connected', 'on-reset', 'on-setted',
+        'on-connected', 'on-reset', 'on-set',
     ];
     static boolAttrs = ['reverse', 'arrow'];
     static get observedAttributes() {
@@ -33453,7 +33486,7 @@ class AnchorsElem extends PlainElem {
             this.render(this.propsProxy);
         }
         else if (name === 'active') {
-            this.active(newVal);
+            this.activate(newVal);
         }
         else if (name === 'offset') {
             for (let k of this.data) {
@@ -33476,7 +33509,7 @@ class AnchorsElem extends PlainElem {
             for (let k of entries) {
                 if (k.isIntersecting) {
                     if (k.intersectionRatio === 1) {
-                        this.active(k.target, true, false);
+                        this.activate(k.target, true, false);
                     }
                 }
             }
@@ -33556,7 +33589,7 @@ class AnchorsElem extends PlainElem {
         plantTree(this, this.data);
         this.querySelector('ul')?.classList.add(`${prefix}reset`);
     }
-    active(data, active = true, smooth = true) {
+    activate(data, active = true, smooth = true) {
         if (!data) {
             return this;
         }
@@ -33595,7 +33628,7 @@ class AnchorsElem extends PlainElem {
         }
     }
     smoothToActive(obj, active = true) {
-        this.active(obj.target, active, this.propsProxy.smooth);
+        this.activate(obj.target, active, this.propsProxy.smooth);
     }
 }
 
@@ -33925,7 +33958,7 @@ class InputElem extends CompBaseCommField {
         this.updateLimit();
     }
     changedName(opt) {
-        if (opt.name === 'type' && !['text', 'number', 'search', 'email', 'url', 'tel', 'password', 'time', 'week', 'datetime', 'datetime-local', 'month'])
+        if (opt.name === 'type' && !['text', 'number', 'search', 'email', 'url', 'tel', 'password', 'time', 'week', 'datetime', 'datetime-local', 'month'].includes(opt.newVal))
             return;
         isNull(opt.newVal) ? this.inputEl.removeAttribute(opt.name) : this.inputEl.setAttribute(opt.name, opt.newVal);
         opt.name === 'name' && (this.name = opt.newVal || '');
@@ -34256,11 +34289,11 @@ class RadiosElem extends CompBaseCommField {
                 }
             }
         };
-        this.propsObs.on('setted', (data) => {
+        this.propsObs.on('set', (data) => {
             data.key === 'value' && (this.valMap = { newVal: data.value, oldVal: data.raw || '' });
         });
         this.propsObs.on('completed', (data) => {
-            if (data.keys.setted.includes('value')) {
+            if (data.keys.set.includes('value')) {
                 this.updateCache({ check: data.proxy.value });
                 this.listen({ name: 'changed', params: [this.valMap] });
             }
@@ -34827,13 +34860,13 @@ class RangeElem extends CompBaseCommFieldMixin {
         }
         for (let k in this.propsRaw)
             this.propsProxy[k] = this.propsRaw[k];
-        for (let k of Object.keys(this.properties).filter(keyCond$1))
+        for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optRange);
         this.setFieldProps(['name', 'value', 'disabled']);
     }
     newIns() {
         let params = Object.assign({
-            onSetted: (data) => {
+            onSet: (data) => {
                 this.modsOpts['module'].value = this.propsProxy.value = this.value = data.value;
                 this.canListen = false;
                 this.setAttribute('value', data.value);
@@ -34880,7 +34913,7 @@ class RangeElem extends CompBaseCommFieldMixin {
         this.wrapEl = createEl('div', {}, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.propsObs.on('completed', (data) => {
-            let keyArr = [...RangeElem.custAttrs, ...RangeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.setted]);
+            let keyArr = [...RangeElem.custAttrs, ...RangeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
             intArr.length && this.ins && this.ins.update(this.modsOpts['module']);
             intArr.length && (this.connCount <= 1 ? this.newIns() : this.ins.update(this.modsOpts['module']));
         });
@@ -34907,7 +34940,7 @@ class StatsElem extends PlainElem {
     static custAttrs = [
         'class',
         'unit', 'tips', 'layout', 'icon', 'disk', 'cube', 'badge', 'dir',
-        'on-connected', 'on-reset', 'on-setted',
+        'on-connected', 'on-reset', 'on-set',
     ];
     static boolAttrs = ['reverse', 'disabled'];
     static get observedAttributes() {
@@ -35443,7 +35476,7 @@ class DatetimeElem extends CompBaseCommFieldMixin {
         }
         for (let k in this.propsRaw)
             this.propsProxy[k] = this.propsRaw[k];
-        for (let k of Object.keys(this.properties).filter(keyCond$1))
+        for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optDatetime);
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
     }
@@ -35487,7 +35520,7 @@ class DatetimeElem extends CompBaseCommFieldMixin {
         this.wrapEl = createEl('div', { class: `${prefix}datetime-wrap` }, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.propsObs.on('completed', (data) => {
-            let keyArr = [...DatetimeElem.custAttrs, ...DatetimeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.setted]);
+            let keyArr = [...DatetimeElem.custAttrs, ...DatetimeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
             intArr.length && (this.connCount <= 1 ? this.newIns() : this.ins.update(this.modsOpts['module']));
         });
     }
@@ -35663,7 +35696,7 @@ class EditorElem extends CompBaseCommFieldMixin {
         for (let k in this.propsRaw)
             this.propsProxy[k] = this.propsRaw[k];
         this.propsRaw.value = this.rawHtml || this.propsRaw.value || '';
-        for (let k of Object.keys(this.properties).filter(keyCond$1))
+        for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optEditor);
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
     }
@@ -35767,7 +35800,7 @@ class SelectElem extends CompBaseCommFieldMixin {
         }
         for (let k in this.propsRaw)
             this.propsProxy[k] = this.propsRaw[k];
-        for (let k of Object.keys(this.properties).filter(keyCond$1))
+        for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optSelect);
         this.setFieldProps(['name', 'disabled']);
         this.value = '';
@@ -35811,7 +35844,7 @@ class SelectElem extends CompBaseCommFieldMixin {
         this.wrapEl = createEl('div', {}, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.propsObs.on('completed', (data) => {
-            let keyArr = [...SelectElem.custAttrs, ...SelectElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.setted]);
+            let keyArr = [...SelectElem.custAttrs, ...SelectElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
             intArr.length && (this.connCount <= 1 ? this.newIns() : this.ins.update(this.modsOpts['module']));
         });
     }
@@ -35844,7 +35877,7 @@ class UploadElem extends CompBaseCommFieldMixin {
         else if (name === 'disabled') {
             this.disabled = this.propsProxy[name];
             if (this.ins) {
-                this.disabled ? this.ins.passivate() : this.ins.activate();
+                this.disabled ? this.ins.lock() : this.ins.unlock();
             }
         }
         else if (name === 'size') {
@@ -35859,7 +35892,7 @@ class UploadElem extends CompBaseCommFieldMixin {
         }
         for (let k in this.propsRaw)
             this.propsProxy[k] = this.propsRaw[k];
-        for (let k of Object.keys(this.properties).filter(keyCond$1))
+        for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optUpload);
         this.setFieldProps(['name', 'value', 'disabled']);
     }
@@ -35903,7 +35936,7 @@ class UploadElem extends CompBaseCommFieldMixin {
         this.wrapEl = createEl('div', {}, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.propsObs.on('completed', (data) => {
-            let keyArr = [...UploadElem.custAttrs, ...UploadElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.setted]);
+            let keyArr = [...UploadElem.custAttrs, ...UploadElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
             intArr.length && (this.connCount <= 1 ? this.newIns() : this.ins.update(this.modsOpts['module']));
         });
     }
@@ -36389,7 +36422,7 @@ class TwilightElem extends CompBaseComm {
 
 const init = (type, parent) => {
     let parentEl = getEl(parent) || document.body, evalFn = new Function('el', 'module', `"use strict";try {return new module(el)} catch {return null}`), moduleNodeList = [], setProp = (node, module) => {
-        elProps$1(node)?.add(module);
+        elProps(node)?.add(module);
     }, getUsableModules = () => {
         let result = [];
         for (let [key, value] of Object.entries(ax)) {
@@ -36458,4 +36491,4 @@ const init = (type, parent) => {
     return ax;
 };
 
-export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, FormatElem, Gesture, GoodElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Scroll, SearchElem, Select, SelectElem, Spy, StatsElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal$1 as attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints$1 as breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax as default, delay, dlToArr, ease, easeHeight, elProps$1 as elProps, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtTarget, getExpiration, getFullGap, getHeights, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond$1 as keyCond, moveItem, notice, offset, paramToJson, parseUrlArr, pipe, plan, prefix, preventDft, privacy, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, setAttr, setAttrs, setContent, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool$1 as spreadBool, startUpper, stdParam, storage, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, unique, valToArr, validTools };
+export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, FormatElem, Gesture, GoodElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Scroll, SearchElem, Select, SelectElem, Spy, StatsElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax as default, delay, dlToArr, ease, easeHeight, elProps, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtTarget, getExpiration, getFullGap, getHeights, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseUrlArr, pipe, plan, prefix, preventDft, privacy, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, setAttr, setAttrs, setContent, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, unique, valToArr, validTools };

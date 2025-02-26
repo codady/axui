@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-27 0:35:35
+ * @since Last modified: 2025-2-26 19:17:14
  * @name AXUI front-end framework.
- * @version 3.0.14
+ * @version 3.0.13
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,8 +15,6 @@
  */
 
 'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 const getComputedVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -3358,22 +3356,6 @@ class ModBase {
             }
         });
     }
-    lock(cb) {
-        if (this.destroyed || !this.targetEl)
-            return;
-        this.targetEl.toggleAttribute('inert', true);
-        this.destroyed = true;
-        this.listen({ name: 'locked', cb });
-        return this;
-    }
-    unlock(cb) {
-        if (!this.targetEl)
-            return;
-        this.targetEl.toggleAttribute('inert', false);
-        this.destroyed = false;
-        this.listen({ name: 'unlocked', cb });
-        return this;
-    }
     
     async reset(cb) {
         this.options = deepClone(this.dftOpts);
@@ -3539,8 +3521,8 @@ class Observe extends ModBaseListen {
             },
             construct: (target, args, proxy) => {
                 let baseProps = { target, args, proxy };
-                super.listen({ name: 'constructed', params: [{ ...baseProps, type: 'constructed' }] });
-                super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'constructed' }] });
+                super.listen({ name: 'new', params: [{ ...baseProps, type: 'new' }] });
+                super.listen({ name: 'trigger', params: [{ ...baseProps, type: 'new' }] });
                 this.reactCount++;
                 this.complete(this.reactCount);
                 return Reflect.construct(target, args, proxy);
@@ -3560,7 +3542,7 @@ class Observe extends ModBaseListen {
             let key = k === 'delete' ? 'deleteProperty' : k;
             this.methods[key] = this.fullMethods[k];
         }
-        this.types = isEmpty(this.options.types) ? ['Object', 'Array', 'Function', 'Class'] : this.options.types;
+        this.types = isEmpty(this.options.types) ? ['Object', 'Array', 'Function'] : this.options.types;
         this.dataType = getDataType(this.targetData);
         if (!this.types.includes(this.dataType)) {
             console.warn(`The target data type should be an ${this.types.join('/')}, but failed to proxy the data!`);
@@ -7642,7 +7624,11 @@ const createComp = (options) => {
             }
         `, component = new Function('constructed', 'connected', 'changed', 'updated', 'autoUpdate', 'autoIns', 'excludeAttrs', 'module', 'modOpts', 'CompBaseComm', 'createEl', 'attrs', 'optMaps', 'methods', str)(opts.constructed, opts.connected, opts.changed, opts.updated, opts.autoUpdate, opts.autoIns, opts.excludeAttrs, opts.module, opts.modOpts, CompBaseComm, createEl, attrs, optMaps, opts.methods);
     opts.register && window.customElements.define(opts.tagName, component);
+    console.log(JSON.stringify(Object.keys(ax)), 31);
     opts.augment && (ax[compName] = component);
+    console.log(ax[compName]);
+    console.log(JSON.stringify(Object.keys(ax)), 32);
+    opts.cb && opts.cb(ax);
     return component;
 };
 
@@ -10070,22 +10056,20 @@ class ModBaseListenCacheNest extends ModBaseListenCache {
         this.listen({ name: 'expandedAll', cb });
         return this;
     }
-    lock(cb) {
-        if (this.destroyed || !this.targetEl)
+    passivate(cb) {
+        if (this.destroyed)
             return;
         this.targetEl.toggleAttribute('inert', true);
-        this.destroyed = true;
         this.treeInputEl.disabled = true;
-        this.listen({ name: 'locked', cb });
+        this.listen({ name: 'passivated', cb });
         return this;
     }
-    unlock(cb) {
-        if (!this.targetEl)
+    activate(cb) {
+        if (this.destroyed)
             return;
         this.targetEl.toggleAttribute('inert', false);
-        this.destroyed = false;
         this.treeInputEl.disabled = false;
-        this.listen({ name: 'unlocked', cb });
+        this.listen({ name: 'activated', cb });
         return this;
     }
     readonly(data, cb) {
@@ -12882,10 +12866,10 @@ class Menu extends ModBaseListenCache {
         }
         this.setAttrs();
         if (this.initCount === 0) {
-            this.activate([...this.getActive(), ...valToArr(this.options.active)]);
+            this.active([...this.getActive(), ...valToArr(this.options.active)]);
         }
         else {
-            this.activate(valToArr(this.options.active));
+            this.active(valToArr(this.options.active));
         }
         this.disable(valToArr(this.options.disable));
         if (this.options.expandAll && this.options.multiple) {
@@ -13421,7 +13405,7 @@ class Menu extends ModBaseListenCache {
         super.listen({ name: 'deselected', cb, params: [item] });
         return this;
     }
-    activate(data, cb) {
+    active(data, cb) {
         if (this.destroyed) {
             return this;
         }
@@ -13863,7 +13847,7 @@ class Tab extends ModBaseListenCache {
             if (item.disabled) {
                 return false;
             }
-            _this.activate(item);
+            _this.active(item);
         };
         this.trigger = this.options.trigger === 'hover' ? 'mouseenter' : 'click';
         this.dataOrig = [];
@@ -13882,7 +13866,7 @@ class Tab extends ModBaseListenCache {
         }
         await this.getDataToRender();
         this.setAttrs();
-        this.activate(this.options.active || 0);
+        this.active(this.options.active || 0);
         this.disable(valToArr(this.options.disabled));
         this.renderFinish();
         super.listen({ name: 'initiated', cb });
@@ -14171,7 +14155,7 @@ class Tab extends ModBaseListenCache {
         super.listen({ name: 'enabledAll', cb });
         return this;
     }
-    activate(data, cb) {
+    active(data, cb) {
         if (this.destroyed || isNull(data))
             return;
         let item = findItem(data, this.treeData), other = this.treeData.find((k) => k !== item && k.selected);
@@ -14233,7 +14217,7 @@ class Tab extends ModBaseListenCache {
             }
         }
         if (this.options.addActive) {
-            this.activate(items[items.length - 1]);
+            this.active(items[items.length - 1]);
         }
         this.renderFinish();
         super.listen({ name: 'added', cb, params: [items] });
@@ -14276,7 +14260,7 @@ class Tab extends ModBaseListenCache {
                 item[k] = val;
             }
             else if (k === 'selected') {
-                val === true ? this.activate(item) : item[k] = val;
+                val === true ? this.active(item) : item[k] = val;
             }
         }
         super.listen({ name: 'edited', cb, params: [item] });
@@ -21618,12 +21602,12 @@ class Range extends ModBaseListenCache {
             }
             if (this.bubbles.min) {
                 this.bubbles.min.onclick = () => {
-                    this.toStart();
+                    this.toEnd();
                 };
             }
             if (this.bubbles.max) {
                 this.bubbles.max.onclick = () => {
-                    this.toEnd();
+                    this.toStart();
                 };
             }
             if (this.options.keyboard) {
@@ -24889,13 +24873,13 @@ const optTree = [
         value: null
     },
     {
-        attr: 'on-locked',
-        prop: 'onLocked',
+        attr: 'on-passivated',
+        prop: 'onPassivated',
         value: null
     },
     {
-        attr: 'on-unlocked',
-        prop: 'onUnlocked',
+        attr: 'on-activated',
+        prop: 'onActivated',
         value: null
     },
     {
@@ -27448,13 +27432,13 @@ const optAccordion = [
         value: null
     },
     {
-        attr: 'on-locked',
-        prop: 'onLocked',
+        attr: 'on-passivated',
+        prop: 'onPassivated',
         value: null
     },
     {
-        attr: 'on-unlocked',
-        prop: 'onUnlocked',
+        attr: 'on-activated',
+        prop: 'onActivated',
         value: null
     },
     ...optBase
@@ -29693,13 +29677,13 @@ const optSelect = [
         value: null
     },
     {
-        attr: 'on-locked',
-        prop: 'onLocked',
+        attr: 'on-passivated',
+        prop: 'onPassivated',
         value: null
     },
     {
-        attr: 'on-unlocked',
-        prop: 'onUnlocked',
+        attr: 'on-activated',
+        prop: 'onActivated',
         value: null
     },
     {
@@ -30137,14 +30121,14 @@ class Select extends ModBaseListenCache {
         return this;
     }
     disable(cb) {
-        this.treeIns.lock();
+        this.treeIns.passivate();
         this.targetEl.toggleAttribute('inert', true);
         this.inputEl.disabled = true;
         super.listen({ name: 'disabled', cb });
         return this;
     }
     enable(cb) {
-        this.treeIns.unlock();
+        this.treeIns.activate();
         this.targetEl.toggleAttribute('inert', false);
         this.inputEl.disabled = false;
         super.listen({ name: 'enabled', cb });
@@ -30453,13 +30437,13 @@ const optUpload = [
         value: null
     },
     {
-        attr: 'on-locked',
-        prop: 'onLocked',
+        attr: 'on-passivated',
+        prop: 'onPassivated',
         value: null
     },
     {
-        attr: 'on-unlocked',
-        prop: 'onUnlocked',
+        attr: 'on-activated',
+        prop: 'onActivated',
         value: null
     },
     ...optBase
@@ -31371,30 +31355,24 @@ class Upload extends ModBaseListenCache {
         this.updateInsProg('processing');
         this.saveRaw();
         for (let k of newData) {
-            try {
-                await fileTools.urlToFile(k.url, k.name, (file) => {
-                    if (this.hasSame(file))
-                        return;
-                    let item = this.renderItem(file);
-                    item.valid = {
-                        passed: true,
-                        msg: this.options.lang.message.single.success
-                    };
-                    item.data = {
-                        name: file.name,
-                        url: k.url,
-                        time: k.time || file.lastModified,
-                        size: file.size,
-                    };
-                    this.updateItemProg(item, 'received');
-                    this.actOpt(item);
-                    result.push(item);
-                });
-            }
-            catch {
-                console.error(`File address error, or the file may be blocked due to cross-origin restrictions:${k.url}`);
-                continue;
-            }
+            await fileTools.urlToFile(k.url, k.name, (file) => {
+                if (this.hasSame(file))
+                    return;
+                let item = this.renderItem(file);
+                item.valid = {
+                    passed: true,
+                    msg: this.options.lang.message.single.success
+                };
+                item.data = {
+                    name: file.name,
+                    url: k.url,
+                    time: k.time || file.lastModified,
+                    size: file.size,
+                };
+                this.updateItemProg(item, 'received');
+                this.actOpt(item);
+                result.push(item);
+            });
         }
         this.options.status.includes('summary') && (this.summaryEl.innerHTML = this.getSummary());
         this.setInputVal();
@@ -32569,33 +32547,19 @@ class CheckboxElem extends CompBaseCommField {
 }
 
 class PlainElem extends HTMLElement {
-    
     shadowEl;
-    
     propsRaw;
-    
     properties;
-    
     propsProxy;
-    
     propsObs;
-    
     custAttrs;
-    
     boolAttrs;
-    
     reset;
-    
     clear;
-    
     wrapEl;
-    
     plans;
-    
     connected;
-    
     set;
-    
     timestamp;
     constructor() {
         super();
@@ -33490,7 +33454,7 @@ class AnchorsElem extends PlainElem {
             this.render(this.propsProxy);
         }
         else if (name === 'active') {
-            this.activate(newVal);
+            this.active(newVal);
         }
         else if (name === 'offset') {
             for (let k of this.data) {
@@ -33513,7 +33477,7 @@ class AnchorsElem extends PlainElem {
             for (let k of entries) {
                 if (k.isIntersecting) {
                     if (k.intersectionRatio === 1) {
-                        this.activate(k.target, true, false);
+                        this.active(k.target, true, false);
                     }
                 }
             }
@@ -33593,7 +33557,7 @@ class AnchorsElem extends PlainElem {
         plantTree(this, this.data);
         this.querySelector('ul')?.classList.add(`${prefix}reset`);
     }
-    activate(data, active = true, smooth = true) {
+    active(data, active = true, smooth = true) {
         if (!data) {
             return this;
         }
@@ -33632,7 +33596,7 @@ class AnchorsElem extends PlainElem {
         }
     }
     smoothToActive(obj, active = true) {
-        this.activate(obj.target, active, this.propsProxy.smooth);
+        this.active(obj.target, active, this.propsProxy.smooth);
     }
 }
 
@@ -33962,7 +33926,7 @@ class InputElem extends CompBaseCommField {
         this.updateLimit();
     }
     changedName(opt) {
-        if (opt.name === 'type' && !['text', 'number', 'search', 'email', 'url', 'tel', 'password', 'time', 'week', 'datetime', 'datetime-local', 'month'].includes(opt.newVal))
+        if (opt.name === 'type' && !['text', 'number', 'search', 'email', 'url', 'tel', 'password', 'time', 'week', 'datetime', 'datetime-local', 'month'])
             return;
         isNull(opt.newVal) ? this.inputEl.removeAttribute(opt.name) : this.inputEl.setAttribute(opt.name, opt.newVal);
         opt.name === 'name' && (this.name = opt.newVal || '');
@@ -35881,7 +35845,7 @@ class UploadElem extends CompBaseCommFieldMixin {
         else if (name === 'disabled') {
             this.disabled = this.propsProxy[name];
             if (this.ins) {
-                this.disabled ? this.ins.lock() : this.ins.unlock();
+                this.disabled ? this.ins.passivate() : this.ins.activate();
             }
         }
         else if (name === 'size') {
@@ -36495,251 +36459,255 @@ const init = (type, parent) => {
     return ax;
 };
 
-exports.Accordion = Accordion;
-exports.AccordionElem = AccordionElem;
-exports.AlarmElem = AlarmElem;
-exports.AnchorsElem = AnchorsElem;
-exports.Autocomplete = Autocomplete;
-exports.AvatarElem = AvatarElem;
-exports.BadgeElem = BadgeElem;
-exports.BtnElem = BtnElem;
-exports.BuoyElem = BuoyElem;
-exports.CalloutElem = CalloutElem;
-exports.CheckboxElem = CheckboxElem;
-exports.CheckboxesElem = CheckboxesElem;
-exports.CompBase = CompBase;
-exports.CompBaseComm = CompBaseComm;
-exports.CompBaseCommField = CompBaseCommField;
-exports.CompBaseCommFieldMixin = CompBaseCommFieldMixin;
-exports.Datetime = Datetime;
-exports.DatetimeElem = DatetimeElem;
-exports.DeformElem = DeformElem;
-exports.Dialog = Dialog;
-exports.DividerElem = DividerElem;
-exports.Dodge = Dodge;
-exports.Drag = Drag;
-exports.Drawer = Drawer;
-exports.Dropdown = Dropdown;
-exports.Editor = Editor;
-exports.EditorElem = EditorElem;
-exports.FieldsElem = FieldsElem;
-exports.FileElem = FileElem;
-exports.FlagElem = FlagElem;
-exports.FormatElem = FormatElem;
-exports.Gesture = Gesture;
-exports.GoodElem = GoodElem;
-exports.Hover = Hover;
-exports.IconElem = IconElem;
-exports.Infinite = Infinite;
-exports.InputElem = InputElem;
-exports.Lazy = Lazy;
-exports.LineElem = LineElem;
-exports.Masonry = Masonry;
-exports.Menu = Menu;
-exports.MenuElem = MenuElem;
-exports.Message = Message;
-exports.ModBase = ModBase;
-exports.ModBaseListen = ModBaseListen;
-exports.ModBaseListenCache = ModBaseListenCache;
-exports.ModBaseListenCacheBubble = ModBaseListenCacheBubble;
-exports.ModBaseListenCacheNest = ModBaseListenCacheNest;
-exports.More = More;
-exports.MoreElem = MoreElem;
-exports.NumberElem = NumberElem;
-exports.Observe = Observe;
-exports.Pagination = Pagination;
-exports.Panel = Panel;
-exports.Popup = Popup;
-exports.Position = Position;
-exports.Progress = Progress;
-exports.ProgressElem = ProgressElem;
-exports.RadioElem = RadioElem;
-exports.RadiosElem = RadiosElem;
-exports.Range = Range;
-exports.RangeElem = RangeElem;
-exports.Rate = Rate;
-exports.RateElem = RateElem;
-exports.ResultElem = ResultElem;
-exports.Retrieval = Retrieval;
-exports.Scroll = Scroll;
-exports.SearchElem = SearchElem;
-exports.Select = Select;
-exports.SelectElem = SelectElem;
-exports.Spy = Spy;
-exports.StatsElem = StatsElem;
-exports.Swipe = Swipe;
-exports.Tab = Tab;
-exports.Tags = Tags;
-exports.TextareaElem = TextareaElem;
-exports.Tooltip = Tooltip;
-exports.Tree = Tree;
-exports.TreeElem = TreeElem;
-exports.TwilightElem = TwilightElem;
-exports.Upload = Upload;
-exports.UploadElem = UploadElem;
-exports.Valid = Valid;
-exports.Virtualize = Virtualize;
-exports.addStyle = addStyle;
-exports.addStyles = addStyles;
-exports.ajax = ajax;
-exports.alert = alert;
-exports.alias = alias;
-exports.allToEls = allToEls;
-exports.appendEls = appendEls;
-exports.arrSearch = arrSearch;
-exports.arrSort = arrSort;
-exports.attrJoinVal = attrJoinVal;
-exports.attrToJson = attrToJson;
-exports.attrValBool = attrValBool;
-exports.augment = augment;
-exports.ax = ax;
-exports.breakpoints = breakpoints;
-exports.bulletTools = bulletTools;
-exports.capStart = capStart;
-exports.clampVal = clampVal;
-exports.classes = classes;
-exports.clearRegx = clearRegx;
-exports.combineArr = combineArr;
-exports.config = config;
-exports.confirm = confirm;
-exports.contains = contains;
-exports.convertByte = convertByte;
-exports.createBtns = createBtns;
-exports.createComp = createComp;
-exports.createEl = createEl;
-exports.createEvt = createEvt;
-exports.createFooter = createFooter;
-exports.createModule = createModule;
-exports.createTools = createTools;
-exports.curveFns = curveFns;
-exports.dateTools = dateTools;
-exports.debounce = debounce;
-exports.decompTask = decompTask;
-exports.deepClone = deepClone;
-exports.deepEqual = deepEqual;
-exports.deepMerge = deepMerge;
-exports.default = ax;
-exports.delay = delay;
-exports.dlToArr = dlToArr;
-exports.ease = ease;
-exports.easeHeight = easeHeight;
-exports.elProps = elProps;
-exports.elState = elState;
-exports.elsSort = elsSort;
-exports.eventMap = eventMap;
-exports.events = events;
-exports.extend = extend;
-exports.fadeIn = fadeIn;
-exports.fadeOut = fadeOut;
-exports.fadeToggle = fadeToggle;
-exports.fieldTools = fieldTools;
-exports.fieldTypes = fieldTypes;
-exports.fileTools = fileTools;
-exports.filterPrims = filterPrims;
-exports.findItem = findItem;
-exports.findItems = findItems;
-exports.formTools = formTools;
-exports.getArrMap = getArrMap;
-exports.getAttrArr = getAttrArr;
-exports.getAttrBool = getAttrBool;
-exports.getBetweenEls = getBetweenEls;
-exports.getClasses = getClasses;
-exports.getClientObj = getClientObj;
-exports.getComputedVar = getComputedVar;
-exports.getContent = getContent;
-exports.getDataType = getDataType;
-exports.getEl = getEl;
-exports.getElSpace = getElSpace;
-exports.getEls = getEls;
-exports.getEvtTarget = getEvtTarget;
-exports.getExpiration = getExpiration;
-exports.getFullGap = getFullGap;
-exports.getHeights = getHeights;
-exports.getImgAvatar = getImgAvatar;
-exports.getImgEmpty = getImgEmpty;
-exports.getImgNone = getImgNone;
-exports.getImgSpin = getImgSpin;
-exports.getImgSpinDk = getImgSpinDk;
-exports.getIntArr = getIntArr;
-exports.getLast = getLast;
-exports.getNestProp = getNestProp;
-exports.getPlaces = getPlaces;
-exports.getRectPoints = getRectPoints;
-exports.getScreenSize = getScreenSize;
-exports.getScrollObj = getScrollObj;
-exports.getSelectorType = getSelectorType;
-exports.getStrFromTpl = getStrFromTpl;
-exports.getUTCTimestamp = getUTCTimestamp;
-exports.getValsFromAttrs = getValsFromAttrs;
-exports.getWidths = getWidths;
-exports.hide = hide;
-exports.icons = icons;
-exports.includes = includes;
-exports.increaseId = increaseId;
-exports.init = init;
-exports.instance = instance;
-exports.isDateStr = isDateStr;
-exports.isEmpty = isEmpty;
-exports.isMobi = isMobi;
-exports.isNull = isNull;
-exports.isOutside = isOutside;
-exports.isProxy = isProxy;
-exports.isScrollUp = isScrollUp;
-exports.isSubset = isSubset;
-exports.keyCond = keyCond;
-exports.moveItem = moveItem;
-exports.notice = notice;
-exports.offset = offset;
-exports.paramToJson = paramToJson;
-exports.parseUrlArr = parseUrlArr;
-exports.pipe = pipe;
-exports.plan = plan;
-exports.prefix = prefix;
-exports.preventDft = preventDft;
-exports.privacy = privacy;
-exports.prompt = prompt;
-exports.propsMap = propsMap;
-exports.purifyHtml = purifyHtml;
-exports.regElem = regElem;
-exports.regExps = regExps;
-exports.removeItem = removeItem;
-exports.removeStyle = removeStyle;
-exports.removeStyles = removeStyles;
-exports.renderTpl = renderTpl;
-exports.repeatStr = repeatStr;
-exports.replaceFrag = replaceFrag;
-exports.requireTypes = requireTypes;
-exports.scrollTo = scrollTo;
-exports.setAttr = setAttr;
-exports.setAttrs = setAttrs;
-exports.setContent = setContent;
-exports.setSingleSel = setSingleSel;
-exports.show = show;
-exports.sliceFrags = sliceFrags;
-exports.sliceStrEnd = sliceStrEnd;
-exports.slideDown = slideDown;
-exports.slideToggle = slideToggle;
-exports.slideUp = slideUp;
-exports.splice = splice;
-exports.splitNum = splitNum;
-exports.spreadBool = spreadBool;
-exports.startUpper = startUpper;
-exports.stdParam = stdParam;
-exports.storage = storage;
-exports.strToJson = strToJson;
-exports.style = style;
-exports.support = support;
-exports.theme = theme;
-exports.throttle = throttle;
-exports.toLocalTime = toLocalTime;
-exports.toNumber = toNumber;
-exports.toPixel = toPixel;
-exports.toggle = toggle;
-exports.tplToEl = tplToEl;
-exports.tplToEls = tplToEls;
-exports.transformTools = transformTools;
-exports.treeTools = treeTools;
-exports.trim = trim;
-exports.unique = unique;
-exports.valToArr = valToArr;
-exports.validTools = validTools;
+var ax_comm = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    Accordion: Accordion,
+    AccordionElem: AccordionElem,
+    AlarmElem: AlarmElem,
+    AnchorsElem: AnchorsElem,
+    Autocomplete: Autocomplete,
+    AvatarElem: AvatarElem,
+    BadgeElem: BadgeElem,
+    BtnElem: BtnElem,
+    BuoyElem: BuoyElem,
+    CalloutElem: CalloutElem,
+    CheckboxElem: CheckboxElem,
+    CheckboxesElem: CheckboxesElem,
+    CompBase: CompBase,
+    CompBaseComm: CompBaseComm,
+    CompBaseCommField: CompBaseCommField,
+    CompBaseCommFieldMixin: CompBaseCommFieldMixin,
+    Datetime: Datetime,
+    DatetimeElem: DatetimeElem,
+    DeformElem: DeformElem,
+    Dialog: Dialog,
+    DividerElem: DividerElem,
+    Dodge: Dodge,
+    Drag: Drag,
+    Drawer: Drawer,
+    Dropdown: Dropdown,
+    Editor: Editor,
+    EditorElem: EditorElem,
+    FieldsElem: FieldsElem,
+    FileElem: FileElem,
+    FlagElem: FlagElem,
+    FormatElem: FormatElem,
+    Gesture: Gesture,
+    GoodElem: GoodElem,
+    Hover: Hover,
+    IconElem: IconElem,
+    Infinite: Infinite,
+    InputElem: InputElem,
+    Lazy: Lazy,
+    LineElem: LineElem,
+    Masonry: Masonry,
+    Menu: Menu,
+    MenuElem: MenuElem,
+    Message: Message,
+    ModBase: ModBase,
+    ModBaseListen: ModBaseListen,
+    ModBaseListenCache: ModBaseListenCache,
+    ModBaseListenCacheBubble: ModBaseListenCacheBubble,
+    ModBaseListenCacheNest: ModBaseListenCacheNest,
+    More: More,
+    MoreElem: MoreElem,
+    NumberElem: NumberElem,
+    Observe: Observe,
+    Pagination: Pagination,
+    Panel: Panel,
+    Popup: Popup,
+    Position: Position,
+    Progress: Progress,
+    ProgressElem: ProgressElem,
+    RadioElem: RadioElem,
+    RadiosElem: RadiosElem,
+    Range: Range,
+    RangeElem: RangeElem,
+    Rate: Rate,
+    RateElem: RateElem,
+    ResultElem: ResultElem,
+    Retrieval: Retrieval,
+    Scroll: Scroll,
+    SearchElem: SearchElem,
+    Select: Select,
+    SelectElem: SelectElem,
+    Spy: Spy,
+    StatsElem: StatsElem,
+    Swipe: Swipe,
+    Tab: Tab,
+    Tags: Tags,
+    TextareaElem: TextareaElem,
+    Tooltip: Tooltip,
+    Tree: Tree,
+    TreeElem: TreeElem,
+    TwilightElem: TwilightElem,
+    Upload: Upload,
+    UploadElem: UploadElem,
+    Valid: Valid,
+    Virtualize: Virtualize,
+    addStyle: addStyle,
+    addStyles: addStyles,
+    ajax: ajax,
+    alert: alert,
+    alias: alias,
+    allToEls: allToEls,
+    appendEls: appendEls,
+    arrSearch: arrSearch,
+    arrSort: arrSort,
+    attrJoinVal: attrJoinVal,
+    attrToJson: attrToJson,
+    attrValBool: attrValBool,
+    augment: augment,
+    ax: ax,
+    breakpoints: breakpoints,
+    bulletTools: bulletTools,
+    capStart: capStart,
+    clampVal: clampVal,
+    classes: classes,
+    clearRegx: clearRegx,
+    combineArr: combineArr,
+    config: config,
+    confirm: confirm,
+    contains: contains,
+    convertByte: convertByte,
+    createBtns: createBtns,
+    createComp: createComp,
+    createEl: createEl,
+    createEvt: createEvt,
+    createFooter: createFooter,
+    createModule: createModule,
+    createTools: createTools,
+    curveFns: curveFns,
+    dateTools: dateTools,
+    debounce: debounce,
+    decompTask: decompTask,
+    deepClone: deepClone,
+    deepEqual: deepEqual,
+    deepMerge: deepMerge,
+    delay: delay,
+    dlToArr: dlToArr,
+    ease: ease,
+    easeHeight: easeHeight,
+    elProps: elProps,
+    elState: elState,
+    elsSort: elsSort,
+    eventMap: eventMap,
+    events: events,
+    extend: extend,
+    fadeIn: fadeIn,
+    fadeOut: fadeOut,
+    fadeToggle: fadeToggle,
+    fieldTools: fieldTools,
+    fieldTypes: fieldTypes,
+    fileTools: fileTools,
+    filterPrims: filterPrims,
+    findItem: findItem,
+    findItems: findItems,
+    formTools: formTools,
+    getArrMap: getArrMap,
+    getAttrArr: getAttrArr,
+    getAttrBool: getAttrBool,
+    getBetweenEls: getBetweenEls,
+    getClasses: getClasses,
+    getClientObj: getClientObj,
+    getComputedVar: getComputedVar,
+    getContent: getContent,
+    getDataType: getDataType,
+    getEl: getEl,
+    getElSpace: getElSpace,
+    getEls: getEls,
+    getEvtTarget: getEvtTarget,
+    getExpiration: getExpiration,
+    getFullGap: getFullGap,
+    getHeights: getHeights,
+    getImgAvatar: getImgAvatar,
+    getImgEmpty: getImgEmpty,
+    getImgNone: getImgNone,
+    getImgSpin: getImgSpin,
+    getImgSpinDk: getImgSpinDk,
+    getIntArr: getIntArr,
+    getLast: getLast,
+    getNestProp: getNestProp,
+    getPlaces: getPlaces,
+    getRectPoints: getRectPoints,
+    getScreenSize: getScreenSize,
+    getScrollObj: getScrollObj,
+    getSelectorType: getSelectorType,
+    getStrFromTpl: getStrFromTpl,
+    getUTCTimestamp: getUTCTimestamp,
+    getValsFromAttrs: getValsFromAttrs,
+    getWidths: getWidths,
+    hide: hide,
+    icons: icons,
+    includes: includes,
+    increaseId: increaseId,
+    init: init,
+    instance: instance,
+    isDateStr: isDateStr,
+    isEmpty: isEmpty,
+    isMobi: isMobi,
+    isNull: isNull,
+    isOutside: isOutside,
+    isProxy: isProxy,
+    isScrollUp: isScrollUp,
+    isSubset: isSubset,
+    keyCond: keyCond,
+    moveItem: moveItem,
+    notice: notice,
+    offset: offset,
+    paramToJson: paramToJson,
+    parseUrlArr: parseUrlArr,
+    pipe: pipe,
+    plan: plan,
+    prefix: prefix,
+    preventDft: preventDft,
+    privacy: privacy,
+    prompt: prompt,
+    propsMap: propsMap,
+    purifyHtml: purifyHtml,
+    regElem: regElem,
+    regExps: regExps,
+    removeItem: removeItem,
+    removeStyle: removeStyle,
+    removeStyles: removeStyles,
+    renderTpl: renderTpl,
+    repeatStr: repeatStr,
+    replaceFrag: replaceFrag,
+    requireTypes: requireTypes,
+    scrollTo: scrollTo,
+    setAttr: setAttr,
+    setAttrs: setAttrs,
+    setContent: setContent,
+    setSingleSel: setSingleSel,
+    show: show,
+    sliceFrags: sliceFrags,
+    sliceStrEnd: sliceStrEnd,
+    slideDown: slideDown,
+    slideToggle: slideToggle,
+    slideUp: slideUp,
+    splice: splice,
+    splitNum: splitNum,
+    spreadBool: spreadBool,
+    startUpper: startUpper,
+    stdParam: stdParam,
+    storage: storage,
+    strToJson: strToJson,
+    style: style,
+    support: support,
+    theme: theme,
+    throttle: throttle,
+    toLocalTime: toLocalTime,
+    toNumber: toNumber,
+    toPixel: toPixel,
+    toggle: toggle,
+    tplToEl: tplToEl,
+    tplToEls: tplToEls,
+    transformTools: transformTools,
+    treeTools: treeTools,
+    trim: trim,
+    unique: unique,
+    valToArr: valToArr,
+    validTools: validTools
+});
+
+exports.tmp = ax_comm;
