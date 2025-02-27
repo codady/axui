@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-27 0:35:35
+ * @since Last modified: 2025-2-27 22:54:59
  * @name AXUI front-end framework.
- * @version 3.0.14
+ * @version 3.0.15
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -35,17 +35,6 @@ const lang = {
         content: '我们使用Cookie来确保您在我们的网站上获得最佳体验，并为您提供个性化服务。继续浏览即表示您同意我们的Cookie政策。',
         cancel: '拒绝',
         confirm: '接受'
-    },
-    puncs: {
-        ',': '，',
-        '.': '。',
-        '!': '！',
-        '" ': '“',
-        ' "': '”',
-        '...': '……',
-        ';': '；',
-        ':': '：',
-        '?': '？'
     },
     ajax: {
         abort: `<i class="${prefix}c-warn">中止了请求！</i>`,
@@ -2262,13 +2251,18 @@ const optBase = [
         value: null,
     },
     {
-        attr: 'on-ready',
-        prop: 'onReady',
+        attr: 'on-constructed',
+        prop: 'onConstructed',
         value: null,
     },
     {
         attr: 'on-initiate',
         prop: 'onInitiate',
+        value: null,
+    },
+    {
+        attr: 'on-initiated',
+        prop: 'onInitiated',
         value: null,
     },
     {
@@ -2292,13 +2286,18 @@ const optBase = [
         value: null,
     },
     {
-        attr: 'on-save',
-        prop: 'onSave',
+        attr: 'on-saved',
+        prop: 'onSaved',
         value: null,
     },
     {
         attr: 'on-clearedcache',
         prop: 'onClearedCache',
+        value: null,
+    },
+    {
+        attr: 'on-updatedcache',
+        prop: 'onUpdatedCache',
         value: null,
     },
 ];
@@ -4371,12 +4370,12 @@ class Message extends ModBaseListen {
     };
     createSection() {
         this.template = `
-        <ax-callout size="lg" opaque hidden content="${this.options.content || config.lang.message.content[this.options.status]}"
+        <ax-callout size="lg" opaque hidden content="${this.options.content === true || this.options.content === '' ? this.options.lang.content[this.options.status] : this.options.content}"
         ${this.options.notable ? 'notable' : ''}
         ${this.options.iconShow ? 'result' : ''}
         ${this.options.closable ? 'closable' : ''}
         ${this.options.status ? 'theme="' + (this.options.status || 'info') + '"' : ''}
-        ${this.options.heading ? 'caption="' + this.options.heading + '"' : ''}
+        ${this.options.heading ? 'caption="' + (this.options.heading === true ? this.options.lang.heading[this.options.status] : this.options.heading) + '"' : ''}
         ${!this.options.progress ? 'noprogress' : ''}
         >
         </ax-callout>
@@ -7507,9 +7506,11 @@ class CompBaseComm extends CompBase {
             this.fillWrap(this.propsRaw);
             this.restoreAttrs();
             this.render(this.propsRaw);
+            this.listen({ name: 'reset' });
         };
-        this.clear = () => {
-            this.removeAttribute('value');
+        this.clear = (attr = 'value') => {
+            this.removeAttribute(attr);
+            this.listen({ name: 'cleared', params: [attr] });
         };
         this.set = (data) => {
             if (isEmpty(data))
@@ -8445,7 +8446,7 @@ class Spy extends ModBaseListen {
             }
             else {
                 new Message({
-                    content: renderTpl(config.lang.spy.isObserved, { src: i.dataset.src || i.src }),
+                    content: renderTpl(this.options.lang.isObserved, { src: i.dataset.src || i.src }),
                     iconShow: true,
                     status: 'info',
                 }).show();
@@ -8467,7 +8468,7 @@ class Spy extends ModBaseListen {
                 }
                 else {
                     new Message({
-                        content: renderTpl(config.lang.spy.isUnobserved, { src: i.dataset.src || i.src }),
+                        content: renderTpl(this.options.lang.isUnobserved, { src: i.dataset.src || i.src }),
                         iconShow: true,
                         status: 'info',
                     }).show();
@@ -12102,7 +12103,7 @@ class Valid extends ModBaseListenCache {
             
             'strength': (data) => {
                 if (typeof data.value !== 'string') {
-                    return { passed: false, fail: config.lang.valid.strFormat };
+                    return { passed: false, fail: this.options.lang.strFormat };
                 }
                 let strength = this.getStrength(data.value), fail = renderTpl(this.options.lang['strength'], { label: data.label, name: data.name, value: strength, data: this.types['strength'] });
                 return strength >= this.types['strength'] ? { passed: true } : { passed: false, fail, type: 'strength' };
@@ -12110,7 +12111,7 @@ class Valid extends ModBaseListenCache {
             
             'specific': (data) => {
                 if (typeof data.value !== 'string') {
-                    return { passed: false, fail: config.lang.valid.strFormat };
+                    return { passed: false, fail: this.options.lang.strFormat };
                 }
                 let parse = validTools.parseSpecific(this.types['specific'], { label: data.label, name: data.name, value: data.value, tpl: this.options.lang['specific'] }), regExp = parse.regex, regText = parse.text;
                 return validTools.test(data.value, regExp) ? { passed: true } : { passed: false, fail: regText, type: 'specific' };
@@ -12118,7 +12119,7 @@ class Valid extends ModBaseListenCache {
             
             'combine': (data) => {
                 if (typeof data.value !== 'string') {
-                    return { passed: false, fail: config.lang.valid.strFormat };
+                    return { passed: false, fail: this.options.lang.strFormat };
                 }
                 let parse = validTools.parseCombine(this.types['combine'], { label: data.label, name: data.name, ins: this, value: data.value, tpl: this.options.lang['combine'] }), regExp = parse.regex, regText = parse.text;
                 return validTools.test(data.value, regExp) ? { passed: true } : { passed: false, fail: regText, type: 'combine' };
@@ -12176,7 +12177,7 @@ class Valid extends ModBaseListenCache {
             if (regExps.hasOwnProperty(k)) {
                 result[k] = (data) => {
                     if (Array.isArray(data.value)) {
-                        return { passed: false, fail: config.lang.valid.strFormat, id: 'strFormat' };
+                        return { passed: false, fail: this.options.lang.strFormat, id: 'strFormat' };
                     }
                     return this.testRegex({ regex: regExps[k], value: data.value, name: k });
                 };
@@ -12189,7 +12190,7 @@ class Valid extends ModBaseListenCache {
         types.forEach((k) => {
             result[k] = (data) => {
                 if (!Array.isArray(data.data)) {
-                    return { passed: false, fail: config.lang.valid.arrFormat };
+                    return { passed: false, fail: this.options.lang.arrFormat };
                 }
                 let value = Array.isArray(data.value) ? data.value : data.value.split(this.options.separator), flag = isSubset(value, data.data), fail = renderTpl(this.options.lang[k], { label: data.label, name: data.name, value: data.value, data: data.data });
                 k === 'exclude' && (flag = !flag);
@@ -12203,7 +12204,7 @@ class Valid extends ModBaseListenCache {
         types.forEach((k) => {
             result[k] = (data) => {
                 if (!Array.isArray(data.data)) {
-                    return { passed: false, fail: config.lang.valid.arrFormat };
+                    return { passed: false, fail: this.options.lang.arrFormat };
                 }
                 let referField = this.parentEl.querySelector(`[name="${this.types[k][0]}"]`), referValue = this.getVals(referField, 'string'), targetValue = this.getVals(this.targetEl, 'string'), fail = renderTpl(this.options.lang[k], { label: data.label, name: data.name, value: targetValue, data: data.data }), condition = k === 'same' ? (referValue === targetValue) : (referValue !== targetValue);
                 return condition ? { passed: true } : { passed: false, fail, type: k };
@@ -12216,7 +12217,7 @@ class Valid extends ModBaseListenCache {
         types.forEach((k) => {
             result[k] = (data) => {
                 if (Array.isArray(data.value)) {
-                    return { passed: false, fail: config.lang.valid.strFormat };
+                    return { passed: false, fail: this.options.lang.strFormat };
                 }
                 let flag = validTools.expired(data.value, data.data).join(''), fail = renderTpl(this.options.lang[k], { label: data.label, value: data.value, data: data.data }), condition = k === 'date=' ? (flag === '0-2') :
                     k === 'date<' ? (flag === '-1-2') :
@@ -12237,7 +12238,7 @@ class Valid extends ModBaseListenCache {
         types.forEach((k) => {
             result[k] = (data) => {
                 if (Array.isArray(data.value)) {
-                    return { passed: false, fail: config.lang.valid.strFormat };
+                    return { passed: false, fail: this.options.lang.strFormat };
                 }
                 let flag = validTools.than(data.value, data.data).join(''), fail = renderTpl(this.options.lang[k], { label: data.label, value: data.value, data: data.data }), condition = k === 'than>' ? (flag === '1-2') :
                     k === 'than>=' ? (flag === '1-2' || flag === '0-2') :
@@ -12258,7 +12259,7 @@ class Valid extends ModBaseListenCache {
         types.forEach((k) => {
             result[k] = (data) => {
                 if (Array.isArray(data.value)) {
-                    return { passed: false, fail: config.lang.valid.strFormat, id: 'strFormat' };
+                    return { passed: false, fail: this.options.lang.strFormat, id: 'strFormat' };
                 }
                 let pattern = k === 'length=' ? this.types[k] :
                     k === 'length>' ? `${this.types[k] + 1},` :
@@ -15148,7 +15149,7 @@ class Tags extends ModBaseListenCache {
             }).filter(Boolean);
             if (oldLen !== arr.length) {
                 new Message({
-                    content: arr.length === 0 ? config.lang.tags.includeFull : config.lang.tags.includePart,
+                    content: arr.length === 0 ? this.options.lang.includeFull : this.options.lang.includePart,
                     status: 'warn',
                     iconShow: true,
                 }).show();
@@ -36495,6 +36496,256 @@ const init = (type, parent) => {
     return ax;
 };
 
+var ax_comm = {
+    ax,
+    alias,
+    config,
+    fieldTypes,
+    prefix,
+    getDataType,
+    renderTpl,
+    getScreenSize,
+    sliceStrEnd,
+    delay,
+    toNumber,
+    toPixel,
+    preventDft,
+    isMobi,
+    events,
+    icons,
+    getFullGap,
+    propsMap,
+    augment,
+    privacy,
+    support,
+    requireTypes,
+    trim,
+    getSelectorType,
+    isEmpty,
+    isNull,
+    getEl,
+    deepClone,
+    deepMerge,
+    strToJson,
+    attrToJson,
+    attrJoinVal,
+    extend,
+    plan,
+    instance,
+    breakpoints,
+    createEl,
+    purifyHtml,
+    startUpper,
+    storage,
+    isDateStr,
+    getExpiration,
+    ajax,
+    offset,
+    elState,
+    contains,
+    getEls,
+    getContent,
+    setContent,
+    createBtns,
+    createFooter,
+    createTools,
+    tplToEl,
+    tplToEls,
+    getHeights,
+    getWidths,
+    getElSpace,
+    slideDown,
+    slideUp,
+    slideToggle,
+    curveFns,
+    ease,
+    easeHeight,
+    fadeIn,
+    fadeOut,
+    fadeToggle,
+    style,
+    show,
+    hide,
+    toggle,
+    pipe,
+    spreadBool,
+    getClasses,
+    classes,
+    validTools,
+    toLocalTime,
+    regExps,
+    replaceFrag,
+    combineArr,
+    sliceFrags,
+    paramToJson,
+    getLast,
+    fieldTools,
+    isSubset,
+    debounce,
+    throttle,
+    elProps,
+    convertByte,
+    clampVal,
+    formTools,
+    fileTools,
+    unique,
+    increaseId,
+    treeTools,
+    valToArr,
+    moveItem,
+    getValsFromAttrs,
+    dlToArr,
+    findItem,
+    findItems,
+    getAttrBool,
+    getAttrArr,
+    theme,
+    attrValBool,
+    getBetweenEls,
+    scrollTo,
+    allToEls,
+    getUTCTimestamp,
+    setAttr,
+    setAttrs,
+    getScrollObj,
+    transformTools,
+    isScrollUp,
+    eventMap,
+    getClientObj,
+    bulletTools,
+    arrSearch,
+    arrSort,
+    isProxy,
+    getNestProp,
+    getIntArr,
+    clearRegx,
+    isOutside,
+    getRectPoints,
+    elsSort,
+    getEvtTarget,
+    getStrFromTpl,
+    stdParam,
+    setSingleSel,
+    splitNum,
+    parseUrlArr,
+    getPlaces,
+    dateTools,
+    repeatStr,
+    createModule,
+    createComp,
+    getArrMap,
+    includes,
+    capStart,
+    removeItem,
+    deepEqual,
+    splice,
+    appendEls,
+    decompTask,
+    filterPrims,
+    createEvt,
+    confirm,
+    alert,
+    notice,
+    prompt,
+    keyCond,
+    removeStyle,
+    removeStyles,
+    addStyle,
+    addStyles,
+    regElem,
+    getComputedVar,
+    getImgSpin,
+    getImgSpinDk,
+    getImgNone,
+    getImgEmpty,
+    getImgAvatar,
+    ModBase,
+    ModBaseListen,
+    ModBaseListenCache,
+    ModBaseListenCacheBubble,
+    ModBaseListenCacheNest,
+    More,
+    Observe,
+    Position,
+    Hover,
+    Popup,
+    Dodge,
+    Message,
+    Valid,
+    Menu,
+    Tab,
+    Drawer,
+    Dialog,
+    Spy,
+    Tooltip,
+    Dropdown,
+    Gesture,
+    Tags,
+    Retrieval,
+    Autocomplete,
+    Scroll,
+    Drag,
+    Masonry,
+    Swipe,
+    Lazy,
+    Progress,
+    Infinite,
+    Virtualize,
+    Pagination,
+    Range,
+    Datetime,
+    Tree,
+    Rate,
+    Accordion,
+    Editor,
+    Select,
+    Upload,
+    Panel,
+    CompBase,
+    CompBaseComm,
+    CompBaseCommField,
+    CompBaseCommFieldMixin,
+    MoreElem,
+    ResultElem,
+    DeformElem,
+    RadioElem,
+    CheckboxElem,
+    BtnElem,
+    LineElem,
+    AvatarElem,
+    FormatElem,
+    FlagElem,
+    BuoyElem,
+    GoodElem,
+    AnchorsElem,
+    MenuElem,
+    FileElem,
+    InputElem,
+    TextareaElem,
+    RadiosElem,
+    CheckboxesElem,
+    NumberElem,
+    RangeElem,
+    StatsElem,
+    IconElem,
+    BadgeElem,
+    DividerElem,
+    AlarmElem,
+    ProgressElem,
+    DatetimeElem,
+    RateElem,
+    TreeElem,
+    AccordionElem,
+    EditorElem,
+    SelectElem,
+    UploadElem,
+    FieldsElem,
+    SearchElem,
+    CalloutElem,
+    TwilightElem,
+    init,
+};
+
 exports.Accordion = Accordion;
 exports.AccordionElem = AccordionElem;
 exports.AlarmElem = AlarmElem;
@@ -36618,7 +36869,7 @@ exports.decompTask = decompTask;
 exports.deepClone = deepClone;
 exports.deepEqual = deepEqual;
 exports.deepMerge = deepMerge;
-exports.default = ax;
+exports.default = ax_comm;
 exports.delay = delay;
 exports.dlToArr = dlToArr;
 exports.ease = ease;

@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-27 0:36:14
+ * @since Last modified: 2025-2-27 22:55:26
  * @name AXUI front-end framework.
- * @version 3.0.14
+ * @version 3.0.15
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -18,7 +18,7 @@
  * @since Last modified: 2025-02-23 23:58:15
  */
 /*
- *Last modified: 2025-02-05 15:24:51
+ *Last modified: 2025-02-27 12:46:41
  */
 :root {
   /*Stage colors*/
@@ -1955,7 +1955,7 @@
   content: "\e62f";
 }
 /*
- *Last modified: 2025-02-20 18:00:06
+ *Last modified: 2025-02-27 15:45:58
  */
 html {
   font-size: var(--_fs-root);
@@ -1964,15 +1964,22 @@ html {
   margin: 0;
 }
 body {
-  font-family: var(--_ff-body);
-  font-size: var(--_fs-body);
-  line-height: var(--_em-body);
-  color: var(--_c-text);
-  text-align: left;
+  --_body-p: 0px;
+  --_body-m: 0px;
+  --_body-a: left;
+  --_body-c: var(--_c-text);
+  --_body-ff: var(--_ff-body);
+  --_body-fs: var(--_fs-body);
+  --_body-lh: var(--_em-body);
+  font-family: var(--_body-ff);
+  font-size: var(--_body-fs);
+  line-height: var(--_body-lh);
+  color: var(--_body-c);
+  text-align: var(--_body-a);
   width: 100%;
   min-height: 100%;
-  padding: 0;
-  margin: 0;
+  padding: var(--_body-p);
+  margin: var(--_body-m);
   position: relative;
 }
 /*reset*/

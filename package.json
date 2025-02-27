@@ -1,6 +1,6 @@
 {
   "name": "@codady/axui",
-  "version": "3.0.14",
+  "version": "3.0.15",
   "author": "AXUI Development Team",
   "license": "MIT",
   "description": "The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management. It has no library dependencies and is designed to meet diverse needs with a focus on design.",
@@ -18,6 +18,9 @@
     "package.json",
     "rollup.config.js",
     "tsconfig.json",
+    "script-css.js",
+    "script-mini.js",
+    "script-note.js",
     "CHANGELOG.md",
     "README.md",
     "LICENSE"
@@ -43,7 +46,7 @@
     "zip": "node script-zip.js",
     "push": "node script-push.js",
     "view": "node script-view.js",
-    "all": "npm run build && npm run css && npm run mini && npm run zip && npm publish && npm run push"
+    "all": "npm run build && npm run css && npm run mini  && (npm run zip || true) && npm publish  && (npm run push || true)"
   },
   "repository": {
     "type": "git",
