@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-27 22:54:59
+ * @since Last modified: 2025-3-2 0:55:19
  * @name AXUI front-end framework.
- * @version 3.0.15
+ * @version 3.0.16
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -1342,597 +1342,6 @@ const ajax = (options) => {
     });
 };
 
-const increaseId = (data, hasId = true) => {
-    let ids = new Set(), newId = 0;
-    if (!data.length)
-        return newId;
-    if (hasId) {
-        for (let k of data)
-            ids.add(~~k.id);
-        newId = Math.max(...ids) + 1;
-    }
-    else {
-        newId = data.length;
-    }
-    return newId;
-};
-
-const getValsFromAttrs = (el) => {
-    let elem = getEl(el), obj = {};
-    if (elem) {
-        obj.label = elem.textContent.trim();
-        let attrs = [...elem.attributes];
-        attrs.forEach(k => {
-            obj[k.name] = (['selected', 'disabled', 'readonly', 'active', 'checked', 'expanded', 'draggable'].includes(k.name)) ? true : k.value.trim();
-        });
-        !obj.hasOwnProperty('value') && (obj.value = obj.label);
-        obj.value && !obj.label && (obj.label = obj.value);
-    }
-    return obj;
-};
-
-const findItem = (val, source, key, prio) => {
-    let valType = getDataType(val);
-    if (!source)
-        return val;
-    let result, first = source[0], firstId = first?.id, idType = getDataType(firstId);
-    if (isNull(firstId) && valType === 'Number') {
-        result = source[val];
-    }
-    else {
-        if (key) {
-            result = source.find((k) => k[key] === val);
-        }
-        else {
-            if (valType.includes('HTML')) {
-                let hasPrio = (item) => prio?.node ? item[prio.node] === val : false, condition = (item) => hasPrio(item) || item.headEl === val || item.wrapEl === val;
-                result = source.find((k) => condition(k));
-            }
-            else {
-                let prop = (valType === 'Number') ? (prio?.number || 'id') :
-                    (valType === 'String') ? prio?.string || (idType === 'String' ? 'id' : 'label') : '';
-                if (valType === 'Object') {
-                    result = source.find((k) => k === val);
-                }
-                else {
-                    result = prop ? source.find((k) => k[prop] === val || k[prio?.guard || 'value'] === val) : undefined;
-                }
-            }
-        }
-    }
-    return result;
-};
-
-const clampVal = ({ val = 0, min = 0, max = 100 }) => {
-    let tmpVal = toNumber(val), tmpMin = toNumber(min), tmpMax = toNumber(max), result = (!['', null, undefined].includes(min) && tmpVal < tmpMin) ? tmpMin :
-        (!['', null, undefined].includes(max) && tmpVal > tmpMax) ? tmpMax : tmpVal;
-    return result;
-};
-
-const splice = ({ host = [], source, intent = 'end+', index = 0, cb }) => {
-    if (isNull(host) || !Array.isArray(host))
-        return [];
-    let tmp = source !== undefined ? (Array.isArray(source) ? source : [source]) : null, data = Array.isArray(tmp) ? tmp : [tmp], idx = isNull(index) ? 0 : clampVal({ min: 0, max: host.length - 1, val: index }), items = [];
-    if (intent === 'clear') {
-        items = [...host];
-        host.splice(0);
-    }
-    else if (intent === 'add') {
-        if (!tmp)
-            return host;
-        host.splice(idx, 0, ...data);
-        items = host.slice(idx, idx + data.length);
-    }
-    else if (intent === 'remove') {
-        let _tmp = source !== undefined ? host.indexOf(source) : idx;
-        if (_tmp < 0) {
-            return host;
-        }
-        else {
-            items = host.slice(_tmp, _tmp + 1);
-            host.splice(_tmp, 1);
-        }
-    }
-    else if (intent === 'replace') {
-        if (!tmp)
-            return host;
-        host.splice(idx, 1, ...data);
-        items = host.slice(idx, idx + data.length);
-    }
-    else if (intent === 'start-') {
-        items = host.slice(0, 1);
-        host.shift();
-    }
-    else if (intent === 'end-') {
-        items = host.slice(-1);
-        host.pop();
-    }
-    else if (intent === 'start+') {
-        if (!tmp)
-            return host;
-        host.unshift(...data);
-        items = host.slice(0, data.length);
-    }
-    else {
-        if (!tmp)
-            return host;
-        host.push(...data);
-        items = host.slice(-data.length);
-    }
-    cb && cb(items);
-    return host;
-};
-
-const treeTools = {
-    
-    find: function (arr, val, key) {
-        let tmp = findItem(arr, val, key);
-        if (tmp)
-            return tmp;
-        for (let k of arr) {
-            k.children && this.find(k.children, val, key);
-        }
-        return null;
-    },
-    getBoolItems: (data, prop, negative = false) => {
-        return data.filter((k) => negative ? !k[prop] : k[prop]);
-    },
-    
-    toFlat: function (data) {
-        let result = [];
-        data.forEach(k => {
-            if (k.children && !data.includes(k.children[0])) {
-                result = [...result, k, ...this.toFlat(k.children)];
-            }
-            else {
-                result.push(k);
-            }
-        });
-        return result;
-    },
-    
-    toTree: (data) => {
-        if (!data || data.length === 0 || !data[0].hasOwnProperty('pId')) {
-            return data;
-        }
-        let root = data[0].pId;
-        data.forEach(k => {
-            let children = data.filter(i => k.id == i.pId);
-            if (children.length) {
-                k.children = children;
-            }
-        });
-        return data.filter(k => k.pId == root);
-    },
-    
-    addIdPath: ({ source, rootStart = config.rootStart, idStart = config.idStart, floorStart = config.floorStart, pathHyphen = config.pathHyphen, lbl2Val = true }) => {
-        if (!Array.isArray(source) || source.length === 0 || source[0].hasOwnProperty('path')) {
-            return source;
-        }
-        let hasId = source[0].hasOwnProperty('id') ? true : false, index = idStart, each = (data, floor, path = rootStart) => {
-            data.forEach(item => {
-                if (!hasId) {
-                    item.id = index;
-                    index++;
-                }
-                item.floor = floor;
-                item.pId = item.pId || item.pId === 0 ? item.pId : rootStart;
-                item.path = path + pathHyphen + item.id;
-                (!item.hasOwnProperty('value') && item.hasOwnProperty('label') && lbl2Val) ? item.value = item.label : null;
-                if (item.children && item.children.length > 0) {
-                    item.children.forEach((k) => {
-                        k.pId = item.id;
-                    });
-                    each(item.children, floor + 1, item.path);
-                }
-                if (!item.path) {
-                    item.path = item.pId + pathHyphen + item.id;
-                }
-            });
-        };
-        each(source, floorStart);
-        return source;
-    },
-    fromInput: (el, hyphen = config.splitHyphen) => {
-        let elem = getEl(el), result = [];
-        if (!elem) {
-            console.warn(`No node, no access to data!`);
-            return result;
-        }
-        let tmp = elem.value.trim();
-        return !tmp ? [] : elem.value.trim().split(hyphen).map((k) => { return { label: k, value: k }; });
-    },
-    
-    fromSelect: function (el) {
-        let elem = getEl(el), result = [];
-        if (!elem) {
-            console.warn(`No node, no access to data!`);
-            return result;
-        }
-        let getChild = () => {
-            let data = [];
-            [...elem.children].forEach(k => {
-                data.push(getJson(k));
-            });
-            return data;
-        }, getJson = (elem) => {
-            let obj = { node: elem, ...getValsFromAttrs(elem) };
-            if (elem.nodeName == 'OPTGROUP') {
-                obj.children = [];
-                [...elem.children].forEach(k => {
-                    obj.children.push(getJson(k));
-                });
-            }
-            return obj;
-        };
-        result = getChild();
-        return result;
-    },
-    
-    fromUl: function (el, type = 'tree') {
-        let elem = getEl(el), result = [];
-        if (!elem) {
-            console.warn(`No node, no access to data!`);
-            return result;
-        }
-        let getChild = () => {
-            let data = [];
-            [...elem.children].forEach(k => {
-                data.push(getJson(k));
-            });
-            return data;
-        }, getJson = (elem) => {
-            let obj = { node: elem.firstElementChild }, tmpLabel = obj.node.querySelector(`:scope> [${alias}="label"]`), tmpBadge = obj.node.querySelector(`:scope> [${alias}="badge"]`) || obj.node.querySelector(`:scope> AX-BADGE`), tmpTips = obj.node.querySelector(`:scope> [${alias}="tips"]`), tmpIcon = obj.node.querySelector(`:scope> [${alias}="icon"]`), tmpDisk = obj.node.querySelector(`:scope> [${alias}="disk"]`), tmpCube = obj.node.querySelector(`:scope> [${alias}="cube"]`), tmpCustom = obj.node.querySelector(`:scope> [${alias}="custom"]`), tmpBrief = elem.querySelector(`:scope> .${prefix}${type}-brief`), tmpCont = elem.querySelector(`:scope> .${prefix}${type}-cont`), tmpExtra = elem.querySelector(`:scope> .${prefix}${type}-extra`);
-            obj.node.classList.contains(`${prefix}${type}-head`) && (obj.headEl = obj.node);
-            tmpLabel && (obj.labelEl = tmpLabel);
-            tmpBadge && (obj.badgeEl = tmpBadge);
-            tmpTips && (obj.tipsEl = tmpTips);
-            tmpCustom && (obj.customEl = tmpCustom);
-            tmpIcon && (obj.iconEl = tmpIcon);
-            tmpDisk && (obj.diskEl = tmpDisk);
-            tmpCube && (obj.cubeEl = tmpCube);
-            tmpBrief && (obj.briefEl = tmpBrief);
-            tmpCont && (obj.contEl = tmpCont);
-            tmpExtra && (obj.extraEl = tmpExtra);
-            Object.assign(obj, { ...getValsFromAttrs(obj.wrapEl), ...getValsFromAttrs(obj.node), ...getValsFromAttrs(obj.labelEl) });
-            obj.headEl && !obj.labelEl && (obj.headEl.innerHTML = '');
-            let parent = elem.querySelector(':scope> ul,:scope> ol');
-            if (parent) {
-                obj.children = [];
-                [...parent.children].forEach(k => {
-                    obj.children.push(getJson(k));
-                });
-            }
-            return obj;
-        };
-        result = getChild();
-        return result;
-    },
-    
-    createBranchObj: function ({ source, flatData, target, isChild = true, isLeaf = true, rootStart = config.rootStart, idStart = config.idStart, floorStart = config.floorStart, pathHyphen = config.pathHyphen }) {
-        let obj = {}, targetObj = findItem(target, flatData), emptyArr = flatData.length === 0, sourceType = getDataType(source), setIdLabelVal = (data, id) => {
-            !data.hasOwnProperty('id') ? data.id = id : null;
-            !data.hasOwnProperty('value') ? (data.hasOwnProperty('label') ? data.value = data.label : data.value = '') : null;
-            !data.hasOwnProperty('label') ? data.label = config.lang.tree.label + id : null;
-        }, setRootChild = (data, id) => {
-            let base = {
-                pId: rootStart,
-                path: rootStart + pathHyphen + id,
-                floor: floorStart
-            };
-            setIdLabelVal(data, id);
-            Object.assign(data, base);
-        };
-        if (isNull(flatData)) {
-            return obj;
-        }
-        if (sourceType === 'String' || sourceType === 'Number') {
-            obj.value = obj.label = source;
-        }
-        else if (sourceType === 'Object') {
-            obj = { ...source };
-        }
-        if (emptyArr) {
-            setRootChild(obj, idStart);
-        }
-        else {
-            let newId = increaseId(flatData);
-            if (!targetObj) {
-                obj.hasOwnProperty('id') ? newId = obj.id : null;
-                setRootChild(obj, newId);
-            }
-            else {
-                !targetObj.hasOwnProperty('children') && isChild && (targetObj.children = []);
-                let props = {};
-                setIdLabelVal(obj, newId);
-                props = isChild ? {
-                    pId: targetObj.id,
-                    path: targetObj.path + pathHyphen + obj.id,
-                    floor: targetObj.floor + 1
-                } : {
-                    pId: targetObj.pId,
-                    path: targetObj.path.replace(new RegExp('(.*)' + targetObj.id), '$1' + obj.id),
-                    floor: targetObj.floor
-                };
-                Object.assign(obj, props);
-            }
-        }
-        !isLeaf && (obj.children = []);
-        return obj;
-    },
-    
-    childToParent: (source, arrowEnd = true) => {
-        if (!source.children) {
-            return;
-        }
-        if (!source.childrenEl) {
-            source.childrenEl = createEl('ul');
-            source.headEl.insertAdjacentElement('afterEnd', source.childrenEl);
-        }
-        if (!source.arrowEl) {
-            source.arrowEl = createEl('i', { [alias]: 'arrow' });
-            source.headEl.insertAdjacentElement(arrowEnd ? 'beforeEnd' : 'afterBegin', source.arrowEl);
-        }
-    },
-    parentToChild: (source) => {
-        if (source.children) {
-            return;
-        }
-        source.target.childrenEl.remove();
-        source.target.childrenEl = null;
-        source.target.arrowEl.remove();
-        source.target.arrowEl = null;
-        source.target.expanded = false;
-    },
-    
-    addBranch: function ({ source, rootEl, flatData, treeData, brother, isFront = true, repeat = true, autoFill = true, cb }) {
-        if (!flatData || !source) {
-            return;
-        }
-        let existing = flatData.find((k) => k.pId === source.pId && k.label === source.label), brotherObj = findItem(brother, flatData), parentObj = findItem(source.pId, flatData), result;
-        if (!repeat && existing) {
-            console.warn(`A branch with the same label (${source.label}) and pId (${source.pId}) already exists. Duplicate addition is not allowed!`);
-            return;
-        }
-        if (parentObj) {
-            if (brotherObj && parentObj.children.includes(brotherObj)) {
-                let index = flatData.indexOf(brotherObj);
-                if (isFront) {
-                    splice({ host: parentObj.children, source, index, intent: 'add', cb: (resp) => result = resp[0] });
-                    autoFill && brotherObj.wrapEl.insertAdjacentElement('beforeBegin', source.wrapEl);
-                }
-                else {
-                    splice({ host: parentObj.children, source, index: index + 1, intent: 'add', cb: (resp) => result = resp[0] });
-                    autoFill && brotherObj.wrapEl.insertAdjacentElement('afterEnd', source.wrapEl);
-                }
-            }
-            else {
-                if (isFront) {
-                    splice({ host: parentObj.children, source, intent: 'start+', cb: (resp) => result = resp[0] });
-                    autoFill && parentObj.childrenEl.insertAdjacentElement('afterBegin', source.wrapEl);
-                }
-                else {
-                    splice({ host: parentObj.children, source, intent: 'end+', cb: (resp) => result = resp[0] });
-                    autoFill && parentObj.childrenEl.insertAdjacentElement('beforeEnd', source.wrapEl);
-                }
-            }
-        }
-        else {
-            if (brotherObj && brotherObj.pId === source.pId) {
-                let index = treeData.indexOf(brotherObj);
-                if (isFront) {
-                    splice({ host: treeData, source, index, intent: 'add', cb: (resp) => result = resp[0] });
-                    autoFill && brotherObj.wrapEl.insertAdjacentElement('beforeBegin', source.wrapEl);
-                }
-                else {
-                    splice({ host: treeData, source, index: index + 1, intent: 'add', cb: (resp) => result = resp[0] });
-                    autoFill && brotherObj.wrapEl.insertAdjacentElement('afterEnd', source.wrapEl);
-                }
-            }
-            else {
-                if (!rootEl) {
-                    return;
-                }
-                if (isFront) {
-                    splice({ host: treeData, source, intent: 'start+', cb: (resp) => result = resp[0] });
-                    autoFill && rootEl.insertAdjacentElement('afterBegin', source.wrapEl);
-                }
-                else {
-                    splice({ host: treeData, source, intent: 'end+', cb: (resp) => result = resp[0] });
-                    autoFill && rootEl.insertAdjacentElement('beforeEnd', source.wrapEl);
-                }
-            }
-        }
-        cb && cb(result, treeData);
-    },
-    
-    removeBranch: function ({ source, flatData, treeData, cb, }) {
-        if (isNull(source) || !flatData || flatData.length === 0) {
-            return;
-        }
-        let obj = findItem(source, flatData), floorStart = treeData[0].floor;
-        if (!obj) {
-            return;
-        }
-        if (obj.floor === floorStart) {
-            splice({ host: treeData, source: obj, intent: 'remove' });
-        }
-        else {
-            let parent = findItem(obj.pId, flatData);
-            if (!parent) {
-                return;
-            }
-            let children = parent.children;
-            splice({ host: children, source: obj, intent: 'remove' });
-            if (children.length === 0) {
-                this.parentToChild(parent);
-            }
-        }
-        obj?.wrapEl && obj.wrapEl.remove();
-        cb && cb(obj);
-    },
-    
-    getParentsFromPath({ path, flatData, labelHyphen = config.labelHyphen, field = 'label', pathHyphen = config.pathHyphen, shift = false, pop = false }) {
-        let paths = path.split(pathHyphen), parents = paths.map((k) => flatData.find((i) => i.id.toString() == k)).filter(Boolean), text = '';
-        shift && parents.shift();
-        pop && parents.pop();
-        text = parents.map((k) => k[field]).join(labelHyphen);
-        return { parents, text };
-    },
-    
-    allToTree: async function ({ content, idStart = config.idStart, rootStart = config.rootStart, floorStart = config.rootStart, pathHyphen = config.pathHyphen, splitHyphen = config.splitHyphen, contType = '', contData = {}, ajax = {}, fill = true, ins, nodeType = 'tree', cb }) {
-        if (isEmpty(content)) {
-            return [];
-        }
-        let treeData = [], result = [], parseStr = (str) => {
-            let result = [], trim = str.trim();
-            if (!trim.startsWith('[') || !trim.endsWith(']'))
-                return result;
-            try {
-                let tmp = new Function(`"use strict"; return ${trim}`)();
-                Array.isArray(tmp) && (result = tmp);
-            }
-            catch (err) {
-                console.error(config.error.parse, err);
-            }
-            return result;
-        }, getFromNode = (node) => {
-            let nodeName = node.nodeName, arr = [];
-            if (nodeName === 'SELECT' || nodeName === 'DATALIST') {
-                arr = this.fromSelect(node);
-            }
-            else if (nodeName === 'UL' || nodeName === 'OL') {
-                arr = this.fromUl(node, nodeType);
-            }
-            else if (nodeName === 'SCRIPT' && node.getAttribute('type') === 'content') {
-                arr = this.toTree(parseStr(node.textContent));
-            }
-            else if (nodeName === 'INPUT') {
-                arr = this.fromInput(node, splitHyphen);
-            }
-            return arr;
-        }, getFromArray = (data) => {
-            let copyData = deepClone(data);
-            return this.toTree(copyData);
-        }, strArr2ObjArr = (arr) => {
-            let firstType = getDataType(arr[0]), tmp = (firstType === 'String' || firstType === 'Number') ? arr.map((k) => { return { label: k, value: k }; }) : arr;
-            return tmp;
-        };
-        await getContent.call(ins, {
-            content,
-            contType,
-            contData,
-            ajax,
-            cb: (resp) => {
-                let dataType = getDataType(resp);
-                if (dataType === 'Object' && resp.hasOwnProperty('data') && Array.isArray(resp.data)) {
-                    treeData = getFromArray(resp.data);
-                    resp.data = treeData;
-                    result = resp;
-                }
-                else {
-                    if (dataType === 'Array') {
-                        treeData = getFromArray(strArr2ObjArr(resp));
-                    }
-                    else if (dataType.includes('HTML')) {
-                        if (['UL', 'OL', 'DATALIST', 'SELECT', 'SCRIPT'].includes(resp.nodeName)) {
-                            treeData = strArr2ObjArr(getFromNode(resp));
-                        }
-                        else if (resp.nodeName.includes('INPUT')) {
-                            treeData = this.fromInput(resp, splitHyphen);
-                        }
-                    }
-                    else if (dataType === 'String') {
-                        let tmp = createEl('div', '', resp), node = tmp.querySelector(':scope > ul,:scope > ol,:scope > datalist,:scope > select,:scope > script,:scope > input');
-                        if (node) {
-                            treeData = strArr2ObjArr(getFromNode(node));
-                            tmp.remove();
-                        }
-                        else {
-                            let str = resp.trim();
-                            if ((str.startsWith('{') && str.endsWith('}')) || (str.startsWith('[') && str.endsWith(']'))) {
-                                treeData = this.toTree(strArr2ObjArr(parseStr(resp)));
-                            }
-                            else {
-                                treeData = strArr2ObjArr(resp.split(splitHyphen).filter(Boolean));
-                            }
-                        }
-                    }
-                    result = treeData;
-                }
-            }
-        });
-        fill && this.addIdPath({ source: treeData, rootStart, idStart, floorStart, pathHyphen });
-        cb && cb(result);
-        return result;
-    },
-    getPathHyphen: (treeData) => {
-        let item = treeData[0], id = item.id, floor = item.floor, pId = item.pId, path = item.path, hyphen = item.path.replace(pId, '').replace(id, '');
-        return { id, floor, pId, path, hyphen };
-    },
-    graftBranch: function ({ source, target, flatData, treeData, rootEl, isFront = true, isChild = true, cb }) {
-        if (isNull(source) || isEmpty(treeData)) {
-            return;
-        }
-        let sourceObj = findItem(source, flatData), targetObj = findItem(target, flatData), firstData = this.getPathHyphen(treeData), floorStart = firstData.floor, rootStart = firstData.pId, pathHyphen = firstData.hyphen;
-        if (!sourceObj) {
-            return;
-        }
-        let sourceParent = findItem(sourceObj.pId, flatData);
-        if (!sourceParent) {
-            splice({ host: treeData, source: sourceObj, intent: 'remove' });
-        }
-        else {
-            splice({ host: sourceParent.children, source: sourceObj, intent: 'remove' });
-        }
-        if (!targetObj) {
-            if (isFront) {
-                rootEl?.insertAdjacentElement('afterBegin', sourceObj.wrapEl);
-                treeData.unshift(sourceObj);
-            }
-            else {
-                rootEl?.insertAdjacentElement('beforeEnd', sourceObj.wrapEl);
-                treeData.push(sourceObj);
-            }
-            sourceObj.pId = rootStart;
-            sourceObj.floor = floorStart;
-            sourceObj.path = rootStart + pathHyphen + sourceObj.id;
-        }
-        else {
-            if (isChild) {
-                !targetObj.hasOwnProperty('children') && (targetObj.children = []);
-                if (isFront) {
-                    targetObj.childrenEl.insertAdjacentElement('afterBegin', sourceObj.wrapEl);
-                    targetObj.children.unshift(sourceObj);
-                }
-                else {
-                    targetObj.childrenEl.insertAdjacentElement('beforeEnd', sourceObj.wrapEl);
-                    targetObj.children.push(sourceObj);
-                }
-                sourceObj.pId = targetObj.id;
-                sourceObj.floor = targetObj.floor + 1;
-                sourceObj.path = targetObj.path + pathHyphen + sourceObj.id;
-            }
-            else {
-                if (targetObj.floor === floorStart) {
-                    let index = treeData.indexOf(targetObj), id = isFront ? index : index + 1;
-                    splice({ host: treeData, source: sourceObj, index: id, intent: 'add' });
-                }
-                else {
-                    let targetParent = findItem(targetObj.pId, flatData), index = targetParent.children.indexOf(targetObj), id = isFront ? index : index + 1;
-                    splice({ host: targetParent.children, source: sourceObj, index: id, intent: 'add' });
-                }
-                sourceObj.pId = targetObj.pId;
-                sourceObj.floor = targetObj.floor;
-                sourceObj.path = targetObj.path.replace(new RegExp('(.*)' + targetObj.id), '$1' + sourceObj.id);
-                let position = isFront ? 'beforeBegin' : 'afterEnd';
-                targetObj.wrapEl.insertAdjacentElement(position, sourceObj.wrapEl);
-            }
-        }
-        cb && cb(sourceObj, targetObj);
-    }
-};
-
 const valToArr = (data, hyphen, toNum = true) => {
     let dataType = getDataType(data), arr = [];
     if ([undefined, null, 'undefined', 'null', ''].includes(data)) {
@@ -1955,6 +1364,86 @@ const valToArr = (data, hyphen, toNum = true) => {
     return [...new Set(arr)];
 };
 
+const getValsFromAttrs = (el) => {
+    let elem = getEl(el), obj = {};
+    if (elem) {
+        obj.label = elem.textContent.trim();
+        let attrs = [...elem.attributes];
+        attrs.forEach(k => {
+            obj[k.name] = (['selected', 'disabled', 'readonly', 'active', 'checked', 'expanded', 'draggable'].includes(k.name)) ? true : k.value.trim();
+        });
+        !obj.hasOwnProperty('value') && (obj.value = obj.label);
+        obj.value && !obj.label && (obj.label = obj.value);
+    }
+    return obj;
+};
+
+const select2Tree = (el) => {
+    let elem = getEl(el), result = [];
+    if (!elem) {
+        console.warn(`No node, no access to data!`);
+        return result;
+    }
+    let getChild = () => {
+        let data = [];
+        [...elem.children].forEach(k => {
+            data.push(getJson(k));
+        });
+        return data;
+    }, getJson = (elem) => {
+        let obj = { node: elem, ...getValsFromAttrs(elem) };
+        if (elem.nodeName == 'OPTGROUP') {
+            obj.children = [];
+            [...elem.children].forEach(k => {
+                obj.children.push(getJson(k));
+            });
+        }
+        return obj;
+    };
+    result = getChild();
+    return result;
+};
+
+const ul2Tree = (el, type = 'tree') => {
+    let elem = getEl(el), result = [];
+    if (!elem) {
+        console.warn(`No node, no access to data!`);
+        return result;
+    }
+    let getChild = () => {
+        let data = [];
+        [...elem.children].forEach(k => {
+            data.push(getJson(k));
+        });
+        return data;
+    }, getJson = (elem) => {
+        let obj = { node: elem.firstElementChild }, tmpLabel = obj.node.querySelector(`:scope> [${alias}="label"]`), tmpBadge = obj.node.querySelector(`:scope> [${alias}="badge"]`) || obj.node.querySelector(`:scope> AX-BADGE`), tmpTips = obj.node.querySelector(`:scope> [${alias}="tips"]`), tmpIcon = obj.node.querySelector(`:scope> [${alias}="icon"]`), tmpDisk = obj.node.querySelector(`:scope> [${alias}="disk"]`), tmpCube = obj.node.querySelector(`:scope> [${alias}="cube"]`), tmpCustom = obj.node.querySelector(`:scope> [${alias}="custom"]`), tmpBrief = elem.querySelector(`:scope> .${prefix}${type}-brief`), tmpCont = elem.querySelector(`:scope> .${prefix}${type}-cont`), tmpExtra = elem.querySelector(`:scope> .${prefix}${type}-extra`);
+        obj.node.classList.contains(`${prefix}${type}-head`) && (obj.headEl = obj.node);
+        tmpLabel && (obj.labelEl = tmpLabel);
+        tmpBadge && (obj.badgeEl = tmpBadge);
+        tmpTips && (obj.tipsEl = tmpTips);
+        tmpCustom && (obj.customEl = tmpCustom);
+        tmpIcon && (obj.iconEl = tmpIcon);
+        tmpDisk && (obj.diskEl = tmpDisk);
+        tmpCube && (obj.cubeEl = tmpCube);
+        tmpBrief && (obj.briefEl = tmpBrief);
+        tmpCont && (obj.contEl = tmpCont);
+        tmpExtra && (obj.extraEl = tmpExtra);
+        Object.assign(obj, { ...getValsFromAttrs(obj.wrapEl), ...getValsFromAttrs(obj.node), ...getValsFromAttrs(obj.labelEl) });
+        obj.headEl && !obj.labelEl && (obj.headEl.innerHTML = '');
+        let parent = elem.querySelector(':scope> ul,:scope> ol');
+        if (parent) {
+            obj.children = [];
+            [...parent.children].forEach(k => {
+                obj.children.push(getJson(k));
+            });
+        }
+        return obj;
+    };
+    result = getChild();
+    return result;
+};
+
 const getContent = async function (opts) {
     let dataType = getDataType(opts.content), getListArr = (data) => {
         let el = getEl(data, opts.parent) || createEl('div', {}, data), nodeName = el.nodeName, target, result;
@@ -1971,8 +1460,8 @@ const getContent = async function (opts) {
         }
         if (target) {
             let tgtName = target.nodeName;
-            result = (['SELECT', 'DATALIST',].includes(tgtName)) ? treeTools.fromSelect(target) :
-                (['UL', 'OL'].includes(tgtName)) ? treeTools.fromUl(target) : [];
+            result = (['SELECT', 'DATALIST',].includes(tgtName)) ? select2Tree(target) :
+                (['UL', 'OL'].includes(tgtName)) ? ul2Tree(target) : [];
         }
         else {
             result = [];
@@ -4046,6 +3535,12 @@ const createTools = (data, parent, refer) => {
         loadModule();
     }
     return toolsEl;
+};
+
+const clampVal = ({ val = 0, min = 0, max = 100 }) => {
+    let tmpVal = toNumber(val), tmpMin = toNumber(min), tmpMax = toNumber(max), result = (!['', null, undefined].includes(min) && tmpVal < tmpMin) ? tmpMin :
+        (!['', null, undefined].includes(max) && tmpVal > tmpMax) ? tmpMax : tmpVal;
+    return result;
 };
 
 const isCompField = (type) => !type || typeof type !== 'string' ? false : fieldTypes.includes(type.toLowerCase().replace('ax-', ''));
@@ -6497,6 +5992,511 @@ const fileTools = {
     }
 };
 
+const increaseId = (data, hasId = true) => {
+    let ids = new Set(), newId = 0;
+    if (!data.length)
+        return newId;
+    if (hasId) {
+        for (let k of data)
+            ids.add(~~k.id);
+        newId = Math.max(...ids) + 1;
+    }
+    else {
+        newId = data.length;
+    }
+    return newId;
+};
+
+const findItem = (val, source, key, prio) => {
+    let valType = getDataType(val);
+    if (!source)
+        return val;
+    let result, first = source[0], firstId = first?.id, idType = getDataType(firstId);
+    if (isNull(firstId) && valType === 'Number') {
+        result = source[val];
+    }
+    else {
+        if (key) {
+            result = source.find((k) => k[key] === val);
+        }
+        else {
+            if (valType.includes('HTML')) {
+                let hasPrio = (item) => prio?.node ? item[prio.node] === val : false, condition = (item) => hasPrio(item) || item.headEl === val || item.wrapEl === val;
+                result = source.find((k) => condition(k));
+            }
+            else {
+                let prop = (valType === 'Number') ? (prio?.number || 'id') :
+                    (valType === 'String') ? prio?.string || (idType === 'String' ? 'id' : 'label') : '';
+                if (valType === 'Object') {
+                    result = source.find((k) => k === val);
+                }
+                else {
+                    result = prop ? source.find((k) => k[prop] === val || k[prio?.guard || 'value'] === val) : undefined;
+                }
+            }
+        }
+    }
+    return result;
+};
+
+const splice = ({ host = [], source, intent = 'end+', index = 0, cb }) => {
+    if (isNull(host) || !Array.isArray(host))
+        return [];
+    let tmp = source !== undefined ? (Array.isArray(source) ? source : [source]) : null, data = Array.isArray(tmp) ? tmp : [tmp], idx = isNull(index) ? 0 : clampVal({ min: 0, max: host.length - 1, val: index }), items = [];
+    if (intent === 'clear') {
+        items = [...host];
+        host.splice(0);
+    }
+    else if (intent === 'add') {
+        if (!tmp)
+            return host;
+        host.splice(idx, 0, ...data);
+        items = host.slice(idx, idx + data.length);
+    }
+    else if (intent === 'remove') {
+        let _tmp = source !== undefined ? host.indexOf(source) : idx;
+        if (_tmp < 0) {
+            return host;
+        }
+        else {
+            items = host.slice(_tmp, _tmp + 1);
+            host.splice(_tmp, 1);
+        }
+    }
+    else if (intent === 'replace') {
+        if (!tmp)
+            return host;
+        host.splice(idx, 1, ...data);
+        items = host.slice(idx, idx + data.length);
+    }
+    else if (intent === 'start-') {
+        items = host.slice(0, 1);
+        host.shift();
+    }
+    else if (intent === 'end-') {
+        items = host.slice(-1);
+        host.pop();
+    }
+    else if (intent === 'start+') {
+        if (!tmp)
+            return host;
+        host.unshift(...data);
+        items = host.slice(0, data.length);
+    }
+    else {
+        if (!tmp)
+            return host;
+        host.push(...data);
+        items = host.slice(-data.length);
+    }
+    cb && cb(items);
+    return host;
+};
+
+const treeTools = {
+    
+    find: function (arr, val, key) {
+        let tmp = findItem(arr, val, key);
+        if (tmp)
+            return tmp;
+        for (let k of arr) {
+            k.children && this.find(k.children, val, key);
+        }
+        return null;
+    },
+    getBoolItems: (data, prop, negative = false) => {
+        return data.filter((k) => negative ? !k[prop] : k[prop]);
+    },
+    
+    toFlat: function (data) {
+        let result = [];
+        data.forEach(k => {
+            if (k.children && !data.includes(k.children[0])) {
+                result = [...result, k, ...this.toFlat(k.children)];
+            }
+            else {
+                result.push(k);
+            }
+        });
+        return result;
+    },
+    
+    toTree: (data) => {
+        if (!data || data.length === 0 || !data[0].hasOwnProperty('pId')) {
+            return data;
+        }
+        let root = data[0].pId;
+        data.forEach(k => {
+            let children = data.filter(i => k.id == i.pId);
+            if (children.length) {
+                k.children = children;
+            }
+        });
+        return data.filter(k => k.pId == root);
+    },
+    
+    addIdPath: ({ source, rootStart = config.rootStart, idStart = config.idStart, floorStart = config.floorStart, pathHyphen = config.pathHyphen, lbl2Val = true }) => {
+        if (!Array.isArray(source) || source.length === 0 || source[0].hasOwnProperty('path')) {
+            return source;
+        }
+        let hasId = source[0].hasOwnProperty('id') ? true : false, index = idStart, each = (data, floor, path = rootStart) => {
+            data.forEach(item => {
+                if (!hasId) {
+                    item.id = index;
+                    index++;
+                }
+                item.floor = floor;
+                item.pId = item.pId || item.pId === 0 ? item.pId : rootStart;
+                item.path = path + pathHyphen + item.id;
+                (!item.hasOwnProperty('value') && item.hasOwnProperty('label') && lbl2Val) ? item.value = item.label : null;
+                if (item.children && item.children.length > 0) {
+                    item.children.forEach((k) => {
+                        k.pId = item.id;
+                    });
+                    each(item.children, floor + 1, item.path);
+                }
+                if (!item.path) {
+                    item.path = item.pId + pathHyphen + item.id;
+                }
+            });
+        };
+        each(source, floorStart);
+        return source;
+    },
+    fromInput: (el, hyphen = config.splitHyphen) => {
+        let elem = getEl(el), result = [];
+        if (!elem) {
+            console.warn(`No node, no access to data!`);
+            return result;
+        }
+        let tmp = elem.value.trim();
+        return !tmp ? [] : elem.value.trim().split(hyphen).map((k) => { return { label: k, value: k }; });
+    },
+    
+    createBranchObj: function ({ source, flatData, target, isChild = true, isLeaf = true, rootStart = config.rootStart, idStart = config.idStart, floorStart = config.floorStart, pathHyphen = config.pathHyphen }) {
+        let obj = {}, targetObj = findItem(target, flatData), emptyArr = flatData.length === 0, sourceType = getDataType(source), setIdLabelVal = (data, id) => {
+            !data.hasOwnProperty('id') ? data.id = id : null;
+            !data.hasOwnProperty('value') ? (data.hasOwnProperty('label') ? data.value = data.label : data.value = '') : null;
+            !data.hasOwnProperty('label') ? data.label = config.lang.tree.label + id : null;
+        }, setRootChild = (data, id) => {
+            let base = {
+                pId: rootStart,
+                path: rootStart + pathHyphen + id,
+                floor: floorStart
+            };
+            setIdLabelVal(data, id);
+            Object.assign(data, base);
+        };
+        if (isNull(flatData)) {
+            return obj;
+        }
+        if (sourceType === 'String' || sourceType === 'Number') {
+            obj.value = obj.label = source;
+        }
+        else if (sourceType === 'Object') {
+            obj = { ...source };
+        }
+        if (emptyArr) {
+            setRootChild(obj, idStart);
+        }
+        else {
+            let newId = increaseId(flatData);
+            if (!targetObj) {
+                obj.hasOwnProperty('id') ? newId = obj.id : null;
+                setRootChild(obj, newId);
+            }
+            else {
+                !targetObj.hasOwnProperty('children') && isChild && (targetObj.children = []);
+                let props = {};
+                setIdLabelVal(obj, newId);
+                props = isChild ? {
+                    pId: targetObj.id,
+                    path: targetObj.path + pathHyphen + obj.id,
+                    floor: targetObj.floor + 1
+                } : {
+                    pId: targetObj.pId,
+                    path: targetObj.path.replace(new RegExp('(.*)' + targetObj.id), '$1' + obj.id),
+                    floor: targetObj.floor
+                };
+                Object.assign(obj, props);
+            }
+        }
+        !isLeaf && (obj.children = []);
+        return obj;
+    },
+    
+    childToParent: (source, arrowEnd = true) => {
+        if (!source.children) {
+            return;
+        }
+        if (!source.childrenEl) {
+            source.childrenEl = createEl('ul');
+            source.headEl.insertAdjacentElement('afterEnd', source.childrenEl);
+        }
+        if (!source.arrowEl) {
+            source.arrowEl = createEl('i', { [alias]: 'arrow' });
+            source.headEl.insertAdjacentElement(arrowEnd ? 'beforeEnd' : 'afterBegin', source.arrowEl);
+        }
+    },
+    parentToChild: (source) => {
+        if (source.children) {
+            return;
+        }
+        source.target.childrenEl.remove();
+        source.target.childrenEl = null;
+        source.target.arrowEl.remove();
+        source.target.arrowEl = null;
+        source.target.expanded = false;
+    },
+    
+    addBranch: function ({ source, rootEl, flatData, treeData, brother, isFront = true, repeat = true, autoFill = true, cb }) {
+        if (!flatData || !source) {
+            return;
+        }
+        let existing = flatData.find((k) => k.pId === source.pId && k.label === source.label), brotherObj = findItem(brother, flatData), parentObj = findItem(source.pId, flatData), result;
+        if (!repeat && existing) {
+            console.warn(`A branch with the same label (${source.label}) and pId (${source.pId}) already exists. Duplicate addition is not allowed!`);
+            return;
+        }
+        if (parentObj) {
+            if (brotherObj && parentObj.children.includes(brotherObj)) {
+                let index = flatData.indexOf(brotherObj);
+                if (isFront) {
+                    splice({ host: parentObj.children, source, index, intent: 'add', cb: (resp) => result = resp[0] });
+                    autoFill && brotherObj.wrapEl.insertAdjacentElement('beforeBegin', source.wrapEl);
+                }
+                else {
+                    splice({ host: parentObj.children, source, index: index + 1, intent: 'add', cb: (resp) => result = resp[0] });
+                    autoFill && brotherObj.wrapEl.insertAdjacentElement('afterEnd', source.wrapEl);
+                }
+            }
+            else {
+                if (isFront) {
+                    splice({ host: parentObj.children, source, intent: 'start+', cb: (resp) => result = resp[0] });
+                    autoFill && parentObj.childrenEl.insertAdjacentElement('afterBegin', source.wrapEl);
+                }
+                else {
+                    splice({ host: parentObj.children, source, intent: 'end+', cb: (resp) => result = resp[0] });
+                    autoFill && parentObj.childrenEl.insertAdjacentElement('beforeEnd', source.wrapEl);
+                }
+            }
+        }
+        else {
+            if (brotherObj && brotherObj.pId === source.pId) {
+                let index = treeData.indexOf(brotherObj);
+                if (isFront) {
+                    splice({ host: treeData, source, index, intent: 'add', cb: (resp) => result = resp[0] });
+                    autoFill && brotherObj.wrapEl.insertAdjacentElement('beforeBegin', source.wrapEl);
+                }
+                else {
+                    splice({ host: treeData, source, index: index + 1, intent: 'add', cb: (resp) => result = resp[0] });
+                    autoFill && brotherObj.wrapEl.insertAdjacentElement('afterEnd', source.wrapEl);
+                }
+            }
+            else {
+                if (!rootEl) {
+                    return;
+                }
+                if (isFront) {
+                    splice({ host: treeData, source, intent: 'start+', cb: (resp) => result = resp[0] });
+                    autoFill && rootEl.insertAdjacentElement('afterBegin', source.wrapEl);
+                }
+                else {
+                    splice({ host: treeData, source, intent: 'end+', cb: (resp) => result = resp[0] });
+                    autoFill && rootEl.insertAdjacentElement('beforeEnd', source.wrapEl);
+                }
+            }
+        }
+        cb && cb(result, treeData);
+    },
+    
+    removeBranch: function ({ source, flatData, treeData, cb, }) {
+        if (isNull(source) || !flatData || flatData.length === 0) {
+            return;
+        }
+        let obj = findItem(source, flatData), floorStart = treeData[0].floor;
+        if (!obj) {
+            return;
+        }
+        if (obj.floor === floorStart) {
+            splice({ host: treeData, source: obj, intent: 'remove' });
+        }
+        else {
+            let parent = findItem(obj.pId, flatData);
+            if (!parent) {
+                return;
+            }
+            let children = parent.children;
+            splice({ host: children, source: obj, intent: 'remove' });
+            if (children.length === 0) {
+                this.parentToChild(parent);
+            }
+        }
+        obj?.wrapEl && obj.wrapEl.remove();
+        cb && cb(obj);
+    },
+    
+    getParentsFromPath({ path, flatData, labelHyphen = config.labelHyphen, field = 'label', pathHyphen = config.pathHyphen, shift = false, pop = false }) {
+        let paths = path.split(pathHyphen), parents = paths.map((k) => flatData.find((i) => i.id.toString() == k)).filter(Boolean), text = '';
+        shift && parents.shift();
+        pop && parents.pop();
+        text = parents.map((k) => k[field]).join(labelHyphen);
+        return { parents, text };
+    },
+    
+    allToTree: async function ({ content, idStart = config.idStart, rootStart = config.rootStart, floorStart = config.rootStart, pathHyphen = config.pathHyphen, splitHyphen = config.splitHyphen, contType = '', contData = {}, ajax = {}, fill = true, ins, nodeType = 'tree', cb }) {
+        if (isEmpty(content)) {
+            return [];
+        }
+        let treeData = [], result = [], parseStr = (str) => {
+            let result = [], trim = str.trim();
+            if (!trim.startsWith('[') || !trim.endsWith(']'))
+                return result;
+            try {
+                let tmp = new Function(`"use strict"; return ${trim}`)();
+                Array.isArray(tmp) && (result = tmp);
+            }
+            catch (err) {
+                console.error(config.error.parse, err);
+            }
+            return result;
+        }, getFromNode = (node) => {
+            let nodeName = node.nodeName, arr = [];
+            if (nodeName === 'SELECT' || nodeName === 'DATALIST') {
+                arr = select2Tree(node);
+            }
+            else if (nodeName === 'UL' || nodeName === 'OL') {
+                arr = ul2Tree(node, nodeType);
+            }
+            else if (nodeName === 'SCRIPT' && node.getAttribute('type') === 'content') {
+                arr = this.toTree(parseStr(node.textContent));
+            }
+            else if (nodeName === 'INPUT') {
+                arr = this.fromInput(node, splitHyphen);
+            }
+            return arr;
+        }, getFromArray = (data) => {
+            let copyData = deepClone(data);
+            return this.toTree(copyData);
+        }, strArr2ObjArr = (arr) => {
+            let firstType = getDataType(arr[0]), tmp = (firstType === 'String' || firstType === 'Number') ? arr.map((k) => { return { label: k, value: k }; }) : arr;
+            return tmp;
+        };
+        await getContent.call(ins, {
+            content,
+            contType,
+            contData,
+            ajax,
+            cb: (resp) => {
+                let dataType = getDataType(resp);
+                if (dataType === 'Object' && resp.hasOwnProperty('data') && Array.isArray(resp.data)) {
+                    treeData = getFromArray(resp.data);
+                    resp.data = treeData;
+                    result = resp;
+                }
+                else {
+                    if (dataType === 'Array') {
+                        treeData = getFromArray(strArr2ObjArr(resp));
+                    }
+                    else if (dataType.includes('HTML')) {
+                        if (['UL', 'OL', 'DATALIST', 'SELECT', 'SCRIPT'].includes(resp.nodeName)) {
+                            treeData = strArr2ObjArr(getFromNode(resp));
+                        }
+                        else if (resp.nodeName.includes('INPUT')) {
+                            treeData = this.fromInput(resp, splitHyphen);
+                        }
+                    }
+                    else if (dataType === 'String') {
+                        let tmp = createEl('div', '', resp), node = tmp.querySelector(':scope > ul,:scope > ol,:scope > datalist,:scope > select,:scope > script,:scope > input');
+                        if (node) {
+                            treeData = strArr2ObjArr(getFromNode(node));
+                            tmp.remove();
+                        }
+                        else {
+                            let str = resp.trim();
+                            if ((str.startsWith('{') && str.endsWith('}')) || (str.startsWith('[') && str.endsWith(']'))) {
+                                treeData = this.toTree(strArr2ObjArr(parseStr(resp)));
+                            }
+                            else {
+                                treeData = strArr2ObjArr(resp.split(splitHyphen).filter(Boolean));
+                            }
+                        }
+                    }
+                    result = treeData;
+                }
+            }
+        });
+        fill && this.addIdPath({ source: treeData, rootStart, idStart, floorStart, pathHyphen });
+        cb && cb(result);
+        return result;
+    },
+    getPathHyphen: (treeData) => {
+        let item = treeData[0], id = item.id, floor = item.floor, pId = item.pId, path = item.path, hyphen = item.path.replace(pId, '').replace(id, '');
+        return { id, floor, pId, path, hyphen };
+    },
+    graftBranch: function ({ source, target, flatData, treeData, rootEl, isFront = true, isChild = true, cb }) {
+        if (isNull(source) || isEmpty(treeData)) {
+            return;
+        }
+        let sourceObj = findItem(source, flatData), targetObj = findItem(target, flatData), firstData = this.getPathHyphen(treeData), floorStart = firstData.floor, rootStart = firstData.pId, pathHyphen = firstData.hyphen;
+        if (!sourceObj) {
+            return;
+        }
+        let sourceParent = findItem(sourceObj.pId, flatData);
+        if (!sourceParent) {
+            splice({ host: treeData, source: sourceObj, intent: 'remove' });
+        }
+        else {
+            splice({ host: sourceParent.children, source: sourceObj, intent: 'remove' });
+        }
+        if (!targetObj) {
+            if (isFront) {
+                rootEl?.insertAdjacentElement('afterBegin', sourceObj.wrapEl);
+                treeData.unshift(sourceObj);
+            }
+            else {
+                rootEl?.insertAdjacentElement('beforeEnd', sourceObj.wrapEl);
+                treeData.push(sourceObj);
+            }
+            sourceObj.pId = rootStart;
+            sourceObj.floor = floorStart;
+            sourceObj.path = rootStart + pathHyphen + sourceObj.id;
+        }
+        else {
+            if (isChild) {
+                !targetObj.hasOwnProperty('children') && (targetObj.children = []);
+                if (isFront) {
+                    targetObj.childrenEl.insertAdjacentElement('afterBegin', sourceObj.wrapEl);
+                    targetObj.children.unshift(sourceObj);
+                }
+                else {
+                    targetObj.childrenEl.insertAdjacentElement('beforeEnd', sourceObj.wrapEl);
+                    targetObj.children.push(sourceObj);
+                }
+                sourceObj.pId = targetObj.id;
+                sourceObj.floor = targetObj.floor + 1;
+                sourceObj.path = targetObj.path + pathHyphen + sourceObj.id;
+            }
+            else {
+                if (targetObj.floor === floorStart) {
+                    let index = treeData.indexOf(targetObj), id = isFront ? index : index + 1;
+                    splice({ host: treeData, source: sourceObj, index: id, intent: 'add' });
+                }
+                else {
+                    let targetParent = findItem(targetObj.pId, flatData), index = targetParent.children.indexOf(targetObj), id = isFront ? index : index + 1;
+                    splice({ host: targetParent.children, source: sourceObj, index: id, intent: 'add' });
+                }
+                sourceObj.pId = targetObj.pId;
+                sourceObj.floor = targetObj.floor;
+                sourceObj.path = targetObj.path.replace(new RegExp('(.*)' + targetObj.id), '$1' + sourceObj.id);
+                let position = isFront ? 'beforeBegin' : 'afterEnd';
+                targetObj.wrapEl.insertAdjacentElement(position, sourceObj.wrapEl);
+            }
+        }
+        cb && cb(sourceObj, targetObj);
+    }
+};
+
 const moveItem = ({ source, target, data, isFront = true }) => {
     let sourceType = getDataType(source), targetType = getDataType(target), from = (sourceType === 'Number') ? source : data.indexOf(source), to = (targetType === 'Number') ? target : data.indexOf(target), sourceObj = sourceType === 'Number' ? data[source] : source, offset = isFront ? 0 : 1;
     if (isNull(from) || isEmpty(data)) {
@@ -6696,8 +6696,8 @@ let theme = {
 
 const attrValBool = (value) => ![null, 'false', '0', false, 0, undefined].includes(value);
 
-const getBetweenEls = ({ selector, start, end, parent }) => {
-    let parentEl = getEl(parent) || document.body, startEl = getEl(start), endEl = getEl(end), els = getEls(selector, parentEl), result = [];
+const getBetweenEls = ({ selector, start, end, root, exclude }) => {
+    let rootEl = getEl(root) || document.body, startEl = getEl(start, rootEl), endEl = getEl(end, rootEl), excEls = getEls(exclude, rootEl), els = getEls(selector, rootEl), result = [];
     if (els.length === 0) {
         return result;
     }
@@ -6716,7 +6716,14 @@ const getBetweenEls = ({ selector, start, end, parent }) => {
             return (startEl.compareDocumentPosition(k) & Node.DOCUMENT_POSITION_FOLLOWING) && endEl.compareDocumentPosition(k) & Node.DOCUMENT_POSITION_PRECEDING;
         });
     }
-    return result;
+    if (excEls.length) {
+        return result.filter((k) => {
+            return !excEls.find((i) => i.contains(k));
+        });
+    }
+    else {
+        return result;
+    }
 };
 
 const scrollTo = (elem, options) => {
@@ -9838,7 +9845,7 @@ class Dialog extends ModBaseListenCacheBubble {
     }
 }
 
-const confirm = ({ content, contType, contData, heading, yes, no }) => {
+const confirm = ({ content, contType, contData, tplStr, tplEng, heading, yes, no }) => {
     if (isEmpty(content))
         return;
     return new Promise((resolve) => {
@@ -9847,6 +9854,8 @@ const confirm = ({ content, contType, contData, heading, yes, no }) => {
             contType,
             contData,
             heading,
+            tplStr,
+            tplEng,
             feature: 'confirm',
             onConfirmed: () => {
                 yes && yes();
@@ -9860,7 +9869,7 @@ const confirm = ({ content, contType, contData, heading, yes, no }) => {
     });
 };
 
-const alert = ({ content, contType, contData, heading, cb }) => {
+const alert = ({ content, contType, contData, heading, tplStr, tplEng, yes }) => {
     if (isEmpty(content))
         return;
     return new Promise((resolve) => {
@@ -9869,16 +9878,18 @@ const alert = ({ content, contType, contData, heading, cb }) => {
             contType,
             contData,
             heading,
+            tplStr,
+            tplEng,
             feature: 'alert',
             onConfirmed: () => {
-                cb && cb();
+                yes && yes();
                 resolve(true);
             },
         }).show();
     });
 };
 
-const notice = ({ content, contType = '', contData = {}, heading = '', label = '', yes }) => {
+const notice = ({ content, contType = '', contData = {}, heading = '', label = '', tplStr, tplEng, yes }) => {
     if (isEmpty(content))
         return;
     return new Promise((resolve) => {
@@ -9887,6 +9898,8 @@ const notice = ({ content, contType = '', contData = {}, heading = '', label = '
             contType,
             contData,
             heading,
+            tplStr,
+            tplEng,
             feature: 'notice',
             footer: {
                 children: [{
@@ -14953,7 +14966,7 @@ class Tags extends ModBaseListenCache {
                 let tmp = createEl('div', {}, obj), children = [...tmp.children];
                 if (children.length) {
                     if (children[0].nodeName === 'SELECT') {
-                        result = treeTools.fromSelect(children[0]);
+                        result = select2Tree(children[0]);
                     }
                     else if (children[0].nodeName === 'INPUT') {
                         result = treeTools.fromInput(children[0], this.options.separator);
@@ -16971,7 +16984,7 @@ class Scroll extends ModBaseListenCache {
     }
 }
 
-const optDrag = [
+const optDrag$1 = [
     {
         attr: 'drops',
         prop: 'drops',
@@ -17121,7 +17134,7 @@ class Drag extends ModBaseListen {
         super();
         super.ready({
             options,
-            maps: optDrag,
+            maps: optDrag$1,
             host: elem,
             component: false,
             spread: ['arrow']
@@ -31974,6 +31987,299 @@ class Panel extends ModBaseListenCache {
     }
 }
 
+const optDrag = [
+    {
+        attr: 'routes',
+        prop: 'routes',
+        value: [],
+    },
+    {
+        attr: 'current',
+        prop: 'current',
+        value: '',
+    },
+    {
+        attr: 'redirect',
+        prop: 'redirect',
+        value: [],
+    },
+    {
+        attr: 'before-check',
+        prop: 'beforeCheck',
+        value: null,
+    },
+    {
+        attr: 'after-check',
+        prop: 'afterCheck',
+        value: null,
+    },
+    {
+        attr: 'purpose',
+        prop: 'purpose',
+        value: 'sort',
+    },
+    {
+        attr: 'point',
+        prop: 'point',
+        value: {
+            before: ['t/3'],
+            after: ['b/3'],
+        },
+    },
+    {
+        attr: 'holder',
+        prop: 'holder',
+        value: {
+            from: false,
+            to: false,
+        },
+    },
+    {
+        attr: 'arrow',
+        prop: 'arrow',
+        value: {
+            enable: false,
+            icon: `${prefix}icon-right`,
+            placement: 'left',
+            selector: '',
+        },
+    },
+    {
+        attr: 'gesture',
+        prop: 'gesture',
+        value: {},
+    },
+    {
+        attr: 'delay',
+        prop: 'delay',
+        value: 50,
+    },
+    {
+        attr: 'duration',
+        prop: 'duration',
+        value: 200,
+    },
+    {
+        attr: 'b4-drop',
+        prop: 'b4Drop',
+        value: null,
+    },
+    {
+        attr: 'on-dropping',
+        prop: 'onDropping',
+        value: null,
+    },
+    {
+        attr: 'on-dropped',
+        prop: 'onDropped',
+        value: null,
+    },
+    {
+        attr: 'on-dragstart',
+        prop: 'onDragStart',
+        value: null,
+    },
+    {
+        attr: 'on-dragmove',
+        prop: 'onDragMove',
+        value: null,
+    },
+    {
+        attr: 'on-dragend',
+        prop: 'onDragEnd',
+        value: null,
+    },
+    {
+        attr: 'on-located',
+        prop: 'onLocated',
+        value: null,
+    },
+    ...optBase
+];
+
+class Router extends ModBaseListen {
+    options = {};
+    routes;
+    current;
+    stateEvt;
+    static hostType = 'none';
+    constructor(options = {}, initial = true) {
+        super();
+        super.ready({
+            options,
+            maps: optDrag,
+        });
+        this.routes = this.options.routes || [];
+        this.current = this.options.current;
+        this.stateEvt = (evt) => {
+            if (!evt.state) {
+                console.log('回到了初始页面，或者改变了哈希');
+            }
+            else {
+                if (this.current !== evt.state.path) {
+                    let toRoute = this.getRoute(evt.state.path), fromRoute = this.getRoute();
+                    if (this.options.beforeCheck) {
+                        let resp = this.options.beforeCheck(toRoute, fromRoute);
+                        if (typeof resp === 'string') {
+                            let reRoute = this.getRoute(resp);
+                            if (reRoute) {
+                                this.push(reRoute);
+                            }
+                            else {
+                                return;
+                            }
+                        }
+                        else if (!resp) {
+                            return;
+                        }
+                    }
+                    this.current = evt.state.path;
+                    toRoute.action && toRoute.action.call(this, toRoute);
+                    super.listen({ name: 'located', params: [toRoute] });
+                }
+            }
+        };
+        super.listen({ name: 'constructed' });
+        initial && this.init();
+    }
+    async init(cb) {
+        super.listen({ name: 'initiate' });
+        try {
+            this.options.b4Init && await this.options.b4Init.call(this);
+        }
+        catch {
+            console.warn(config.warn.init);
+            return this;
+        }
+        window.addEventListener('popstate', this.stateEvt);
+        this.current = this.getUrlPath();
+        this.add({ path: this.current, action: null });
+        super.listen({ name: 'initiated', cb });
+        return this;
+    }
+    getUrlPath() {
+        let pathname = window.location.pathname, search = window.location.search, hash = window.location.hash;
+        return pathname + search + hash;
+    }
+    getRoute(path = this.current) {
+        return this.routes.find((k) => k.path === path);
+    }
+    ;
+    add(state) {
+        let item = this.routes.find((k) => k.path === state.path);
+        item ? Object.assign(item, state) : this.routes.push(state);
+    }
+    remove(path) {
+        this.routes.filter((k) => k.path !== path);
+    }
+    push(state, cb) {
+        if (isNull(state) || this.destroyed)
+            return;
+        if (this.options.beforeCheck) {
+            let resp = this.options.beforeCheck(state, this.getRoute());
+            if (typeof resp === 'string') {
+                state = this.getRoute(state.resp);
+                if (!state)
+                    window.location.href = resp;
+            }
+            else if (!resp) {
+                return;
+            }
+        }
+        let route = this.getRoute(state.path);
+        if (route) {
+            this.replace(state);
+            Object.assign(route, state);
+            return this;
+        }
+        this.add(state);
+        history.pushState({ path: state.path }, Date.now() + '', state.path);
+        this.current = state.path;
+        state.action && state.action.call(this, state);
+        super.listen({ name: 'located', cb, params: [state] });
+        return this;
+    }
+    replace(state, cb) {
+        if (isNull(state) || this.destroyed)
+            return;
+        let route = this.getRoute(state.path);
+        if (!route) {
+            this.push(state);
+            return this;
+        }
+        Object.assign(route, state);
+        if (this.options.beforeCheck) {
+            let resp = this.options.beforeCheck(route, this.getRoute());
+            if (typeof resp === 'string') {
+                state = this.getRoute(state.resp);
+                if (!state)
+                    return;
+            }
+            else if (!resp) {
+                return;
+            }
+        }
+        history.replaceState({ path: state.path }, Date.now() + '', state.path);
+        this.current = state.path;
+        state.action && state.action.call(this, state);
+        super.listen({ name: 'located', cb, params: [state] });
+        return this;
+    }
+    back() {
+        if (this.destroyed)
+            return;
+        history.go(-1);
+        return this;
+    }
+    forward() {
+        if (this.destroyed)
+            return;
+        history.go(1);
+        return this;
+    }
+    go(path) {
+        if (this.destroyed)
+            return;
+        if (typeof path === 'string') {
+            this.push(this.getRoute(path));
+        }
+        else {
+            history.go(path);
+        }
+        return this;
+    }
+    clear() {
+        this.routes = [];
+        return this;
+    }
+    routeChange(path) {
+        if (!path)
+            return;
+        let action = this.routes[path];
+        if (action) {
+            this.current = path;
+            action.call(this);
+        }
+        else {
+            console.error(`No route found for path: ${path}`);
+        }
+    }
+    beforeCheck(to, from, next) {
+    }
+    afterCheck() {
+    }
+    restore() {
+        return this;
+    }
+    destroy(cb) {
+        if (this.destroyed)
+            return;
+        this.destroyed = true;
+        super.listen({ name: 'destroyed', cb });
+        return this;
+    }
+}
+
 class CompBaseCommField extends CompBaseComm {
     name;
     value;
@@ -33471,43 +33777,39 @@ class GoodElem extends CompBaseComm {
     }
 }
 
-class AnchorsElem extends PlainElem {
+class AnchorsElem extends CompBaseComm {
     data;
     smoothEvent;
     interactIns;
     constructor() {
         super();
-        this.createPropsObs();
         this.getRawData();
         this.createInteract();
+        this.fillWrap(this.propsProxy);
         this.render(this.propsProxy);
     }
+    static custAttrs = [
+        'root', 'active', 'offset',
+        'on-connected', 'on-reset', 'on-set',
+    ];
+    static boolAttrs = ['smooth', 'collapsed'];
     static get observedAttributes() {
-        return ['class', 'headings', 'parent', 'active', 'offset', 'smooth', 'collapsed'];
+        return ['headings', ...this.custAttrs, ...this.boolAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
-        this.propsProxy[name] = (name === 'collapsed' || name === 'smooth') ? getAttrBool(newVal) : newVal;
-        if (name === 'headings' || name === 'parent') {
-            this.render(this.propsProxy);
-        }
-        else if (name === 'active') {
-            this.activate(newVal);
-        }
-        else if (name === 'offset') {
-            for (let k of this.data) {
-                k.target.style.scrollMarginTop = newVal;
-            }
-        }
-        else if (name === 'smooth') {
-            let bool = attrValBool(newVal);
-            bool ? this.addSmooth() : this.removeSmooth();
-        }
+        if (!this.canListen)
+            return;
+        this.propsProxy[name] = AnchorsElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
     }
-    connectedCallback() {
-    }
-    disconnectedCallback() {
-    }
-    adoptedCallback() {
+    getRawData() {
+        for (let k of [...AnchorsElem.custAttrs, ...AnchorsElem.lazyAttrs])
+            this.propsRaw[k] = this.getAttribute(k);
+        for (let k of AnchorsElem.boolAttrs)
+            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.propsRaw.headings = this.getHeadings(this.getAttribute('headings') || this.rawHtml);
+        for (let k in this.propsRaw)
+            this.propsProxy[k] = this.propsRaw[k];
     }
     createInteract() {
         this.interactIns = new IntersectionObserver(entries => {
@@ -33522,25 +33824,19 @@ class AnchorsElem extends PlainElem {
             threshold: [1],
         });
     }
-    getRawData() {
-        this.propsRaw = {
-            headings: valToArr(this.getAttribute('headings') || this.textContent),
-            parent: this.getAttribute('parent'),
-            offset: this.getAttribute('offset'),
-            smooth: getAttrBool(this.getAttribute('smooth')),
-            collapsed: getAttrBool(this.getAttribute('collapsed')),
-        };
-        for (let k in this.propsRaw) {
-            this.propsProxy[k] = this.propsRaw[k];
-        }
+    getHeadings(str) {
+        return valToArr(str).map((k) => {
+            let tmp = k.split('|');
+            return { heading: tmp[0], exclude: tmp[1] };
+        });
     }
     getData(headings) {
         if (headings.length === 0) {
-            return [];
+            headings = [{ heading: 'h2', exclude: '' }];
         }
-        let result = [], getChildren = (index, els, arr, pNext) => {
-            let keyNext = headings[index + 1];
-            els.forEach((x, y) => {
+        let result = [], getChildren = (index, current, arr, pNext) => {
+            let els = getEls(current.heading, this.propsProxy.root), excEls = getEls(current.exclude, this.propsProxy.root), keyNext = headings[index + 1]?.heading;
+            for (let [y, x] of els.entries()) {
                 let obj = {
                     target: x,
                     label: x.textContent.replace('§', '')
@@ -33549,24 +33845,29 @@ class AnchorsElem extends PlainElem {
                     selector: keyNext,
                     start: x,
                     end: els[y + 1] || pNext,
-                    parent: this.propsProxy.parent,
+                    root: this.propsProxy.root,
                 });
                 if (children.length > 0) {
                     obj.children = [];
-                    getChildren(index + 1, children, obj.children, els[y + 1]);
+                    getChildren(index + 1, headings[index + 1], obj.children, els[y + 1]);
                 }
+                if (excEls.length && excEls.find((i) => i.contains(x)))
+                    continue;
                 arr.push(obj);
-            });
+            }
         };
-        getChildren(0, getEls(headings[0], this.propsProxy.parent), result);
+        getChildren(0, headings[0], result);
         treeTools.addIdPath({ source: result });
         return result;
     }
-    render(data) {
-        this.innerHTML = '';
-        this.data = this.getData(valToArr(data.headings));
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { [alias]: 'wrap' });
+        this.get2FillTreeNodes(data);
+    }
+    get2FillTreeNodes(data) {
+        this.data = this.getData(data.headings);
         let plantTree = (parent, data) => {
-            let ul = createEl('ul');
+            let ul = createEl('ul', { class: `${prefix}reset` });
             for (let k of data) {
                 k.wrapEl = createEl('li', { [alias]: 'wrap' });
                 k.labelEl = createEl('a', { [alias]: 'label', href: `#${k.label}` }, k.label);
@@ -33574,11 +33875,10 @@ class AnchorsElem extends PlainElem {
                 k.wrapEl.appendChild(k.headEl);
                 k.labelEl.onclick = () => this.smoothToActive(k, false);
                 k.target.id = k.label;
-                let tmp = k.target.querySelector(`[href="#${k.label}"]`);
-                if (tmp) {
-                    tmp.remove();
-                }
-                k.hashEl = createEl('a', { href: `#${k.label}` }, '§');
+                k.target.classList.add(`${prefix}anchor`);
+                let tmp = k.target.querySelector(`${prefix}hash`);
+                tmp && tmp.remove();
+                k.hashEl = createEl('a', { href: `#${k.label}`, class: `${prefix}hash` }, '§');
                 k.hashEl.onclick = () => this.smoothToActive(k, false);
                 k.target.appendChild(k.hashEl);
                 this.interactIns.observe(k.target);
@@ -33591,8 +33891,12 @@ class AnchorsElem extends PlainElem {
             parent.appendChild(ul);
             return ul;
         };
-        plantTree(this, this.data);
-        this.querySelector('ul')?.classList.add(`${prefix}reset`);
+        this.wrapEl.innerHTML = '';
+        plantTree(this.wrapEl, this.data);
+    }
+    render(data) {
+        this.insertSource();
+        this.appendChild(this.wrapEl);
     }
     activate(data, active = true, smooth = true) {
         if (!data) {
@@ -33634,6 +33938,27 @@ class AnchorsElem extends PlainElem {
     }
     smoothToActive(obj, active = true) {
         this.activate(obj.target, active, this.propsProxy.smooth);
+    }
+    changedMaps = {
+        headings: this.changedRender,
+        root: this.changedRender,
+        active: this.changedActive,
+        offset: this.changedOffset,
+        smooth: this.changedSmooth,
+    };
+    changedRender(opt) {
+        this.get2FillTreeNodes(this.propsProxy);
+    }
+    changedActive(opt) {
+        this.activate(opt.newVal);
+    }
+    changedOffset(opt) {
+        for (let k of this.data)
+            k.target.style.scrollMarginTop = opt.newVal;
+    }
+    changedSmooth(opt) {
+        let bool = attrValBool(opt.newVal);
+        bool ? this.addSmooth() : this.removeSmooth();
     }
 }
 
@@ -35230,7 +35555,6 @@ class BadgeElem extends PlainElem {
     }
     static lazyAttrs = ['stor-name'];
     static custAttrs = [
-        'class',
         'theme', 'type', 'shape',
         'on-connected', 'on-reset',
     ];
@@ -36659,6 +36983,8 @@ var ax_comm = {
     getImgNone,
     getImgEmpty,
     getImgAvatar,
+    select2Tree,
+    ul2Tree,
     ModBase,
     ModBaseListen,
     ModBaseListenCache,
@@ -36701,6 +37027,7 @@ var ax_comm = {
     Select,
     Upload,
     Panel,
+    Router,
     CompBase,
     CompBaseComm,
     CompBaseCommField,
@@ -36812,6 +37139,7 @@ exports.Rate = Rate;
 exports.RateElem = RateElem;
 exports.ResultElem = ResultElem;
 exports.Retrieval = Retrieval;
+exports.Router = Router;
 exports.Scroll = Scroll;
 exports.SearchElem = SearchElem;
 exports.Select = Select;
@@ -36961,6 +37289,7 @@ exports.repeatStr = repeatStr;
 exports.replaceFrag = replaceFrag;
 exports.requireTypes = requireTypes;
 exports.scrollTo = scrollTo;
+exports.select2Tree = select2Tree;
 exports.setAttr = setAttr;
 exports.setAttrs = setAttrs;
 exports.setContent = setContent;
@@ -36991,6 +37320,7 @@ exports.tplToEls = tplToEls;
 exports.transformTools = transformTools;
 exports.treeTools = treeTools;
 exports.trim = trim;
+exports.ul2Tree = ul2Tree;
 exports.unique = unique;
 exports.valToArr = valToArr;
 exports.validTools = validTools;

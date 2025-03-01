@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-2-27 22:55:26
+ * @since Last modified: 2025-3-2 0:55:48
  * @name AXUI front-end framework.
- * @version 3.0.15
+ * @version 3.0.16
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-02-23 23:58:15
+ * @since Last modified: 2025-03-02 00:44:42
  */
 /*
  *Last modified: 2025-02-27 12:46:41
@@ -10021,7 +10021,7 @@ AX-GOOD[increased] [rep=icon] {
   margin-right: var(--_rem-space);
 }
 /*
-Last modified: 2025-02-12 20:36:35
+Last modified: 2025-03-02 00:44:35
 */
 /*Anchors*/
 AX-ANCHORS {
@@ -10081,6 +10081,17 @@ AX-ANCHORS li [rep=label] {
 }
 AX-ANCHORS li [rep=label]:hover {
   color: var(--_c-prim);
+}
+._anchor {
+  position: relative;
+}
+._anchor ._hash {
+  font-weight: normal;
+  position: absolute;
+  left: 0;
+  width: var(--_rem-body);
+  text-align: center;
+  transform: translateX(-100%);
 }
 /*
  *Last modified: 2025-02-19 01:59:52
