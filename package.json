@@ -1,6 +1,6 @@
 {
   "name": "@codady/axui",
-  "version": "3.0.19",
+  "version": "3.0.20",
   "author": "AXUI Development Team",
   "license": "MIT",
   "description": "The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management. It has no library dependencies and is designed to meet diverse needs with a focus on design.",

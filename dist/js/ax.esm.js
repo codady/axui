@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-3 22:23:12
+ * @since Last modified: 2025-3-3 22:37:15
  * @name AXUI front-end framework.
- * @version 3.0.19
+ * @version 3.0.20
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -21044,7 +21044,7 @@ class Pagination extends ModBaseListenCache {
             this.content = [...this.altIns.content];
             this.output.total = this.content.length;
         }
-        else if ((typeof this.options.content === 'string') && this.options.contType !== 'async') {
+        else if ((typeof this.options.content === 'string') && this.options.contType === 'ins') {
             this.altIns = instance.find(this.options.content, 'pagination');
             this.content = this.altIns ? [...this.altIns.content] : [];
             this.output.total = this.content.length;
