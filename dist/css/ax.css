@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-3 10:46:55
+ * @since Last modified: 2025-3-3 22:23:38
  * @name AXUI front-end framework.
- * @version 3.0.18
+ * @version 3.0.19
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-03 10:41:25
+ * @since Last modified: 2025-03-03 22:22:29
  */
 /*
  *Last modified: 2025-02-27 12:46:41
@@ -11692,6 +11692,16 @@ AX-ICON[dir=v][bg] [rep=disk] img {
   font-size: 1rem;
 }
 /*Pagination*/
+AX-PAGINATION {
+  --_pgn-br-top: var(--_rem-font);
+  --_pgn-br-btm: var(--_rem-font);
+  display: block;
+  vertical-align: middle;
+}
+:not(AX-SELECT) ._pagination {
+  --_pgn-br-top: var(--_rem-font);
+  --_pgn-br-btm: var(--_rem-font);
+}
 ._pagination {
   --_pgn-c-sel: var(--_c-prim);
   --_pgn-c-txt: var(--_c-text);
@@ -11700,8 +11710,6 @@ AX-ICON[dir=v][bg] [rep=disk] img {
   --_pgn-p: 0.9rem;
   --_pgn-m: 0.2rem;
   --_pgn-a: center;
-  --_pgn-br-top: var(--_rem-font);
-  --_pgn-br-btm: var(--_rem-font);
   color: var(--_pgn-c-txt);
   font-size: var(--_pgn-fs);
   line-height: var(--_pgn-h);
