@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-2 0:55:48
+ * @since Last modified: 2025-3-3 10:42:29
  * @name AXUI front-end framework.
- * @version 3.0.16
+ * @version 3.0.17
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-02 00:44:42
+ * @since Last modified: 2025-03-03 10:41:25
  */
 /*
  *Last modified: 2025-02-27 12:46:41
@@ -1955,7 +1955,7 @@
   content: "\e62f";
 }
 /*
- *Last modified: 2025-02-27 15:45:58
+ *Last modified: 2025-03-03 09:28:01
  */
 html {
   font-size: var(--_fs-root);
@@ -2319,6 +2319,7 @@ textarea,
 select {
   background-color: var(--_c-stage);
   min-width: var(--_field-w);
+  width: var(--_field-w);
   box-sizing: border-box;
   border-radius: var(--_field-r);
   border: 1px solid var(--_c-text-bd);
@@ -11692,49 +11693,34 @@ AX-ICON[dir=v][bg] [rep=disk] img {
 }
 /*Pagination*/
 ._pagination {
-  --_page-c-sel: var(--_c-prim);
-  --_page-c-txt: var(--_c-text);
-  --_page-h: var(--_rem-body);
-  --_page-fs: var(--_rem-ignore);
-  --_page-m: var(--_rem-min);
-  --_page-a: center;
-  color: var(--_page-c-txt);
-  font-size: var(--_page-fs);
-  line-height: var(--_page-h);
-  margin: var(--_m) auto;
+  --_pgn-c-sel: var(--_c-prim);
+  --_pgn-c-txt: var(--_c-text);
+  --_pgn-h: var(--_rem-body);
+  --_pgn-fs: var(--_rem-ignore);
+  --_pgn-p: 0.9rem;
+  --_pgn-m: 0.2rem;
+  --_pgn-a: center;
+  --_pgn-br-top: var(--_rem-font);
+  --_pgn-br-btm: var(--_rem-font);
+  color: var(--_pgn-c-txt);
+  font-size: var(--_pgn-fs);
+  line-height: var(--_pgn-h);
+  margin: var(--_pgn-br-top) auto var(--_pgn-br-btm) auto;
   display: flex;
   align-items: center;
-  justify-content: var(--_page-a);
+  justify-content: var(--_pgn-a);
   flex-wrap: wrap;
   /* 
   [rep=first] *:not([class*="icon"]),
   [rep=prev] *:not([class*="icon"]) {
-    margin-right: var(--_page-m);
-    margin-left: calc(-1*var(--_page-m));
+    margin-right: var(--_pgn-m);
+    margin-left: calc(-1*var(--_pgn-m));
   }
   [rep=last] *:not([class*="icon"]),
   [rep=next] *:not([class*="icon"]) {
-    margin-left: var(--_page-m);
-    margin-right: calc(-1*var(--_page-m));
+    margin-left: var(--_pgn-m);
+    margin-right: calc(-1*var(--_pgn-m));
   } */
-  /*   [rep=group]>span {
-    border: 1px solid var(--_c-text-bd);
-    background-color: var(--_c-white);
-    height: auto;
-    line-height: 1.4rem;
-    margin: 0;
-    padding: .6rem .9rem;
-  }
- */
-  /*   [rep=group] [rep=pages] * {
-    border-radius: 0;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  [rep=group] [rep=pages] *:not(:last-child) {
-    margin-right: -0.1rem;
-  }
- */
   /*  &[type=plain] a:where(:not([rep=total]))[selected] {
     height: var(--_rem-body);
     min-width: var(--_rem-body);
@@ -11756,29 +11742,29 @@ AX-ICON[dir=v][bg] [rep=disk] img {
   display: none;
 }
 ._pagination[align=left] {
-  --_page-a: flex-start;
+  --_pgn-a: flex-start;
 }
 ._pagination[align=left] [rep=other] {
   flex: auto;
   text-align: right;
 }
 ._pagination[align=right] {
-  --_page-a: flex-end;
+  --_pgn-a: flex-end;
 }
 ._pagination[align=right] [rep=other] {
   flex: auto;
   text-align: left;
 }
-._pagination[align=left]:has([rep=main]) [rep=main] :first-child {
+._pagination[align=left] > *:first-child,
+._pagination[align=left] > [rep=pages]:first-child > *:first-child,
+._pagination[align=left] [rep=main]:first-child > *:first-child,
+._pagination[align=left] [rep=main]:first-child > [rep=pages]:first-child > *:first-child {
   margin-left: 0;
 }
-._pagination[align=right]:has([rep=main]) [rep=main] :last-child {
-  margin-right: 0;
-}
-._pagination[align=left]:not(:has([rep=main])) :first-child {
-  margin-left: 0;
-}
-._pagination[align=right]:not(:has([rep=main])) :last-child {
+._pagination[align=right] > *:last-child,
+._pagination[align=right] > [rep=pages]:last-child > *:last-child,
+._pagination[align=right] [rep=main]:last-child > *:last-child,
+._pagination[align=right] [rep=main]:last-child > [rep=pages]:last-child > *:last-child {
   margin-right: 0;
 }
 ._pagination[flexible] [rep=main] {
@@ -11794,57 +11780,72 @@ AX-ICON[dir=v][bg] [rep=disk] img {
   font-size: 1rem;
 }
 ._pagination a,
-._pagination[type=group] [rep=main] span {
-  color: var(--_page-c-txt);
-  height: auto;
-  line-height: var(--_rem-font);
+._pagination[type=group] [rep=main] > span:where(:not([rep=pages])),
+._pagination[type=group] [rep=pages] > span {
+  color: var(--_pgn-c-txt);
+  height: var(--_pgn-h);
   border: 1px solid var(--_c-text-bd);
   border-radius: var(--_r);
   background-image: none;
-  padding: 0.6rem 0.9rem;
-  margin: 0 calc(var(--_page-m)/2);
+  padding: 0 var(--_pgn-p);
+  margin: 0 var(--_pgn-m);
+  box-sizing: border-box;
   background-color: var(--_c-stage);
   transition: all var(--_dur-1) linear;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
 }
-._pagination span {
-  margin: 0 calc(var(--_page-m)/2);
+._pagination > span:where(:not([rep=pages])),
+._pagination [rep=main] > span:where(:not([rep=pages])),
+._pagination [rep=pages] > span {
+  margin: 0 var(--_pgn-m);
 }
 ._pagination [selected] {
   color: var(--_c-white);
-  height: auto;
-  line-height: var(--_rem-font);
-  border: 1px solid var(--_page-c-sel);
-  border-radius: var(--_r);
-  background-image: none;
-  padding: 0.6rem 0.9rem;
-  margin: 0 calc(var(--_page-m)/2);
-  background-color: var(--_page-c-sel);
-  position: relative;
+  border-color: var(--_pgn-c-sel);
+  background-color: var(--_pgn-c-sel);
 }
 ._pagination [disabled] {
   opacity: var(--_o-disabled);
 }
 ._pagination a:where(:not([rep=total], [selected])):hover {
-  color: var(--_page-c-sel);
-  border-color: var(--_page-c-sel);
+  color: var(--_pgn-c-sel);
+  border-color: var(--_pgn-c-sel);
   text-decoration: none;
   background-color: var(--_c-prim-bg);
   z-index: 2;
+  cursor: pointer;
 }
 ._pagination[type=group] {
-  --_page-m: 0;
+  --_pgn-m: 0;
 }
-._pagination[type=group] [rep=main] > * {
+._pagination[type=group] [rep=main] > *:where(:not([rep=pages])) {
   border-radius: 0;
 }
-._pagination[type=group] [rep=main] > *:not(:last-child) {
-  margin-right: -0.1rem;
+._pagination[type=group] [rep=main] > *:where(:not([rep=pages])):not(:last-child) {
+  margin-right: -1px;
 }
-._pagination[type=group] [rep=main] > *:first-child {
+._pagination[type=group] [rep=main] > *:where(:not([rep=pages])):first-child {
   border-radius: var(--_r) 0 0 var(--_r);
 }
-._pagination[type=group] [rep=main] > *:last-child {
+._pagination[type=group] [rep=main] > *:where(:not([rep=pages])):last-child {
+  border-radius: 0 var(--_r) var(--_r) 0;
+}
+._pagination[type=group] [rep=main] [rep=pages]:not(:last-child) {
+  margin-right: -1px;
+}
+._pagination[type=group] [rep=pages] > * {
+  border-radius: 0;
+}
+._pagination[type=group] [rep=pages] > *:not(:last-child) {
+  margin-right: -1px;
+}
+._pagination[type=group] [rep=pages]:first-child *:first-child {
+  border-radius: var(--_r) 0 0 var(--_r);
+}
+._pagination[type=group] [rep=pages]:last-child *:last-child {
   border-radius: 0 var(--_r) var(--_r) 0;
 }
 ._pagination[type=plain] a:not([selected]),
@@ -11860,8 +11861,26 @@ AX-ICON[dir=v][bg] [rep=disk] img {
 ._pagination .pagination {
   text-align: center;
 }
+._pagination [rep=locate],
+._pagination [rep=count] {
+  margin: 0 var(--_pgn-m);
+  display: inline-flex;
+}
+._pagination [rep=locate] input,
+._pagination [rep=count] input {
+  width: 3em;
+  text-align: center;
+}
 ._pagination[turning] {
   padding: calc(var(--_rem-body)/2) 0;
+}
+._pagination[size=sm] {
+  --_pgn-h: var(--_rem-list);
+  --_pgn-p: 0.6rem;
+}
+._pagination[size=lg] {
+  --_pgn-h: var(--_rem-input);
+  --_pgn-p: 1.4rem;
 }
 /*Tag & Tags*/
 ._tags {
@@ -14525,6 +14544,10 @@ AX-INPUT {
   --_input-foc: var(--_c-prim);
   --_input-hov: var(--_c-prim);
   --_input-foc-bd: var(--_input-foc);
+  --_input-bg-label: var(--_c-text-bg);
+  --_input-bg-unit: var(--_c-text-bg);
+  --_input-bd-label: 1px;
+  --_input-bd-unit: 1px;
   flex-direction: column;
   border-radius: var(--_input-r);
   box-sizing: border-box;
@@ -14588,7 +14611,6 @@ AX-INPUT > [rep=wrap] > [rep=label],
 AX-INPUT > [rep=wrap] > [rep=unit] {
   color: var(--_c-brief);
   line-height: calc(var(--_input-h) - 2px);
-  background-color: var(--_c-text-bg);
   padding: 0 var(--_input-p-lr);
   box-sizing: border-box;
   white-space: nowrap;
@@ -14597,10 +14619,12 @@ AX-INPUT > [rep=wrap] > [rep=unit] {
   text-overflow: ellipsis;
 }
 AX-INPUT > [rep=wrap] > [rep=label] {
-  border-right: 1px solid var(--_input-c-bd);
+  background-color: var(--_input-bg-label);
+  border-right: var(--_input-bd-label) solid var(--_input-c-bd);
 }
 AX-INPUT > [rep=wrap] > [rep=unit] {
-  border-left: 1px solid var(--_input-c-bd);
+  background-color: var(--_input-bg-unit);
+  border-left: var(--_input-bd-unit) solid var(--_input-c-bd);
 }
 AX-INPUT > [rep=wrap] > [rep=custom] {
   display: inline-flex;
@@ -14689,6 +14713,12 @@ AX-INPUT[size=lg] {
   --_input-h: var(--_em-max);
   --_input-p-lr: var(--_em-font);
   --_input-r: var(--_r-input-lg);
+}
+AX-INPUT[feature=plain] {
+  --_input-bg-label: transparent;
+  --_input-bg-unit: transparent;
+  --_input-bd-label: 0px;
+  --_input-bd-unit: 0px;
 }
 /*Textarea input*/
 AX-TEXTAREA {

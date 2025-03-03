@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-2 0:55:19
+ * @since Last modified: 2025-3-3 10:41:43
  * @name AXUI front-end framework.
- * @version 3.0.16
+ * @version 3.0.17
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -259,8 +259,10 @@ const lang = {
         ellipsis: '...',
         tips: '{{this.current}}/{{this.pages}}',
         total: '共有{{this.total}}条数据',
-        locate: '跳到<input type="text" value="{{this.current}}" rep="input"><ax-btn rep="btn">确定</ax-btn>',
-        count: '每页显示<input type="text" value="{{this.count}}" rep="input">条 <ax-btn rep="btn">确定</ax-btn>',
+        locate: '跳到',
+        count: '每页',
+        page: '页',
+        unit: '条',
     },
     datetime: {
         month: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
@@ -2281,6 +2283,11 @@ const optObserve = [
         value: true,
     },
     {
+        attr: 'lenient',
+        prop: 'lenient',
+        value: true,
+    },
+    {
         attr: 'once',
         prop: 'once',
         value: false,
@@ -2301,8 +2308,8 @@ const optObserve = [
         value: null,
     },
     {
-        attr: 'on-setted',
-        prop: 'onSetted',
+        attr: 'on-set',
+        prop: 'onSet',
         value: null,
     },
     {
@@ -2339,6 +2346,8 @@ const optObserve = [
 ];
 
 const deepEqual = (a, b) => {
+    if (a === b)
+        return true;
     let typeA = getDataType(a), typeB = getDataType(b);
     if (typeA === typeB && typeA === 'Object') {
         let getStr = (data) => {
@@ -2990,7 +2999,7 @@ class Observe extends ModBaseListen {
             set: (target, key, value, proxy) => {
                 if (!this.canRun(key))
                     return true;
-                if (deepEqual(target[key], value))
+                if (deepEqual(target[key], value) || (this.options.lenient && target[key] === value) || (!this.options.lenient && target[key] == value))
                     return true;
                 let raw = target[key], baseProps = { target, key, value, raw, proxy }, handleType = target[key] === undefined ? 'added' : 'edited';
                 value = this.deepProxy(value);
@@ -20697,9 +20706,24 @@ const optPagination = [
         value: 10
     },
     {
+        attr: 'counts',
+        prop: 'counts',
+        value: ''
+    },
+    {
+        attr: 'dropdown',
+        prop: 'dropdown',
+        value: {}
+    },
+    {
         attr: 'current',
         prop: 'current',
         value: 1,
+    },
+    {
+        attr: 'size',
+        prop: 'size',
+        value: 'md',
     },
     {
         attr: 'expanded',
@@ -20738,6 +20762,11 @@ const optPagination = [
         attr: 'classes',
         prop: 'classes',
         value: '',
+    },
+    {
+        attr: 'delay',
+        prop: 'delay',
+        value: 100,
     },
     {
         attr: 'names',
@@ -20861,6 +20890,7 @@ class Pagination extends ModBaseListenCache {
     data;
     nodes;
     spyIns;
+    dropdwonIns;
     static hostType = 'node';
     static optMaps = optPagination;
     constructor(elem, options = {}, initial = true) {
@@ -20896,6 +20926,7 @@ class Pagination extends ModBaseListenCache {
     }
     setOutputObs() {
         this.outputObs = new Observe({ current: -1, count: this.options.count, total: 0, pages: -1, }, {
+            lenient: false,
             onSet: (data) => {
                 if (['total', 'count'].includes(data.key)) {
                     if (data.key === 'total') {
@@ -20954,6 +20985,7 @@ class Pagination extends ModBaseListenCache {
         this.options.type ? this.targetEl.setAttribute('type', this.options.type) : this.targetEl.removeAttribute('type');
         this.options.classes && classes(this.targetEl).add(this.options.classes);
         this.targetEl.toggleAttribute('flexible', this.options.flexible);
+        this.options.size ? this.targetEl.setAttribute('size', this.options.size) : this.targetEl.removeAttribute('size');
     }
     getNodesTree() {
         this.targetEl.innerHTML = '';
@@ -21098,30 +21130,44 @@ class Pagination extends ModBaseListenCache {
         this.tipsEl.innerHTML = renderTpl(this.options.lang?.tips, this.output);
     }
     renderLocateEl() {
-        this.locateEl.innerHTML = renderTpl(this.options.lang?.locate, this.output);
-        this.locateInput = this.locateEl.querySelector(`[${alias}="input"]`);
-        this.locateBtn = this.locateEl.querySelector(`[${alias}="btn"]`);
-        this.locateBtn.onclick = debounce(() => {
-            let val = ~~this.locateInput.value;
-            (val < 1 || val > this.output.pages) && console.warn('The value is out of range,it has been fixed!');
-            val = this.correctCur(val);
-            this.locateInput.value = val;
-            this.locate(val);
+        let tmp = { size: 'sm', feature: 'plain', label: this.options.lang?.locate, unit: this.options.lang?.page, value: this.output.current, btn: `<i class='_icon-arrow-right'></i>` };
+        this.locateInput = createEl('ax-input', tmp);
+        this.locateInput.on('connected', () => {
+            this.locateInput.btnEl.onclick = debounce(() => {
+                let val = ~~this.locateInput.value;
+                (val < 1 || val > this.output.pages) && console.warn('The value is out of range,it has been fixed!');
+                val = this.correctCur(val);
+                this.locateInput.value = val;
+                this.locate(val);
+            }, this.options.delay);
+            this.locateInput.onkeyup = (e) => (e.code === 'Enter') && this.locateInput.btnEl.click();
         });
-        this.locateInput.onkeyup = (e) => {
-            (e.code === 'Enter') && this.locateBtn.click();
-        };
+        this.locateEl.appendChild(this.locateInput);
     }
     renderCountEl() {
-        this.countEl.innerHTML = renderTpl(this.options.lang?.count, this.output);
-        this.countInput = this.countEl.querySelector(`[${alias}="input"]`);
-        this.countBtn = this.countEl.querySelector(`[${alias}="btn"]`);
-        this.countBtn.onclick = debounce(() => {
-            this.output.count = ~~this.countInput.value;
+        let tmp = { size: 'sm', feature: 'plain', label: this.options.lang?.count, unit: this.options.lang?.unit, value: this.output.count, btn: `<i class='_icon-arrow-right'></i>` };
+        this.countInput = createEl('ax-input', tmp);
+        this.countInput.on('connected', () => {
+            this.countInput.btnEl.onclick = debounce(() => {
+                this.output.count = ~~this.countInput.value;
+            }, this.options.delay);
+            this.countInput.onkeyup = (e) => (e.code === 'Enter') && this.countInput.btnEl.click();
+            if (this.options.counts) {
+                this.dropdwonIns = new ax.Dropdown(this.countInput, {
+                    content: this.options.counts,
+                    feature: 'select',
+                    popup: {
+                        canClick: (target) => {
+                            return this.countInput.inputEl.contains(target);
+                        },
+                        onTargetSet: (val) => {
+                            this.countInput.btnEl.click();
+                        }
+                    }
+                });
+            }
         });
-        this.countInput.onkeyup = (e) => {
-            (e.code === 'Enter') && this.countBtn.click();
-        };
+        this.countEl.appendChild(this.countInput);
     }
     renderPagesEl(current = this.output.current) {
         this.pagesEl.innerHTML = '';
@@ -21155,7 +21201,7 @@ class Pagination extends ModBaseListenCache {
         this.output.current == current && tmp.setAttribute('selected', '');
         tmp.onclick = debounce(() => {
             this.locate(current);
-        });
+        }, this.options.delay);
         return tmp;
     }
     hasEll() {
