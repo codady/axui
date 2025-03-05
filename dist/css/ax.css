@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-5 10:0:55
+ * @since Last modified: 2025-3-5 22:52:12
  * @name AXUI front-end framework.
- * @version 3.0.21
+ * @version 3.0.22
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-05 10:00:15
+ * @since Last modified: 2025-03-05 22:51:30
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -2777,7 +2777,7 @@ table td {
   transition: background-color var(--_dur-1) linear, box-shadow var(--_dur-1) linear;
 }
 /*
-Last modified: 2025-03-04 23:44:04
+Last modified: 2025-03-05 21:35:26
 */
 /*Button*/
 AX-BTN {
@@ -3273,23 +3273,8 @@ AX-BTN [rep="tail"] {
 AX-BTN [rep=disk],
 AX-BTN [rep=cube],
 AX-BTN [rep=image] {
-  display: inline-flex;
   height: var(--_rem-list);
   margin-right: var(--_g);
-}
-AX-BTN [rep=disk],
-AX-BTN [rep=cube] {
-  width: var(--_rem-list);
-  object-fit: cover;
-}
-AX-BTN [rep=disk] {
-  border-radius: 100%;
-}
-AX-BTN [rep=cube] {
-  border-radius: var(--_r);
-}
-AX-BTN [rep=image] img {
-  height: 100%;
 }
 AX-BTN AX-BADGE {
   position: absolute;
@@ -8328,6 +8313,8 @@ AX-AVATAR {
   border-radius: clamp(var(--_r), var(--_avatar-r), calc(var(--_r)*6));
   vertical-align: middle;
   display: inline-flex;
+  align-items: center;
+  position: relative;
 }
 AX-AVATAR > [rep=wrap] {
   font-size: var(--_avatar-fs);
@@ -8413,6 +8400,23 @@ AX-AVATAR[shape=square] {
 }
 AX-AVATAR[shape=round] {
   border-radius: 100%;
+}
+AX-AVATAR[arrow]:after {
+  content: 'down';
+  font-family: var(--_ff-icon);
+  font-size: var(--_px-root);
+  color: var(--_c-ignore);
+  transition: all var(--_dur-2) linear;
+}
+AX-AVATAR:where([arrow=inside]):after {
+  margin-left: var(--_px-min);
+}
+AX-AVATAR:where(:not([arrow=inside])):after {
+  position: absolute;
+  right: calc(var(--_px-root)*-1 - var(--_px-min));
+}
+AX-AVATAR[arrow]:where(._opened):after {
+  rotate: 180deg;
 }
 AX-AVATAR[theme=prim],
 AX-AVATAR[theme=error],
@@ -9547,7 +9551,7 @@ AX-FLAG[theme=ignore] {
   transition: all var(--_dur-1) linear;
   position: relative;
 }
-._bullet:where(:not([paddingless])) {
+._bullet:where(:not([unpadded])) {
   padding: 0 var(--_blt-pd);
 }
 ._bullet ._bullet-body {
@@ -9861,20 +9865,20 @@ AX-BUOY [rep=head]:where(:has([rep=icon])) [rep=label] {
 AX-BUOY [rep=head]:where(:has([rep=arrow])) [rep=label] {
   margin-right: var(--_rem-min);
 }
-AX-BUOY[reverse] [rep=head] {
+AX-BUOY[inverted] [rep=head] {
   background-color: var(--_c-stage);
 }
 AX-BUOY [rep=value] {
   padding: 0 var(--_buoy-p);
   transition: all var(--_dur-1) linear;
 }
-AX-BUOY[reverse] [rep=value] {
+AX-BUOY[inverted] [rep=value] {
   background-color: var(--_c-ignore-bg);
 }
 AX-BUOY._opened [rep=arrow] {
   rotate: 180deg;
 }
-AX-BUOY:where(:not([reverse])) [rep=head]:hover {
+AX-BUOY:where(:not([inverted])) [rep=head]:hover {
   color: var(--_c-ignore);
 }
 AX-BUOY[theme=prim] {
@@ -9908,45 +9912,45 @@ AX-BUOY[theme=brief] {
   --_buoy-c-txt: var(--_c-brief);
   --_buoy-c-bd: var(--_c-brief);
 }
-AX-BUOY[theme=prim]:where(:not([reverse])) [rep=head],
-AX-BUOY[theme=prim]:where([reverse]) [rep=value] {
+AX-BUOY[theme=prim]:where(:not([inverted])) [rep=head],
+AX-BUOY[theme=prim]:where([inverted]) [rep=value] {
   background-color: var(--_c-prim);
 }
-AX-BUOY[theme=succ]:where(:not([reverse])) [rep=head],
-AX-BUOY[theme=succ]:where([reverse]) [rep=value] {
+AX-BUOY[theme=succ]:where(:not([inverted])) [rep=head],
+AX-BUOY[theme=succ]:where([inverted]) [rep=value] {
   background-color: var(--_c-succ);
 }
-AX-BUOY[theme=error]:where(:not([reverse])) [rep=head],
-AX-BUOY[theme=error]:where([reverse]) [rep=value] {
+AX-BUOY[theme=error]:where(:not([inverted])) [rep=head],
+AX-BUOY[theme=error]:where([inverted]) [rep=value] {
   background-color: var(--_c-error);
 }
-AX-BUOY[theme=warn]:where(:not([reverse])) [rep=head],
-AX-BUOY[theme=warn]:where([reverse]) [rep=value] {
+AX-BUOY[theme=warn]:where(:not([inverted])) [rep=head],
+AX-BUOY[theme=warn]:where([inverted]) [rep=value] {
   background-color: var(--_c-warn);
 }
-AX-BUOY[theme=info]:where(:not([reverse])) [rep=head],
-AX-BUOY[theme=info]:where([reverse]) [rep=value] {
+AX-BUOY[theme=info]:where(:not([inverted])) [rep=head],
+AX-BUOY[theme=info]:where([inverted]) [rep=value] {
   background-color: var(--_c-info);
 }
-AX-BUOY[theme=issue]:where(:not([reverse])) [rep=head],
-AX-BUOY[theme=issue]:where([reverse]) [rep=value] {
+AX-BUOY[theme=issue]:where(:not([inverted])) [rep=head],
+AX-BUOY[theme=issue]:where([inverted]) [rep=value] {
   background-color: var(--_c-issue);
 }
-AX-BUOY[theme=text]:where(:not([reverse])) [rep=head],
-AX-BUOY[theme=text]:where([reverse]) [rep=value] {
+AX-BUOY[theme=text]:where(:not([inverted])) [rep=head],
+AX-BUOY[theme=text]:where([inverted]) [rep=value] {
   background-color: var(--_c-black);
 }
-AX-BUOY[theme=brief]:where(:not([reverse])) [rep=head],
-AX-BUOY[theme=brief]:where([reverse]) [rep=value] {
+AX-BUOY[theme=brief]:where(:not([inverted])) [rep=head],
+AX-BUOY[theme=brief]:where([inverted]) [rep=value] {
   background-color: var(--_c-brief);
 }
 AX-BUOY[theme] [rep=head] {
   border-width: 0;
 }
-AX-BUOY[theme]:where(:not([reverse])) [rep=head] {
+AX-BUOY[theme]:where(:not([inverted])) [rep=head] {
   color: var(--_c-white);
 }
-AX-BUOY[theme]:where(:not([reverse])) [rep=head]:hover {
+AX-BUOY[theme]:where(:not([inverted])) [rep=head]:hover {
   color: rgba(255, 255, 255, var(--_o-active));
 }
 AX-BUOY[size=sm] {
@@ -9959,37 +9963,37 @@ AX-BUOY[size=lg] {
   --_buoy-lh: var(--_rem-title);
   --_buoy-p: var(--_rem-space);
 }
-AX-BUOY[theme=prim]:where([reverse]) [rep=head] {
+AX-BUOY[theme=prim]:where([inverted]) [rep=head] {
   color: var(--_c-prim);
 }
-AX-BUOY[theme=succ]:where([reverse]) [rep=head] {
+AX-BUOY[theme=succ]:where([inverted]) [rep=head] {
   color: var(--_c-succ);
 }
-AX-BUOY[theme=error]:where([reverse]) [rep=head] {
+AX-BUOY[theme=error]:where([inverted]) [rep=head] {
   color: var(--_c-error);
 }
-AX-BUOY[theme=warn]:where([reverse]) [rep=head] {
+AX-BUOY[theme=warn]:where([inverted]) [rep=head] {
   color: var(--_c-warn);
 }
-AX-BUOY[theme=info]:where([reverse]) [rep=head] {
+AX-BUOY[theme=info]:where([inverted]) [rep=head] {
   color: var(--_c-info);
 }
-AX-BUOY[theme=issue]:where([reverse]) [rep=head] {
+AX-BUOY[theme=issue]:where([inverted]) [rep=head] {
   color: var(--_c-issue);
 }
-AX-BUOY[theme=text]:where([reverse]) [rep=head] {
+AX-BUOY[theme=text]:where([inverted]) [rep=head] {
   color: var(--_c-text);
 }
-AX-BUOY[theme=brief]:where([reverse]) [rep=head] {
+AX-BUOY[theme=brief]:where([inverted]) [rep=head] {
   color: var(--_c-brief);
 }
-AX-BUOY[theme]:where([reverse]) [rep=value] {
+AX-BUOY[theme]:where([inverted]) [rep=value] {
   color: var(--_c-white);
 }
-AX-BUOY[reverse] [rep=value]:hover {
+AX-BUOY[inverted] [rep=value]:hover {
   color: var(--_c-text);
 }
-AX-BUOY[theme]:where([reverse]) [rep=value]:hover {
+AX-BUOY[theme]:where([inverted]) [rep=value]:hover {
   color: rgba(255, 255, 255, var(--_o-active));
 }
 /*

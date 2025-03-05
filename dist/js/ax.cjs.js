@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-5 10:0:28
+ * @since Last modified: 2025-3-5 22:51:46
  * @name AXUI front-end framework.
- * @version 3.0.21
+ * @version 3.0.22
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -1920,7 +1920,7 @@ const optBubble = [
             type: 'custom',
             parentNode: 'ul',
             childNode: 'li',
-            paddingless: false,
+            unpadded: false,
             hoverable: false,
             divisible: false,
             multiline: false,
@@ -3198,7 +3198,7 @@ const bulletTools = {
                 disabled=this.disabled?'disabled':''; 
         /}}
         <${global.childNode}>
-                    <div class="${prefix}bullet" ${global.paddingless ? 'paddingless' : ''} ${global.hoverable ? 'hoverable' : ''}  ${global.multiline ? 'multiline' : ''} {{value}} {{selected}} {{active}} {{check}}  {{disabled}}>
+                    <div class="${prefix}bullet" ${global.unpadded ? 'unpadded' : ''} ${global.hoverable ? 'hoverable' : ''}  ${global.multiline ? 'multiline' : ''} {{value}} {{selected}} {{active}} {{check}}  {{disabled}}>
                     {{icon}}
                     {{disk}}
                     {{cube}}
@@ -14437,8 +14437,8 @@ const optDropdown = [
         value: '',
     },
     {
-        attr: 'paddingless',
-        prop: 'paddingless',
+        attr: 'unpadded',
+        prop: 'unpadded',
         value: false,
     },
     {
@@ -14537,7 +14537,7 @@ class Dropdown extends ModBaseListenCache {
             bullet: {
                 enable: !!this.options.listType,
                 type: this.options.listType,
-                paddingless: this.options.paddingless,
+                unpadded: this.options.unpadded,
                 hoverable: this.options.hoverable,
                 divisible: this.options.divisible,
                 multiline: this.options.multiline,
@@ -15410,7 +15410,7 @@ const optRetrieval = [
         value: {
             type: 'custom',
             childNode: 'div',
-            paddingless: false,
+            unpadded: false,
             hoverable: false,
             divisible: false,
             multiline: false,
@@ -32859,182 +32859,7 @@ class CheckboxElem extends CompBaseCommField {
     }
 }
 
-class PlainElem extends HTMLElement {
-    
-    shadowEl;
-    
-    propsRaw;
-    
-    properties;
-    
-    propsProxy;
-    
-    propsObs;
-    
-    custAttrs;
-    
-    boolAttrs;
-    
-    reset;
-    
-    clear;
-    
-    wrapEl;
-    
-    plans;
-    
-    connected;
-    
-    set;
-    
-    timestamp;
-    constructor() {
-        super();
-        this.propsRaw = {};
-        this.properties = {};
-        this[ax.compSign] = true;
-        this.plans = {};
-        this.timestamp = Date.now();
-        this.reset = () => {
-            this.innerHTML = '';
-            this.fillWrap(this.propsRaw);
-            this.restoreAttrs();
-            this.render(this.propsRaw);
-        };
-        this.clear = () => {
-            this.removeAttribute('value');
-        };
-        this.set = (key, val) => {
-            setAttr(this, key, val);
-            this.listen({ name: 'set', params: [{ key, value: this.getAttribute(key) }] });
-        };
-        this.on('connected', () => {
-            this.setAttribute(ax.compSign, '');
-            this.setCache();
-        });
-        this.on('reset', () => {
-            this.clearCache();
-        });
-    }
-    static lazyAttrs = ['stor-name', 'class'];
-    disconnectedCallback() {
-    }
-    adoptedCallback() {
-    }
-    restoreAttrs() {
-        for (let k in this.propsProxy) {
-            let valProxy = this.propsProxy[k], valRaw = this.propsRaw[k];
-            if (valProxy !== valRaw) {
-                if (isNull(valRaw)) {
-                    this.removeAttribute(k);
-                }
-                else if (valRaw === true) {
-                    this.setAttribute(k, '');
-                }
-                else if (valRaw === false) {
-                    this.removeAttribute(k);
-                }
-                else {
-                    this.setAttribute(k, valRaw);
-                }
-            }
-        }
-    }
-    createPropsObs() {
-        this.propsObs = new Observe(this.properties);
-        this.propsProxy = this.propsObs.proxy;
-        this.propsObs.on('set', (data) => {
-            this.connected && this.updateCache({ [data.key]: data.value });
-        });
-    }
-    getPropVal(comp, name, val) {
-        return comp.boolAttrs.includes(name) ? getAttrBool(val) : val;
-    }
-    getHtmlVal(name = 'label', unformatted = true) {
-        let val = unformatted ? this.textContent?.trim() : this.innerHTML;
-        return val || this.getAttribute(name);
-    }
-    getInitPropsRaw(comp) {
-        [...comp.custAttrs, ...comp.lazyAttrs].forEach((k) => {
-            this.propsRaw[k] = this.getAttribute(k);
-        });
-        comp.boolAttrs.forEach((k) => {
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        });
-    }
-    getInitPropsProxy() {
-        for (let k in this.propsRaw) {
-            this.propsProxy[k] = this.propsRaw[k];
-        }
-    }
-    connectedRender(data) {
-        this.render(data);
-        this.connected = true;
-        this.listen({ name: 'connected' });
-    }
-    listen({ name, params = [], cb } = {}) {
-        name && this.plans.hasOwnProperty(name) && this.emit(name, ...params);
-        if (name && this.propsProxy[`on-${name.toLowerCase()}`]) {
-            let value = this.propsProxy[`on-${name.toLowerCase()}`], addFnShell = (str) => {
-                let tmp = str.trim(), result = (!(tmp.startsWith('function') || tmp.startsWith('(')) && !tmp.endsWith('}')) ? `function(){${str}}` : str;
-                return result;
-            }, fn = new Function('"use strict";return ' + addFnShell(value))();
-            fn && fn.call(this, ...params);
-        }
-        cb && cb.call(this, ...params);
-    }
-    on(type, handler) {
-        plan.add(type, this, handler);
-        return this;
-    }
-    emit(type, ...params) {
-        plan.do(type, this, ...params);
-        return this;
-    }
-    off(type, handler) {
-        plan.remove(type, this, handler);
-        return this;
-    }
-    setCache() {
-        let storName = this.propsProxy['stor-name'], cache = storage.get(storName);
-        if (!storName || !cache)
-            return;
-        let copyCache = deepClone(cache), dataCache = copyCache['data'], hasData = copyCache.hasOwnProperty('data');
-        if (hasData) {
-            dataCache ? setAttr(this, 'data', dataCache) : this.removeAttribute('data');
-            Reflect.deleteProperty(copyCache, 'data');
-        }
-        for (let k in copyCache) {
-            setAttr(this, k, copyCache[k]);
-        }
-    }
-    updateCache(data) {
-        let storName = this.propsProxy['stor-name'];
-        if (!storName)
-            return;
-        let cache = storage.get(storName) || {};
-        Object.assign(cache, data);
-        storage.set(storName, cache);
-    }
-    clearCache() {
-        let storName = this.propsProxy['stor-name'];
-        if (!storName)
-            return;
-        storage.clear(storName);
-    }
-    addScrollable(input) {
-        let scrolled = input.scrollHeight > input.clientHeight;
-        scrolled ? this.setAttribute('scrollable', '') : this.removeAttribute('scrollable');
-    }
-    render(data) {
-    }
-    getRawData() {
-    }
-    fillWrap(data) {
-    }
-}
-
-class BtnElem extends PlainElem {
+class BtnElem extends CompBaseComm {
     labelEl;
     iconEl;
     tailEl;
@@ -33046,133 +32871,28 @@ class BtnElem extends PlainElem {
     tipsIns;
     constructor() {
         super();
-        super.createPropsObs();
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static lazyAttrs = ['stor-name'];
-    static custAttrs = ['class', 'type', 'theme', 'href', 'tab', 'target', 'rel', 'download', 'shape', 'size', 'width', 'check', 'icon', 'tail', 'disk', 'cube', 'image', 'tips', 'badge', 'mean'];
+    static custAttrs = ['type', 'theme', 'href', 'tab', 'target', 'rel', 'download', 'shape', 'size', 'width', 'check', 'icon', 'tail', 'disk', 'cube', 'image', 'tips', 'badge', 'mean'];
     static boolAttrs = ['disabled', 'shaded', 'grad'];
     static get observedAttributes() {
         return ['label', ...this.custAttrs, ...this.boolAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
         this.propsProxy[name] = BtnElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        if (name === 'label') {
-            this.labelEl.innerHTML = newVal;
-        }
-        else if (name === 'href') {
-            if (newVal === null || oldVal === null) {
-                this.innerHTML = '';
-                this.fillWrap(this.propsProxy);
-                this.render();
-            }
-            else {
-                this.wrapEl.href = newVal;
-            }
-        }
-        else if (name === 'target' && this.wrapEl.nodeName === 'A') {
-            this.wrapEl.target = newVal;
-        }
-        else if (name === 'rel' && this.wrapEl.nodeName === 'A') {
-            this.wrapEl.rel = newVal;
-        }
-        else if (name === 'download' && this.wrapEl.nodeName === 'A') {
-            this.wrapEl.download = newVal;
-        }
-        else if (name === 'tab') {
-            this.wrapEl.tabIndex = newVal;
-        }
-        else if (name === 'icon') {
-            if (this.iconEl) {
-                this.iconEl.setAttribute('class', newVal);
-            }
-            else {
-                this.insertIcon(newVal);
-            }
-        }
-        else if (name === 'tail') {
-            if (this.tailEl) {
-                this.tailEl.setAttribute('class', newVal);
-            }
-            else {
-                this.insertTail(newVal);
-            }
-        }
-        else if (name === 'disk') {
-            if (this.diskEl) {
-                this.diskEl.setAttribute('src', newVal);
-            }
-            else {
-                this.insertDisk(newVal);
-            }
-        }
-        else if (name === 'cube') {
-            if (this.cubeEl) {
-                this.cubeEl.setAttribute('src', newVal);
-            }
-            else {
-                this.insertCube(newVal);
-            }
-        }
-        else if (name === 'image') {
-            if (this.imageEl) {
-                this.imageEl.setAttribute('src', newVal);
-            }
-            else {
-                this.insertImage(newVal);
-            }
-        }
-        else if (name === 'mean') {
-            if (this.meanEl) {
-                this.meanEl.setAttribute(alias, newVal);
-            }
-            else {
-                this.insertMean(newVal);
-            }
-        }
-        else if (name === 'badge') {
-            if (this.badgeEl) {
-                isNull(newVal) || newVal === '0' ? this.badgeEl.remove() : this.badgeEl.setAttribute('label', newVal);
-            }
-            else {
-                this.insertBadge(newVal);
-            }
-        }
-        else if (name === 'tips') {
-            if (this.tipsIns) {
-                this.tipsIns.updateCont(newVal);
-                if (newVal) {
-                    this.tipsIns.popupIns.state !== 'shown' && this.tipsIns.popupIns.show();
-                }
-                else {
-                    this.tipsIns.popupIns.hide();
-                }
-            }
-            else {
-                newVal ? this.insertTips(this.propsProxy.tips) : null;
-            }
-        }
-    }
-    connectedCallback() {
-        !this.querySelector(`[${alias}="wrap"]`) ? this.appendChild(this.wrapEl) : null;
-        this.render();
-        this.propsProxy.tips ? this.insertTips(this.propsProxy.tips) : null;
-        this.connected = true;
-        this.listen({ name: 'connected' });
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
     }
     getRawData() {
-        [...BtnElem.custAttrs, ...BtnElem.lazyAttrs].forEach((k) => {
+        for (let k of [...BtnElem.custAttrs, ...BtnElem.lazyAttrs])
             this.propsRaw[k] = this.getAttribute(k);
-        });
-        BtnElem.boolAttrs.forEach((k) => {
+        for (let k of BtnElem.boolAttrs)
             this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        });
         this.initLabel();
-        for (let k in this.propsRaw) {
+        for (let k in this.propsRaw)
             this.propsProxy[k] = this.propsRaw[k];
-        }
-        this.innerHTML = '';
     }
     initLabel() {
         if (this.innerHTML) {
@@ -33262,7 +32982,118 @@ class BtnElem extends PlainElem {
         data.hasOwnProperty('badge') ? this.insertBadge(data.badge) : null;
     }
     render(data) {
+        this.insertSource();
         this.appendChild(this.wrapEl);
+    }
+    changedMaps = {
+        label: this.changedLabel,
+        href: this.changedHref,
+        target: this.changedTarget,
+        rel: this.changedTarget,
+        download: this.changedTarget,
+        tab: this.changedTab,
+        icon: this.changedIcon,
+        disk: this.changedDisk,
+        cube: this.changedCube,
+        image: this.changedImage,
+        tips: this.changedTips,
+        tail: this.changedTail,
+        mean: this.changedMean,
+        badge: this.changedBadge,
+    };
+    changedLabel(opt) {
+        this.labelEl.innerHTML = opt.newVal || '';
+    }
+    changedHref(opt) {
+        if (opt.newVal === null || opt.oldVal === null) {
+            this.innerHTML = '';
+            this.fillWrap(this.propsProxy);
+            this.render();
+        }
+        else {
+            this.wrapEl.href = opt.newVal;
+        }
+    }
+    changedTarget(opt) {
+        if (opt.newVal) {
+            this.wrapEl.setAttribute(opt.name, opt.newVal);
+        }
+        else {
+            this.wrapEl.removeAttribute(opt.name);
+        }
+    }
+    changedTab(opt) {
+        opt.newVal ? this.wrapEl.tabIndex = opt.newVal : this.wrapEl.removeAttribute('tabindex');
+    }
+    changedIcon(opt) {
+        if (this.iconEl) {
+            this.iconEl.setAttribute('class', opt.newVal);
+        }
+        else {
+            this.insertIcon(opt.newVal);
+        }
+    }
+    changedTail(opt) {
+        if (this.tailEl) {
+            this.tailEl.setAttribute('class', opt.newVal);
+        }
+        else {
+            this.insertTail(opt.newVal);
+        }
+    }
+    changedDisk(opt) {
+        if (this.diskEl) {
+            this.diskEl.setAttribute('src', opt.newVal);
+        }
+        else {
+            this.insertDisk(opt.newVal);
+        }
+    }
+    changedCube(opt) {
+        if (this.cubeEl) {
+            this.cubeEl.setAttribute('src', opt.newVal);
+        }
+        else {
+            this.insertCube(opt.newVal);
+        }
+    }
+    changedImage(opt) {
+        if (this.imageEl) {
+            this.imageEl.setAttribute('src', opt.newVal);
+        }
+        else {
+            this.insertImage(opt.newVal);
+        }
+    }
+    changedMean(opt) {
+        if (this.meanEl) {
+            this.meanEl.setAttribute(alias, opt.newVal);
+        }
+        else {
+            this.insertMean(opt.newVal);
+        }
+    }
+    changedBadge(opt) {
+        if (this.badgeEl) {
+            isNull(opt.newVal) || opt.newVal === '0' ? this.badgeEl.remove() : this.badgeEl.setAttribute('label', opt.newVal);
+        }
+        else {
+            this.insertBadge(opt.newVal);
+        }
+    }
+    changedTips(opt) {
+        if (this.tipsIns) {
+            this.tipsIns.updateCont(opt.newVal);
+            if (opt.newVal) {
+                this.tipsIns.popupIns.state !== 'shown' && this.tipsIns.popupIns.show();
+            }
+            else {
+                this.tipsIns.popupIns.hide();
+            }
+        }
+        else {
+            opt.newVal ? this.insertTips(this.propsProxy.tips) : null;
+        }
     }
 }
 
@@ -33278,40 +33109,26 @@ class LineElem extends CompBaseComm {
     }
     static custAttrs = [
         'type', 'theme', 'size', 'align',
-        'on-connected', 'on-reset',
+        'on-connected', 'on-reset', 'on-set',
     ];
     static boolAttrs = ['v'];
     static get observedAttributes() {
         return ['label', ...this.custAttrs, ...this.boolAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
         this.propsProxy[name] = LineElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        if (name === 'label') {
-            this.labelEl.innerHTML = newVal;
-            if (newVal) {
-                (elState(this.labelEl).isVirtual) ? this.wrapEl.append(this.labelEl, this.endEl) : null;
-            }
-            else {
-                this.labelEl.remove();
-                this.endEl.remove();
-            }
-        }
-    }
-    connectedCallback() {
-        this.connectedRender();
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
     }
     getRawData() {
-        [...LineElem.custAttrs, ...LineElem.lazyAttrs].forEach((k) => {
+        for (let k of [...LineElem.custAttrs, ...LineElem.lazyAttrs])
             this.propsRaw[k] = this.getAttribute(k);
-        });
-        LineElem.boolAttrs.forEach((k) => {
+        for (let k of LineElem.boolAttrs)
             this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        });
-        this.propsRaw.label = this.textContent?.trim() || this.getAttribute('label');
-        for (let k in this.propsRaw) {
+        this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
+        for (let k in this.propsRaw)
             this.propsProxy[k] = this.propsRaw[k];
-        }
-        this.innerHTML = '';
     }
     fillWrap(data) {
         this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.labelEl);
@@ -33322,102 +33139,114 @@ class LineElem extends CompBaseComm {
         data.label ? this.wrapEl.append(this.labelEl, this.endEl) : null;
     }
     render(data) {
+        this.insertSource();
         this.appendChild(this.wrapEl);
+    }
+    changedMaps = {
+        label: this.changedLabel,
+    };
+    changedLabel(opt) {
+        this.labelEl.innerHTML = opt.newVal;
+        if (opt.newVal) {
+            (elState(this.labelEl).isVirtual) && this.wrapEl.append(this.labelEl, this.endEl);
+        }
+        else {
+            this.labelEl.remove();
+            this.endEl.remove();
+        }
     }
 }
 
-class AvatarElem extends PlainElem {
+class AvatarElem extends CompBaseComm {
     mainEl;
     badgeEl;
     tipsEl;
     contRaw;
     constructor() {
         super();
-        super.createPropsObs();
         this.getRawData();
-        this.render(this.propsProxy);
+        this.fillWrap(this.propsProxy);
     }
+    static custAttrs = ['type', 'theme', 'tips', 'size', 'src', 'shape', 'badge', 'href', 'target', 'rel'];
+    static boolAttrs = ['disabled'];
     static get observedAttributes() {
-        return ['class', 'type', 'theme', 'tips', 'size', 'src', 'shape', 'badge', 'href', 'target', 'rel'];
+        return ['src', ...this.custAttrs, ...this.boolAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
-        this.propsProxy[name] = newVal;
-        if (name === 'type') {
-            if ((this.mainEl.nodeName === 'IMG' && newVal === 'text') || (this.mainEl.nodeName === 'I' && (newVal === 'image' || !newVal))) {
-                this.mainEl.remove();
-                this.mainEl = this.getMainEl(newVal, this.propsProxy.src);
-                this.wrapEl.appendChild(this.mainEl);
-            }
-        }
-        else if (name === 'tips') {
-            if (newVal === null) {
-                this.tipsEl.remove();
-            }
-            else {
-                this.tipsEl.innerHTML = newVal;
-                (elState(this.tipsEl).isVirtual) ? this.wrapEl.appendChild(this.tipsEl) : null;
-            }
-        }
-        else if (name === 'badge') {
-            if (newVal === null) {
-                this.badgeEl.remove();
-            }
-            else {
-                this.badgeEl.setAttribute('label', (newVal === '0' || !newVal) ? '' : newVal);
-                (elState(this.badgeEl).isVirtual) ? this.wrapEl.appendChild(this.badgeEl) : null;
-            }
-        }
-        else if (name === 'src') {
-            (this.propsProxy.type === 'text') ? this.mainEl.innerHTML = newVal : this.mainEl.src = newVal;
-        }
-        else if (name === 'href') {
-            this.wrapEl.setAttribute('href', newVal);
-        }
-        else if (name === 'target') {
-            this.wrapEl.setAttribute('target', newVal);
-        }
-        else if (name === 'rel') {
-            this.wrapEl.setAttribute('rel', newVal);
-        }
-    }
-    connectedCallback() {
-    }
-    disconnectedCallback() {
-    }
-    adoptedCallback() {
+        if (!this.canListen)
+            return;
+        this.propsProxy[name] = AvatarElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
     }
     getMainEl(type, src) {
         return (type === 'text') ? createEl('i', { [alias]: 'main' }, src || 'null') : createEl('img', { [alias]: 'main', src: src || getImgAvatar() });
     }
     getRawData() {
-        this.propsRaw = {
-            type: this.getAttribute('type'),
-            theme: this.getAttribute('theme'),
-            size: this.getAttribute('size'),
-            src: this.getAttribute('src') || this.textContent,
-            shape: this.getAttribute('shape'),
-            tips: this.getAttribute('tips'),
-            badge: this.getAttribute('badge'),
-            radius: this.getAttribute('radius'),
-            href: this.getAttribute('href'),
-            target: this.getAttribute('target'),
-            rel: this.getAttribute('rel'),
-            disabled: getAttrBool(this.getAttribute('disabled')),
-        };
-        for (let k in this.propsRaw) {
+        for (let k of [...AvatarElem.custAttrs, ...AvatarElem.lazyAttrs])
+            this.propsRaw[k] = this.getAttribute(k);
+        for (let k of AvatarElem.boolAttrs)
+            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.propsRaw.src = this.getAttribute('src') || this.rawHtml;
+        for (let k in this.propsRaw)
             this.propsProxy[k] = this.propsRaw[k];
-        }
     }
-    render(data) {
-        this.innerHTML = '';
+    fillWrap(data) {
         this.wrapEl = createEl('a', { [alias]: 'wrap' });
-        this.badgeEl = createEl('ax-badge', { [alias]: 'badge', shadowed: '' }, data?.badge?.trim());
+        this.badgeEl = createEl('ax-badge', { [alias]: 'badge', shadowed: '', label: data?.badge?.trim() });
         this.tipsEl = createEl('i', { [alias]: 'tips' }, data.tips || '');
         this.mainEl = this.getMainEl(data.type, data.src);
         this.wrapEl.appendChild(this.mainEl);
-        this.hasAttribute('badge') ? this.wrapEl.appendChild(this.badgeEl) : null;
-        this.getAttribute('tips') ? this.wrapEl.appendChild(this.tipsEl) : null;
+        this.hasAttribute('badge') && this.wrapEl.appendChild(this.badgeEl);
+        this.getAttribute('tips') && this.wrapEl.appendChild(this.tipsEl);
+    }
+    render(data) {
+        this.insertSource();
         this.appendChild(this.wrapEl);
+    }
+    changedMaps = {
+        badge: this.changedBadge,
+        tips: this.changedTips,
+        src: this.changedSrc,
+        href: this.changedHref,
+        target: this.changedHref,
+        rel: this.changedHref,
+        type: this.changedType,
+    };
+    changedSrc(opt) {
+        (this.propsProxy.type === 'text') ? this.mainEl.innerHTML = opt.newVal : this.mainEl.src = opt.newVal;
+    }
+    changedHref(opt) {
+        if (opt.newVal) {
+            this.wrapEl.setAttribute(opt.name, opt.newVal);
+        }
+        else {
+            this.wrapEl.removeAttribute(opt.name);
+        }
+    }
+    changedBadge(opt) {
+        if (opt.newVal === null) {
+            this.badgeEl.remove();
+        }
+        else {
+            this.badgeEl.setAttribute('label', (opt.newVal === '0' || !opt.newVal) ? '' : opt.newVal);
+            (elState(this.badgeEl).isVirtual) ? this.wrapEl.appendChild(this.badgeEl) : null;
+        }
+    }
+    changedTips(opt) {
+        if (opt.newVal === null) {
+            this.tipsEl.remove();
+        }
+        else {
+            this.tipsEl.innerHTML = opt.newVal;
+            (elState(this.tipsEl).isVirtual) ? this.wrapEl.appendChild(this.tipsEl) : null;
+        }
+    }
+    changedType(opt) {
+        if ((this.mainEl.nodeName === 'IMG' && opt.newVal === 'text') || (this.mainEl.nodeName === 'I' && (opt.newVal === 'image' || !opt.newVal))) {
+            this.mainEl.remove();
+            this.mainEl = this.getMainEl(opt.newVal, this.propsProxy.src);
+            this.wrapEl.appendChild(this.mainEl);
+        }
     }
 }
 
@@ -33435,31 +33264,10 @@ class FormatElem extends CompBaseComm {
         return ['label', ...this.custAttrs, ...this.boolAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
         this.propsProxy[name] = FormatElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        if (name === 'label' || name === 'type') {
-            this.wrapEl.innerHTML = '';
-            this.fillCont(this.propsProxy);
-        }
-        else if (name === 'rts' && this.propsProxy.type === 'ruby') {
-            this.wrapEl.innerHTML = `<ruby>${this.getRuby(this.propsProxy.label, newVal)}</ruby>`;
-        }
-        else if (name === 'info' && (this.propsProxy.type === 'prefix' || this.propsProxy.type === 'suffix')) {
-            this.infoEl.innerHTML = newVal;
-        }
-        else if (name === 'tips' && (this.propsProxy.type === 'prefix' || this.propsProxy.type === 'suffix')) {
-            this.tipsIns.update(!newVal ? { asleep: true } : { asleep: false, content: newVal });
-        }
-        else if (name === 'lines' && this.propsProxy.type === 'break') {
-            this.wrapEl.innerHTML = this.getBrText(this.propsProxy.label, ~~newVal, this.propsProxy.size);
-        }
-        else if (name === 'size' && this.propsProxy.type === 'break') {
-            let tmp = this.wrapEl.firstElementChild;
-            tmp ? tmp.style.fontSize = newVal : null;
-        }
-        else if (name === 'width' && this.propsProxy.type === 'break') {
-            let tmp = this.wrapEl.firstElementChild;
-            tmp ? tmp.style.width = newVal : null;
-        }
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
     }
     getRawData() {
         for (let k of [...FormatElem.custAttrs, ...FormatElem.lazyAttrs])
@@ -33544,6 +33352,52 @@ class FormatElem extends CompBaseComm {
         }
         return result + '</i>';
     }
+    changedMaps = {
+        label: this.changedLabel,
+        type: this.changedLabel,
+        rts: this.changedRts,
+        info: this.changedInfo,
+        tips: this.changedTips,
+        lines: this.changedLines,
+        size: this.changedSize,
+        width: this.changedWidth,
+    };
+    changedLabel(opt) {
+        this.wrapEl.innerHTML = '';
+        this.fillCont(this.propsProxy);
+    }
+    changedRts(opt) {
+        if (this.propsProxy.type === 'ruby') {
+            this.wrapEl.innerHTML = `<ruby>${this.getRuby(this.propsProxy.label, opt.newVal)}</ruby>`;
+        }
+    }
+    changedInfo(opt) {
+        if (this.propsProxy.type === 'prefix' || this.propsProxy.type === 'suffix') {
+            this.infoEl.innerHTML = opt.newVal;
+        }
+    }
+    changedTips(opt) {
+        if (this.propsProxy.type === 'prefix' || this.propsProxy.type === 'suffix') {
+            this.tipsIns.update(!opt.newVal ? { asleep: true } : { asleep: false, content: opt.newVal });
+        }
+    }
+    changedLines(opt) {
+        if (this.propsProxy.type === 'break') {
+            this.wrapEl.innerHTML = this.getBrText(this.propsProxy.label, ~~opt.newVal, this.propsProxy.size);
+        }
+    }
+    changedSize(opt) {
+        if (this.propsProxy.type === 'break') {
+            let tmp = this.wrapEl.firstElementChild;
+            tmp ? tmp.style.fontSize = opt.newVal : null;
+        }
+    }
+    changedWidth(opt) {
+        if (this.propsProxy.type === 'break') {
+            let tmp = this.wrapEl.firstElementChild;
+            tmp ? tmp.style.width = opt.newVal : null;
+        }
+    }
 }
 
 class FlagElem extends CompBaseComm {
@@ -33589,7 +33443,7 @@ class FlagElem extends CompBaseComm {
     }
 }
 
-class BuoyElem extends PlainElem {
+class BuoyElem extends CompBaseComm {
     headEl;
     labelEl;
     iconEl;
@@ -33597,80 +33451,31 @@ class BuoyElem extends PlainElem {
     valueEl;
     constructor() {
         super();
-        this.createPropsObs();
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static lazyAttrs = ['stor-name'];
     static custAttrs = [
-        'class',
         'icon', 'label', 'theme', 'size',
         'on-connected', 'on-reset', 'on-set',
     ];
-    static boolAttrs = ['reverse', 'arrow'];
+    static boolAttrs = ['inverted', 'arrow'];
     static get observedAttributes() {
         return ['value', ...this.custAttrs, ...this.boolAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
         this.propsProxy[name] = BuoyElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        if (name === 'value') {
-            this.valueEl.innerHTML = newVal;
-        }
-        else if (name === 'label') {
-            if (newVal === null) {
-                this.labelEl.remove();
-            }
-            else {
-                this.labelEl.innerHTML = newVal;
-                if (elState(this.labelEl).isVirtual) {
-                    if (!elState(this.iconEl).isVirtual) {
-                        this.iconEl.insertAdjacentElement('afterEnd', this.labelEl);
-                    }
-                    else {
-                        this.headEl.insertAdjacentElement('afterBegin', this.labelEl);
-                    }
-                }
-            }
-        }
-        else if (name === 'icon') {
-            if (newVal === null) {
-                this.iconEl.remove();
-            }
-            else {
-                this.iconEl.setAttribute('class', newVal);
-                if (elState(this.iconEl).isVirtual) {
-                    this.headEl.insertAdjacentElement('afterBegin', this.iconEl);
-                }
-            }
-        }
-        else if (name === 'arrow') {
-            if (!attrValBool(newVal)) {
-                this.arrowEl.remove();
-            }
-            else {
-                if (elState(this.arrowEl).isVirtual) {
-                    this.headEl.appendChild(this.arrowEl);
-                }
-            }
-        }
-    }
-    connectedCallback() {
-        this.render();
-        this.connected = true;
-        this.listen({ name: 'connected' });
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
     }
     getRawData() {
-        [...BuoyElem.custAttrs, ...BuoyElem.lazyAttrs].forEach((k) => {
+        for (let k of [...BuoyElem.custAttrs, ...BuoyElem.lazyAttrs])
             this.propsRaw[k] = this.getAttribute(k);
-        });
-        BuoyElem.boolAttrs.forEach((k) => {
+        for (let k of BuoyElem.boolAttrs)
             this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        });
-        this.propsRaw.value = this.textContent?.trim() || this.getAttribute('value');
-        for (let k in this.propsRaw) {
+        this.propsRaw.value = this.getAttribute('value') || this.rawHtml;
+        for (let k in this.propsRaw)
             this.propsProxy[k] = this.propsRaw[k];
-        }
-        this.innerHTML = '';
     }
     fillWrap(data) {
         this.wrapEl = createEl('span', { [alias]: 'wrap' });
@@ -33685,7 +33490,54 @@ class BuoyElem extends PlainElem {
         this.wrapEl.append(this.headEl, this.valueEl);
     }
     render(data) {
+        this.insertSource();
         this.append(this.wrapEl);
+    }
+    changedMaps = {
+        value: this.changedValue,
+        label: this.changedLabel,
+        icon: this.changedIcon,
+        arrow: this.changedArrow,
+    };
+    changedValue(opt) {
+        this.valueEl.innerHTML = opt.newVal || '';
+    }
+    changedLabel(opt) {
+        if (opt.newVal === null) {
+            this.labelEl.remove();
+        }
+        else {
+            this.labelEl.innerHTML = opt.newVal;
+            if (elState(this.labelEl).isVirtual) {
+                if (!elState(this.iconEl).isVirtual) {
+                    this.iconEl.insertAdjacentElement('afterEnd', this.labelEl);
+                }
+                else {
+                    this.headEl.insertAdjacentElement('afterBegin', this.labelEl);
+                }
+            }
+        }
+    }
+    changedIcon(opt) {
+        if (opt.newVal === null) {
+            this.iconEl.remove();
+        }
+        else {
+            this.iconEl.setAttribute('class', opt.newVal);
+            if (elState(this.iconEl).isVirtual) {
+                this.headEl.insertAdjacentElement('afterBegin', this.iconEl);
+            }
+        }
+    }
+    changedArrow(opt) {
+        if (!attrValBool(opt.newVal)) {
+            this.arrowEl.remove();
+        }
+        else {
+            if (elState(this.arrowEl).isVirtual) {
+                this.headEl.appendChild(this.arrowEl);
+            }
+        }
     }
 }
 
@@ -35226,6 +35078,181 @@ class RangeElem extends CompBaseCommFieldMixin {
     }
 }
 
+class PlainElem extends HTMLElement {
+    
+    shadowEl;
+    
+    propsRaw;
+    
+    properties;
+    
+    propsProxy;
+    
+    propsObs;
+    
+    custAttrs;
+    
+    boolAttrs;
+    
+    reset;
+    
+    clear;
+    
+    wrapEl;
+    
+    plans;
+    
+    connected;
+    
+    set;
+    
+    timestamp;
+    constructor() {
+        super();
+        this.propsRaw = {};
+        this.properties = {};
+        this[ax.compSign] = true;
+        this.plans = {};
+        this.timestamp = Date.now();
+        this.reset = () => {
+            this.innerHTML = '';
+            this.fillWrap(this.propsRaw);
+            this.restoreAttrs();
+            this.render(this.propsRaw);
+        };
+        this.clear = () => {
+            this.removeAttribute('value');
+        };
+        this.set = (key, val) => {
+            setAttr(this, key, val);
+            this.listen({ name: 'set', params: [{ key, value: this.getAttribute(key) }] });
+        };
+        this.on('connected', () => {
+            this.setAttribute(ax.compSign, '');
+            this.setCache();
+        });
+        this.on('reset', () => {
+            this.clearCache();
+        });
+    }
+    static lazyAttrs = ['stor-name', 'class'];
+    disconnectedCallback() {
+    }
+    adoptedCallback() {
+    }
+    restoreAttrs() {
+        for (let k in this.propsProxy) {
+            let valProxy = this.propsProxy[k], valRaw = this.propsRaw[k];
+            if (valProxy !== valRaw) {
+                if (isNull(valRaw)) {
+                    this.removeAttribute(k);
+                }
+                else if (valRaw === true) {
+                    this.setAttribute(k, '');
+                }
+                else if (valRaw === false) {
+                    this.removeAttribute(k);
+                }
+                else {
+                    this.setAttribute(k, valRaw);
+                }
+            }
+        }
+    }
+    createPropsObs() {
+        this.propsObs = new Observe(this.properties);
+        this.propsProxy = this.propsObs.proxy;
+        this.propsObs.on('set', (data) => {
+            this.connected && this.updateCache({ [data.key]: data.value });
+        });
+    }
+    getPropVal(comp, name, val) {
+        return comp.boolAttrs.includes(name) ? getAttrBool(val) : val;
+    }
+    getHtmlVal(name = 'label', unformatted = true) {
+        let val = unformatted ? this.textContent?.trim() : this.innerHTML;
+        return val || this.getAttribute(name);
+    }
+    getInitPropsRaw(comp) {
+        [...comp.custAttrs, ...comp.lazyAttrs].forEach((k) => {
+            this.propsRaw[k] = this.getAttribute(k);
+        });
+        comp.boolAttrs.forEach((k) => {
+            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        });
+    }
+    getInitPropsProxy() {
+        for (let k in this.propsRaw) {
+            this.propsProxy[k] = this.propsRaw[k];
+        }
+    }
+    connectedRender(data) {
+        this.render(data);
+        this.connected = true;
+        this.listen({ name: 'connected' });
+    }
+    listen({ name, params = [], cb } = {}) {
+        name && this.plans.hasOwnProperty(name) && this.emit(name, ...params);
+        if (name && this.propsProxy[`on-${name.toLowerCase()}`]) {
+            let value = this.propsProxy[`on-${name.toLowerCase()}`], addFnShell = (str) => {
+                let tmp = str.trim(), result = (!(tmp.startsWith('function') || tmp.startsWith('(')) && !tmp.endsWith('}')) ? `function(){${str}}` : str;
+                return result;
+            }, fn = new Function('"use strict";return ' + addFnShell(value))();
+            fn && fn.call(this, ...params);
+        }
+        cb && cb.call(this, ...params);
+    }
+    on(type, handler) {
+        plan.add(type, this, handler);
+        return this;
+    }
+    emit(type, ...params) {
+        plan.do(type, this, ...params);
+        return this;
+    }
+    off(type, handler) {
+        plan.remove(type, this, handler);
+        return this;
+    }
+    setCache() {
+        let storName = this.propsProxy['stor-name'], cache = storage.get(storName);
+        if (!storName || !cache)
+            return;
+        let copyCache = deepClone(cache), dataCache = copyCache['data'], hasData = copyCache.hasOwnProperty('data');
+        if (hasData) {
+            dataCache ? setAttr(this, 'data', dataCache) : this.removeAttribute('data');
+            Reflect.deleteProperty(copyCache, 'data');
+        }
+        for (let k in copyCache) {
+            setAttr(this, k, copyCache[k]);
+        }
+    }
+    updateCache(data) {
+        let storName = this.propsProxy['stor-name'];
+        if (!storName)
+            return;
+        let cache = storage.get(storName) || {};
+        Object.assign(cache, data);
+        storage.set(storName, cache);
+    }
+    clearCache() {
+        let storName = this.propsProxy['stor-name'];
+        if (!storName)
+            return;
+        storage.clear(storName);
+    }
+    addScrollable(input) {
+        let scrolled = input.scrollHeight > input.clientHeight;
+        scrolled ? this.setAttribute('scrollable', '') : this.removeAttribute('scrollable');
+    }
+    render(data) {
+    }
+    getRawData() {
+    }
+    fillWrap(data) {
+    }
+}
+
 class StatsElem extends PlainElem {
     mainEl;
     badgeEl;
@@ -35522,47 +35549,52 @@ class IconElem extends CompBaseComm {
     }
 }
 
-class BadgeElem extends PlainElem {
+class BadgeElem extends CompBaseComm {
     constructor() {
         super();
-        this.createPropsObs();
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static lazyAttrs = ['stor-name'];
     static custAttrs = [
         'theme', 'type', 'shape',
-        'on-connected', 'on-reset',
+        'on-connected', 'on-reset', 'on-set',
     ];
     static boolAttrs = ['glassy'];
     static get observedAttributes() {
         return ['label', ...this.custAttrs, ...this.boolAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
-        this.propsProxy[name] = this.getPropVal(BadgeElem, name, newVal);
-        if (name === 'label') {
-            if (newVal === null) {
-                this.wrapEl.innerHTML = '';
-            }
-            else {
-                this.wrapEl.innerHTML = newVal;
-            }
-        }
-    }
-    connectedCallback() {
-        this.connectedRender();
+        if (!this.canListen)
+            return;
+        this.propsProxy[name] = BadgeElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
     }
     getRawData() {
-        this.getInitPropsRaw(BadgeElem);
-        this.propsRaw.label = this.getHtmlVal();
-        this.getInitPropsProxy();
-        this.innerHTML = '';
+        for (let k of [...BadgeElem.custAttrs, ...BadgeElem.lazyAttrs])
+            this.propsRaw[k] = this.getAttribute(k);
+        for (let k of BadgeElem.boolAttrs)
+            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
+        for (let k in this.propsRaw)
+            this.propsProxy[k] = this.propsRaw[k];
     }
     fillWrap(data) {
         this.wrapEl = createEl('div', { [alias]: 'wrap' }, data.label);
     }
     render() {
+        this.insertSource();
         this.appendChild(this.wrapEl);
+    }
+    changedMaps = {
+        label: this.changedLabel,
+    };
+    changedLabel(opt) {
+        if (opt.newVal === null) {
+            this.wrapEl.innerHTML = '';
+        }
+        else {
+            this.wrapEl.innerHTML = opt.newVal;
+        }
     }
 }
 
@@ -35575,7 +35607,10 @@ class DividerElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['break', 'size', 'fs'];
+    static custAttrs = [
+        'break', 'size', 'fs',
+        'on-connected', 'on-reset', 'on-set',
+    ];
     static boolAttrs = [];
     static get observedAttributes() {
         return ['label', ...this.custAttrs, ...this.boolAttrs];
@@ -36538,8 +36573,8 @@ class CalloutElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['theme', 'caption', 'icon', 'disk', 'cube', 'image', 'href', 'target', 'rel', 'feature', 'autoclose'];
-    static boolAttrs = ['closable', 'opaque', 'hidden', 'result'];
+    static custAttrs = ['theme', 'caption', 'icon', 'disk', 'cube', 'image', 'href', 'target', 'rel', 'feature', 'autoclose', 'size'];
+    static boolAttrs = ['closable', 'square', 'opaque', 'notable', 'hidden', 'result'];
     static get observedAttributes() {
         return ['content', ...this.custAttrs, ...this.boolAttrs];
     }
