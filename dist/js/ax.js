@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-3 22:37:15
+ * @since Last modified: 2025-3-5 10:0:28
  * @name AXUI front-end framework.
- * @version 3.0.20
+ * @version 3.0.21
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -33778,7 +33778,7 @@
             'root', 'active', 'offset',
             'on-connected', 'on-reset', 'on-set',
         ];
-        static boolAttrs = ['smooth', 'collapsed'];
+        static boolAttrs = ['smooth'];
         static get observedAttributes() {
             return ['headings', ...this.custAttrs, ...this.boolAttrs];
         }
