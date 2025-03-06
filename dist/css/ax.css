@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-5 22:52:12
+ * @since Last modified: 2025-3-6 11:32:39
  * @name AXUI front-end framework.
- * @version 3.0.22
+ * @version 3.0.23
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-05 22:51:30
+ * @since Last modified: 2025-03-06 11:31:43
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -8045,8 +8045,8 @@ AX-LINE:where([align=start]:has([rep=label])) [rep=start],
 AX-LINE:where([align=end]:has([rep=label])) [rep=end] {
   flex: none;
 }
-AX-LINE:where([align=start]:not([v]):has([rep=label])) [rep=start],
-AX-LINE:where([align=end]:not([v]):has([rep=label])) [rep=end] {
+AX-LINE:where([align=start]:not([dir=v]):has([rep=label])) [rep=start],
+AX-LINE:where([align=end]:not([dir=v]):has([rep=label])) [rep=end] {
   width: var(--_line-offset);
 }
 AX-LINE[type=dashed] [rep=start] {
@@ -8113,43 +8113,43 @@ AX-LINE[theme=text] {
   --_line-c-bg: var(--_c-text-bd);
   --_line-c-label: var(--_c-text);
 }
-AX-LINE[v] {
+AX-LINE[dir=v] {
   --_line-dir-s: bottom;
   --_line-dir-e: top;
   width: var(--_line-sz);
   height: 100%;
 }
-AX-LINE[v] [rep=wrap] {
+AX-LINE[dir=v] [rep=wrap] {
   width: inherit;
   height: inherit;
   flex-direction: column;
 }
-AX-LINE[v]:has([rep=label]) {
+AX-LINE[dir=v]:has([rep=label]) {
   width: var(--_rem-title);
 }
-AX-LINE[v] [rep=label] {
+AX-LINE[dir=v] [rep=label] {
   writing-mode: vertical-rl;
   margin: var(--_m) auto;
 }
-AX-LINE[v] [rep=start],
-AX-LINE[v] [rep=end] {
+AX-LINE[dir=v] [rep=start],
+AX-LINE[dir=v] [rep=end] {
   width: var(--_line-sz);
   height: auto;
 }
-AX-LINE[v]:where([align=start]:has([rep=label])) [rep=start],
-AX-LINE[v]:where([align=end]:has([rep=label])) [rep=end] {
+AX-LINE[dir=v]:where([align=start]:has([rep=label])) [rep=start],
+AX-LINE[dir=v]:where([align=end]:has([rep=label])) [rep=end] {
   height: var(--_line-offset);
 }
-AX-LINE[v][type=dashed] [rep=start],
-AX-LINE[v][type=dashed] [rep=end] {
+AX-LINE[dir=v][type=dashed] [rep=start],
+AX-LINE[dir=v][type=dashed] [rep=end] {
   background-size: var(--_line-sz) calc(var(--_line-sz)*10);
   background-repeat: repeat-y;
 }
-AX-LINE:where(:not([v])) {
+AX-LINE:where(:not([dir=v])) {
   margin-top: var(--_line-gap);
   margin-bottom: var(--_line-gap);
 }
-AX-LINE:where([v]) {
+AX-LINE:where([dir=v]) {
   margin-left: var(--_line-gap);
   margin-right: var(--_line-gap);
 }
@@ -11424,6 +11424,7 @@ AX-STATS [rep=label] {
   font-size: var(--_stats-fs);
   position: relative;
   line-height: var(--_stats-lh);
+  font-family: var(--_ff-alt);
 }
 AX-STATS [rep=label] AX-BADGE {
   position: absolute;
@@ -11442,31 +11443,19 @@ AX-STATS [rep=tips] {
 }
 AX-STATS [rep=icon],
 AX-STATS [rep=disk],
-AX-STATS [rep=cube] {
+AX-STATS [rep=cube],
+AX-STATS [rep=image] {
   height: var(--_stats-h-legend);
-  aspect-ratio: 1/1;
   margin-right: var(--_rem-body);
+}
+AX-STATS [rep=icon] {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-}
-AX-STATS [rep=icon] {
+  aspect-ratio: 1/1;
   font-size: var(--_rem-list);
   border-radius: 100%;
   background-color: var(--_c-text-bg);
-}
-AX-STATS [rep=disk] img,
-AX-STATS [rep=cube] img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
-}
-AX-STATS [rep=disk] {
-  border-radius: 100%;
-}
-AX-STATS [rep=cube] {
-  border-radius: var(--_r);
 }
 AX-STATS:where([dir=v]):where(:not(:has([rep=unit]))) {
   text-align: center;
@@ -11482,7 +11471,7 @@ AX-STATS:where([dir=v]) [rep=head] {
 AX-STATS:where([dir=v]) [rep=tips] {
   line-height: var(--_rem-subject);
 }
-AX-STATS:where([dir=v])[reverse] [rep=main] {
+AX-STATS:where([dir=v])[inverted] [rep=main] {
   flex-direction: column-reverse;
 }
 AX-STATS:where([dir=v]):not(:has([rep=tips])) {
