@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-6 11:32:13
+ * @since Last modified: 2025-3-7 16:17:25
  * @name AXUI front-end framework.
- * @version 3.0.23
+ * @version 3.0.24
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -1058,10 +1058,16 @@
             }
             else {
                 if (dataType === 'Array' && data.length > 0) {
-                    data.forEach((i) => {
-                        let child = createEl(i.name, i.attrs, i.content);
-                        child && host.appendChild(child);
-                    });
+                    for (let k of data) {
+                        let childType = getDataType(k);
+                        if (childType.includes('HTML')) {
+                            host.appendChild(k);
+                        }
+                        else {
+                            let child = createEl(k.name, k.attrs, k.content);
+                            child && host.appendChild(child);
+                        }
+                    }
                 }
                 else if (dataType.includes('HTML')) {
                     host.appendChild(data);
@@ -6105,6 +6111,27 @@
         return host;
     };
 
+    const parseStr = (source, type = 'array') => {
+        let dft = {
+            start: type === 'object' ? '{' : '[',
+            end: type === 'object' ? '}' : ']',
+            return: type === 'object' ? {} : [],
+        };
+        if (!source)
+            return dft.return;
+        let result = dft.return, trim = source.trim();
+        if (!trim.startsWith(dft.start) || !trim.endsWith(dft.end))
+            return result;
+        try {
+            let tmp = new Function(`"use strict"; return ${trim}`)();
+            result = tmp;
+        }
+        catch (err) {
+            console.error(config.error.parse, err);
+        }
+        return result;
+    };
+
     const treeTools = {
         
         find: function (arr, val, key) {
@@ -6360,19 +6387,7 @@
             if (isEmpty(content)) {
                 return [];
             }
-            let treeData = [], result = [], parseStr = (str) => {
-                let result = [], trim = str.trim();
-                if (!trim.startsWith('[') || !trim.endsWith(']'))
-                    return result;
-                try {
-                    let tmp = new Function(`"use strict"; return ${trim}`)();
-                    Array.isArray(tmp) && (result = tmp);
-                }
-                catch (err) {
-                    console.error(config.error.parse, err);
-                }
-                return result;
-            }, getFromNode = (node) => {
+            let treeData = [], result = [], getFromNode = (node) => {
                 let nodeName = node.nodeName, arr = [];
                 if (nodeName === 'SELECT' || nodeName === 'DATALIST') {
                     arr = select2Tree(node);
@@ -31780,6 +31795,11 @@
             super.listen({ name: 'initiated', cb });
             return this;
         }
+        correctOpts() {
+            if (this.options.feature === 'window') {
+                this.options.dividable = false;
+            }
+        }
         async fillBody(content, cb) {
             if (this.destroyed)
                 return this;
@@ -36721,6 +36741,170 @@
         }
     }
 
+    class StepElem extends CompBaseComm {
+        content;
+        template;
+        constructor() {
+            super();
+            this.template = `
+        {{let active = this.active?'active':'',
+            href = this.href ?'href="'+this.href+'"':'',
+            name = href?'a':'div',
+            target = href && this.target?'target="'+this.target+'"':'',
+            rel= href && this.rel?'rel="'+this.rel+'"':'';
+        /}}
+        <{{name}} {{href}} {{target}} {{rel}} {{active}} class="_step-item _reset">
+            <div class="_step-track">
+                <div></div>
+                <span ${alias}="node"></span>
+                <div></div>
+            </div>
+        </{{name}}>
+    `;
+            this.getRawData();
+            console.log(JSON.stringify(this.propsProxy), 12);
+            this.fillWrap(this.propsProxy);
+        }
+        static custAttrs = [
+            'active', 'type', 'theme', 'dir',
+            'on-connected', 'on-reset', 'on-set',
+        ];
+        static boolAttrs = ['head-show', 'body-show', 'inverted', 'justify'];
+        static get observedAttributes() {
+            return ['content', ...this.custAttrs, ...this.boolAttrs];
+        }
+        attributeChangedCallback(name, oldVal, newVal) {
+            if (!this.canListen)
+                return;
+            this.propsProxy[name] = StepElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+            this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        }
+        getRawData() {
+            for (let k of [...StepElem.custAttrs, ...StepElem.lazyAttrs])
+                this.propsRaw[k] = this.getAttribute(k);
+            for (let k of StepElem.boolAttrs)
+                this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+            this.propsRaw.content = this.getAttribute('content') || this.rawHtml;
+            for (let k in this.propsRaw)
+                this.propsProxy[k] = this.propsRaw[k];
+        }
+        fillWrap(data) {
+            this.content = this.stdContent(this.getArrContent());
+            let fragment = document.createDocumentFragment();
+            console.log(this.content, 123);
+            for (let k of this.content) {
+                let node = tplToEl(renderTpl(this.template, k));
+                k.wrapEl = node;
+                k.wrapEl.querySelector(`[${alias}="node"]`).innerHTML = this.getLegend(k);
+                k.headEl = createEl('div', { class: `${prefix}step-head` }, k.tips);
+                k.labelEl = createEl('div', { [alias]: 'label' }, k.label);
+                k.briefEl = createEl('div', { [alias]: 'brief' }, k.brief);
+                k.bodyEl = createEl('div', { class: `${prefix}step-body` }, [k.labelEl, k.briefEl]);
+                fragment.appendChild(node);
+            }
+            this.wrapEl = createEl('div', { [alias]: 'wrap' }, data.label);
+            this.wrapEl.appendChild(fragment);
+        }
+        getArrContent(content = this.propsProxy.content) {
+            let trim = content.trim(), tmp = createEl('div', {}, trim), firstChild = tmp.firstElementChild, result = [];
+            if (trim.startsWith('<') && firstChild) {
+                let nodeName = firstChild.nodeName;
+                if (nodeName === 'SCRIPT' && firstChild.getAttribute('type').includes('content')) {
+                    result = parseStr(firstChild.textContent);
+                }
+                else {
+                    result = [...tmp.children].map((k, i) => {
+                        let _tmp = {
+                            label: k.getAttribute('label') || k.textContent.trim(),
+                            brief: k.getAttribute('brief'),
+                            tips: k.getAttribute('tips'),
+                            icon: k.getAttribute('icon'),
+                            cube: k.getAttribute('cube'),
+                            image: k.getAttribute('image'),
+                            disk: k.getAttribute('disk'),
+                        };
+                        if (k.nodeName === 'A') {
+                            _tmp.target = k.getAttribute('target');
+                            _tmp.rel = k.getAttribute('rel');
+                            _tmp.href = k.getAttribute('href');
+                        }
+                        return _tmp;
+                    });
+                }
+            }
+            else {
+                result = parseStr(content);
+            }
+            return result;
+        }
+        stdContent(content) {
+            return content.map((k, i) => {
+                if (typeof k === 'string' || typeof k === 'number') {
+                    return { label: k, index: i + 1 };
+                }
+                else {
+                    return Object.assign(k, { index: i + 1 });
+                }
+            });
+        }
+        getLegend(data) {
+            let type = this.propsProxy.type, dft = data.icon ? '<i class="' + data.icon + '"></i>' : data.image ? '<img src="' + data.image + '"/>' : data.index, result = '';
+            if (type?.includes('circle')) {
+                result = dft;
+            }
+            else if (type === 'plain') {
+                result = data.field ? (data.field === 'icon' ? '<i class="' + data.icon + '"></i>' : data.field === 'image' ? '<img src="' + data.image + '"/>' : data[data.field]) : dft;
+            }
+            return result;
+        }
+        setLegendType() {
+            for (let k of this.content) {
+                let tmp = this.getLegend(k);
+                k.wrapEl.querySelector(`[${alias}="node"]`).innerHTML = tmp;
+            }
+        }
+        render() {
+            this.insertSource();
+            this.appendChild(this.wrapEl);
+        }
+        changedMaps = {
+            'head-show': this.changedHeadshow,
+            'body-show': this.changedBodyshow,
+            active: this.changedActive,
+            content: this.changedContent,
+            type: this.changedType,
+        };
+        changedHeadshow(opt) {
+            for (let k of this.content) {
+                console.log(this.propsProxy['head-show']);
+                this.propsProxy['head-show'] ? k.wrapEl.insertAdjacentElement('afterbegin', k.headEl) : k.headEl.remove();
+            }
+        }
+        changedBodyshow(opt) {
+            for (let k of this.content) {
+                this.propsProxy['body-show'] ? k.wrapEl.insertAdjacentElement('beforeend', k.bodyEl) : k.bodyEl.remove();
+            }
+        }
+        changedActive(opt) {
+            if (opt.newVal) {
+                let tmp = Math.min(~~opt.newVal, this.content.length - 1);
+                for (let [i, k] of this.content.entries()) {
+                    k.wrapEl.toggleAttribute('active', i === tmp ? true : false);
+                }
+            }
+        }
+        changedContent(opt) {
+            if (opt.newVal) {
+                this.wrapEl.remove();
+                this.fillWrap(this.propsProxy);
+                this.appendChild(this.wrapEl);
+            }
+        }
+        changedType(opt) {
+            this.setLegendType();
+        }
+    }
+
     const init = (type, parent) => {
         let parentEl = getEl(parent) || document.body, evalFn = new Function('el', 'module', `"use strict";try {return new module(el)} catch {return null}`), moduleNodeList = [], setProp = (node, module) => {
             elProps(node)?.add(module);
@@ -36957,6 +37141,7 @@
         getImgAvatar,
         select2Tree,
         ul2Tree,
+        parseStr,
         ModBase,
         ModBaseListen,
         ModBaseListenCache,
@@ -37043,6 +37228,7 @@
         CalloutElem,
         TwilightElem,
         PaginationElem,
+        StepElem,
         init,
     };
 
@@ -37122,6 +37308,7 @@
         SelectElem: SelectElem,
         Spy: Spy,
         StatsElem: StatsElem,
+        StepElem: StepElem,
         Swipe: Swipe,
         Tab: Tab,
         Tags: Tags,
@@ -37246,6 +37433,7 @@
         notice: notice,
         offset: offset,
         paramToJson: paramToJson,
+        parseStr: parseStr,
         parseUrlArr: parseUrlArr,
         pipe: pipe,
         plan: plan,

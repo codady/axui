@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-6 11:32:39
+ * @since Last modified: 2025-3-7 16:18:36
  * @name AXUI front-end framework.
- * @version 3.0.23
+ * @version 3.0.24
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-06 11:31:43
+ * @since Last modified: 2025-03-07 15:53:08
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -12327,7 +12327,7 @@ AX-FILTER[bordered] section {
   }
 }
 /*
-Last modified: 2025-03-04 23:50:24
+Last modified: 2025-03-06 16:07:41
 */
 /*Panel*/
 AX-PANEL {
@@ -12338,6 +12338,7 @@ AX-PANEL {
   --_panel-bd-c: var(--_c-text-bd);
   --_panel-fs: var(--_fs-body);
   --_panel-r: var(--_r-input);
+  --_panel-r-win: var(--_r);
   --_panel-c: var(--_c-text);
   --_panel-c-bg: transparent;
   --_panel-c-lamp: var(--_c-prim);
@@ -12539,6 +12540,32 @@ AX-PANEL {
 ._panel[collapsed] {
   --_panel-d: none;
 }
+._panel[feature=loose] {
+  --_panel-h: calc(var(--_rem-hitbox) + 1rem);
+  --_panel-fs: var(--_fs-caption);
+  --_panel-p: var(--_rem-list);
+}
+._panel[feature=loose] ._panel-head > [rep=icon],
+._panel[feature=loose] ._panel-head > [rep=disk],
+._panel[feature=loose] ._panel-head > [rep=cube],
+._panel[feature=loose] ._panel-head > [rep=image] {
+  margin-right: var(--_rem-space);
+}
+._panel[feature=loose]:where(:not([lamp=bottom]):has(._panel-brief)) {
+  --_panel-h-legend: var(--_rem-hitbox);
+}
+._panel[feature=loose][lamp=bottom] ._panel-brief {
+  margin-top: var(--_rem-list);
+}
+._panel[feature=window] {
+  --_panel-c-bg: var(--_c-text-bg);
+}
+._panel[feature=window] ._panel-body {
+  border: 1px solid var(--_panel-bd-c);
+  border-radius: var(--_panel-r-win);
+  background-color: var(--_c-stage);
+  margin: 0 var(--_px-space) var(--_px-space) var(--_px-space);
+}
 ._panel[theme=prim] {
   --_panel-c: var(--_c-prim);
   --_panel-bd-c: var(--_c-prim-bd);
@@ -12576,23 +12603,6 @@ AX-PANEL {
 ._panel[theme=text] {
   --_panel-c-bg: var(--_c-text-bg);
   --_panel-c-lamp: var(--_c-text);
-}
-._panel[feature=loose] {
-  --_panel-h: calc(var(--_rem-hitbox) + 1rem);
-  --_panel-fs: var(--_fs-caption);
-  --_panel-p: var(--_rem-list);
-}
-._panel[feature=loose] ._panel-head > [rep=icon],
-._panel[feature=loose] ._panel-head > [rep=disk],
-._panel[feature=loose] ._panel-head > [rep=cube],
-._panel[feature=loose] ._panel-head > [rep=image] {
-  margin-right: var(--_rem-space);
-}
-._panel[feature=loose]:where(:not([lamp=bottom]):has(._panel-brief)) {
-  --_panel-h-legend: var(--_rem-hitbox);
-}
-._panel[feature=loose][lamp=bottom] ._panel-brief {
-  margin-top: var(--_rem-list);
 }
 /*Group button*/
 [class*="_group-btn"] {
@@ -19100,6 +19110,385 @@ AX-TWILIGHT:hover {
 }
 [scheme=dark] AX-TWILIGHT svg {
   transform: rotate(-45deg);
+}
+/*Step*/
+AX-STEP {
+  --_step-c-node: var(--_c-prim);
+  --_step-c-label: var(--_c-text);
+  --_step-c-brief: var(--_c-brief);
+  --_step-c-head: var(--_c-text);
+  --_step-c-tips: var(--_c-white);
+  --_step-bg-track: var(--_c-prim);
+  --_step-bg-node: transparent;
+  --_step-h-track: 0.2rem;
+  --_step-lh-track: 0.6rem;
+  --_step-fs-label: var(--_rem-caption);
+  --_step-fs-tips: var(--_rem-ignore);
+  --_step-fs-node: var(--_rem-ignore);
+  --_step-fs-brief: var(--_rem-ignore);
+  --_step-w-tips: 6rem;
+  text-align: center;
+  box-sizing: border-box;
+  display: block;
+  /**/
+  /**/
+  /**/
+}
+AX-STEP [rep=wrap] {
+  box-sizing: border-box;
+  display: flex;
+}
+AX-STEP ._step-item {
+  flex: auto;
+  width: calc((100%/24)*2);
+  position: relative;
+}
+AX-STEP ._step-item ._step-head {
+  color: var(--_step-c-head);
+  font-size: var(--_step-fs-tips);
+  line-height: var(--_rem-subject);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--_r);
+  position: relative;
+  margin-bottom: 0.8rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+AX-STEP ._step-item ._step-track {
+  width: 100%;
+  line-height: var(--_step-lh-track);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  zoom: 1;
+}
+AX-STEP ._step-item [rep=node] {
+  font-size: var(--_step-fs-node);
+  color: var(--_step-c-node);
+  width: var(--_step-lh-track);
+  height: var(--_step-lh-track);
+  border-radius: 100%;
+  border: 0.2rem solid var(--_step-bg-track);
+  background-color: var(--_step-bg-node);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+AX-STEP ._step-item ._step-track div {
+  flex: auto;
+  width: 0;
+  height: var(--_step-h-track);
+  background-color: var(--_step-bg-track);
+}
+AX-STEP ._step-item [rep=label] {
+  color: var(--_step-c-label);
+  font-size: var(--_step-fs-label);
+  line-height: 1em;
+  margin: var(--_rem-space) auto;
+}
+AX-STEP ._step-item [rep=brief] {
+  font-size: var(--_step-fs-brief);
+  color: var(--_step-c-brief);
+  line-height: var(--_rem-subject);
+  margin: 0 var(--_rem-body);
+}
+AX-STEP ._step-item[active] ~ ._step-item ._step-track div {
+  background-color: var(--_c-ignore);
+}
+AX-STEP ._step-item[active] ~ ._step-item [rep=node] {
+  border-color: var(--_c-ignore);
+  color: var(--_c-ignore);
+}
+AX-STEP ._step-item[active] ~ ._step-item [rep=label],
+AX-STEP ._step-item[active] ~ ._step-item [rep=brief],
+AX-STEP ._step-item[active] ~ ._step-item ._step-head {
+  color: var(--_c-ignore);
+}
+AX-STEP ._step-item[active] ~ ._step-item [rep=label] a,
+AX-STEP ._step-item[active] ~ ._step-item [rep=brief] a,
+AX-STEP ._step-item[active] ~ ._step-item ._step-head a {
+  --_link-c: var(--_c-ignore);
+}
+AX-STEP[type="dot-fill"] ._step-item[active] ~ ._step-item [rep=node] {
+  background-color: var(--_c-ignore);
+}
+AX-STEP[type="circle-fill"] ._step-item[active] ~ ._step-item [rep=node] {
+  background-color: var(--_c-ignore);
+  color: var(--_c-white);
+}
+AX-STEP ._step-item[active] ._step-head {
+  color: var(--_step-c-tips);
+  background-color: var(--_step-bg-track);
+}
+AX-STEP ._step-item[active] ._step-head:before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-right: 0.5rem solid transparent;
+  border-left: 0.5rem solid transparent;
+  border-top: 0.5rem solid var(--_step-bg-track);
+  margin-left: -0.5rem;
+  position: absolute;
+  left: 50%;
+  bottom: -0.4rem;
+}
+AX-STEP.ax-ends-none:not([dir=v]) ._step-item:first-child ._step-track div:first-child,
+AX-STEP.ax-ends-none:not([dir=v]) ._step-item:last-child ._step-track div:last-child,
+AX-STEP.ax-ends-none:not([dir=v]) ._step-item[active] ~ ._step-item:last-child ._step-track div:last-child {
+  background: transparent;
+}
+AX-STEP.ax-ends-none:not([dir=v]) ._step-item[active] ._step-track div:last-child {
+  background-color: var(--_c-ignore);
+}
+AX-STEP[justify]:not([dir=v]) ._step-item:first-child {
+  text-align: left;
+}
+AX-STEP[justify]:not([dir=v]) ._step-item:first-child [rep=brief] {
+  margin-left: 0;
+}
+AX-STEP[justify]:not([dir=v]) ._step-item:last-child {
+  text-align: right;
+}
+AX-STEP[justify]:not([dir=v]) ._step-item:last-child [rep=brief] {
+  margin-right: 0;
+}
+AX-STEP[justify]:not([dir=v]) ._step-item:first-child ._step-track div:first-child,
+AX-STEP[justify]:not([dir=v]) ._step-item:last-child ._step-track div:last-child {
+  display: none;
+}
+AX-STEP[justify]:not([dir=v]) ._step-item:first-child ._step-track div:last-child,
+AX-STEP[justify]:not([dir=v]) ._step-item:last-child ._step-track div:first-child {
+  width: 100%;
+}
+AX-STEP[justify]:not([dir=v]) ._step-item[active] ._step-track div:last-child {
+  background-color: var(--_c-ignore);
+}
+AX-STEP[justify]:not([dir=v]) ._step-item:first-child:not([active]) ._step-head {
+  padding-left: 0;
+}
+AX-STEP[justify]:not([dir=v]) ._step-item:last-child:not([active]) ._step-head {
+  padding-right: 0;
+}
+AX-STEP[justify]:not([dir=v]) ._step-item:first-child[active] ._step-head:before {
+  left: 0.5rem;
+}
+AX-STEP[justify]:not([dir=v]) ._step-item:last-child[active] ._step-head:before {
+  left: auto;
+  right: 0;
+}
+AX-STEP[type="dot-fill"] {
+  --_step-bg-node: var(--_step-bg-track);
+}
+AX-STEP[type="dot-fill"] ._step-item [rep=node] {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 100%;
+  border: none;
+}
+AX-STEP[type=circle],
+AX-STEP[type="circle-fill"] {
+  --_step-lh-track: var(--_rem-subject);
+}
+AX-STEP[type=circle][justify] ._step-item:first-child[active] ._step-head:before,
+AX-STEP[type="circle-fill"][justify] ._step-item:first-child[active] ._step-head:before {
+  left: 1.1rem;
+}
+AX-STEP[type=circle][justify] ._step-item:last-child[active] ._step-head:before,
+AX-STEP[type="circle-fill"][justify] ._step-item:last-child[active] ._step-head:before {
+  left: auto;
+  right: 0.6rem;
+}
+AX-STEP[type=circle] ._step-item [rep=node] img,
+AX-STEP[type="circle-fill"] ._step-item [rep=node] img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+AX-STEP[type="circle-fill"] {
+  --_step-bg-node: var(--_step-bg-track);
+  --_step-c-node: var(--_c-white);
+}
+AX-STEP[type=plain] {
+  --_step-lh-track: var(--_rem-hitbox);
+  --_step-fs-node: var(--_rem-list);
+}
+AX-STEP[type=plain] ._step-item [rep=node] {
+  width: auto;
+  border-radius: 0;
+  border: none;
+  padding: 0 var(--_rem-body);
+}
+AX-STEP[type=plain] ._step-item [rep=node] img {
+  max-width: 4.4rem;
+}
+AX-STEP[type=plain][justify] ._step-item:first-child[active] ._step-head:before {
+  left: 2.2rem;
+}
+AX-STEP[type=plain][justify] ._step-item:last-child[active] ._step-head:before {
+  left: auto;
+  right: 1.7rem;
+}
+AX-STEP[dir=v] [rep=wrap] {
+  flex-direction: column;
+}
+AX-STEP[dir=v] ._step-item {
+  display: flex;
+}
+AX-STEP[dir=v] ._step-item:where(:has(._step-body)) {
+  width: 100%;
+}
+AX-STEP[dir=v] ._step-item ._step-track {
+  height: 100%;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+AX-STEP[dir=v] ._step-item ._step-track div {
+  width: 0.2rem;
+  height: 6rem;
+}
+AX-STEP[dir=v] ._step-item ._step-track div:first-child {
+  height: 0.7rem;
+}
+AX-STEP[dir=v]:where([type*="circle"], [type=plain]) ._step-item ._step-track div:first-child {
+  height: 0;
+}
+AX-STEP[dir=v]:where(:not([inverted])) ._step-item:last-child ._step-track div:last-child {
+  height: 0;
+}
+AX-STEP[dir=v]:where(:not([inverted])) ._step-item:first-child ._step-track div:first-child {
+  background: transparent;
+}
+AX-STEP[dir=v] ._step-item[active] ._step-track div:last-child {
+  background-color: var(--_c-ignore);
+}
+AX-STEP[dir=v] ._step-body {
+  text-align: left;
+  margin-left: var(--_rem-body);
+  flex: auto;
+  width: 0;
+}
+AX-STEP[dir=v] ._step-body [rep=label] {
+  line-height: var(--_rem-list);
+  margin: 0;
+}
+AX-STEP[dir=v] ._step-body [rep=brief] {
+  margin: var(--_rem-min) 0 0 0;
+}
+AX-STEP[dir=v] ._step-head {
+  width: var(--_step-w-tips);
+  margin-bottom: 0;
+  margin-right: 0.8rem;
+  padding: 0.2rem 0;
+  height: fit-content;
+}
+AX-STEP[dir=v] ._step-item[active] ._step-head:before {
+  width: 0;
+  height: 0;
+  margin-left: 0;
+  border-right: 0;
+  border-top: 0.5rem solid transparent;
+  border-bottom: 0.5rem solid transparent;
+  border-left: 0.5rem solid var(--_step-bg-track);
+  left: auto;
+  bottom: auto;
+  top: 0.6rem;
+  right: -0.5rem;
+}
+AX-STEP[dir=v][type=plain] ._step-item [rep=node] {
+  padding: 0;
+  width: var(--_step-lh-track);
+}
+AX-STEP[dir=v][type=plain] ._step-item ._step-head,
+AX-STEP[dir=v][type=plain] ._step-item [rep=label] {
+  margin-top: 1rem;
+}
+AX-STEP[dir=v][inverted] ._step-item:first-child ._step-track div:last-child {
+  height: 0;
+}
+AX-STEP[dir=v][inverted] [rep=wrap] {
+  flex-direction: column-reverse;
+}
+AX-STEP[dir=v][inverted] ._step-item ._step-track div {
+  background-color: var(--_c-ignore);
+}
+AX-STEP[dir=v][inverted] ._step-item [rep=label],
+AX-STEP[dir=v][inverted] ._step-item:not([active]) ._step-head,
+AX-STEP[dir=v][inverted] ._step-item [rep=brief] {
+  color: var(--_c-ignore);
+}
+AX-STEP[dir=v][inverted] ._step-item[active] [rep=label],
+AX-STEP[dir=v][inverted] ._step-item[active] ~ ._step-item [rep=label] {
+  color: var(--_step-c-label);
+}
+AX-STEP[dir=v][inverted] ._step-item[active] [rep=brief],
+AX-STEP[dir=v][inverted] ._step-item[active] ~ ._step-item [rep=brief] {
+  color: var(--_step-c-brief);
+}
+AX-STEP[dir=v][inverted] ._step-item[active] ~ ._step-item ._step-head {
+  color: var(--_step-c-head);
+}
+AX-STEP[dir=v][inverted] ._step-item:not([active]) [rep=node] {
+  color: var(--_c-ignore);
+  border-color: var(--_c-ignore);
+}
+AX-STEP[dir=v][inverted] ._step-item[active] ~ ._step-item [rep=node] {
+  color: var(--_step-bg-track);
+  border-color: var(--_step-bg-track);
+}
+AX-STEP[dir=v][inverted] ._step-item[active] ._step-track div:first-child {
+  background-color: var(--_step-bg-track);
+}
+AX-STEP[dir=v][inverted] ._step-item[active] ._step-track div:last-child {
+  background-color: var(--_c-ignore);
+}
+AX-STEP[dir=v][inverted] ._step-item[active] ~ ._step-item ._step-track div {
+  background-color: var(--_step-bg-track);
+}
+AX-STEP[dir=v][inverted] ._step-item[active]:last-child ._step-track div:first-child,
+AX-STEP[dir=v][inverted] ._step-item[active] ~ ._step-item:last-child ._step-track div:first-child {
+  background-color: transparent;
+}
+AX-STEP[dir=v][inverted][type="dot-fill"] ._step-item:not([active]) [rep=node] {
+  background-color: var(--_c-ignore);
+}
+AX-STEP[dir=v][inverted][type="dot-fill"] ._step-item[active] ~ ._step-item [rep=node] {
+  background-color: var(--_step-bg-track);
+}
+AX-STEP[theme=error] {
+  --_step-c-node: var(--_c-error);
+  --_step-bg-track: var(--_c-error);
+}
+AX-STEP[theme=succ] {
+  --_step-c-node: var(--_c-succ);
+  --_step-bg-track: var(--_c-succ);
+}
+AX-STEP[theme=info] {
+  --_step-c-node: var(--_c-info);
+  --_step-bg-track: var(--_c-info);
+}
+AX-STEP[theme=isuue] {
+  --_step-c-node: var(--_c-isuue);
+  --_step-bg-track: var(--_c-isuue);
+}
+AX-STEP[theme=warn] {
+  --_step-c-node: var(--_c-warn);
+  --_step-bg-track: var(--_c-warn);
+}
+AX-STEP[theme=text] {
+  --_step-c-node: var(--_c-text);
+  --_step-bg-track: var(--_c-text);
+}
+AX-STEP[theme]:where(:not([theme=warn]))[type="circle-fill"] {
+  --_step-c-node: var(--_c-white);
+}
+AX-STEP[theme=warn][type="circle-fill"] {
+  --_step-c-node: var(--_c-text);
 }
 ._dodge {
   position: relative;
