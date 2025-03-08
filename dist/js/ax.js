@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-7 16:17:25
+ * @since Last modified: 2025-3-8 13:30:23
  * @name AXUI front-end framework.
- * @version 3.0.24
+ * @version 3.0.25
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -169,6 +169,16 @@
             strength: '{{ this.label }}的当前强度为{{ this.value}}，要求达到{{ this.data }}！',
             specific: `{{ this.label }}要求{{ for(let k in this.data){/}}{{k+'至少'+this.data[k]+'个'}}{{ (Object.keys(this.data).slice(-1)[0] !== k)? '，':''}}{{}/}}！`,
             combine: `{{ this.label }}要求{{ this.data.types.join('、') }}至少{{ this.data.total }}种！`,
+        },
+        status: {
+            warn: '有警告',
+            succ: '完成了',
+            error: '有报错',
+            issue: '有疑问',
+            info: '有消息',
+            confirm: '已确认',
+            cancel: '已取消',
+            forbid: '已禁用'
         },
         message: {
             heading: {
@@ -36762,11 +36772,10 @@
         </{{name}}>
     `;
             this.getRawData();
-            console.log(JSON.stringify(this.propsProxy), 12);
             this.fillWrap(this.propsProxy);
         }
         static custAttrs = [
-            'active', 'type', 'theme', 'dir',
+            'active', 'type', 'theme', 'dir', 'error',
             'on-connected', 'on-reset', 'on-set',
         ];
         static boolAttrs = ['head-show', 'body-show', 'inverted', 'justify'];
@@ -36871,6 +36880,7 @@
             'head-show': this.changedHeadshow,
             'body-show': this.changedBodyshow,
             active: this.changedActive,
+            error: this.changedError,
             content: this.changedContent,
             type: this.changedType,
         };
@@ -36893,6 +36903,19 @@
                 }
             }
         }
+        changedError(opt) {
+            let tmp = opt.newVal ? valToArr(opt.newVal) : [];
+            if (!tmp.length) {
+                for (let k of this.content) {
+                    k.wrapEl.toggleAttribute('error', false);
+                }
+            }
+            else {
+                for (let [i, k] of this.content.entries()) {
+                    k.wrapEl.toggleAttribute('error', tmp.includes(i) ? true : false);
+                }
+            }
+        }
         changedContent(opt) {
             if (opt.newVal) {
                 this.wrapEl.remove();
@@ -36902,6 +36925,73 @@
         }
         changedType(opt) {
             this.setLegendType();
+        }
+    }
+
+    class StatusElem extends CompBaseComm {
+        lampEl;
+        labelEl;
+        constructor() {
+            super();
+            this.getRawData();
+            this.fillWrap(this.propsProxy);
+        }
+        static custAttrs = [
+            'type', 'lamp', 'current',
+            'on-connected', 'on-reset', 'on-set',
+        ];
+        static boolAttrs = [];
+        static get observedAttributes() {
+            return ['label', ...this.custAttrs, ...this.boolAttrs];
+        }
+        attributeChangedCallback(name, oldVal, newVal) {
+            if (!this.canListen)
+                return;
+            this.propsProxy[name] = StatusElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+            this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        }
+        getRawData() {
+            for (let k of [...StatusElem.custAttrs, ...StatusElem.lazyAttrs])
+                this.propsRaw[k] = this.getAttribute(k);
+            for (let k of StatusElem.boolAttrs)
+                this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+            this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
+            for (let k in this.propsRaw)
+                this.propsProxy[k] = this.propsRaw[k];
+            console.log(this.propsRaw.label, 20);
+        }
+        fillWrap(data) {
+            this.lampEl = createEl('i', { [alias]: 'lamp' });
+            this.labelEl = createEl('i', { [alias]: 'label' }, config.lang.status.info);
+            this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.lampEl);
+            this.propsRaw.label && this.wrapEl.appendChild(this.labelEl);
+        }
+        render() {
+            this.insertSource();
+            this.appendChild(this.wrapEl);
+        }
+        changedMaps = {
+            label: this.changedLabel,
+            lamp: this.changedLamp,
+            current: this.changedCurrent,
+        };
+        changedLabel(opt) {
+            if (opt.newVal === null) {
+                this.labelEl.remove();
+            }
+            else {
+                elState(this.labelEl).isVirtual && this.wrapEl.appendChild(this.labelEl);
+                this.labelEl.innerHTML = opt.newVal ? opt.newVal : config.lang.status[this.propsProxy.current || 'info'];
+            }
+        }
+        changedLamp(opt) {
+            let attr = this.propsProxy.type === 'circle' ? 'borderColor' : 'backgroundColor';
+            this.lampEl.style[attr] = opt.newVal || null;
+        }
+        changedCurrent(opt) {
+            if (opt.newVal) {
+                this.labelEl.innerHTML = config.lang.status[opt.newVal];
+            }
         }
     }
 
@@ -37229,6 +37319,7 @@
         TwilightElem,
         PaginationElem,
         StepElem,
+        StatusElem,
         init,
     };
 
@@ -37308,6 +37399,7 @@
         SelectElem: SelectElem,
         Spy: Spy,
         StatsElem: StatsElem,
+        StatusElem: StatusElem,
         StepElem: StepElem,
         Swipe: Swipe,
         Tab: Tab,
