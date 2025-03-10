@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-8 13:30:23
+ * @since Last modified: 2025-3-11 0:12:50
  * @name AXUI front-end framework.
- * @version 3.0.25
+ * @version 3.0.26
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -556,14 +556,14 @@ const isEmpty = (data) => {
 };
 
 const getEl = (obj, wrap) => {
-    let objType = getDataType(obj), parType = getDataType(wrap), parent = parType.includes('HTML') ? wrap : document.body.querySelector(wrap), result = null;
+    let objType = getDataType(obj), parType = getDataType(wrap), parent = parType.includes('HTML') ? wrap : document.querySelector(wrap), result = null;
     if (obj) {
         if (objType.includes('HTML')) {
             result = obj;
         }
         else if (objType === 'String') {
             try {
-                result = (parent || document.body).querySelector(obj.trim());
+                result = (parent || document).querySelector(obj.trim());
             }
             catch {
                 result = null;
@@ -1044,7 +1044,7 @@ const getEls = (data, parent) => {
     }
     else if (type === 'Array') {
         result = data.map((k) => {
-            return getEl(k, parent);
+            return getEl(k, parentEl);
         });
     }
     return result.filter(Boolean);
@@ -6922,6 +6922,24 @@ const transformTools = {
         dom.style.transform = transformTxt;
         cb && cb(transformTxt);
     },
+    remove: ({ el, prop }) => {
+        let dom = getEl(el), tmp = dom?.style?.transform;
+        if (!dom || !tmp)
+            return;
+        dom.style.transform = prop ? tmp.replace(new RegExp(`${prop}\\([^)]+\\)\\s*`, 'g'), '') : 'none';
+    },
+    disable: (el) => {
+        let dom = getEl(el);
+        if (!dom)
+            return;
+        dom.style.transitionDuration = `0ms`;
+    },
+    enable: (el, duration = 200) => {
+        let dom = getEl(el);
+        if (!dom)
+            return;
+        dom.style.transitionDuration = `${duration}ms`;
+    },
     
     matrix: (elem) => {
         let el = getEl(elem);
@@ -9106,8 +9124,8 @@ class Gesture extends ModBaseListen {
         try {
             this.options.b4Init && await this.options.b4Init.call(this);
         }
-        catch {
-            console.warn(config.warn.init);
+        catch (err) {
+            err ? console.error(err) : console.warn(config.warn.init);
             return this;
         }
         this.setEmpty();
@@ -32370,6 +32388,191 @@ class Router extends ModBaseListen {
     }
 }
 
+const optFlip = [
+    {
+        attr: 'parent',
+        prop: 'parent',
+        value: ''
+    },
+    {
+        attr: 'children',
+        prop: 'children',
+        value: '',
+    },
+    {
+        attr: 'duration',
+        prop: 'duration',
+        value: 300,
+    },
+    {
+        attr: 'prevent',
+        prop: 'prevent',
+        value: false,
+    },
+    {
+        attr: 'transition',
+        prop: 'transition',
+        value: '',
+    },
+    
+    {
+        attr: 'b4-play',
+        prop: 'b4Play',
+        value: null,
+    },
+    {
+        attr: 'on-played',
+        prop: 'onPlayed',
+        value: null,
+    },
+    {
+        attr: 'on-playedall',
+        prop: 'onPlayedAll',
+        value: null,
+    },
+    ...optBase
+];
+
+class Flip extends ModBaseListen {
+    options = {};
+    parentEl;
+    flipEls;
+    flipData;
+    childrenObs;
+    canPlay;
+    static hostType = 'none';
+    static optMaps = optFlip;
+    constructor(options = {}, initial = true) {
+        super();
+        super.ready({
+            options,
+            maps: Flip.optMaps,
+        });
+        super.listen({ name: 'constructed' });
+        initial && this.init();
+    }
+    
+    async init(cb) {
+        super.listen({ name: 'initiate' });
+        try {
+            this.options.b4Init && await this.options.b4Init.call(this);
+        }
+        catch (err) {
+            err ? console.error(err) : console.warn(config.warn.init);
+            return this;
+        }
+        this.canPlay = !this.options.prevent;
+        this.updateFlipEls();
+        for (let k of this.flipEls)
+            this.setFirstRect(k);
+        super.listen({ name: 'initiated', cb });
+        return this;
+    }
+    disableTrans(target) {
+        if (this.options.transition) {
+            target.style.transition = this.options.transition;
+        }
+        else {
+            transformTools.disable(target);
+        }
+    }
+    enableTrans(target) {
+        if (this.options.transition) {
+            target.style.transition = this.options.transition + `,transform ${this.options.duration}ms`;
+        }
+        else {
+            transformTools.enable(target, this.options.duration);
+        }
+    }
+    async play(target) {
+        if (this.destroyed || !target?.flip)
+            return;
+        let nowTranslate = transformTools.get(target, ['translate']).translate;
+        if (!target.flip?.playing) {
+            this.disableTrans(target);
+            let lastRect = this.getRect(target), dist = {
+                x: target.flip.x - lastRect.x,
+                y: target.flip.y - lastRect.y,
+            };
+            if (!dist.x && !dist.y)
+                return;
+            transformTools.set({
+                el: target,
+                data: {
+                    translate: {
+                        x: dist.x + nowTranslate.x,
+                        y: dist.y + nowTranslate.y
+                    }
+                }
+            });
+            await new Promise(resolve => requestAnimationFrame(resolve));
+            target.flip.playing = true;
+        }
+        return new Promise(resolve => {
+            this.enableTrans(target);
+            transformTools.set({
+                el: target,
+                data: {
+                    translate: nowTranslate
+                }
+            });
+            let endEvt = () => {
+                target.removeEventListener('transitionend', endEvt);
+                this.setFirstRect(target);
+                this.disableTrans(target);
+                super.listen({ name: 'played', params: [target] });
+                resolve(null);
+            };
+            target.addEventListener('transitionend', endEvt);
+        });
+    }
+    getRect(target) {
+        let tmp = target.getBoundingClientRect();
+        return {
+            x: tmp.left,
+            y: tmp.top,
+        };
+    }
+    setFirstRect(target) {
+        let tmp = target.getBoundingClientRect();
+        target.flip = {
+            x: tmp.left,
+            y: tmp.top,
+            playing: false,
+        };
+    }
+    updateFlipEls() {
+        if (this.options.parent && !this.options.children) {
+            let tmp = getEl(this.options.parent);
+            this.flipEls = tmp ? [...tmp.children] : [];
+        }
+        else {
+            this.flipEls = getEls(this.options.children, this.options.parent);
+        }
+    }
+    async playAll(cb) {
+        if (this.flipEls.length < 2 || !this.canPlay || this.destroyed)
+            return this;
+        if (this.options.b4Play) {
+            let els = await this.options.b4Play.call(this, this.flipEls);
+            els && (this.flipEls = els);
+        }
+        let promises = [...this.flipEls].map(k => this.play(k));
+        await Promise.all(promises);
+        super.listen({ name: 'playedAll', cb, params: [this.flipEls] });
+        return this;
+    }
+    destroy(cb) {
+        if (this.destroyed)
+            return this;
+        for (let k of this.flipEls)
+            Reflect.deleteProperty(k, 'flip');
+        this.destroyed = true;
+        super.listen({ name: 'destroyed', cb });
+        return this;
+    }
+}
+
 class CompBaseCommField extends CompBaseComm {
     name;
     value;
@@ -36979,7 +37182,7 @@ class StatusElem extends CompBaseComm {
         }
     }
     changedLamp(opt) {
-        let attr = this.propsProxy.type === 'circle' ? 'borderColor' : 'backgroundColor';
+        let attr = this.propsProxy.type === 'circle' ? 'borderColor' : 'background';
         this.lampEl.style[attr] = opt.newVal || null;
     }
     changedCurrent(opt) {
@@ -37269,6 +37472,7 @@ var ax_comm = {
     Upload,
     Panel,
     Router,
+    Flip,
     CompBase,
     CompBaseComm,
     CompBaseCommField,
@@ -37317,4 +37521,4 @@ var ax_comm = {
     init,
 };
 
-export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, FormatElem, Gesture, GoodElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax_comm as default, delay, dlToArr, ease, easeHeight, elProps, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtTarget, getExpiration, getFullGap, getHeights, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, prefix, preventDft, privacy, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };
+export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax_comm as default, delay, dlToArr, ease, easeHeight, elProps, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtTarget, getExpiration, getFullGap, getHeights, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, prefix, preventDft, privacy, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };

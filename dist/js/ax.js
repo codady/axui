@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-8 13:30:23
+ * @since Last modified: 2025-3-11 0:12:50
  * @name AXUI front-end framework.
- * @version 3.0.25
+ * @version 3.0.26
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -562,14 +562,14 @@
     };
 
     const getEl = (obj, wrap) => {
-        let objType = getDataType(obj), parType = getDataType(wrap), parent = parType.includes('HTML') ? wrap : document.body.querySelector(wrap), result = null;
+        let objType = getDataType(obj), parType = getDataType(wrap), parent = parType.includes('HTML') ? wrap : document.querySelector(wrap), result = null;
         if (obj) {
             if (objType.includes('HTML')) {
                 result = obj;
             }
             else if (objType === 'String') {
                 try {
-                    result = (parent || document.body).querySelector(obj.trim());
+                    result = (parent || document).querySelector(obj.trim());
                 }
                 catch {
                     result = null;
@@ -1050,7 +1050,7 @@
         }
         else if (type === 'Array') {
             result = data.map((k) => {
-                return getEl(k, parent);
+                return getEl(k, parentEl);
             });
         }
         return result.filter(Boolean);
@@ -6928,6 +6928,24 @@
             dom.style.transform = transformTxt;
             cb && cb(transformTxt);
         },
+        remove: ({ el, prop }) => {
+            let dom = getEl(el), tmp = dom?.style?.transform;
+            if (!dom || !tmp)
+                return;
+            dom.style.transform = prop ? tmp.replace(new RegExp(`${prop}\\([^)]+\\)\\s*`, 'g'), '') : 'none';
+        },
+        disable: (el) => {
+            let dom = getEl(el);
+            if (!dom)
+                return;
+            dom.style.transitionDuration = `0ms`;
+        },
+        enable: (el, duration = 200) => {
+            let dom = getEl(el);
+            if (!dom)
+                return;
+            dom.style.transitionDuration = `${duration}ms`;
+        },
         
         matrix: (elem) => {
             let el = getEl(elem);
@@ -9112,8 +9130,8 @@
             try {
                 this.options.b4Init && await this.options.b4Init.call(this);
             }
-            catch {
-                console.warn(config.warn.init);
+            catch (err) {
+                err ? console.error(err) : console.warn(config.warn.init);
                 return this;
             }
             this.setEmpty();
@@ -32376,6 +32394,191 @@
         }
     }
 
+    const optFlip = [
+        {
+            attr: 'parent',
+            prop: 'parent',
+            value: ''
+        },
+        {
+            attr: 'children',
+            prop: 'children',
+            value: '',
+        },
+        {
+            attr: 'duration',
+            prop: 'duration',
+            value: 300,
+        },
+        {
+            attr: 'prevent',
+            prop: 'prevent',
+            value: false,
+        },
+        {
+            attr: 'transition',
+            prop: 'transition',
+            value: '',
+        },
+        
+        {
+            attr: 'b4-play',
+            prop: 'b4Play',
+            value: null,
+        },
+        {
+            attr: 'on-played',
+            prop: 'onPlayed',
+            value: null,
+        },
+        {
+            attr: 'on-playedall',
+            prop: 'onPlayedAll',
+            value: null,
+        },
+        ...optBase
+    ];
+
+    class Flip extends ModBaseListen {
+        options = {};
+        parentEl;
+        flipEls;
+        flipData;
+        childrenObs;
+        canPlay;
+        static hostType = 'none';
+        static optMaps = optFlip;
+        constructor(options = {}, initial = true) {
+            super();
+            super.ready({
+                options,
+                maps: Flip.optMaps,
+            });
+            super.listen({ name: 'constructed' });
+            initial && this.init();
+        }
+        
+        async init(cb) {
+            super.listen({ name: 'initiate' });
+            try {
+                this.options.b4Init && await this.options.b4Init.call(this);
+            }
+            catch (err) {
+                err ? console.error(err) : console.warn(config.warn.init);
+                return this;
+            }
+            this.canPlay = !this.options.prevent;
+            this.updateFlipEls();
+            for (let k of this.flipEls)
+                this.setFirstRect(k);
+            super.listen({ name: 'initiated', cb });
+            return this;
+        }
+        disableTrans(target) {
+            if (this.options.transition) {
+                target.style.transition = this.options.transition;
+            }
+            else {
+                transformTools.disable(target);
+            }
+        }
+        enableTrans(target) {
+            if (this.options.transition) {
+                target.style.transition = this.options.transition + `,transform ${this.options.duration}ms`;
+            }
+            else {
+                transformTools.enable(target, this.options.duration);
+            }
+        }
+        async play(target) {
+            if (this.destroyed || !target?.flip)
+                return;
+            let nowTranslate = transformTools.get(target, ['translate']).translate;
+            if (!target.flip?.playing) {
+                this.disableTrans(target);
+                let lastRect = this.getRect(target), dist = {
+                    x: target.flip.x - lastRect.x,
+                    y: target.flip.y - lastRect.y,
+                };
+                if (!dist.x && !dist.y)
+                    return;
+                transformTools.set({
+                    el: target,
+                    data: {
+                        translate: {
+                            x: dist.x + nowTranslate.x,
+                            y: dist.y + nowTranslate.y
+                        }
+                    }
+                });
+                await new Promise(resolve => requestAnimationFrame(resolve));
+                target.flip.playing = true;
+            }
+            return new Promise(resolve => {
+                this.enableTrans(target);
+                transformTools.set({
+                    el: target,
+                    data: {
+                        translate: nowTranslate
+                    }
+                });
+                let endEvt = () => {
+                    target.removeEventListener('transitionend', endEvt);
+                    this.setFirstRect(target);
+                    this.disableTrans(target);
+                    super.listen({ name: 'played', params: [target] });
+                    resolve(null);
+                };
+                target.addEventListener('transitionend', endEvt);
+            });
+        }
+        getRect(target) {
+            let tmp = target.getBoundingClientRect();
+            return {
+                x: tmp.left,
+                y: tmp.top,
+            };
+        }
+        setFirstRect(target) {
+            let tmp = target.getBoundingClientRect();
+            target.flip = {
+                x: tmp.left,
+                y: tmp.top,
+                playing: false,
+            };
+        }
+        updateFlipEls() {
+            if (this.options.parent && !this.options.children) {
+                let tmp = getEl(this.options.parent);
+                this.flipEls = tmp ? [...tmp.children] : [];
+            }
+            else {
+                this.flipEls = getEls(this.options.children, this.options.parent);
+            }
+        }
+        async playAll(cb) {
+            if (this.flipEls.length < 2 || !this.canPlay || this.destroyed)
+                return this;
+            if (this.options.b4Play) {
+                let els = await this.options.b4Play.call(this, this.flipEls);
+                els && (this.flipEls = els);
+            }
+            let promises = [...this.flipEls].map(k => this.play(k));
+            await Promise.all(promises);
+            super.listen({ name: 'playedAll', cb, params: [this.flipEls] });
+            return this;
+        }
+        destroy(cb) {
+            if (this.destroyed)
+                return this;
+            for (let k of this.flipEls)
+                Reflect.deleteProperty(k, 'flip');
+            this.destroyed = true;
+            super.listen({ name: 'destroyed', cb });
+            return this;
+        }
+    }
+
     class CompBaseCommField extends CompBaseComm {
         name;
         value;
@@ -36985,7 +37188,7 @@
             }
         }
         changedLamp(opt) {
-            let attr = this.propsProxy.type === 'circle' ? 'borderColor' : 'backgroundColor';
+            let attr = this.propsProxy.type === 'circle' ? 'borderColor' : 'background';
             this.lampEl.style[attr] = opt.newVal || null;
         }
         changedCurrent(opt) {
@@ -37275,6 +37478,7 @@
         Upload,
         Panel,
         Router,
+        Flip,
         CompBase,
         CompBaseComm,
         CompBaseCommField,
@@ -37355,6 +37559,7 @@
         FieldsElem: FieldsElem,
         FileElem: FileElem,
         FlagElem: FlagElem,
+        Flip: Flip,
         FormatElem: FormatElem,
         Gesture: Gesture,
         GoodElem: GoodElem,
