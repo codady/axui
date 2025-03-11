@@ -19,8 +19,9 @@ const runCommand = (command) => {
 };
 
 // 定义压缩 JavaScript 的通用命令
+//-c表示压缩精简，-m表示混淆变量
 const minifyJsFile = (input, output) => {
-  const command = `npx terser ${input} -o ${output} -c arguments,dead_code,directives,arrows -m keep_classnames=true,keep_fnames=true`;
+  const command = `npx terser ${input} -o ${output} -c arguments,dead_code,directives,arrows,drop_console -m keep_classnames=true,keep_fnames=true`;
   return runCommand(command);
 };
 

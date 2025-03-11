@@ -17,9 +17,16 @@ const sharePlugins = [
       };
     },
   },
+  //npm run all才执行replace方法
+  process.env.REPLACE === 'true' && replace({
+  //防止替换赋值表达式
+    preventAssignment: true,
+    //将console.log替换为空字符串,平时测试需要使用console.log
+    'console.log': '', 
+  }),
   //Solve the problem："Unresolved dependencies" 解决引入外部包提示“Unresolved dependencies”
   resolve(),
-]
+].filter(Boolean);
 export default [
   {
     //打包入口文件，esm格式

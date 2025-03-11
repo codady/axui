@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-11 0:12:50
+ * @since Last modified: 2025-3-11 17:34:35
  * @name AXUI front-end framework.
- * @version 3.0.26
+ * @version 3.0.27
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -27029,7 +27029,7 @@
                 target: {
                     content: this.tooltipEl,
                     size: '',
-                    theme: 'text-lit',
+                    theme: 'text-lt',
                     keepShow: true,
                 },
                 source: this.options.tooltip,
@@ -32226,9 +32226,7 @@
             this.routes = this.options.routes || [];
             this.current = this.options.current;
             this.stateEvt = (evt) => {
-                if (!evt.state) {
-                    console.log('回到了初始页面，或者改变了哈希');
-                }
+                if (!evt.state) ;
                 else {
                     if (this.current !== evt.state.path) {
                         let toRoute = this.getRoute(evt.state.path), fromRoute = this.getRoute();
@@ -32427,6 +32425,11 @@
             value: null,
         },
         {
+            attr: 'b4-playall',
+            prop: 'b4PlayAll',
+            value: null,
+        },
+        {
             attr: 'on-played',
             prop: 'onPlayed',
             value: null,
@@ -32446,6 +32449,7 @@
         flipData;
         childrenObs;
         canPlay;
+        playedEls;
         static hostType = 'none';
         static optMaps = optFlip;
         constructor(options = {}, initial = true) {
@@ -32467,6 +32471,7 @@
                 err ? console.error(err) : console.warn(config.warn.init);
                 return this;
             }
+            this.playedEls = [];
             this.canPlay = !this.options.prevent;
             this.updateFlipEls();
             for (let k of this.flipEls)
@@ -32493,6 +32498,10 @@
         async play(target) {
             if (this.destroyed || !target?.flip)
                 return;
+            if (this.options.b4Play) {
+                let resp = await this.options.b4Play.call(this, target);
+                resp && (target = resp);
+            }
             let nowTranslate = transformTools.get(target, ['translate']).translate;
             if (!target.flip?.playing) {
                 this.disableTrans(target);
@@ -32526,6 +32535,7 @@
                     target.removeEventListener('transitionend', endEvt);
                     this.setFirstRect(target);
                     this.disableTrans(target);
+                    this.playedEls.push(target);
                     super.listen({ name: 'played', params: [target] });
                     resolve(null);
                 };
@@ -32559,13 +32569,14 @@
         async playAll(cb) {
             if (this.flipEls.length < 2 || !this.canPlay || this.destroyed)
                 return this;
-            if (this.options.b4Play) {
-                let els = await this.options.b4Play.call(this, this.flipEls);
-                els && (this.flipEls = els);
+            if (this.options.b4PlayAll) {
+                let resp = await this.options.b4PlayAll.call(this, this.flipEls);
+                resp && (this.flipEls = resp);
             }
             let promises = [...this.flipEls].map(k => this.play(k));
             await Promise.all(promises);
-            super.listen({ name: 'playedAll', cb, params: [this.flipEls] });
+            super.listen({ name: 'playedAll', cb, params: [this.playedEls] });
+            this.playedEls = [];
             return this;
         }
         destroy(cb) {
@@ -36847,12 +36858,16 @@
         labelEl;
         legendEl;
         targetEl;
+        labels;
+        isDay;
         constructor() {
             super();
             this.getRawData();
+            this.labels = [config.lang.twilight.day, config.lang.twilight.night];
+            this.isDay = true;
             this.fillWrap(this.propsProxy);
         }
-        static custAttrs = ['target', 'feature'];
+        static custAttrs = ['labels', 'target', 'feature'];
         static boolAttrs = [''];
         static get observedAttributes() {
             return [...this.custAttrs, ...this.boolAttrs];
@@ -36873,7 +36888,7 @@
         }
         fillWrap(data) {
             this.wrapEl = createEl('div', { [alias]: 'wrap' });
-            this.labelEl = createEl('i', { [alias]: 'label' }, config.lang.twilight.day);
+            this.labelEl = createEl('i', { [alias]: 'label' }, this.labels[0]);
             let now = Date.now();
             this.legendEl = createEl('i', { [alias]: 'legend' }, `
                 <svg viewBox="0 0 24 24">
@@ -36902,24 +36917,33 @@
             this.addEventListener('click', () => {
                 let target = this.targetEl || document.body;
                 if (target.hasAttribute('scheme')) {
-                    this.labelEl.innerHTML = config.lang.twilight.day;
+                    this.labelEl.innerHTML = this.labels[0];
                     target.removeAttribute('scheme');
+                    this.isDay = true;
                 }
                 else {
-                    this.labelEl.innerHTML = config.lang.twilight.night;
+                    this.labelEl.innerHTML = this.labels[1];
                     target.setAttribute('scheme', 'dark');
+                    this.isDay = false;
                 }
             }, false);
         }
         changedMaps = {
             feature: this.changedFeature,
             target: this.changedTarget,
+            labels: this.changedLabels,
         };
         changedTarget(opt) {
             this.targetEl = getEl(opt.newVal);
         }
         changedFeature(opt) {
             opt.newVal ? this.labelEl.remove() : this.wrapEl.insertAdjacentElement('afterbegin', this.labelEl);
+        }
+        changedLabels(opt) {
+            if (opt.newVal) {
+                this.labels = valToArr(opt.newVal);
+                this.labelEl.innerHTML = this.labels[this.isDay ? 0 : 1];
+            }
         }
     }
 
@@ -37003,7 +37027,7 @@
         fillWrap(data) {
             this.content = this.stdContent(this.getArrContent());
             let fragment = document.createDocumentFragment();
-            console.log(this.content, 123);
+            (this.content);
             for (let k of this.content) {
                 let node = tplToEl(renderTpl(this.template, k));
                 k.wrapEl = node;
@@ -37089,7 +37113,7 @@
         };
         changedHeadshow(opt) {
             for (let k of this.content) {
-                console.log(this.propsProxy['head-show']);
+                (this.propsProxy['head-show']);
                 this.propsProxy['head-show'] ? k.wrapEl.insertAdjacentElement('afterbegin', k.headEl) : k.headEl.remove();
             }
         }
@@ -37161,7 +37185,7 @@
             this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
             for (let k in this.propsRaw)
                 this.propsProxy[k] = this.propsRaw[k];
-            console.log(this.propsRaw.label, 20);
+            (this.propsRaw.label);
         }
         fillWrap(data) {
             this.lampEl = createEl('i', { [alias]: 'lamp' });
