@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-11 17:34:35
+ * @since Last modified: 2025-3-12 19:12:27
  * @name AXUI front-end framework.
- * @version 3.0.27
+ * @version 3.0.28
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -7555,6 +7555,8 @@ class CompBase extends HTMLElement {
 }
 
 class CompBaseComm extends CompBase {
+    static baseAttrs = ['on-connected', 'on-reset', 'on-set'];
+    static boolAttrs = [];
     constructor() {
         super();
         this.reset = function () {
@@ -37216,6 +37218,106 @@ class StatusElem extends CompBaseComm {
     }
 }
 
+class HeadingElem extends CompBaseComm {
+    headEl;
+    iconEl;
+    diskEl;
+    cubeEl;
+    imageEl;
+    labelEl;
+    tipsEl;
+    arrowEl;
+    legends;
+    constructor() {
+        super();
+        this.getRawData();
+        this.fillWrap(this.propsProxy);
+    }
+    static custAttrs = [...this.baseAttrs, 'size', 'theme', 'icon', 'disk', 'cube', 'image', 'tips', 'arrow'];
+    static get observedAttributes() {
+        return ['label', ...this.custAttrs, ...this.boolAttrs];
+    }
+    attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
+        this.propsProxy[name] = HeadingElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+    }
+    getRawData() {
+        for (let k of [...HeadingElem.custAttrs, ...HeadingElem.lazyAttrs])
+            this.propsRaw[k] = this.getAttribute(k);
+        for (let k of HeadingElem.boolAttrs)
+            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
+        for (let k in this.propsRaw)
+            this.propsProxy[k] = this.propsRaw[k];
+    }
+    fillWrap(data) {
+        this.labelEl = createEl('i', { [alias]: 'label' }, data.label);
+        this.headEl = createEl('div', { [alias]: 'head' }, this.labelEl);
+        this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.headEl);
+        this.arrowEl = createEl('i', { [alias]: 'arrow', class: `${prefix}icon-right` });
+        this.tipsEl = createEl('i', { [alias]: 'tips' }, data.tips);
+        this.iconEl = createEl('i', { [alias]: 'icon', class: data.label });
+        this.diskEl = createEl('img', { [alias]: 'disk', src: data.disk });
+        this.cubeEl = createEl('img', { [alias]: 'cube', src: data.cube });
+        this.imageEl = createEl('img', { [alias]: 'image', src: data.image });
+        this.legends = [
+            { name: 'icon', el: this.iconEl, attr: 'class' },
+            { name: 'disk', el: this.diskEl, attr: 'src' },
+            { name: 'cube', el: this.cubeEl, attr: 'src' },
+            { name: 'image', el: this.imageEl, attr: 'src' },
+        ];
+    }
+    render() {
+        this.insertSource();
+        this.appendChild(this.wrapEl);
+    }
+    changedMaps = {
+        label: this.changedLabel,
+        icon: this.changedLegend,
+        disk: this.changedLegend,
+        cube: this.changedLegend,
+        image: this.changedLegend,
+        tips: this.changedTips,
+        arrow: this.changedArrow,
+    };
+    changedLabel(opt) {
+        this.labelEl.innerHTML = opt.newVal;
+    }
+    changedTips(opt) {
+        if (opt.newVal === null) {
+            this.tipsEl.remove();
+        }
+        else {
+            this.tipsEl.innerHTML = opt.newVal;
+            this.headEl.insertAdjacentElement('afterend', this.tipsEl);
+        }
+    }
+    changedArrow(opt) {
+        if (opt.newVal === null) {
+            this.arrowEl.remove();
+        }
+        else {
+            this.arrowEl.setAttribute('class', opt.newVal ? opt.newVal : `${prefix}icon-right`);
+            this.wrapEl.appendChild(this.arrowEl);
+        }
+    }
+    changedLegend(opt) {
+        let item = this.legends.find((k) => k.name === opt.name);
+        if (opt.newVal) {
+            item.el.setAttribute(item.attr, opt.newVal);
+            elState(item.el).isVirtual && this.headEl.insertAdjacentElement('beforebegin', item.el);
+            for (let k of this.legends) {
+                k !== item && !elState(k.el).isVirtual && k.el.remove();
+            }
+        }
+        else {
+            item.el.remove();
+        }
+    }
+}
+
 const init = (type, parent) => {
     let parentEl = getEl(parent) || document.body, evalFn = new Function('el', 'module', `"use strict";try {return new module(el)} catch {return null}`), moduleNodeList = [], setProp = (node, module) => {
         elProps(node)?.add(module);
@@ -37542,7 +37644,8 @@ var ax_comm = {
     PaginationElem,
     StepElem,
     StatusElem,
+    HeadingElem,
     init,
 };
 
-export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax_comm as default, delay, dlToArr, ease, easeHeight, elProps, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtTarget, getExpiration, getFullGap, getHeights, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, prefix, preventDft, privacy, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };
+export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, HeadingElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax_comm as default, delay, dlToArr, ease, easeHeight, elProps, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtTarget, getExpiration, getFullGap, getHeights, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, prefix, preventDft, privacy, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };

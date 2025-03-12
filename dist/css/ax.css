@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-11 17:35:3
+ * @since Last modified: 2025-3-12 19:12:59
  * @name AXUI front-end framework.
- * @version 3.0.27
+ * @version 3.0.28
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-11 17:34:23
+ * @since Last modified: 2025-03-12 19:12:15
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -7266,6 +7266,7 @@ AX-HEADER {
   --_header-gap: var(--_m);
   --_header-bd: 1px;
   --_header-bg: var(--_c-stage);
+  --_header-filter: none;
   --_child-gap: var(--_rem-title);
   display: block;
   width: 100%;
@@ -7277,11 +7278,20 @@ AX-HEADER ._header-wrap {
   width: 100%;
   box-sizing: border-box;
   background-color: var(--_header-bg);
+  backdrop-filter: var(--_header-filter);
   border-bottom: var(--_header-bd) solid var(--_c-text-bd);
   transition: all var(--_dur-2) linear;
   display: flex;
   align-items: center;
   flex: auto;
+}
+AX-HEADER[feature=blur] {
+  --_header-bg: var(--_c-stage-88);
+  --_header-filter: blur(10px);
+}
+AX-HEADER[feature=transparent] {
+  --_header-bg: transparent;
+  --_header-bd: 0;
 }
 AX-HEADER ._header-holder {
   height: var(--_header-h);
@@ -7446,17 +7456,6 @@ AX-HEADER [rep=avatar] {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-}
-AX-HEADER [rep=avatar]:after {
-  content: 'down';
-  font-family: var(--_ff-icon);
-  font-size: var(--_px-root);
-  color: var(--_c-ignore);
-  margin-left: var(--_g);
-  transition: all var(--_dur-2) linear;
-}
-AX-HEADER [rep=avatar]._opened:after {
-  rotate: 180deg;
 }
 AX-HEADER[justify] ._header-head {
   text-align: left;
@@ -8430,7 +8429,7 @@ AX-AVATAR[theme=succ],
 AX-AVATAR[theme=info],
 AX-AVATAR[theme=issue],
 AX-AVATAR[theme=text] {
-  --_avatar-c: var(--_c-stage);
+  --_avatar-c: var(--_c-white);
 }
 AX-AVATAR[theme=prim] {
   --_avatar-c-bg: var(--_c-prim);
@@ -19605,6 +19604,121 @@ AX-STATUS[current=cancel] {
 AX-STATUS[current=forbid] {
   --_status-c-dot: var(--_c-ignore);
   --_status-c-txt: var(--_c-ignore);
+}
+/*Heading*/
+AX-HEADING {
+  --_heading-fs-label: var(--_rem-subject);
+  --_heading-fs-icon: var(--_rem-body);
+  --_heading-fs-arrow: var(--_rem-ignore);
+  --_heading-fs-tips: var(--_rem-body);
+  --_heading-c-label: inherit;
+  --_heading-c-tips: var(--_c-brief);
+  --_heading-c-icon: var(--_c-prim);
+  --_heading-c-arrow: var(--_c-ignore);
+  --_heading-bg-icon: var(--_c-prim-bg);
+  --_heading-bd-icon: var(--_c-prim-bd);
+  --_heading-lh: var(--_rem-title);
+  --_heading-g: var(--_rem-space);
+  display: block;
+}
+AX-HEADING > [rep=wrap] {
+  display: flex;
+  align-items: center;
+}
+AX-HEADING > [rep=wrap] > [rep=head] {
+  display: flex;
+  align-items: center;
+  flex: auto;
+}
+AX-HEADING > [rep=wrap] > [rep=head] [rep=label] {
+  color: var(--_heading-c-label);
+  font-size: var(--_heading-fs-label);
+  transition: all var(--_dur-2) linear;
+}
+AX-HEADING > [rep=wrap] > [rep=icon] {
+  font-size: var(--_heading-fs-icon);
+  color: var(--_heading-c-icon);
+  height: var(--_rem-list);
+  aspect-ratio: 1/1;
+  border-radius: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--_heading-bg-icon);
+  border: 1px solid var(--_heading-bd-icon);
+  margin-right: var(--_heading-g);
+  transition: all var(--_dur-2) linear;
+}
+AX-HEADING > [rep=wrap] > [rep=tips] {
+  font-size: var(--_heading-fs-tips);
+  color: var(--_heading-c-tips);
+}
+AX-HEADING > [rep=wrap] > [rep=disk],
+AX-HEADING > [rep=wrap] > [rep=cube],
+AX-HEADING > [rep=wrap] > [rep=image] {
+  height: var(--_rem-list);
+  margin-right: var(--_heading-g);
+}
+AX-HEADING > [rep=wrap] > [rep=arrow] {
+  font-size: var(--_heading-fs-arrow);
+  color: var(--_heading-c-arrow);
+  height: var(--_rem-subject);
+  line-height: var(--_rem-subject);
+  aspect-ratio: 1/1;
+  border-radius: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: -4px;
+  transition: all var(--_dur-2) linear;
+}
+AX-HEADING > [rep=wrap] [rep=arrow]:hover {
+  color: var(--_heading-c-icon);
+}
+AX-HEADING:hover > [rep=wrap] > [rep=arrow] {
+  background-color: var(--_heading-bg-icon);
+}
+AX-HEADING[theme=prim] {
+  --_heading-c-label: var(--_c-prim);
+  --_heading-c-icon: var(--_c-prim);
+  --_heading-bg-icon: var(--_c-prim-bg);
+  --_heading-bd-icon: var(--_c-prim-bd);
+}
+AX-HEADING[theme=succ] {
+  --_heading-c-label: var(--_c-succ);
+  --_heading-c-icon: var(--_c-succ);
+  --_heading-bg-icon: var(--_c-succ-bg);
+  --_heading-bd-icon: var(--_c-succ-bd);
+}
+AX-HEADING[theme=error] {
+  --_heading-c-label: var(--_c-error);
+  --_heading-c-icon: var(--_c-error);
+  --_heading-bg-icon: var(--_c-error-bg);
+  --_heading-bd-icon: var(--_c-error-bd);
+}
+AX-HEADING[theme=info] {
+  --_heading-c-label: var(--_c-info);
+  --_heading-c-icon: var(--_c-info);
+  --_heading-bg-icon: var(--_c-info-bg);
+  --_heading-bd-icon: var(--_c-info-bd);
+}
+AX-HEADING[theme=issue] {
+  --_heading-c-label: var(--_c-issue);
+  --_heading-c-icon: var(--_c-issue);
+  --_heading-bg-icon: var(--_c-issue-bg);
+  --_heading-bd-icon: var(--_c-issue-bd);
+}
+AX-HEADING[theme=text] {
+  --_heading-c-label: var(--_c-text);
+  --_heading-c-icon: var(--_c-text);
+  --_heading-bg-icon: var(--_c-text-bg);
+  --_heading-bd-icon: var(--_c-text-bd);
+}
+AX-HEADING[theme=warn] {
+  --_heading-c-label: var(--_c-warn);
+  --_heading-c-icon: var(--_c-warn);
+  --_heading-bg-icon: var(--_c-warn-bg);
+  --_heading-bd-icon: var(--_c-warn-bd);
 }
 ._dodge {
   position: relative;
