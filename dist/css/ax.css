@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-12 19:12:59
+ * @since Last modified: 2025-3-14 0:3:31
  * @name AXUI front-end framework.
- * @version 3.0.28
+ * @version 3.0.29
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-12 19:12:15
+ * @since Last modified: 2025-03-14 00:02:23
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -9758,7 +9758,7 @@ AX-FLAG[theme=ignore] {
 }
 ._post [rep=caption] {
   font-size: var(--_rem-caption);
-  font-weight: bold;
+  font-weight: normal;
   margin-bottom: var(--_break, var(--_rem-space));
 }
 ._post [rep=caption] a {
@@ -10363,7 +10363,7 @@ AX-ANCHORS li [rep=label]:hover {
   opacity: 1;
 }
 /*
-Last modified: 2025-03-05 09:37:26
+Last modified: 2025-03-12 23:06:09
 */
 /*Card*/
 ._card {
@@ -10374,6 +10374,7 @@ Last modified: 2025-03-05 09:37:26
   --_card-r: var(--_r-input);
   --_card-ar: 16/9;
   --_card-scale: 1.05;
+  --_card-fw: bold;
   --_card-m: var(--_rem-body);
   background-color: var(--_card-bg);
   border: var(--_card-bd) solid var(--_c-text-bd);
@@ -10386,7 +10387,7 @@ Last modified: 2025-03-05 09:37:26
 }
 ._card [rep=caption] {
   font-size: var(--_rem-caption);
-  font-weight: bold;
+  font-weight: var(--_card-fw);
   margin-bottom: var(--_break, var(--_rem-space));
 }
 ._card [rep=caption] a {
@@ -12332,7 +12333,7 @@ AX-FILTER[bordered] section {
   }
 }
 /*
-Last modified: 2025-03-06 16:07:41
+Last modified: 2025-03-12 21:49:44
 */
 /*Panel*/
 AX-PANEL {
@@ -12563,7 +12564,7 @@ AX-PANEL {
   margin-top: var(--_rem-list);
 }
 ._panel[feature=window] {
-  --_panel-c-bg: var(--_c-text-bg);
+  --_panel-c-bg: var(--_c-ignore-bg);
 }
 ._panel[feature=window] ._panel-body {
   border: 1px solid var(--_panel-bd-c);
