@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-14 0:2:58
+ * @since Last modified: 2025-3-16 1:24:45
  * @name AXUI front-end framework.
- * @version 3.0.29
+ * @version 3.0.30
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -759,7 +759,7 @@ const renderTpl = (html, data) => {
     return result;
 };
 
-const getScreenSize = () => getComputedVar(`--${prefix}SCREEN`);
+const getScreenSize = () => getComputedVar(`--SCREEN`);
 
 const startUpper = (str) => {
     str = str.trim();
@@ -37322,6 +37322,125 @@ class HeadingElem extends CompBaseComm {
     }
 }
 
+class SkeletonElem extends CompBaseComm {
+    headEl;
+    iconEl;
+    diskEl;
+    cubeEl;
+    imageEl;
+    labelEl;
+    tipsEl;
+    arrowEl;
+    legends;
+    cols;
+    rows;
+    constructor() {
+        super();
+        this.getRawData();
+        this.fillWrap(this.propsProxy);
+    }
+    static custAttrs = [...this.baseAttrs, 'type', 'anim', 'cols', 'rows'];
+    static get observedAttributes() {
+        return ['content', ...this.custAttrs, ...this.boolAttrs];
+    }
+    attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
+        this.propsProxy[name] = SkeletonElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+    }
+    getRawData() {
+        for (let k of [...SkeletonElem.custAttrs, ...SkeletonElem.lazyAttrs])
+            this.propsRaw[k] = this.getAttribute(k);
+        this.propsRaw.content = this.getAttribute('content') || this.rawHtml;
+        for (let k of SkeletonElem.boolAttrs)
+            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        for (let k in this.propsRaw)
+            this.propsProxy[k] = this.propsRaw[k];
+        this.cols = this.getCols();
+        this.rows = this.getRows();
+    }
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.getSkelStr());
+    }
+    getRows(str = this.propsProxy.rows) {
+        return ~~this.propsProxy.rows || 1;
+    }
+    getCols(str = this.propsProxy.cols) {
+        let val = null, obj;
+        if (isNull(str))
+            return val;
+        if (str?.includes(',')) {
+            obj = paramToJson(str);
+            val = ~~obj[getScreenSize()];
+            (getScreenSize());
+        }
+        else {
+            val = ~~str;
+        }
+        return val || 4;
+    }
+    getSkelStr() {
+        if (!this.propsProxy.type) {
+            if (this.propsProxy.content) {
+                (this.propsProxy.content, this.cols, this.rows, (this.cols || 1) * this.rows);
+                return this.propsProxy.content.repeat((this.cols || 1) * this.rows);
+            }
+            else {
+                return '';
+            }
+        }
+        if (this.propsProxy.type === 'article') {
+            return `
+            <section>
+                <div rep="legend">
+                </div>
+                <div rep="text">
+                ${'<div></div>'.repeat(this.rows > 1 ? this.rows : 19)}
+                </div>
+            </section>
+            `;
+        }
+        else {
+            let repeatNum = this.propsProxy.type.includes('avatar') ? 2 :
+                this.propsProxy.type === 'paragraph' ? 4 : 3, itemStr = `
+        <section>
+                <div rep="legend"></div>
+                <div rep="text">
+                ${'<div></div>'.repeat(repeatNum)}
+                </div>
+            </section>
+        `;
+            return itemStr.repeat((this.cols || 1) * this.rows);
+        }
+    }
+    render() {
+        this.insertSource();
+        this.appendChild(this.wrapEl);
+    }
+    changedMaps = {
+        content: this.changedContent,
+        cols: this.changedCols,
+        rows: this.changedRows,
+        type: this.changedType
+    };
+    changedContent(opt) {
+        this.wrapEl.innerHTML = this.getSkelStr();
+    }
+    changedType(opt) {
+        this.wrapEl.innerHTML = this.getSkelStr();
+    }
+    changedCols(opt) {
+        this.cols = this.getCols(opt.newVal);
+        this.wrapEl.style.gridTemplateColumns = this.cols ? `repeat(${this.cols}, 1fr)` : null;
+        this.wrapEl.innerHTML = this.getSkelStr();
+    }
+    changedRows(opt) {
+        this.rows = this.getRows(opt.newVal);
+        this.wrapEl.innerHTML = this.getSkelStr();
+    }
+}
+
 const init = (type, parent) => {
     let parentEl = getEl(parent) || document.body, evalFn = new Function('el', 'module', `"use strict";try {return new module(el)} catch {return null}`), moduleNodeList = [], setProp = (node, module) => {
         elProps(node)?.add(module);
@@ -37649,6 +37768,7 @@ var ax_comm = {
     StepElem,
     StatusElem,
     HeadingElem,
+    SkeletonElem,
     init,
 };
 
@@ -37726,6 +37846,7 @@ exports.Scroll = Scroll;
 exports.SearchElem = SearchElem;
 exports.Select = Select;
 exports.SelectElem = SelectElem;
+exports.SkeletonElem = SkeletonElem;
 exports.Spy = Spy;
 exports.StatsElem = StatsElem;
 exports.StatusElem = StatusElem;

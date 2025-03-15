@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-14 0:2:58
+ * @since Last modified: 2025-3-16 1:24:45
  * @name AXUI front-end framework.
- * @version 3.0.29
+ * @version 3.0.30
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -755,7 +755,7 @@ const renderTpl = (html, data) => {
     return result;
 };
 
-const getScreenSize = () => getComputedVar(`--${prefix}SCREEN`);
+const getScreenSize = () => getComputedVar(`--SCREEN`);
 
 const startUpper = (str) => {
     str = str.trim();
@@ -37318,6 +37318,125 @@ class HeadingElem extends CompBaseComm {
     }
 }
 
+class SkeletonElem extends CompBaseComm {
+    headEl;
+    iconEl;
+    diskEl;
+    cubeEl;
+    imageEl;
+    labelEl;
+    tipsEl;
+    arrowEl;
+    legends;
+    cols;
+    rows;
+    constructor() {
+        super();
+        this.getRawData();
+        this.fillWrap(this.propsProxy);
+    }
+    static custAttrs = [...this.baseAttrs, 'type', 'anim', 'cols', 'rows'];
+    static get observedAttributes() {
+        return ['content', ...this.custAttrs, ...this.boolAttrs];
+    }
+    attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
+        this.propsProxy[name] = SkeletonElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+    }
+    getRawData() {
+        for (let k of [...SkeletonElem.custAttrs, ...SkeletonElem.lazyAttrs])
+            this.propsRaw[k] = this.getAttribute(k);
+        this.propsRaw.content = this.getAttribute('content') || this.rawHtml;
+        for (let k of SkeletonElem.boolAttrs)
+            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        for (let k in this.propsRaw)
+            this.propsProxy[k] = this.propsRaw[k];
+        this.cols = this.getCols();
+        this.rows = this.getRows();
+    }
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.getSkelStr());
+    }
+    getRows(str = this.propsProxy.rows) {
+        return ~~this.propsProxy.rows || 1;
+    }
+    getCols(str = this.propsProxy.cols) {
+        let val = null, obj;
+        if (isNull(str))
+            return val;
+        if (str?.includes(',')) {
+            obj = paramToJson(str);
+            val = ~~obj[getScreenSize()];
+            (getScreenSize());
+        }
+        else {
+            val = ~~str;
+        }
+        return val || 4;
+    }
+    getSkelStr() {
+        if (!this.propsProxy.type) {
+            if (this.propsProxy.content) {
+                (this.propsProxy.content, this.cols, this.rows, (this.cols || 1) * this.rows);
+                return this.propsProxy.content.repeat((this.cols || 1) * this.rows);
+            }
+            else {
+                return '';
+            }
+        }
+        if (this.propsProxy.type === 'article') {
+            return `
+            <section>
+                <div rep="legend">
+                </div>
+                <div rep="text">
+                ${'<div></div>'.repeat(this.rows > 1 ? this.rows : 19)}
+                </div>
+            </section>
+            `;
+        }
+        else {
+            let repeatNum = this.propsProxy.type.includes('avatar') ? 2 :
+                this.propsProxy.type === 'paragraph' ? 4 : 3, itemStr = `
+        <section>
+                <div rep="legend"></div>
+                <div rep="text">
+                ${'<div></div>'.repeat(repeatNum)}
+                </div>
+            </section>
+        `;
+            return itemStr.repeat((this.cols || 1) * this.rows);
+        }
+    }
+    render() {
+        this.insertSource();
+        this.appendChild(this.wrapEl);
+    }
+    changedMaps = {
+        content: this.changedContent,
+        cols: this.changedCols,
+        rows: this.changedRows,
+        type: this.changedType
+    };
+    changedContent(opt) {
+        this.wrapEl.innerHTML = this.getSkelStr();
+    }
+    changedType(opt) {
+        this.wrapEl.innerHTML = this.getSkelStr();
+    }
+    changedCols(opt) {
+        this.cols = this.getCols(opt.newVal);
+        this.wrapEl.style.gridTemplateColumns = this.cols ? `repeat(${this.cols}, 1fr)` : null;
+        this.wrapEl.innerHTML = this.getSkelStr();
+    }
+    changedRows(opt) {
+        this.rows = this.getRows(opt.newVal);
+        this.wrapEl.innerHTML = this.getSkelStr();
+    }
+}
+
 const init = (type, parent) => {
     let parentEl = getEl(parent) || document.body, evalFn = new Function('el', 'module', `"use strict";try {return new module(el)} catch {return null}`), moduleNodeList = [], setProp = (node, module) => {
         elProps(node)?.add(module);
@@ -37645,7 +37764,8 @@ var ax_comm = {
     StepElem,
     StatusElem,
     HeadingElem,
+    SkeletonElem,
     init,
 };
 
-export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, HeadingElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax_comm as default, delay, dlToArr, ease, easeHeight, elProps, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtTarget, getExpiration, getFullGap, getHeights, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, prefix, preventDft, privacy, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };
+export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, HeadingElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, SkeletonElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax_comm as default, delay, dlToArr, ease, easeHeight, elProps, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtTarget, getExpiration, getFullGap, getHeights, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, prefix, preventDft, privacy, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };

@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-14 0:3:31
+ * @since Last modified: 2025-3-16 1:25:25
  * @name AXUI front-end framework.
- * @version 3.0.29
+ * @version 3.0.30
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-14 00:02:23
+ * @since Last modified: 2025-03-16 01:24:15
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -19720,6 +19720,324 @@ AX-HEADING[theme=warn] {
   --_heading-c-icon: var(--_c-warn);
   --_heading-bg-icon: var(--_c-warn-bg);
   --_heading-bd-icon: var(--_c-warn-bd);
+}
+/*Alert*/
+AX-SKELETON {
+  --_skel-d: block;
+  --_skel-dir: row;
+  --_skel-r: var(--_r-input);
+  --_skel-bg: var(--_c-text-ac);
+  --_skel-gap: var(--_rem-title);
+  --_skel-lh-sm: var(--_rem-ignore);
+  --_skel-lh-md: var(--_rem-body);
+  --_skel-lh-lg: var(--_rem-title);
+  --_skel-m-sm: var(--_rem-space);
+  --_skel-m-md: var(--_rem-body);
+  --_skel-m-lg: var(--_rem-title);
+  display: var(--_skel-d);
+  vertical-align: middle;
+}
+AX-SKELETON [rep=wrap] {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+AX-SKELETON[cols] [rep=wrap] {
+  display: grid;
+  grid-gap: var(--_skel-gap);
+}
+AX-SKELETON [rep=wrap] > section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: var(--_skel-dir);
+}
+AX-SKELETON[type*="avatar"] [rep=legend] {
+  height: 6rem;
+  aspect-ratio: 1/1;
+  border-radius: 100%;
+  background-color: var(--_skel-bg);
+}
+AX-SKELETON[type*="avatar"] [rep=text] {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+AX-SKELETON[type*="avatar"] [rep=text] * {
+  background-color: var(--_skel-bg);
+  height: var(--_skel-lh-sm);
+  border-radius: var(--_skel-r);
+  margin-top: var(--_skel-m-sm);
+}
+AX-SKELETON[type*="avatar"] [rep=text] *:first-child {
+  width: 8rem;
+}
+AX-SKELETON:where(:not([cols]))[type*="avatar"] section:where(:not(:first-child)) {
+  margin-top: var(--_skel-m-lg);
+}
+AX-SKELETON[type="avatar"] {
+  --_skel-dir: column;
+}
+AX-SKELETON[type="avatar"] [rep=text] {
+  align-items: center;
+}
+AX-SKELETON[type="avatar"] [rep=text] *:last-child {
+  width: 12rem;
+}
+AX-SKELETON[type="avatar-left"] [rep=text],
+AX-SKELETON[type="avatar-right"] [rep=text] {
+  display: flex;
+  flex: auto;
+}
+AX-SKELETON[type="avatar-left"] [rep=legend] {
+  margin-right: var(--_skel-m-md);
+}
+AX-SKELETON[type="avatar-right"] [rep=wrap] > section {
+  flex-direction: row-reverse;
+}
+AX-SKELETON[type="avatar-right"] [rep=legend] {
+  margin-left: var(--_skel-m-md);
+}
+AX-SKELETON[type*="post"] [rep=legend] {
+  height: 6rem;
+  aspect-ratio: 4/3;
+  border-radius: var(--_skel-r);
+  background-color: var(--_skel-bg);
+}
+AX-SKELETON[type*="post"] [rep=text] {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex: auto;
+}
+AX-SKELETON[type*="post"] [rep=text] * {
+  background-color: var(--_skel-bg);
+  height: var(--_skel-lh-sm);
+  border-radius: var(--_skel-r);
+}
+AX-SKELETON[type*="post"] [rep=text] *:first-child {
+  width: 80%;
+}
+AX-SKELETON[type*="post"] [rep=text] *:where(:not(:first-child)) {
+  margin-top: var(--_skel-m-sm);
+}
+AX-SKELETON:where(:not([cols]))[type*="post"] section:where(:not(:first-child)) {
+  margin-top: var(--_skel-m-lg);
+}
+AX-SKELETON[type="post"] [rep=legend] {
+  display: none;
+}
+AX-SKELETON[type="post-left"] [rep=legend] {
+  margin-right: var(--_skel-m-md);
+}
+AX-SKELETON[type="post-right"] [rep=wrap] > section {
+  flex-direction: row-reverse;
+}
+AX-SKELETON[type="post-right"] [rep=legend] {
+  margin-left: var(--_skel-m-md);
+}
+AX-SKELETON[type*="bullet"] [rep=legend] {
+  height: var(--_rem-title);
+  aspect-ratio: 1/1;
+  border-radius: var(--_skel-r);
+  background-color: var(--_skel-bg);
+}
+AX-SKELETON[type*="bullet"] [rep=text] {
+  display: flex;
+  align-items: center;
+  flex: auto;
+}
+AX-SKELETON[type*="bullet"] [rep=text] * {
+  background-color: var(--_skel-bg);
+  height: var(--_skel-lh-sm);
+  border-radius: var(--_skel-r);
+}
+AX-SKELETON[type*="bullet"] [rep=text] *:first-child {
+  flex: auto;
+}
+AX-SKELETON[type*="bullet"] [rep=text] *:last-child {
+  width: 6rem;
+  margin-left: var(--_skel-m-md);
+}
+AX-SKELETON:where(:not([cols]))[type*="bullet"] section:where(:not(:first-child)) {
+  margin-top: var(--_skel-m-md);
+}
+AX-SKELETON[type="bullet"] [rep=legend] {
+  display: none;
+}
+AX-SKELETON[type="bullet-left"] [rep=legend] {
+  margin-right: var(--_skel-m-md);
+}
+AX-SKELETON[type="bullet-right"] [rep=wrap] > section {
+  flex-direction: row-reverse;
+}
+AX-SKELETON[type="bullet-right"] [rep=legend] {
+  margin-left: var(--_skel-m-md);
+}
+AX-SKELETON[type*=card] {
+  --_skel-dir: column;
+}
+AX-SKELETON[type*=card] [rep=legend] {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--_skel-r);
+  background-color: var(--_skel-bg);
+}
+AX-SKELETON[type*=card] [rep=text] {
+  width: 100%;
+}
+AX-SKELETON[type*=card] [rep=text] * {
+  background-color: var(--_skel-bg);
+  height: var(--_skel-lh-sm);
+  border-radius: var(--_skel-r);
+  margin-top: var(--_skel-m-sm);
+}
+AX-SKELETON[type*=card] [rep=text] *:first-child {
+  width: 80%;
+}
+AX-SKELETON[type*=card] [rep=text] *:last-child {
+  width: 40%;
+}
+AX-SKELETON[type=paragraph] {
+  --_skel-dir: column;
+}
+AX-SKELETON[type=paragraph] [rep=legend] {
+  display: none;
+}
+AX-SKELETON[type=paragraph] [rep=text] {
+  width: 100%;
+}
+AX-SKELETON[type=paragraph] [rep=text] * {
+  background-color: var(--_skel-bg);
+  height: var(--_skel-lh-md);
+  border-radius: var(--_skel-r);
+}
+AX-SKELETON[type=paragraph] [rep=text] *:where(:not(:first-child)) {
+  margin-top: var(--_skel-m-md);
+}
+AX-SKELETON[type=paragraph] [rep=text] *:last-child {
+  width: 40%;
+}
+AX-SKELETON[type=article] {
+  --_skel-dir: column;
+}
+AX-SKELETON[type=article] [rep=legend] {
+  width: 100%;
+  margin-bottom: var(--_skel-m-md);
+}
+AX-SKELETON[type=article] [rep=legend]:before,
+AX-SKELETON[type=article] [rep=legend]:after {
+  content: '';
+  background-color: var(--_skel-bg);
+  border-radius: var(--_skel-r);
+  display: block;
+}
+AX-SKELETON[type=article] [rep=legend]:before {
+  height: var(--_skel-lh-lg);
+  width: 60%;
+}
+AX-SKELETON[type=article] [rep=legend]:after {
+  height: var(--_skel-lh-sm);
+  width: 40%;
+  margin-top: var(--_skel-m-md);
+}
+AX-SKELETON[type=article] [rep=text] {
+  width: 100%;
+}
+AX-SKELETON[type=article] [rep=text] * {
+  margin-top: var(--_skel-m-md);
+  background-color: var(--_skel-bg);
+  height: var(--_skel-lh-md);
+  border-radius: var(--_skel-r);
+}
+AX-SKELETON[type=article] [rep=text] *:nth-child(4n) {
+  width: 80%;
+}
+AX-SKELETON[type=article] [rep=text] *:last-child {
+  width: 40%;
+}
+AX-SKELETON[type=plain],
+AX-SKELETON:has([rep=wrap]:empty) {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+AX-SKELETON[type=plain] [rep=wrap],
+AX-SKELETON:has([rep=wrap]:empty) [rep=wrap] {
+  border-radius: inherit;
+  background-color: var(--_skel-bg);
+}
+@keyframes _skel-fade {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+@keyframes _skel-stream {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+AX-SKELETON[anim=stream] {
+  background-color: var(--_c-stage);
+}
+AX-SKELETON[anim=stream] [rep=wrap]:after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 34%, black 50%, rgba(255, 255, 255, 0) 67%);
+  background-size: 300% 100%;
+  mix-blend-mode: overlay;
+  animation: _skel-stream var(--_dur-6) ease infinite both;
+}
+AX-SKELETON[anim=fade] {
+  animation: _skel-fade var(--_dur-5) linear infinite both;
+}
+AX-SKELETON[theme=prim] {
+  --_skel-bg: var(--_c-prim-ac);
+}
+AX-SKELETON[theme=error] {
+  --_skel-bg: var(--_c-error-ac);
+}
+AX-SKELETON[theme=succ] {
+  --_skel-bg: var(--_c-succ-ac);
+}
+AX-SKELETON[theme=info] {
+  --_skel-bg: var(--_c-info-ac);
+}
+AX-SKELETON[theme=issue] {
+  --_skel-bg: var(--_c-issue-ac);
+}
+AX-SKELETON[theme=warn] {
+  --_skel-bg: var(--_c-warn-ac);
+}
+AX-SKELETON[shape=round] {
+  --_skel-r: var(--_rem-ignore);
+}
+AX-SKELETON[shape=round][type*="bullet"] [rep=legend] {
+  border-radius: 100%;
+}
+AX-SKELETON[shape=round][type*="post"] [rep=legend],
+AX-SKELETON[shape=round][type="card"] [rep=legend] {
+  border-radius: var(--_r-input-lg);
+}
+AX-SKELETON[shape=round][type=article] [rep=legend] *:first-child {
+  border-radius: var(--_rem-title);
+}
+AX-SKELETON[shape=square] {
+  --_skel-r: 0;
 }
 ._dodge {
   position: relative;
