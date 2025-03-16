@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-16 1:24:45
+ * @since Last modified: 2025-3-16 20:41:4
  * @name AXUI front-end framework.
- * @version 3.0.30
+ * @version 3.0.31
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -669,18 +669,19 @@ const requireTypes = (data, require, cb) => {
     }
 };
 
-const strToJson = (str) => {
+const strToJson = (str, type = 'object') => {
+    let dft = type === 'array' ? [] : {};
     if (typeof str !== 'string')
-        return {};
+        return dft;
     str = str.trim();
     if (!str)
         return {};
     try {
-        !str.startsWith('{') && (str = `{${str}}`);
+        str = (str.startsWith('[') && str.endsWith(']')) || (str.startsWith('{') && str.endsWith('}')) ? str : `{${str}}`;
         return new Function('"use strict";return ' + str)();
     }
     catch {
-        return {};
+        return dft;
     }
 };
 
@@ -7461,10 +7462,37 @@ class CompBase extends HTMLElement {
         this.listen({ name: 'adopted' });
     }
     static lazyAttrs = ['stor-name', 'class'];
+    static baseAttrs = ['on-connected', 'on-disconnected', 'on-adopted', 'on-reset', 'on-set'];
+    static jsonAttrs = ['lang'];
+    static boolAttrs = [];
     createShadow() {
         this.shadowEl = this.attachShadow({ mode: "open" });
         this.slotEl = createEl('slot');
         this.shadowEl.appendChild(this.slotEl);
+    }
+    saveProps(name, newVal, comp) {
+        this.propsProxy[name] = comp.boolAttrs.includes(name) ? getAttrBool(newVal) : comp.jsonAttrs.includes(name) ? strToJson(newVal) : newVal;
+    }
+    savePropsToListen(name, oldVal, newVal, comp, other) {
+        if (other && Object.keys(other).includes(name)) {
+            this.propsProxy[name] = other[name];
+        }
+        else {
+            this.saveProps(name, newVal, comp);
+        }
+        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+    }
+    getRawProps(comp) {
+        for (let k of [...comp.custAttrs, ...comp.lazyAttrs])
+            this.propsRaw[k] = this.getAttribute(k);
+        for (let k of comp.boolAttrs)
+            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        for (let k of comp.jsonAttrs)
+            this.propsRaw[k] = strToJson(this.getAttribute(k));
+    }
+    getProxyProps() {
+        for (let k in this.propsRaw)
+            this.propsProxy[k] = this.propsRaw[k];
     }
     restoreAttrs() {
         for (let k in this.propsProxy) {
@@ -7485,25 +7513,9 @@ class CompBase extends HTMLElement {
             }
         }
     }
-    getPropVal(comp, name, val) {
-        return comp.boolAttrs.includes(name) ? getAttrBool(val) : val;
-    }
     getHtmlVal(name = 'label', unformatted = true) {
         let val = unformatted ? this.textContent?.trim() : this.innerHTML;
         return val || this.getAttribute(name);
-    }
-    getInitPropsRaw(comp) {
-        [...comp.custAttrs, ...comp.lazyAttrs].forEach((k) => {
-            this.propsRaw[k] = this.getAttribute(k);
-        });
-        comp.boolAttrs.forEach((k) => {
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        });
-    }
-    getInitPropsProxy() {
-        for (let k in this.propsRaw) {
-            this.propsProxy[k] = this.propsRaw[k];
-        }
     }
     connectedRender(data) {
         this.render(data);
@@ -7552,11 +7564,10 @@ class CompBase extends HTMLElement {
             deepMerge(this.propsProxy, value, {});
         }
     }
+    changedMaps = {};
 }
 
 class CompBaseComm extends CompBase {
-    static baseAttrs = ['on-connected', 'on-reset', 'on-set'];
-    static boolAttrs = [];
     constructor() {
         super();
         this.reset = function () {
@@ -32629,7 +32640,7 @@ class CompBaseCommField extends CompBaseComm {
             this.clearCache();
         });
     }
-    static evtsArr = ['on-connected', 'on-disconnected', 'on-adopted', 'on-reset', 'on-cleared', 'on-changed', 'on-input', 'on-set'];
+    static evtsArr = [...this.baseAttrs, 'on-cleared', 'on-changed',];
     connectedCallback() {
         if (this.inputEl) {
             this.addEvts(['blur', 'focus']);
@@ -32779,25 +32790,20 @@ class ResultElem extends CompBaseComm {
         this.fillWrap(this.propsProxy);
         
     }
-    static custAttrs = ['to', 'shape', 'type'];
+    static custAttrs = ['to', 'shape', 'type', ...this.baseAttrs];
     static boolAttrs = [];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = ResultElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, ResultElem);
     }
     getRawData() {
-        for (let k of [...ResultElem.custAttrs, ...ResultElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of ResultElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(ResultElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('span', { [alias]: 'wrap' });
@@ -32853,24 +32859,19 @@ class DeformElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['type', 'theme', 'shape', 'size', 'class'];
+    static custAttrs = ['type', 'theme', 'shape', 'size', ...this.baseAttrs];
     static boolAttrs = ['disabled', 'bordered', 'filled', 'dark'];
     static get observedAttributes() {
-        return ['content', ...this.custAttrs, ...this.boolAttrs];
+        return ['content', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = DeformElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, DeformElem);
     }
     getRawData() {
-        for (let k of [...DeformElem.custAttrs, ...DeformElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of DeformElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getRawProps(DeformElem);
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('div', { [alias]: 'wrap' }, '<i></i>'.repeat(3));
@@ -32928,12 +32929,12 @@ class RadioElem extends CompBaseCommField {
     static custAttrs = ['size', 'value', 'name', 'type', 'check', ...this.evtsArr];
     static boolAttrs = ['disabled'];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = RadioElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+        this.saveProps(name, newVal, RadioElem);
         if (['disabled', 'value', 'name'].includes(name)) {
             if (name === 'value') {
                 if (newVal === null && !this.propsProxy.label) {
@@ -32972,16 +32973,9 @@ class RadioElem extends CompBaseCommField {
         }
     }
     getRawData() {
-        [...RadioElem.custAttrs, ...RadioElem.lazyAttrs].forEach((k) => {
-            this.propsRaw[k] = this.getAttribute(k);
-        });
-        RadioElem.boolAttrs.forEach((k) => {
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        });
+        this.getRawProps(RadioElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw) {
-            this.propsProxy[k] = this.propsRaw[k];
-        }
+        this.getProxyProps();
         this.setFieldProps(['name', 'value', 'disabled', 'check']);
     }
     fillWrap(data) {
@@ -33027,12 +33021,12 @@ class CheckboxElem extends CompBaseCommField {
     static custAttrs = ['size', 'value', 'type', 'name', 'check', ...this.evtsArr];
     static boolAttrs = ['disabled'];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = CheckboxElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+        this.saveProps(name, newVal, CheckboxElem);
         if (['disabled', 'value', 'name'].includes(name)) {
             if (name === 'value') {
                 if (newVal === null && !this.propsProxy.label) {
@@ -33116,25 +33110,20 @@ class BtnElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['type', 'theme', 'href', 'tab', 'target', 'rel', 'download', 'shape', 'size', 'width', 'check', 'icon', 'tail', 'disk', 'cube', 'image', 'tips', 'badge', 'mean'];
+    static custAttrs = ['type', 'theme', 'href', 'tab', 'target', 'rel', 'download', 'shape', 'size', 'width', 'check', 'icon', 'tail', 'disk', 'cube', 'image', 'tips', 'badge', 'mean', ...this.baseAttrs];
     static boolAttrs = ['disabled', 'shaded', 'grad'];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = BtnElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, BtnElem);
     }
     getRawData() {
-        for (let k of [...BtnElem.custAttrs, ...BtnElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of BtnElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(BtnElem);
         this.initLabel();
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     initLabel() {
         if (this.innerHTML) {
@@ -33349,28 +33338,20 @@ class LineElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = [
-        'type', 'theme', 'size', 'align', 'dir',
-        'on-connected', 'on-reset', 'on-set',
-    ];
+    static custAttrs = ['type', 'theme', 'size', 'align', 'dir', ...this.baseAttrs];
     static boolAttrs = [];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = LineElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, LineElem);
     }
     getRawData() {
-        for (let k of [...LineElem.custAttrs, ...LineElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of LineElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(LineElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.labelEl);
@@ -33409,28 +33390,23 @@ class AvatarElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['type', 'theme', 'tips', 'size', 'src', 'shape', 'badge', 'href', 'target', 'rel'];
+    static custAttrs = ['type', 'theme', 'tips', 'size', 'src', 'shape', 'badge', 'href', 'target', 'rel', ...this.baseAttrs];
     static boolAttrs = ['disabled'];
     static get observedAttributes() {
-        return ['src', ...this.custAttrs, ...this.boolAttrs];
+        return ['src', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = AvatarElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, AvatarElem);
     }
     getMainEl(type, src) {
         return (type === 'text') ? createEl('i', { [alias]: 'main' }, src || 'null') : createEl('img', { [alias]: 'main', src: src || getImgAvatar() });
     }
     getRawData() {
-        for (let k of [...AvatarElem.custAttrs, ...AvatarElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of AvatarElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(AvatarElem);
         this.propsRaw.src = this.getAttribute('src') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('a', { [alias]: 'wrap' });
@@ -33500,25 +33476,20 @@ class FormatElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['type', 'rts', 'info', 'tips', 'lines', 'size', 'width'];
+    static custAttrs = ['type', 'rts', 'info', 'tips', 'lines', 'size', 'width', ...this.baseAttrs];
     static boolAttrs = [];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = FormatElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, FormatElem);
     }
     getRawData() {
-        for (let k of [...FormatElem.custAttrs, ...FormatElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of FormatElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(FormatElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('div', { [alias]: 'wrap' });
@@ -33649,25 +33620,20 @@ class FlagElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['type', 'theme', 'placement',];
+    static custAttrs = ['type', 'theme', 'placement', ...this.baseAttrs];
     static boolAttrs = [];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = FlagElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, FlagElem);
     }
     getRawData() {
-        for (let k of [...FlagElem.custAttrs, ...FlagElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of FlagElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(FlagElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.labelEl = createEl('i', { [alias]: 'label' }, this.propsProxy.label);
@@ -33696,28 +33662,20 @@ class BuoyElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = [
-        'icon', 'label', 'theme', 'size',
-        'on-connected', 'on-reset', 'on-set',
-    ];
+    static custAttrs = ['icon', 'label', 'theme', 'size', ...this.baseAttrs];
     static boolAttrs = ['inverted', 'arrow'];
     static get observedAttributes() {
-        return ['value', ...this.custAttrs, ...this.boolAttrs];
+        return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = BuoyElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, BuoyElem);
     }
     getRawData() {
-        for (let k of [...BuoyElem.custAttrs, ...BuoyElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of BuoyElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(BuoyElem);
         this.propsRaw.value = this.getAttribute('value') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('span', { [alias]: 'wrap' });
@@ -33803,25 +33761,20 @@ class GoodElem extends CompBaseComm {
             this.canListen = true;
         };
     }
-    static custAttrs = ['icon', 'label', 'tips'];
+    static custAttrs = ['icon', 'label', 'tips', ...this.baseAttrs];
     static boolAttrs = ['disabled', 'increased'];
     static get observedAttributes() {
-        return ['value', ...this.custAttrs, ...this.boolAttrs];
+        return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = GoodElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, GoodElem);
     }
     getRawData() {
-        for (let k of [...GoodElem.custAttrs, ...GoodElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of GoodElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(GoodElem);
         this.propsRaw.value = this.getAttribute('value') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('span', { [alias]: 'wrap' });
@@ -33866,28 +33819,20 @@ class AnchorsElem extends CompBaseComm {
         this.fillWrap(this.propsProxy);
         this.render(this.propsProxy);
     }
-    static custAttrs = [
-        'root', 'active', 'offset',
-        'on-connected', 'on-reset', 'on-set',
-    ];
+    static custAttrs = ['root', 'active', 'offset', ...this.baseAttrs];
     static boolAttrs = ['smooth'];
     static get observedAttributes() {
-        return ['headings', ...this.custAttrs, ...this.boolAttrs];
+        return ['headings', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = AnchorsElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, AnchorsElem);
     }
     getRawData() {
-        for (let k of [...AnchorsElem.custAttrs, ...AnchorsElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of AnchorsElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(AnchorsElem);
         this.propsRaw.headings = this.getHeadings(this.getAttribute('headings') || this.rawHtml);
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     createInteract() {
         this.interactIns = new IntersectionObserver(entries => {
@@ -34089,23 +34034,18 @@ class FileElem extends CompBaseCommField {
     static custAttrs = ['name', 'value', 'accept', 'size', 'label', 'tools', ...this.evtsArr];
     static boolAttrs = ['disabled', 'readonly', 'multiple', 'full'];
     static get observedAttributes() {
-        return ['placeholder', ...this.custAttrs, ...this.boolAttrs];
+        return ['placeholder', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = FileElem.boolAttrs.includes(name) ? getAttrBool(newVal) : name === 'tools' ? getAttrArr(newVal, 'close') : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, FileElem, { tools: getAttrArr(newVal, 'close') });
     }
     getRawData() {
-        for (let k of [...FileElem.custAttrs, ...FileElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of FileElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(FileElem);
         this.propsRaw.placeholder = this.getAttribute('placeholder') || this.rawHtml || config.lang.form.fileLabel;
         this.propsRaw.value = this.propsRaw.multiple ? [] : '';
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
         this.propsProxy['tools'] = getAttrArr(this.getAttribute('tools'), 'close');
         this.value = this.propsProxy.value;
         this.setFieldProps(['name', 'value', 'disabled', 'readonly', 'multiple']);
@@ -34129,7 +34069,7 @@ class FileElem extends CompBaseCommField {
             let files = [...this.inputEl.files], names = files.map((k) => k.name), oldVal = this.value;
             this.value = this.propsProxy.multiple ? files : files[0] || '';
             files.length > 0 && (this.propsProxy.value = names.join(','));
-            this.namesEl.innerHTML = (files.length === 0) ? '' : (files.length === 1) ? this.inputEl.value : renderTpl(config.lang.form.fileMulti, { data: files.length }) + this.propsProxy.value;
+            this.namesEl.innerHTML = (files.length === 0) ? '' : (files.length === 1) ? this.inputEl.value : renderTpl(this.propsProxy.lang?.multi || config.lang.form.fileMulti, { data: files.length }) + this.propsProxy.value;
             this.listen({ name: 'changed', params: [{ oldVal, newVal: this.value }] });
         }, false);
         this.wrapEl.addEventListener('click', this.clickEvt);
@@ -34228,22 +34168,17 @@ class InputElem extends CompBaseCommField {
     static custAttrs = ['name', 'placeholder', 'type', 'size', 'limit', 'tools', 'icon', 'cube', 'disk', 'image', 'btn', 'action', 'label', 'unit', 'custom', 'mean', 'task', ...this.evtsArr];
     static boolAttrs = ['disabled', 'readonly', 'blocked', 'full'];
     static get observedAttributes() {
-        return ['value', ...this.custAttrs, ...this.boolAttrs];
+        return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = InputElem.boolAttrs.includes(name) ? getAttrBool(newVal) : name === 'tools' ? getAttrArr(newVal, 'close') : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, InputElem, { tools: getAttrArr(newVal, 'close') });
     }
     getRawData() {
-        for (let k of [...InputElem.custAttrs, ...InputElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of InputElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(InputElem);
         this.propsRaw.value = this.getAttribute('value') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
         this.propsProxy['tools'] = getAttrArr(this.getAttribute('tools'), 'close');
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
     }
@@ -34270,7 +34205,7 @@ class InputElem extends CompBaseCommField {
         if (!total) {
             return this;
         }
-        this.limitEl.innerHTML = renderTpl(config.lang.form.maxLength, { total, value: len, remaining });
+        this.limitEl.innerHTML = renderTpl(this.propsProxy.lang?.max || config.lang.form.maxLength, { total, value: len, remaining });
         if (tmp <= 0) {
             if (tmp < 0) {
                 this.inputEl.value = value.slice(0, total);
@@ -34473,22 +34408,17 @@ class TextareaElem extends CompBaseCommField {
     static custAttrs = ['name', 'placeholder', 'size', 'tools', 'limit', 'label', 'mean', 'task', ...this.evtsArr];
     static boolAttrs = ['disabled', 'readonly', 'single', 'full'];
     static get observedAttributes() {
-        return ['value', ...this.custAttrs, ...this.boolAttrs];
+        return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = TextareaElem.boolAttrs.includes(name) ? getAttrBool(newVal) : name === 'tools' ? getAttrArr(newVal, 'close') : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, TextareaElem, { tools: getAttrArr(newVal, 'close') });
     }
     getRawData() {
-        for (let k of [...TextareaElem.custAttrs, ...TextareaElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of TextareaElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(TextareaElem);
         this.propsRaw.value = this.getAttribute('value') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
         this.propsProxy['tools'] = getAttrArr(this.getAttribute('tools'), 'close');
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
     }
@@ -34509,7 +34439,7 @@ class TextareaElem extends CompBaseCommField {
         if (!total) {
             return this;
         }
-        this.limitEl.innerHTML = renderTpl(config.lang.form.maxLength, { total, value: len, remaining });
+        this.limitEl.innerHTML = renderTpl(this.propsProxy.lang?.max || config.lang.form.maxLength, { total, value: len, remaining });
         if (tmp <= 0) {
             if (tmp < 0) {
                 this.inputEl.value = value.slice(0, total);
@@ -34702,12 +34632,12 @@ class RadiosElem extends CompBaseCommField {
     static custAttrs = ['size', 'name', 'type', 'layout', 'cols', 'checked', 'disable', 'content', 'wrap-classes', 'item-classes', 'input-classes', 'on-checked', ...this.evtsArr];
     static boolAttrs = ['disabled'];
     static get observedAttributes() {
-        return ['content', ...this.custAttrs, ...this.boolAttrs];
+        return ['content', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = RadiosElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+        this.saveProps(name, newVal, RadiosElem);
         if (name === 'content') {
             this.updateInputs(newVal);
         }
@@ -34754,17 +34684,10 @@ class RadiosElem extends CompBaseCommField {
         this.connectedRender();
     }
     getRawData() {
-        [...RadiosElem.custAttrs, ...RadiosElem.lazyAttrs].forEach((k) => {
-            this.propsRaw[k] = this.getAttribute(k);
-        });
-        RadiosElem.boolAttrs.forEach((k) => {
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        });
+        this.getRawProps(RadiosElem);
         !this.propsRaw.name && (this.propsRaw.name = ax.namePfx + Date.now());
         this.propsRaw.content = super.getItemsData();
-        for (let k in this.propsRaw) {
-            this.propsProxy[k] = this.propsRaw[k];
-        }
+        this.getProxyProps();
         this.setFieldProps(['name', 'value', 'disabled']);
     }
     fillWrap(data) {
@@ -34903,12 +34826,12 @@ class CheckboxesElem extends CompBaseCommField {
     ];
     static boolAttrs = ['disabled'];
     static get observedAttributes() {
-        return ['content', ...this.custAttrs, ...this.boolAttrs];
+        return ['content', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = this.getPropVal(CheckboxesElem, name, newVal);
+        this.saveProps(name, newVal, CheckboxesElem);
         if (name === 'content') {
             this.updateInputs(newVal);
         }
@@ -34968,10 +34891,10 @@ class CheckboxesElem extends CompBaseCommField {
         this.connectedRender();
     }
     getRawData() {
-        this.getInitPropsRaw(CheckboxesElem);
+        this.getRawProps(CheckboxesElem);
         !this.propsRaw.name && (this.propsRaw.name = ax.namePfx + Date.now());
         this.propsRaw.content = super.getItemsData();
-        this.getInitPropsProxy();
+        this.getProxyProps();
         this.setFieldProps(['name', 'value', 'disabled']);
     }
     fillWrap(data) {
@@ -35057,17 +34980,17 @@ class NumberElem extends CompBaseCommField {
         this.fillWrap(this.propsProxy);
         this.select = () => this.inputEl.select();
         this.on('input', (value) => {
-            let step = this.propsProxy.step || 1;
-            if (this.propsProxy.max) {
-                if (~~value + step > ~~this.propsProxy.max) {
+            let step = ~~this.propsProxy.step || 1, val = ~~value, max = ~~this.propsProxy.max, min = ~~this.propsProxy.min;
+            if (!isNull(this.propsProxy.max)) {
+                if (val + step > max) {
                     this.incrEl.toggleAttribute('disabled', true);
                 }
                 else {
                     this.incrEl.removeAttribute('disabled');
                 }
             }
-            if (this.propsProxy.min) {
-                if (~~value - step < ~~this.propsProxy.min) {
+            if (!isNull(this.propsProxy.min)) {
+                if (val - step < min) {
                     this.decrEl.toggleAttribute('disabled', true);
                 }
                 else {
@@ -35079,12 +35002,12 @@ class NumberElem extends CompBaseCommField {
     static custAttrs = ['name', 'placeholder', 'layout', 'size', 'max', 'min', 'step', 'label', 'on-exceeded', ...this.evtsArr];
     static boolAttrs = ['tips', 'disabled', 'readonly', 'full'];
     static get observedAttributes() {
-        return ['value', ...this.custAttrs, ...this.boolAttrs];
+        return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = NumberElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
+        this.saveProps(name, newVal, NumberElem);
         if (NumberElem.boolAttrs.includes(name)) {
             this.inputEl[name === 'readonly' ? 'readOnly' : name] = this.propsProxy[name];
             this[name === 'readonly' ? 'readOnly' : name] = this.propsProxy[name];
@@ -35121,16 +35044,9 @@ class NumberElem extends CompBaseCommField {
         }
     }
     getRawData() {
-        [...NumberElem.custAttrs, ...NumberElem.lazyAttrs].forEach((k) => {
-            this.propsRaw[k] = this.getAttribute(k);
-        });
-        NumberElem.boolAttrs.forEach((k) => {
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        });
+        this.getRawProps(NumberElem);
         this.propsRaw.value = parseFloat(this.getAttribute('value') || this.getConnCont('text'));
-        for (let k in this.propsRaw) {
-            this.propsProxy[k] = this.propsRaw[k];
-        }
+        this.getProxyProps();
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
     }
     fillWrap(data) {
@@ -35149,7 +35065,7 @@ class NumberElem extends CompBaseCommField {
             return this;
         }
         if (max !== '+∞' && min !== '-∞') {
-            str = renderTpl(config.lang.form.limitNumber, { max, min });
+            str = renderTpl(this.propsProxy.lang?.limit || config.lang.form.limitNumber, { max, min });
             if (~~val >= ~~min && ~~val <= ~~max) {
                 this.removeAttribute('exceeded');
                 this.decrEl.removeAttribute('disabled');
@@ -35157,18 +35073,18 @@ class NumberElem extends CompBaseCommField {
             }
             else {
                 this.setAttribute('exceeded', '');
-                str += config.lang.form.exceed;
+                str += (this.propsProxy.lang?.exceed || config.lang.form.exceed);
                 val = (~~val < ~~min) ? min : (~~val > ~~max) ? max : val;
                 ~~val > old ? this.decrEl.setAttribute('disabled', '') : this.incrEl.setAttribute('disabled', '');
                 this.listen({ name: 'exceeded', params: [val, old] });
             }
         }
         else if (max !== '+∞') {
-            str = renderTpl(config.lang.form.maxNumber, { max });
+            str = renderTpl(this.propsProxy.lang?.max || config.lang.form.maxNumber, { max });
             if (~~val > ~~max) {
                 val = max;
                 this.setAttribute('exceeded', '');
-                str += config.lang.form.exceed;
+                str += (this.propsProxy.lang?.exceed || config.lang.form.exceed);
                 this.incrEl.setAttribute('disabled', '');
                 this.listen({ name: 'exceeded', params: [val, old] });
             }
@@ -35178,11 +35094,11 @@ class NumberElem extends CompBaseCommField {
             }
         }
         else if (min !== '-∞') {
-            str = renderTpl(config.lang.form.minNumber, { min });
+            str = renderTpl(this.propsProxy.lang?.min || config.lang.form.minNumber, { min });
             if (~~val < ~~min) {
                 val = min;
                 this.setAttribute('exceeded', '');
-                str += config.lang.form.exceed;
+                str += (this.propsProxy.lang?.exceed || config.lang.form.exceed);
                 this.decrEl.setAttribute('disabled', '');
                 this.listen({ name: 'exceeded', params: [val, old] });
             }
@@ -35258,8 +35174,7 @@ class RangeElem extends CompBaseCommFieldMixin {
         for (let k of [...RangeElem.custAttrs, ...RangeElem.lazyAttrs, ...RangeElem.boolAttrs, ...RangeElem.evtsArr]) {
             this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), RangeElem, optRange);
         }
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
         for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optRange);
         this.setFieldProps(['name', 'value', 'disabled']);
@@ -35336,28 +35251,20 @@ class StatsElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = [
-        'unit', 'tips', 'icon', 'disk', 'cube', 'image', 'badge', 'dir',
-        'on-connected', 'on-reset', 'on-set',
-    ];
+    static custAttrs = ['unit', 'tips', 'icon', 'disk', 'cube', 'image', 'badge', 'dir', ...this.baseAttrs];
     static boolAttrs = ['inverted', 'disabled'];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = StatsElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, StatsElem);
     }
     getRawData() {
-        for (let k of [...StatsElem.custAttrs, ...StatsElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of StatsElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(StatsElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('div', { [alias]: 'wrap' });
@@ -35492,25 +35399,20 @@ class IconElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['tips', 'type', 'badge', 'dir', 'bg', 'href', 'target', 'rel', 'download'];
+    static custAttrs = ['tips', 'type', 'badge', 'dir', 'bg', 'href', 'target', 'rel', 'download', ...this.baseAttrs];
     static boolAttrs = ['disabled'];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = IconElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, IconElem);
     }
     getRawData() {
-        for (let k of [...IconElem.custAttrs, ...IconElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of IconElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(IconElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.headEl = createEl('span', { [alias]: 'head' });
@@ -35651,28 +35553,20 @@ class BadgeElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = [
-        'theme', 'type', 'shape',
-        'on-connected', 'on-reset', 'on-set',
-    ];
+    static custAttrs = ['theme', 'type', 'shape', ...this.baseAttrs];
     static boolAttrs = ['glassy'];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = BadgeElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, BadgeElem);
     }
     getRawData() {
-        for (let k of [...BadgeElem.custAttrs, ...BadgeElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of BadgeElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(BadgeElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('div', { [alias]: 'wrap' }, data.label);
@@ -35703,28 +35597,20 @@ class DividerElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = [
-        'break', 'size', 'fs',
-        'on-connected', 'on-reset', 'on-set',
-    ];
+    static custAttrs = ['break', 'size', 'fs', ...this.baseAttrs];
     static boolAttrs = [];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = DividerElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, DividerElem);
     }
     getRawData() {
-        for (let k of [...DividerElem.custAttrs, ...DividerElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of DividerElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(DividerElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.startEl = createEl('div', { [alias]: 'start' });
@@ -35761,25 +35647,20 @@ class AlarmElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['icon', 'image', 'theme', 'size'];
+    static custAttrs = ['icon', 'image', 'theme', 'size', ...this.baseAttrs];
     static boolAttrs = [];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = AlarmElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, AlarmElem);
     }
     getRawData() {
-        for (let k of [...AlarmElem.custAttrs, ...AlarmElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of AlarmElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(AlarmElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('span', { [alias]: 'wrap' });
@@ -35907,8 +35788,7 @@ class DatetimeElem extends CompBaseCommFieldMixin {
         for (let k of [...DatetimeElem.custAttrs, ...DatetimeElem.lazyAttrs, ...DatetimeElem.boolAttrs, ...DatetimeElem.evtsArr]) {
             this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), DatetimeElem, optDatetime);
         }
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
         for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optDatetime);
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
@@ -36203,8 +36083,7 @@ class EditorElem extends CompBaseCommFieldMixin {
         for (let k of [...EditorElem.custAttrs, ...EditorElem.lazyAttrs, ...EditorElem.boolAttrs, ...EditorElem.evtsArr]) {
             this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), EditorElem, optEditor);
         }
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
         this.propsRaw.value = this.rawHtml || this.propsRaw.value || '';
         for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optEditor);
@@ -36308,8 +36187,7 @@ class SelectElem extends CompBaseCommFieldMixin {
         for (let k of [...SelectElem.custAttrs, ...SelectElem.lazyAttrs, ...SelectElem.boolAttrs, ...SelectElem.evtsArr]) {
             this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), SelectElem, optSelect);
         }
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
         for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optSelect);
         this.setFieldProps(['name', 'disabled']);
@@ -36400,8 +36278,7 @@ class UploadElem extends CompBaseCommFieldMixin {
         for (let k of [...UploadElem.custAttrs, ...UploadElem.lazyAttrs, ...UploadElem.boolAttrs, ...UploadElem.evtsArr]) {
             this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), UploadElem, optUpload);
         }
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
         for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optUpload);
         this.setFieldProps(['name', 'value', 'disabled']);
@@ -36477,21 +36354,16 @@ class FieldsElem extends CompBaseCommField {
     static custAttrs = ['size', 'label', 'unit', 'connector', 'align', 'shape'];
     static boolAttrs = ['disabled', 'full', 'dividable'];
     static get observedAttributes() {
-        return [...this.custAttrs, ...this.boolAttrs];
+        return [...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = FieldsElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, FieldsElem);
     }
     getRawData() {
-        for (let k of [...FieldsElem.custAttrs, ...FieldsElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of FieldsElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getRawProps(FieldsElem);
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.fieldsEl = createEl('div', { [alias]: 'fields' });
@@ -36583,7 +36455,7 @@ class SearchElem extends CompBaseCommField {
     static custAttrs = ['size', 'label', 'feature', 'shape'];
     static boolAttrs = ['disabled', 'full', 'notable'];
     static get observedAttributes() {
-        return [...this.custAttrs, ...this.boolAttrs];
+        return [...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
@@ -36596,8 +36468,7 @@ class SearchElem extends CompBaseCommField {
             this.propsRaw[k] = this.getAttribute(k);
         for (let k of SearchElem.boolAttrs)
             this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
     }
@@ -36669,25 +36540,20 @@ class CalloutElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['theme', 'caption', 'icon', 'disk', 'cube', 'image', 'href', 'target', 'rel', 'feature', 'autoclose', 'size'];
+    static custAttrs = ['theme', 'caption', 'icon', 'disk', 'cube', 'image', 'href', 'target', 'rel', 'feature', 'autoclose', 'size', ...this.baseAttrs];
     static boolAttrs = ['closable', 'square', 'opaque', 'notable', 'hidden', 'result'];
     static get observedAttributes() {
-        return ['content', ...this.custAttrs, ...this.boolAttrs];
+        return ['content', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = CalloutElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, CalloutElem);
     }
     getRawData() {
-        for (let k of [...CalloutElem.custAttrs, ...CalloutElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of CalloutElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(CalloutElem);
         this.propsRaw.content = this.getAttribute('content') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('div', { [alias]: 'wrap' });
@@ -36863,24 +36729,19 @@ class TwilightElem extends CompBaseComm {
         this.isDay = true;
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = ['labels', 'target', 'feature'];
+    static custAttrs = ['labels', 'target', 'feature', ...this.baseAttrs];
     static boolAttrs = [''];
     static get observedAttributes() {
-        return [...this.custAttrs, ...this.boolAttrs];
+        return [...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = TwilightElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, TwilightElem);
     }
     getRawData() {
-        for (let k of [...TwilightElem.custAttrs, ...TwilightElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of TwilightElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getRawProps(TwilightElem);
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.wrapEl = createEl('div', { [alias]: 'wrap' });
@@ -36997,28 +36858,20 @@ class StepElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = [
-        'active', 'type', 'theme', 'dir', 'error',
-        'on-connected', 'on-reset', 'on-set',
-    ];
+    static custAttrs = ['active', 'type', 'theme', 'dir', 'error', ...this.baseAttrs];
     static boolAttrs = ['head-show', 'body-show', 'inverted', 'justify'];
     static get observedAttributes() {
-        return ['content', ...this.custAttrs, ...this.boolAttrs];
+        return ['content', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = StepElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, StepElem);
     }
     getRawData() {
-        for (let k of [...StepElem.custAttrs, ...StepElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of StepElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(StepElem);
         this.propsRaw.content = this.getAttribute('content') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.content = this.stdContent(this.getArrContent());
@@ -37159,33 +37012,24 @@ class StatusElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = [
-        'type', 'lamp', 'current',
-        'on-connected', 'on-reset', 'on-set',
-    ];
+    static custAttrs = ['type', 'lamp', 'current', ...this.baseAttrs];
     static boolAttrs = [];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = StatusElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, StatusElem);
     }
     getRawData() {
-        for (let k of [...StatusElem.custAttrs, ...StatusElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of StatusElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(StatusElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
-        (this.propsRaw.label);
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.lampEl = createEl('i', { [alias]: 'lamp' });
-        this.labelEl = createEl('i', { [alias]: 'label' }, config.lang.status.info);
+        this.labelEl = createEl('i', { [alias]: 'label' }, this.propsProxy.lang?.info || config.lang.status.info);
         this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.lampEl);
         this.propsRaw.label && this.wrapEl.appendChild(this.labelEl);
     }
@@ -37204,7 +37048,8 @@ class StatusElem extends CompBaseComm {
         }
         else {
             elState(this.labelEl).isVirtual && this.wrapEl.appendChild(this.labelEl);
-            this.labelEl.innerHTML = opt.newVal ? opt.newVal : config.lang.status[this.propsProxy.current || 'info'];
+            let tmp = this.propsProxy.current || 'info';
+            this.labelEl.innerHTML = opt.newVal ? opt.newVal : this.propsProxy.lang?.[tmp] || config.lang.status[tmp];
         }
     }
     changedLamp(opt) {
@@ -37213,7 +37058,7 @@ class StatusElem extends CompBaseComm {
     }
     changedCurrent(opt) {
         if (opt.newVal) {
-            this.labelEl.innerHTML = config.lang.status[opt.newVal];
+            this.labelEl.innerHTML = this.propsProxy.lang?.[opt.newVal] || config.lang.status[opt.newVal];
         }
     }
 }
@@ -37235,22 +37080,17 @@ class HeadingElem extends CompBaseComm {
     }
     static custAttrs = [...this.baseAttrs, 'size', 'theme', 'icon', 'disk', 'cube', 'image', 'tips', 'arrow'];
     static get observedAttributes() {
-        return ['label', ...this.custAttrs, ...this.boolAttrs];
+        return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = HeadingElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, HeadingElem);
     }
     getRawData() {
-        for (let k of [...HeadingElem.custAttrs, ...HeadingElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
-        for (let k of HeadingElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
+        this.getRawProps(HeadingElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
     }
     fillWrap(data) {
         this.labelEl = createEl('i', { [alias]: 'label' }, data.label);
@@ -37335,24 +37175,19 @@ class SkeletonElem extends CompBaseComm {
         this.getRawData();
         this.fillWrap(this.propsProxy);
     }
-    static custAttrs = [...this.baseAttrs, 'type', 'anim', 'cols', 'rows'];
+    static custAttrs = ['type', 'anim', 'cols', 'rows', ...this.baseAttrs];
     static get observedAttributes() {
-        return ['content', ...this.custAttrs, ...this.boolAttrs];
+        return ['content', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.propsProxy[name] = SkeletonElem.boolAttrs.includes(name) ? getAttrBool(newVal) : newVal;
-        this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        this.savePropsToListen(name, oldVal, newVal, SkeletonElem);
     }
     getRawData() {
-        for (let k of [...SkeletonElem.custAttrs, ...SkeletonElem.lazyAttrs])
-            this.propsRaw[k] = this.getAttribute(k);
+        this.getRawProps(SkeletonElem);
         this.propsRaw.content = this.getAttribute('content') || this.rawHtml;
-        for (let k of SkeletonElem.boolAttrs)
-            this.propsRaw[k] = getAttrBool(this.getAttribute(k));
-        for (let k in this.propsRaw)
-            this.propsProxy[k] = this.propsRaw[k];
+        this.getProxyProps();
         this.cols = this.getCols();
         this.rows = this.getRows();
     }
@@ -37367,7 +37202,7 @@ class SkeletonElem extends CompBaseComm {
         if (isNull(str))
             return val;
         if (str?.includes(',')) {
-            obj = paramToJson(str);
+            obj = strToJson(str);
             val = ~~obj[getScreenSize()];
             (getScreenSize());
         }

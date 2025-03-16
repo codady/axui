@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-16 1:25:25
+ * @since Last modified: 2025-3-16 20:41:32
  * @name AXUI front-end framework.
- * @version 3.0.30
+ * @version 3.0.31
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-16 01:24:15
+ * @since Last modified: 2025-03-16 20:40:51
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -19997,8 +19997,7 @@ AX-SKELETON[anim=stream] [rep=wrap]:after {
   position: absolute;
   left: 0;
   top: 0;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 34%, black 50%, rgba(255, 255, 255, 0) 67%);
-  background-size: 300% 100%;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 34%, black 50%, rgba(0, 0, 0, 0) 67%) 0% 0% / 300% 100%;
   mix-blend-mode: overlay;
   animation: _skel-stream var(--_dur-6) ease infinite both;
 }
@@ -24117,41 +24116,11 @@ AX-SKELETON[shape=square] {
   ._badge-warn {
     color: var(--_c-white);
   }
+  AX-SKELETON[anim=stream] [rep=wrap]:after {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 34%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 67%) 0% 0% / 300% 100%;
+  }
 }
 [scheme="dark"]:where(:not(:root)) {
-  /* //由公共变量衍生需要修正的变量
-        --_c-stage: hsl(var(--_h-stage), var(--_s-stage), var(--_l-stage));
-        --_c-text: hsla(var(--_h-text), var(--_s-text), var(--_l-text), var(--_a-text));
-        --_c-text-bg: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 4%*var(--_c-coef)));
-        --_c-text-bd: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 12%*var(--_c-coef)));
-        --_c-text-fc: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 16%*var(--_c-coef)));
-        --_c-text-tp: hsla(var(--_h-text), var(--_s-text), calc(-100% * var(--_c-coef)), 0);
-        --_c-text-ac: hsla(var(--_h-text), var(--_s-text), calc(-100% * var(--_c-coef)), 0.06);
-        --_c-text-sd: hsla(var(--_h-text), var(--_s-text), calc(-100% * var(--_c-coef)), 0.2);
-        --_c-brief: hsla(var(--_h-text), var(--_s-text), calc(var(--_l-text) + 20%*var(--_c-coef)), var(--_a-text));
-        --_c-brief-bg: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 2%*var(--_c-coef)));
-        --_c-ignore: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 30%*var(--_c-coef)));
-        --_c-ignore-bg: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 2%*var(--_c-coef)));
-        --_c-prim-bg: hsl(var(--_h-prim), 100%, calc(var(--_l-stage) - 3%*var(--_c-coef)));
-        --_c-prim-bd: hsl(var(--_h-prim), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
-        --_c-prim-fc: hsl(var(--_h-prim), 62%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
-        --_c-prim-ht: hsl(var(--_h-prim), 70%, calc(var(--_l-stage) - 30%*var(--_c-coef)));
-        --_c-prim-gy: hsla(var(--_h-prim), 20%, calc(var(--_l-stage) - 20%*var(--_c-coef)), var(--_a-prim));
-        --_c-succ-bg: hsl(var(--_h-succ), 50%, calc(var(--_l-stage) - 4%*var(--_c-coef)));
-        --_c-succ-bd: hsl(var(--_h-succ), 33%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
-        --_c-succ-fc: hsl(var(--_h-succ), 38%, calc(var(--_l-stage) - 13%*var(--_c-coef)));
-        --_c-error-bg: hsl(var(--_h-error), 100%, calc(var(--_l-stage) - 3%*var(--_c-coef)));
-        --_c-error-bd: hsl(var(--_h-error), 39%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
-        --_c-error-fc: hsl(var(--_h-error), 42%, calc(var(--_l-stage) - 14%*var(--_c-coef)));
-        --_c-warn-bg: hsl(var(--_h-warn), 100%, calc(var(--_l-stage) - 4%*var(--_c-coef)));
-        --_c-warn-bd: hsl(var(--_h-warn), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
-        --_c-warn-fc: hsl(var(--_h-warn), 49%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
-        --_c-info-bg: hsl(var(--_h-info), 100%, calc(var(--_l-stage) - 3%*var(--_c-coef)));
-        --_c-info-bd: hsl(var(--_h-info), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
-        --_c-info-fc: hsl(var(--_h-info), 62%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
-        --_c-issue-bg: hsl(var(--_h-issue), 100%, calc(var(--_l-stage) - 4%*var(--_c-coef)));
-        --_c-issue-bd: hsl(var(--_h-issue), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
-        --_c-issue-fc: hsl(var(--_h-issue), 49%, calc(var(--_l-stage) - 15%*var(--_c-coef))); */
   /*Stage colors*/
   --_h-stage: 0;
   --_s-stage: 0%;
@@ -24380,4 +24349,7 @@ AX-SKELETON[shape=square] {
 }
 [scheme="dark"] ._badge-warn {
   color: var(--_c-white);
+}
+[scheme="dark"] AX-SKELETON[anim=stream] [rep=wrap]:after {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 34%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 67%) 0% 0% / 300% 100%;
 }
