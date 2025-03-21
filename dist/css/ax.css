@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-16 20:41:32
+ * @since Last modified: 2025-3-21 23:18:2
  * @name AXUI front-end framework.
- * @version 3.0.31
+ * @version 3.0.32
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-16 20:40:51
+ * @since Last modified: 2025-03-21 23:15:34
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -7391,7 +7391,7 @@ AX-HEADER [rep=nav] ._group-lamp {
 AX-HEADER [rep=nav] ._grade > [rep=host] {
   line-height: var(--_header-h);
 }
-AX-HEADER [rep=nav] ._menu[row] {
+AX-HEADER [rep=nav] ._menu[nav] {
   --_menu-h-1st: var(--_header-h);
 }
 AX-HEADER [rep=btns] {
@@ -13089,6 +13089,618 @@ ol:where(._group-flex) li:before {
 ._group-input [rep=content] ._box-tools [rep="icon"] {
   font-size: var(--_px-ignore);
 }
+/*tree*/
+AX-TREE {
+  display: block;
+  content-visibility: auto;
+}
+._tree {
+  --_tree-h: var(--_rem-title);
+  --_tree-lh: var(--_rem-list);
+  --_tree-gap: var(--_rem-min);
+  --_tree-bg-hov: var(--_c-text-bg);
+  --_tree-c: var(--_c-text);
+  --_tree-theme: var(--_c-prim);
+  --_tree-theme-bg: var(--_c-prim-bg);
+  --_tree-theme-sd: var(--_c-prim-sd);
+  --_tree-c-hl: var(--_c-white);
+  --_tree-bg-hl: var(--_tree-theme);
+  --_tree-c-arrow: var(--_c-brief);
+  content-visibility: auto;
+  /*line节点连线*/
+}
+._tree > * ._tree-children {
+  display: none;
+}
+._tree ._tree-head {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: var(--_tree-h);
+  transition: all var(--_dur-2) linear;
+  /*edit编辑*/
+  /*expand展开*/
+  /*selected已选择*/
+  /*drag拖拽节点*/
+  /*focus聚焦，新增和拖拽成为焦点，如果本身是已选择状态则不做改变*/
+}
+._tree ._tree-head [rep=holder] {
+  flex: auto;
+}
+._tree ._tree-head [rep=gap] {
+  width: var(--_tree-gap);
+}
+._tree ._tree-head > [rep=arrow] {
+  color: var(--_tree-c-arrow);
+  font-family: var(--_ff-icon);
+  text-align: center;
+  width: var(--_tree-lh);
+  height: var(--_tree-h);
+  line-height: var(--_tree-h);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--_rem-body);
+  position: relative;
+}
+._tree ._tree-head > [rep=arrow][type=icon] {
+  font-size: var(--_rem-root);
+}
+._tree ._tree-head > [rep=arrow]:not(._none) {
+  cursor: pointer;
+  transition: all var(--_dur-2) linear;
+}
+._tree ._tree-head > [rep=arrow][spinning]:before {
+  content: "";
+  display: inline-block;
+  width: 1.4rem;
+  height: 1.4rem;
+  background: var(--_spin) no-repeat scroll center;
+  background-size: cover;
+}
+._tree ._tree-head > [rep=check] {
+  width: var(--_tree-lh);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+._tree ._tree-head > [rep=legend] {
+  color: var(--_c-brief);
+  width: var(--_tree-lh);
+  height: var(--_tree-lh);
+  line-height: var(--_tree-lh);
+  text-align: center;
+  background-position: center;
+  background-size: var(--_rem-body);
+  background-repeat: no-repeat;
+}
+._tree ._tree-head > [rep=group] > [rep=icon],
+._tree ._tree-head > [rep=icon] {
+  color: var(--_c-brief);
+  width: var(--_tree-lh);
+  text-align: center;
+  margin-right: var(--_tree-gap);
+  transition: all var(--_dur-2) linear;
+}
+._tree ._tree-head > [rep=group] > [rep=disk],
+._tree ._tree-head > [rep=disk] {
+  height: var(--_tree-lh);
+  width: var(--_tree-lh);
+  margin-right: var(--_tree-gap);
+  object-fit: cover;
+  border-radius: 100%;
+}
+._tree ._tree-head > [rep=group] > [rep=cube],
+._tree ._tree-head > [rep=cube] {
+  height: var(--_tree-lh);
+  width: var(--_tree-lh);
+  margin-right: var(--_tree-gap);
+  object-fit: cover;
+  border-radius: var(--_r);
+}
+._tree ._tree-head > [rep=group] > [rep=image],
+._tree ._tree-head > [rep=image] {
+  max-width: calc(var(--_tree-lh)*2);
+  margin-right: var(--_tree-gap);
+}
+._tree ._tree-head > [rep=group] > [rep=label],
+._tree ._tree-head > [rep=label] {
+  color: var(--_tree-c);
+  line-height: var(--_tree-lh);
+  padding: 0 var(--_tree-gap);
+  margin-right: var(--_tree-gap);
+  border-radius: var(--_r);
+  box-sizing: border-box;
+  white-space: nowrap;
+  position: relative;
+  cursor: pointer;
+  transition: all var(--_dur-2) linear;
+}
+._tree ._tree-head > [rep=group] > [rep=label] [rep=mark],
+._tree ._tree-head > [rep=label] [rep=mark] {
+  color: var(--_c-issue);
+}
+._tree ._tree-head > [rep=group] > [rep=tips],
+._tree ._tree-head > [rep=tips] {
+  font-size: var(--_rem-ignore);
+  color: var(--_c-ignore);
+  margin-left: var(--_tree-gap);
+}
+._tree ._tree-head > [rep=group] > [rep=badge],
+._tree ._tree-head > [rep=group] > [rep=AX-BADGE],
+._tree ._tree-head > [rep=badge],
+._tree ._tree-head > AX-BADGE {
+  margin-left: var(--_tree-gap);
+}
+._tree ._tree-head > [rep=group] > [rep=custom],
+._tree ._tree-head > [rep=custom] {
+  margin-left: var(--_tree-gap);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+._tree ._tree-head > [rep=tools] {
+  --_tools-c-hov: var(--_tree-c-hl);
+  --_tools-c-haz-hov: var(--_tree-c-hl);
+  --_tools-bg-hov: var(--_tree-bg-hl);
+  --_tools-bg-hov-haz: var(--_c-error);
+  margin-left: var(--_tree-gap);
+}
+._tree ._tree-head input[type='text'] {
+  width: 9.2rem;
+  height: var(--_tree-lh);
+  line-height: var(--_tree-lh);
+  padding: 0 0.4rem;
+}
+._tree ._tree-head[editing] > [rep=group] > [rep=label],
+._tree ._tree-head[editing] > [rep=label] {
+  padding: 0;
+}
+._tree ._tree-head[editing] > [rep=tools] {
+  position: absolute;
+  left: -100000px;
+}
+._tree ._tree-head[expanded] > [rep=group] > [rep=arrow][type=icon],
+._tree ._tree-head[expanded] > [rep=arrow][type=icon] {
+  color: var(--_tree-theme);
+}
+._tree ._tree-head:where([selected]:not([editing])) > [rep=group] > [rep=label],
+._tree ._tree-head:where([selected]:not([editing])) > [rep=label] {
+  color: var(--_tree-c-hl);
+  background: var(--_tree-bg-hl);
+}
+._tree ._tree-head[drop=ing] > [rep=group] > [rep=label],
+._tree ._tree-head[drop=ing] > [rep=label] {
+  color: var(--_tree-theme);
+  background: transparent;
+}
+._tree ._tree-head[drop=ing] > [rep=group] > [rep=label]:before,
+._tree ._tree-head[drop=ing] > [rep=label]:before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-width: 4px;
+  border-style: solid;
+  border-color: transparent transparent transparent var(--_tree-theme);
+  position: absolute;
+  left: -4px;
+  display: none;
+}
+._tree ._tree-head[drop=ing]:where([point=before]) > [rep=group] > [rep=label]:before,
+._tree ._tree-head[drop=ing]:where([point=before]) > [rep=label]:before {
+  display: block;
+  top: -6px;
+}
+._tree ._tree-head[drop=ing]:where([point=after]) > [rep=group] > [rep=label]:before,
+._tree ._tree-head[drop=ing]:where([point=after]) > [rep=label]:before {
+  display: block;
+  bottom: -6px;
+}
+._tree ._tree-head[drop=ing]:where([point=inside]) > [rep=group] > [rep=label]:before,
+._tree ._tree-head[drop=ing]:where([point=inside]) > [rep=label]:before {
+  display: block;
+  top: 7px;
+}
+._tree ._tree-head[drop=ing]:where([point=inside]) > [rep=group] > [rep=label]:after,
+._tree ._tree-head[drop=ing]:where([point=inside]) > [rep=label]:after {
+  content: '';
+  border: 1px solid var(--_tree-theme);
+  border-radius: var(--_r);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+._tree ._tree-head ._tree-head:where(:focus:not([selected])) > [rep=group] > [rep=label],
+._tree ._tree-head ._tree-head:where(:focus:not([selected])) > [rep=label] {
+  color: var(--_tree-theme);
+}
+._tree ._tree-head:hover {
+  background-color: var(--_tree-bg-hov);
+}
+._tree ._tree-head:where([readonly]) > [rep=tools] {
+  opacity: var(--_o-disabled);
+  pointer-events: none;
+}
+._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]),
+._tree ._tree-head:where([disabled]),
+._tree ._tree-head:where([uncheckable][unselectable]),
+._tree ._tree-head:where([unselectable][exceeded]) {
+  opacity: var(--_o-disabled);
+  pointer-events: none;
+}
+._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]) ~ ._tree-body,
+._tree ._tree-head:where([disabled]) ~ ._tree-body,
+._tree ._tree-head:where([uncheckable][unselectable]) ~ ._tree-body,
+._tree ._tree-head:where([unselectable][exceeded]) ~ ._tree-body,
+._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]) ~ ._tree-foot,
+._tree ._tree-head:where([disabled]) ~ ._tree-foot,
+._tree ._tree-head:where([uncheckable][unselectable]) ~ ._tree-foot,
+._tree ._tree-head:where([unselectable][exceeded]) ~ ._tree-foot {
+  opacity: var(--_o-disabled);
+  pointer-events: none;
+}
+._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]):where([readonly]) > [rep=tools],
+._tree ._tree-head:where([disabled]):where([readonly]) > [rep=tools],
+._tree ._tree-head:where([uncheckable][unselectable]):where([readonly]) > [rep=tools],
+._tree ._tree-head:where([unselectable][exceeded]):where([readonly]) > [rep=tools],
+._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]) > [rep=check]:where([disabled]),
+._tree ._tree-head:where([disabled]) > [rep=check]:where([disabled]),
+._tree ._tree-head:where([uncheckable][unselectable]) > [rep=check]:where([disabled]),
+._tree ._tree-head:where([unselectable][exceeded]) > [rep=check]:where([disabled]),
+._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]):where([readonly]) > [rep=group] > [rep=tools],
+._tree ._tree-head:where([disabled]):where([readonly]) > [rep=group] > [rep=tools],
+._tree ._tree-head:where([uncheckable][unselectable]):where([readonly]) > [rep=group] > [rep=tools],
+._tree ._tree-head:where([unselectable][exceeded]):where([readonly]) > [rep=group] > [rep=tools],
+._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]) > [rep=group] > [rep=check]:where([disabled]),
+._tree ._tree-head:where([disabled]) > [rep=group] > [rep=check]:where([disabled]),
+._tree ._tree-head:where([uncheckable][unselectable]) > [rep=group] > [rep=check]:where([disabled]),
+._tree ._tree-head:where([unselectable][exceeded]) > [rep=group] > [rep=check]:where([disabled]) {
+  opacity: 1;
+}
+._tree ._tree-wrap {
+  /*disabled禁止勾选*/
+  /*  &[disabled] {
+      opacity: .5;
+    } */
+  /*    &:where(:not([disabled])) [disabled] {
+      opacity: .5;
+      &~._tree-body,
+      &~._tree-foot {
+        opacity: .5;
+        pointer-events: none;
+      }
+    } */
+  /*readonly只读，禁止编辑*/
+  /*   &:where(:not([disabled])) ._tree-head[readonly]>[rep=tools] {
+      opacity: .5;
+      pointer-events: none;
+    } */
+}
+._tree ._tree-wrap:has(>._tree-children) > ._tree-head > [rep=legend] {
+  cursor: pointer;
+}
+._tree ._tree-body {
+  --_tree-body-lh: var(--_rem-list);
+  --_tree-body-c: var(--_c-brief);
+  line-height: var(--_rem-subject);
+  display: flex;
+}
+._tree ._tree-body > ._none {
+  width: var(--_tree-lh);
+  position: relative;
+}
+._tree ._tree-brief {
+  color: var(--_tree-body-c);
+  font-size: var(--_rem-ignore);
+  flex: auto;
+  box-sizing: border-box;
+  margin: 0 0 var(--_rem-space) var(--_p);
+  position: relative;
+}
+._tree ._tree-brief:before {
+  content: 'corner-left-up';
+  /*       width: var(--_tree-body-dot);
+      height: var(--_tree-body-dot); 
+      border-radius: var(--_tree-body-dot);
+      background-color: var(--_c-text-sd);*/
+  font-family: var(--_ff-icon);
+  font-size: var(--_px-root);
+  color: var(--_c-ignore);
+  position: absolute;
+  left: calc(var(--_p)*-1 + var(--_tree-gap));
+  top: 0;
+}
+._tree ._tree-body:where(:has(._tree-brief:empty)) {
+  display: none;
+}
+._tree ._tree-foot {
+  line-height: var(--_tree-body-lh);
+}
+._tree ._tree-foot > ._none {
+  width: var(--_tree-lh);
+  position: relative;
+}
+._tree ._tree-foot:has([rep=info]:empty) {
+  display: none;
+}
+._tree ._tree-foot [rep=info] {
+  color: var(--_c-brief);
+}
+._tree ._tree-foot [rep=more],
+._tree ._tree-foot [rep=next],
+._tree ._tree-foot [rep=first] {
+  margin-left: var(--_rem-space);
+  cursor: pointer;
+}
+._tree ._tree-foot [rep=more],
+._tree ._tree-foot [rep=next] {
+  color: var(--_tree-theme);
+}
+._tree li ._tree-foot {
+  display: none;
+}
+._tree > ._tree-foot,
+._tree ._tree-head[expanded] ~ ._tree-foot {
+  display: flex;
+}
+._tree ._tree-result {
+  padding: calc((var(--_tree-h) - var(--_tree-lh))/2) 0;
+  box-sizing: border-box;
+}
+._tree ._tree-result [rep=holder] {
+  color: var(--_c-ignore);
+}
+._tree ._tree-page {
+  padding-left: var(--_rem-space);
+  flex: auto;
+  box-sizing: border-box;
+}
+._tree ._tree-page [disabled] {
+  opacity: 0.5;
+}
+._tree ._tree-children:empty + ._tree-foot {
+  display: none;
+}
+._tree[tools-trigger="hover"] ._tree-head > [rep=tools],
+._tree[tools-trigger="click"] ._tree-head > [rep=tools] {
+  display: none;
+}
+._tree[tools-trigger="hover"] ._tree-head:hover > [rep=tools] {
+  display: inline-flex;
+}
+._tree[feature=check] {
+  --_tree-h: var(--_rem-input);
+}
+._tree[feature=check] ._tree-head {
+  padding: 0 var(--_rem-body);
+}
+._tree[feature=check] ._tree-head [rep=check] {
+  margin-right: var(--_tree-gap);
+}
+._tree[feature=check] ._tree-head[checked] {
+  color: var(--_tree-theme);
+  background-color: var(--_tree-theme-bg);
+}
+._tree[feature=check] ._tree-head[checked] > [rep=label],
+._tree[feature=check] ._tree-head[checked] > [rep=group] > [rep=label] {
+  color: var(--_tree-theme);
+}
+._tree[feature=select],
+._tree[feature=dropdown] {
+  --_tree-h: var(--_rem-input);
+}
+._tree[feature=select] ._tree-head,
+._tree[feature=dropdown] ._tree-head {
+  padding: 0 var(--_rem-body);
+}
+._tree[feature=select] ._tree-head > [rep=label],
+._tree[feature=dropdown] ._tree-head > [rep=label],
+._tree[feature=select] ._tree-head > [rep=group] > [rep=label],
+._tree[feature=dropdown] ._tree-head > [rep=group] > [rep=label] {
+  padding: 0;
+}
+._tree[feature=select] ._tree-head[checked],
+._tree[feature=dropdown] ._tree-head[checked] {
+  color: var(--_tree-theme);
+  background-color: var(--_tree-theme-bg);
+}
+._tree[feature=select] ._tree-head[checked] > [rep=label],
+._tree[feature=dropdown] ._tree-head[checked] > [rep=label],
+._tree[feature=select] ._tree-head[checked] > [rep=group] > [rep=label],
+._tree[feature=dropdown] ._tree-head[checked] > [rep=group] > [rep=label] {
+  color: var(--_tree-theme);
+}
+._tree[feature=select] ._tree-head[checked]:after,
+._tree[feature=dropdown] ._tree-head[checked]:after {
+  content: 'check';
+  font-family: var(--_ff-icon);
+  color: var(--_tree-theme);
+  font-size: var(--_rem-ignore);
+  margin-left: var(--_tree-gap);
+}
+._tree[feature=select] {
+  box-sizing: border-box;
+  width: var(--_w-input);
+  height: calc((var(--_rem-input) + 1px)*5 - 1px);
+  overflow: auto;
+  background-color: var(--_c-stage);
+  border: 1px solid var(--_c-text-bd);
+  border-radius: var(--_r-input);
+}
+._tree[feature=select]:focus {
+  border-color: var(--_tree-theme);
+  outline: var(--_w-outline) solid var(--_tree-theme-sd);
+  outline-offset: 0px;
+}
+._tree[feature=select] > ._tree-children > li:where(:not(:last-child)) > ._tree-head,
+._tree[feature=select] > ._tree-children > li li > ._tree-head {
+  border-bottom: 1px solid var(--_c-text-bd);
+}
+._tree[feature=button] ._tree-children {
+  display: flow-root !important;
+}
+._tree[feature=button] ._tree-wrap:where(:not(:has(._tree-children))) {
+  display: inline-flex;
+  float: left;
+}
+._tree[feature=button] ._tree-head > [rep=label],
+._tree[feature=button] ._tree-head > [rep=group] > [rep=label] {
+  padding: 0;
+}
+._tree[feature=button] ._tree-head:where(:not(:has(+._tree-children))) {
+  display: inline-flex;
+  border: 1px solid var(--_c-text-bd);
+  border-radius: var(--_r);
+  padding: 0 var(--_rem-space);
+  margin: 0 var(--_rem-space) var(--_rem-space) 0;
+  position: relative;
+}
+._tree[feature=button] ._tree-head:where(:not(:has(+._tree-children)))[checked] {
+  color: var(--_tree-theme);
+  background-color: var(--_tree-theme-bg);
+  border-color: var(--_tree-theme);
+}
+._tree[feature=button] ._tree-head:where(:not(:has(+._tree-children)))[checked] > [rep=label],
+._tree[feature=button] ._tree-head:where(:not(:has(+._tree-children)))[checked] > [rep=group] > [rep=label] {
+  color: var(--_tree-theme);
+}
+._tree[feature=button] ._tree-head:where(:not(:has(+._tree-children)))[checked]:after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-width: 4px;
+  border-style: solid;
+  border-color: transparent var(--_tree-theme) var(--_tree-theme) transparent;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+._tree[feature=button] ._tree-head:where(:has(+._tree-children)) {
+  background-color: transparent;
+  margin-bottom: var(--_rem-space);
+}
+._tree[feature=button] ._tree-head:where(:has(+._tree-children))[checked] > [rep=group] > [rep=label],
+._tree[feature=button] ._tree-head:where(:has(+._tree-children))[checked] > [rep=label] {
+  color: var(--_tree-theme);
+}
+._tree[feature=button] ._tree-head:where(:has(+._tree-children))[checked]:after {
+  content: 'check';
+  font-family: var(--_ff-icon);
+  color: var(--_tree-theme);
+  font-size: var(--_rem-ignore);
+}
+._tree[feature=list] {
+  --_tree-h: auto;
+}
+._tree[feature=list] ._tree-head {
+  padding: var(--_rem-space) var(--_rem-body);
+}
+._tree[feature=list] ._tree-head > [rep=label],
+._tree[feature=list] ._tree-head > [rep=group] > [rep=label] {
+  padding: 0;
+}
+._tree[feature=list] ._tree-head[checked] {
+  background-color: var(--_tree-theme-bg);
+}
+._tree[feature=list] ._tree-head[checked] > [rep=label],
+._tree[feature=list] ._tree-head[checked] > [rep=group] > [rep=label] {
+  color: var(--_tree-theme);
+}
+._tree[feature=list] ._tree-head[checked]:after {
+  content: 'check';
+  font-family: var(--_ff-icon);
+  color: var(--_tree-theme);
+  font-size: var(--_rem-ignore);
+  line-height: var(--_rem-subject);
+  margin-left: var(--_tree-gap);
+}
+._tree[feature=list] ._tree-head [rep=group] {
+  flex: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+._tree[feature=list] ._tree-head [rep=tips],
+._tree[feature=list] ._tree-head [rep=custom] {
+  line-height: var(--_rem-subject);
+  width: 100%;
+  margin-left: 0;
+}
+._tree[feature=list] ._tree-head [rep=custom] {
+  color: var(--_c-brief);
+}
+._tree[chain] ._tree-head [rep=arrow]._none:before,
+._tree[chain] ._tree-head [rep=arrow]._none:after {
+  content: '';
+  width: calc(var(--_tree-lh) / 2);
+  height: calc(var(--_tree-h) / 2);
+  position: absolute;
+  right: 0;
+}
+._tree[chain] ._tree-head [rep=arrow]._none:before {
+  box-shadow: inset 1px -1px 0 0 var(--_c-text-fc);
+  top: 0;
+}
+._tree[chain] ._tree-head [rep=arrow]._none:after {
+  box-shadow: inset 1px 0 0 0 var(--_c-text-fc);
+  bottom: 0;
+}
+._tree[chain] > ._tree-children > li:first-child > ._tree-head [rep=arrow]._none:before {
+  box-shadow: inset 0 -1px 0 0 var(--_c-text-fc);
+}
+._tree[chain] ._tree-children > li:last-child > ._tree-head [rep=arrow]._none:after {
+  display: none;
+}
+._tree[chain] ._tree-body > ._none:before,
+._tree[chain] ._tree-foot > ._none:before {
+  content: '';
+  width: calc(var(--_tree-lh) / 2);
+  height: 100%;
+  box-shadow: inset 1px 0 0 0 var(--_c-text-fc);
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+._tree[chain] ._tree-children > li:last-child > ._tree-body > ._none:before,
+._tree[chain] ._tree-children > li:last-child > ._tree-foot > ._none:before {
+  display: none;
+}
+._tree ._tree-head > [rep=indent] i,
+._tree ._tree-body > [rep=indent] i,
+._tree ._tree-foot > [rep=indent] i {
+  width: var(--_tree-lh);
+}
+._tree[chain] ._tree-head > [rep=indent],
+._tree[chain] ._tree-body > [rep=indent],
+._tree[chain] ._tree-foot > [rep=indent] {
+  position: relative;
+}
+._tree[chain] ._tree-head > [rep=indent] i,
+._tree[chain] ._tree-body > [rep=indent] i,
+._tree[chain] ._tree-foot > [rep=indent] i {
+  height: 100%;
+  position: relative;
+}
+._tree[chain] ._tree-head > [rep=indent] i:before,
+._tree[chain] ._tree-body > [rep=indent] i:before,
+._tree[chain] ._tree-foot > [rep=indent] i:before {
+  content: '';
+  width: calc(var(--_tree-lh) / 2);
+  height: 100%;
+  box-shadow: inset 1px 0 0 0 var(--_c-text-fc);
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+._tree[chain] ._tree-head > [rep=indent] {
+  height: var(--_tree-h);
+}
+._tree[chain] ._tree-body > [rep=indent],
+._tree[chain] ._tree-foot > [rep=indent] {
+  height: auto;
+}
 /*ax popup*/
 ._popup:where(:not(._plain)) {
   --_popup-r: var(--_r-bubble);
@@ -13241,21 +13853,36 @@ AX-MENU {
   display: block;
 }
 ._menu {
-  --_menu-gap-r: var(--_g);
-  --_menu-sz-wdgt: 2.4rem;
-  --_menu-w: var(--_w-menu);
-  --_menu-h-1st: var(--_rem-input);
+  --_menu-w: min(100%,var(--_w-menu));
+  --_menu-h: auto;
+  --_menu-h-item: var(--_rem-input);
+  --_menu-h-1st: var(--_menu-h-item);
+  --_menu-r: var(--_r-input);
+  --_menu-gap: var(--_g);
+  --_menu-c: var(--_c-text);
+  --_menu-c-hov: var(--_c-prim);
+  --_menu-c-sel: var(--_c-prim);
+  --_menu-theme: var(--_c-prim);
+  --_menu-theme-bg: var(--_c-prim-bg);
+  --_menu-bg: transparent;
+  --_menu-fw: bold;
+  --_tree-h: var(--_menu-h-item);
+  --_tree-gap: var(--_menu-gap);
+  --_tree-c: var(--_menu-c);
+  --_tree-theme: var(--_menu-theme);
+  --_tree-theme-bg: var(--_menu-theme-bg);
+  --_tree-c-hl: inherit;
+  --_tree-bg-hl: transparent;
+  --_tree-bg-hov: transparent;
+  --_tree-c-arrow: var(--_c-ignore);
+  color: var(--_menu-c);
+  background-color: var(--_menu-bg);
   width: var(--_menu-w);
+  height: var(--_menu-h);
   display: flex;
   flex-direction: column;
+  content-visibility: visible;
   min-height: var(--_rem-title);
-}
-._menu:where(ul),
-._menu *:where(ul) {
-  padding-inline-start: 0;
-}
-._menu *:where(ul) > li:before {
-  display: none;
 }
 ._menu [ajax-message] {
   width: 100%;
@@ -13265,216 +13892,188 @@ AX-MENU {
   justify-content: center;
   align-items: center;
 }
-._menu:where(:not([row], [spill])) {
-  height: 100%;
+._menu:where(:not([nav], [spill])) {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
-._menu:where(:not([expose])) ul {
+._menu:where(:not([expose])) > ul ul {
   display: none;
 }
 ._menu li {
   box-sizing: border-box;
-  position: relative;
   transition: all var(--_dur-2) ease-out;
 }
-._menu li > :first-child {
-  color: var(--_c-text);
-  height: var(--_rem-hitbox);
-  padding-right: var(--_p);
-  display: flex;
-  align-items: center;
-  position: relative;
-  transition: all var(--_dur-2) linear;
+._menu li > ._tree-head {
+  color: var(--_menu-c);
 }
-._menu li > :first-child:where(:not([disabled])) {
+._menu li > ._tree-head:where(:not([disabled])) {
   cursor: pointer;
 }
-._menu > li {
+._menu > ul > li {
   border-bottom: none;
 }
-._menu > li:before {
+._menu > ul > li:before {
   content: '';
   width: 0.3rem;
   height: 0;
-  background-color: var(--_c-prim);
+  background-color: var(--_menu-theme);
   position: absolute;
   left: 0;
   top: 0;
   z-index: 2;
   transition: all var(--_dur-2) ease-out;
 }
-._menu [rep=indent] * {
-  width: var(--_p);
-}
-._menu [rep=label] {
-  color: var(--_c-text);
-  line-height: var(--_rem-subject);
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex: auto;
-  width: 0;
+._menu > ul > li:where(:has(>._tree-head[expanded])):before {
   height: 100%;
-  transition: all var(--_dur-2) linear;
 }
-._menu > li > :first-child [rep=label] {
-  font-weight: bold;
+._menu:where(:not([lamp], [unpadded])) > ul > li:before {
+  display: block;
 }
-._menu [rep=icon] {
-  color: var(--_c-text-aj);
-  width: var(--_menu-sz-wdgt);
-  text-align: center;
-  margin-right: var(--_menu-gap-r);
-  transition: all var(--_dur-2) linear;
+._menu:where(:not([unpadded])) ._tree-head,
+._menu:where(:not([unpadded])) ._tree-body {
+  padding-left: var(--_rem-body);
+  padding-right: var(--_rem-body);
 }
-._menu [rep=disk] {
-  height: var(--_menu-sz-wdgt);
-  width: var(--_menu-sz-wdgt);
-  margin-right: var(--_menu-gap-r);
-  object-fit: cover;
-  border-radius: 100%;
-}
-._menu [rep=cube] {
-  height: var(--_menu-sz-wdgt);
-  width: var(--_menu-sz-wdgt);
-  margin-right: var(--_menu-gap-r);
-  object-fit: cover;
-  border-radius: var(--_r);
-}
-._menu [rep=arrow] {
-  color: var(--_c-ignore);
-  font-size: var(--_px-root);
-  font-family: var(--_ff-icon);
-  width: var(--_rem-title);
-  margin-right: calc(-1*var(--_p));
-  text-align: center;
-  transition: all var(--_dur-2) linear;
-}
-._menu [rep=arrow]:before {
-  content: 'right';
-}
-._menu:where([expose]) [rep=arrow] {
+._menu ._tree-body ._none {
   display: none;
 }
-._menu [rep=tips] {
+._menu ._tree-brief:before {
+  left: calc(-1*var(--_rem-body));
+}
+._menu ._tree-head > [rep=label],
+._menu ._tree-head > [rep=group] > [rep=label] {
+  line-height: var(--_rem-subject);
+  display: -webkit-box;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  padding: 0;
+  flex: auto;
+  border-radius: 0;
+}
+._menu > ul > li > ._tree-head > [rep=label] {
+  font-weight: var(--_menu-fw);
+}
+._menu > ._tree-head {
+  height: var(--_menu-h-1st);
+}
+._menu[trigger=hover] ._tree-head > [rep=arrow],
+._menu[trigger=hover] ._tree-head > [rep=group] > [rep=arrow] {
+  pointer-events: none;
+}
+._menu:where([expose]) ._tree-head > [rep=arrow],
+._menu:where([expose]) ._tree-head > [rep=group] > [rep=arrow] {
+  display: none;
+}
+._menu:where(:not([unpadded])) ._tree-head > [rep=arrow]:last-child {
+  margin-right: calc(-1*var(--_rem-body));
+}
+._menu ._none[rep=arrow] {
+  display: none;
+}
+._menu ._tree-head > [rep=tips],
+._menu ._tree-head > [rep=group] > [rep=tips] {
   font-size: var(--_rem-ignore);
   color: var(--_c-ignore);
 }
-._menu li:where(:has(>[expanded])):before {
-  height: 100%;
-}
-._menu [expanded] > [rep=arrow] {
-  transform: rotate(90deg);
-}
-._menu [selected]:where(:not([disabled])) {
+._menu ._tree-head[selected]:where(:not([disabled])) {
   color: var(--_c-white);
-  background-color: var(--_c-prim-bg);
+  background-color: var(--_menu-theme-bg);
 }
-._menu [selected]:where(:not([disabled])) [rep=label],
-._menu [selected]:where(:not([disabled])) [rep=icon] {
-  color: var(--_c-prim);
+._menu ._tree-head[selected]:where(:not([disabled])):hover {
+  background-color: var(--_menu-theme-bg);
 }
-._menu [disabled] {
-  user-select: none;
-  pointer-events: none;
-  background-color: var(--_c-ignore-bg);
+._menu ._tree-head[selected]:where(:not([disabled])) > [rep=label],
+._menu ._tree-head[selected]:where(:not([disabled])) > [rep=icon],
+._menu ._tree-head[selected]:where(:not([disabled])) > [rep=group] > [rep=label],
+._menu ._tree-head[selected]:where(:not([disabled])) > [rep=group] > [rep=icon] {
+  color: var(--_menu-c-sel);
 }
-._menu [disabled] > * {
-  opacity: var(--_o-active);
+._menu ._tree-head[disabled] {
+  background-color: var(--_c-text-bg);
 }
-._menu li:hover > :first-child:where(:not([disabled])) [rep=label],
-._menu li:hover > :first-child:where(:not([disabled])) [rep=icon],
-._menu li:hover > :first-child:where(:not([disabled])) [rep=arrow] {
-  color: var(--_c-prim);
+._menu li:hover > ._tree-head:where(:not([disabled])) > [rep=label],
+._menu li:hover > ._tree-head:where(:not([disabled])) > [rep=icon],
+._menu li:hover > ._tree-head:where(:not([disabled])) > [rep=arrow],
+._menu li:hover > ._tree-head:where(:not([disabled])) > [rep=group] > [rep=label],
+._menu li:hover > ._tree-head:where(:not([disabled])) > [rep=group] > [rep=icon],
+._menu li:hover > ._tree-head:where(:not([disabled])) > [rep=group] > [rep=arrow] {
+  color: var(--_menu-c-hov);
 }
-._menu[scheme=dark] {
-  background-color: var(--_c-prim-sg);
+._menu[theme=dark] {
+  --_menu-c: rgba(255, 255, 255, 0.5);
+  --_menu-bg: var(--_c-prim-sg);
+  --_menu-c-hov: var(--_c-white);
+  --_menu-c-sel: var(--_c-white);
+  --_tree-c-arrow: rgba(255, 255, 255, 0.2);
 }
-._menu[scheme=dark] > li {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+._menu[theme=dark] > ul > li {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
-._menu[scheme=dark] [rep=label],
-._menu[scheme=dark] [rep=tips],
-._menu[scheme=dark] [rep=icon] {
-  color: rgba(255, 255, 255, 0.5);
-}
-._menu[scheme=dark] [rep=arrow] {
-  color: rgba(255, 255, 255, 0.2);
-}
-._menu[scheme=dark] > li > :first-child [rep=label] {
+._menu[theme=dark] > ul > li > ._tree-head [rep=label] {
   font-weight: normal;
 }
-._menu[scheme=dark] [selected] {
+._menu[theme=dark] ._tree-head[selected] {
   background-color: var(--_c-prim-sd);
 }
-._menu[scheme=dark] [selected] [rep=label],
-._menu[scheme=dark] [selected] [rep=icon] {
-  color: var(--_c-white);
+._menu[theme=dark] ._tree-head[disabled] {
+  background-color: var(--_c-text-sd);
 }
-._menu[scheme=dark] [disabled] {
-  background-color: var(--_c-ignore-bg);
+._menu[theme=dark] ._tree-head[expanded] > [rep=group] > [rep=arrow][type=icon],
+._menu[theme=dark] ._tree-head[expanded] > [rep=arrow][type=icon] {
+  color: var(--_menu-c);
 }
-._menu[scheme=dark] [disabled] [rep=label],
-._menu[scheme=dark] [disabled] [rep=tips],
-._menu[scheme=dark] [disabled] [rep=icon] {
-  color: rgba(255, 255, 255, 0.2);
-}
-._menu[scheme=dark] li:hover > :first-child:where(:not([disabled])) [rep=label],
-._menu[scheme=dark] li:hover > :first-child:where(:not([disabled])) [rep=icon],
-._menu[scheme=dark] li:hover > :first-child:where(:not([disabled])) [rep=arrow] {
-  color: var(--_c-white);
+._menu[theme=dark][lamp=block] ._tree-head[selected] {
+  border-radius: 0;
 }
 ._menu[full] {
   --_menu-w: 100%;
 }
-._menu[gapless] > li:before {
+._menu[unpadded] > ul > li:before {
   display: none;
 }
-._menu[gapless] > li > :first-child {
-  padding-left: 0;
-}
-._menu[gapless] > li > :first-child [rep=indent] {
-  display: none;
-}
-._menu[gapless] li > :first-child {
-  padding-right: 0;
-}
-._menu[gapless] [rep=arrow] {
-  margin-right: 0;
-}
-._menu[lamp=dot] > li:before,
-._menu[lamp=dot] > li > :first-child:before {
-  display: none;
-}
-._menu[lamp=dot] [selected]:before {
+._menu[lamp=dot] ._tree-head[selected]:before {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 100%;
-  background-color: var(--_c-prim);
+  background-color: var(--_menu-theme);
   content: '';
   position: absolute;
-  left: calc(var(--_p)*2 - 0.4rem);
-  top: calc((var(--_rem-hitbox) - 0.5rem)/2);
+  top: calc((100% - 0.5rem)/2);
 }
-._menu[lamp=dot]:where([gapless]) [selected]:before {
-  left: calc(var(--_p) - 0.4rem);
+._menu[lamp=dot] > ul > li > ._tree-head[selected]:before {
+  left: var(--_rem-min);
 }
-._menu[lamp=dot] > li > [selected]:before {
-  display: none;
+._menu[lamp=dot][unpadded] > ul > li li > ._tree-head[selected]:before {
+  left: calc(var(--_rem-body) - 0.4rem);
 }
-._menu[lamp=line] > li:before {
-  display: none;
+._menu[lamp=dot]:where(:not([unpadded])) > ul > li li > ._tree-head[selected]:before {
+  left: calc(var(--_rem-body)*2 - 0.4rem);
 }
-._menu[lamp=line] [selected]:before {
+._menu[lamp=line] ._tree-head[selected]:before {
   position: absolute;
-  background-color: var(--_c-prim);
+  background-color: var(--_menu-theme);
   content: '';
-  width: 0.2rem;
+  width: 2px;
   height: 100%;
   left: 0;
   top: 0;
+}
+._menu[lamp=block] ._tree-head[selected] {
+  border-radius: var(--_menu-r);
+  background-color: var(--_menu-theme);
+}
+._menu[lamp=block] ._tree-head[selected] > [rep=tips],
+._menu[lamp=block] ._tree-head[selected] > [rep=group] > [rep=tips] {
+  color: rgba(255, 255, 255, 0.5);
+}
+._menu[lamp=block] ._tree-head[selected] > [rep=label],
+._menu[lamp=block] ._tree-head[selected] > [rep=icon],
+._menu[lamp=block] ._tree-head[selected] > [rep=group] > [rep=label],
+._menu[lamp=block] ._tree-head[selected] > [rep=group] > [rep=icon] {
+  color: var(--_c-white);
 }
 ._menu[align=left] [rep=label] {
   justify-content: flex-start;
@@ -13485,104 +14084,100 @@ AX-MENU {
 ._menu[align=right] [rep=label] {
   justify-content: flex-end;
 }
-._menu[spill]:where(:not([row])) {
+._menu[spill]:where(:not([nav])) {
   position: relative;
   z-index: 610;
 }
-._menu[spill]:where(:not([row])) > li > ul {
+._menu[spill]:where(:not([nav])) > ul > li > ul {
   right: calc(var(--_w-list)*-1 - 0.6rem);
   top: -1px;
 }
-._menu[spill]:where(:not([row])) > li > :first-child:where([expanded]) > [rep=arrow] {
-  transform: rotate(180deg);
-}
-._menu[spill]:where(:not([row])) li {
-  position: relative;
-}
-._menu[spill]:where(:not([row])) ul {
+._menu[spill]:where(:not([nav])) > ul ul {
   width: var(--_w-list);
   position: absolute;
   background-color: var(--_c-stage);
   border: 1px solid var(--_c-text-bd);
-  border-radius: var(--_r);
+  border-radius: var(--_menu-r);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
-._menu[spill]:where(:not([row])) ul > li:first-child,
-._menu[spill]:where(:not([row])) ul > li:first-child > :first-child {
+._menu[spill]:where(:not([nav])) > ul ul > li:first-child,
+._menu[spill]:where(:not([nav])) > ul ul > li:first-child > :first-child {
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
 }
-._menu[spill]:where(:not([row])) ul > li:last-child,
-._menu[spill]:where(:not([row])) ul > li:last-child > :first-child {
+._menu[spill]:where(:not([nav])) > ul ul > li:last-child,
+._menu[spill]:where(:not([nav])) > ul ul > li:last-child > :first-child {
   border-bottom-left-radius: inherit;
   border-bottom-right-radius: inherit;
 }
-._menu[spill]:where(:not([row])) ul li > :first-child {
-  height: var(--_rem-input);
-  padding-left: var(--_p);
-}
-._menu[spill]:where(:not([row])) ul [rep=indent] {
+._menu[spill]:where(:not([nav])) > ul ul [rep=indent] {
   display: none;
 }
-._menu[spill]:where(:not([row])) > li > ul > li ul {
+._menu[spill]:where(:not([nav])) > ul > li > ul > li ul {
   right: calc(-100% - 0.1rem - 0.6rem);
   top: -0.1rem;
 }
-._menu[spill]:where(:not([row])) > li > ul li > :first-child:where([expanded]) > [rep=arrow] {
-  -webkit-transform: rotate(180deg);
-  transform: rotate(180deg);
-}
-._menu[spill]:where(:not([row])) > li li {
+._menu[spill]:where(:not([nav])) > ul > li li {
   border-bottom: 1px solid var(--_c-text-bd);
 }
-._menu[spill]:where(:not([row])) > li ul li:last-child {
+._menu[spill]:where(:not([nav])) > ul > li ul li:last-child {
   border-bottom: 0;
 }
-._menu[spill]:where(:not([row])) > li li:hover > :first-child:where(:not([disabled], [selected])) {
+._menu[spill]:where(:not([nav])) > ul > li li:hover > :first-child:where(:not([disabled], [selected])) {
   background-color: var(--_c-text-bg);
 }
-._menu[spill]:where(:not([row])) > li ul [selected]:where(:not([disabled])) {
-  background-color: var(--_c-prim);
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])),
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover {
+  background-color: var(--_menu-theme);
 }
-._menu[spill]:where(:not([row])) > li ul [selected]:where(:not([disabled])) [rep=tips] {
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=tips],
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=tips],
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=tips],
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=tips] {
   color: rgba(255, 255, 255, 0.5);
 }
-._menu[spill]:where(:not([row])) > li ul [selected]:where(:not([disabled])) [rep=label],
-._menu[spill]:where(:not([row])) > li ul [selected]:where(:not([disabled])) [rep=icon],
-._menu[spill]:where(:not([row])) > li ul [selected]:where(:not([disabled])) [rep=arrow] {
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=label],
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=label],
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=icon],
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=icon],
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=label],
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=label],
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=icon],
+._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=icon] {
   color: var(--_c-white);
 }
-._menu[spill]:where(:not([row])) > li li:hover > [selected]:where(:not([disabled])) [rep=label],
-._menu[spill]:where(:not([row])) > li li:hover > [selected]:where(:not([disabled])) [rep=icon] {
-  color: var(--_c-white);
-}
-._menu[row] {
+._menu[nav] {
   --_menu-w: auto;
+  --_menu-fw: normal;
   display: inline-flex;
   flex-direction: row;
-  min-height: var(--_rem-title);
+  min-height: var(--_menu-h-1st);
   position: relative;
   z-index: 610;
 }
-._menu[row] > li {
-  display: inline-block;
-  box-sizing: border-box;
+._menu[nav] > ul > li {
+  display: inline-flex;
 }
-._menu[row] > li:before {
+._menu[nav] > ul > li:before {
   display: none;
 }
-._menu[row] > li > :first-child {
+._menu[nav] > ul > li > ._tree-head {
   height: var(--_menu-h-1st);
-  padding-left: var(--_p);
 }
-._menu[row] > li > :first-child [rep=indent] {
+._menu[nav] > ul > li > ._tree-head [rep=indent] {
   display: none;
 }
-._menu[row] > li > :first-child [rep=label] {
-  font-weight: normal;
+._menu[nav] > ul > li > ._tree-head > [rep=label],
+._menu[nav] > ul > li > ._tree-head > [rep=group] > [rep=label] {
+  height: var(--_menu-h-1st);
   position: relative;
+  flex: none;
+  width: auto;
+  display: inline-flex;
+  align-items: center;
 }
-._menu[row] > li > :first-child [rep=label]:after {
+._menu[nav] > ul > li > ._tree-head > [rep=label]:after,
+._menu[nav] > ul > li > ._tree-head > [rep=group] > [rep=label]:after {
   content: '';
   height: 2px;
   width: 2em;
@@ -13593,102 +14188,97 @@ AX-MENU {
   left: 50%;
   bottom: 0;
 }
-._menu[row] > li:has([selected]) > :first-child [rep=label] {
-  color: var(--_c-prim);
+._menu[nav] > ul > li > ._tree-head[expanded] > [rep=label],
+._menu[nav] > ul > li > ._tree-head[expanded] > [rep=group] > [rep=label] {
+  color: var(--_menu-theme);
 }
-._menu[row] > li:has([selected]) > :first-child [rep=label]:after {
+._menu[nav] > ul > li > ._tree-head[expanded] > [rep=label]:after,
+._menu[nav] > ul > li > ._tree-head[expanded] > [rep=group] > [rep=label]:after {
   transform: translate(-50%, 0) scaleX(1);
 }
-._menu[row] > li > :first-child > [rep=arrow]:before {
-  content: 'down';
-}
-._menu[row] > li > :first-child:where([expanded]) > [rep=arrow] {
-  transform: rotate(180deg);
-}
-._menu[row] > li > :first-child > [rep=label] {
-  flex: none;
-  width: auto;
-}
-._menu[row] > li > [selected],
-._menu[row] > li > [disabled] {
+._menu[nav] > ul > li > [selected],
+._menu[nav] > ul > li > [disabled] {
   background: transparent;
 }
-._menu[row] > li > [expanded] [rep=label] {
-  color: var(--_c-prim);
+._menu[nav] > ul > li > [expanded] > [rep=label],
+._menu[nav] > ul > li > [expanded] > [rep=group] > [rep=label] {
+  color: var(--_menu-theme);
 }
-._menu[row] > li > ul {
+._menu[nav] > ul > li > ._tree-head > [rep=arrow],
+._menu[nav] > ul > li > ._tree-head > [rep=grou] > [rep=arrow] {
+  width: var(--_rem-body);
+  margin-right: 0;
+}
+._menu[nav] > ul > li > ul {
   left: -0.1rem;
   top: calc(100% + 0.6rem);
 }
-._menu[row] li {
-  position: relative;
-}
-._menu[row] ul {
+._menu[nav] > ul ul {
   width: var(--_w-list);
   position: absolute;
   background-color: var(--_c-stage);
   border: 1px solid var(--_c-text-bd);
-  border-radius: var(--_r);
+  border-radius: var(--_menu-r);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
-._menu[row] ul > li:first-child,
-._menu[row] ul > li:first-child > :first-child {
+._menu[nav] > ul ul > li:first-child,
+._menu[nav] > ul ul > li:first-child > :first-child {
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
 }
-._menu[row] ul > li:last-child,
-._menu[row] ul > li:last-child > :first-child {
+._menu[nav] > ul ul > li:last-child,
+._menu[nav] > ul ul > li:last-child > :first-child {
   border-bottom-left-radius: inherit;
   border-bottom-right-radius: inherit;
 }
-._menu[row] ul li > :first-child {
-  height: var(--_rem-input);
-  padding-left: var(--_p);
-}
-._menu[row] ul [rep=indent] {
+._menu[nav] > ul ul [rep=indent] {
   display: none;
 }
-._menu[row] > li > ul > li ul {
+._menu[nav] > ul > li > ul > li ul {
   right: calc(-100% - 0.1rem - 0.6rem);
   top: -0.1rem;
 }
-._menu[row] > li > ul li > :first-child:where([expanded]) > [rep=arrow] {
-  -webkit-transform: rotate(180deg);
-  transform: rotate(180deg);
-}
-._menu[row] > li li {
+._menu[nav] > ul > li li {
   border-bottom: 1px solid var(--_c-text-bd);
 }
-._menu[row] > li ul li:last-child {
+._menu[nav] > ul > li ul li:last-child {
   border-bottom: 0;
 }
-._menu[row] > li li:hover > :first-child:where(:not([disabled], [selected])) {
+._menu[nav] > ul > li li:hover > :first-child:where(:not([disabled], [selected])) {
   background-color: var(--_c-text-bg);
 }
-._menu[row] > li ul [selected]:where(:not([disabled])) {
-  background-color: var(--_c-prim);
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])),
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover {
+  background-color: var(--_menu-theme);
 }
-._menu[row] > li ul [selected]:where(:not([disabled])) [rep=tips] {
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=tips],
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=tips],
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=tips],
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=tips] {
   color: rgba(255, 255, 255, 0.5);
 }
-._menu[row] > li ul [selected]:where(:not([disabled])) [rep=label],
-._menu[row] > li ul [selected]:where(:not([disabled])) [rep=icon],
-._menu[row] > li ul [selected]:where(:not([disabled])) [rep=arrow] {
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=label],
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=label],
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=icon],
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=icon],
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=label],
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=label],
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=icon],
+._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=icon] {
   color: var(--_c-white);
 }
-._menu[row] > li li:hover > [selected]:where(:not([disabled])) [rep=label],
-._menu[row] > li li:hover > [selected]:where(:not([disabled])) [rep=icon] {
-  color: var(--_c-white);
+._menu[nav] > ul > li > ul li > :first-child > [rep=arrow] {
+  rotate: -90deg;
 }
-._menu[row] [rep=label] + [rep=tips],
-._menu[row] [rep=label] + ax-badge,
-._menu[row] [rep=label] + [rep=badge] {
-  margin-left: var(--_g);
+._menu[nav] > ul > li > ul li > :first-child:where([expanded]) > [rep=arrow] {
+  rotate: 90deg;
 }
-._menu[align=center] > li ul [rep=arrow] {
+._menu[align=center] > ul > li ul ._tree-head > [rep=arrow],
+._menu[align=center] > ul > li ul ._tree-head > [rep=group] > [rep=arrow] {
   margin-left: calc(var(--_p) - var(--_rem-title));
 }
-._menu[align=center]:where(:not([row])) > li > :first-child [rep=arrow] {
+._menu[align=center]:where(:not([nav])) > ul > li > ._tree-head > [rep=arrow],
+._menu[align=center]:where(:not([nav])) > ul > li > ._tree-head > [rep=group] > [rep=arrow] {
   margin-left: calc(var(--_p) - var(--_rem-title));
 }
 /*Tab & Panel*/
@@ -16878,599 +17468,6 @@ AX-DATETIME {
 AX-DATETIME ._datetime-wrap,
 AX-DATETIME AX-TEXTAREA {
   width: 100%;
-}
-/*tree*/
-AX-TREE {
-  display: block;
-  content-visibility: auto;
-}
-._tree {
-  --_tree-h: var(--_rem-title);
-  --_tree-lh: var(--_rem-list);
-  --_tree-gap: var(--_rem-min);
-  content-visibility: auto;
-  /*line节点连线*/
-}
-._tree > * ._tree-children {
-  display: none;
-}
-._tree ._tree-head {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  height: var(--_tree-h);
-  transition: all var(--_dur-2) linear;
-  /*edit编辑*/
-  /*expand展开*/
-  /*selected已选择*/
-  /*drag拖拽节点*/
-  /*focus聚焦，新增和拖拽成为焦点，如果本身是已选择状态则不做改变*/
-}
-._tree ._tree-head [rep=holder] {
-  flex: auto;
-}
-._tree ._tree-head [rep=gap] {
-  width: var(--_tree-gap);
-}
-._tree ._tree-head > [rep=arrow] {
-  color: var(--_c-brief);
-  font-family: var(--_ff-icon);
-  text-align: center;
-  width: var(--_tree-lh);
-  height: var(--_tree-h);
-  line-height: var(--_tree-h);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: var(--_rem-body);
-  position: relative;
-}
-._tree ._tree-head > [rep=arrow][type=icon] {
-  font-size: var(--_rem-root);
-}
-._tree ._tree-head > [rep=arrow]:not(._none) {
-  cursor: pointer;
-  transition: all var(--_dur-2) linear;
-}
-._tree ._tree-head > [rep=arrow][spinning]:before {
-  content: "";
-  display: inline-block;
-  width: 1.4rem;
-  height: 1.4rem;
-  background: var(--_spin) no-repeat scroll center;
-  background-size: cover;
-}
-._tree ._tree-head > [rep=check] {
-  width: var(--_tree-lh);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-}
-._tree ._tree-head > [rep=legend] {
-  color: var(--_c-brief);
-  width: var(--_tree-lh);
-  height: var(--_tree-lh);
-  line-height: var(--_tree-lh);
-  text-align: center;
-  background-position: center;
-  background-size: var(--_rem-body);
-  background-repeat: no-repeat;
-}
-._tree ._tree-head > [rep=group] > [rep=icon],
-._tree ._tree-head > [rep=icon] {
-  color: var(--_c-brief);
-  width: var(--_tree-lh);
-  text-align: center;
-  margin-right: var(--_tree-gap);
-  transition: all var(--_dur-2) linear;
-}
-._tree ._tree-head > [rep=group] > [rep=disk],
-._tree ._tree-head > [rep=disk] {
-  height: var(--_tree-lh);
-  width: var(--_tree-lh);
-  margin-right: var(--_tree-gap);
-  object-fit: cover;
-  border-radius: 100%;
-}
-._tree ._tree-head > [rep=group] > [rep=cube],
-._tree ._tree-head > [rep=cube] {
-  height: var(--_tree-lh);
-  width: var(--_tree-lh);
-  margin-right: var(--_tree-gap);
-  object-fit: cover;
-  border-radius: var(--_r);
-}
-._tree ._tree-head > [rep=group] > [rep=image],
-._tree ._tree-head > [rep=image] {
-  max-width: calc(var(--_tree-lh)*2);
-  margin-right: var(--_tree-gap);
-}
-._tree ._tree-head > [rep=group] > [rep=label],
-._tree ._tree-head > [rep=label] {
-  color: var(--_c-text);
-  line-height: var(--_tree-lh);
-  padding: 0 var(--_tree-gap);
-  margin-right: var(--_tree-gap);
-  border-radius: var(--_r);
-  box-sizing: border-box;
-  white-space: nowrap;
-  position: relative;
-  cursor: pointer;
-}
-._tree ._tree-head > [rep=group] > [rep=label] [rep=mark],
-._tree ._tree-head > [rep=label] [rep=mark] {
-  color: var(--_c-issue);
-}
-._tree ._tree-head > [rep=group] > [rep=tips],
-._tree ._tree-head > [rep=tips] {
-  font-size: var(--_rem-ignore);
-  color: var(--_c-ignore);
-  margin-left: var(--_tree-gap);
-}
-._tree ._tree-head > [rep=group] > [rep=badge],
-._tree ._tree-head > [rep=group] > [rep=AX-BADGE],
-._tree ._tree-head > [rep=badge],
-._tree ._tree-head > AX-BADGE {
-  margin-left: var(--_tree-gap);
-}
-._tree ._tree-head > [rep=group] > [rep=custom],
-._tree ._tree-head > [rep=custom] {
-  margin-left: var(--_tree-gap);
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-._tree ._tree-head > [rep=tools] {
-  --_tools-c-hov: var(--_c-white);
-  --_tools-c-haz-hov: var(--_c-white);
-  --_tools-bg-hov: var(--_c-prim);
-  --_tools-bg-hov-haz: var(--_c-error);
-  margin-left: var(--_tree-gap);
-}
-._tree ._tree-head input[type='text'] {
-  width: 9.2rem;
-  height: var(--_tree-lh);
-  line-height: var(--_tree-lh);
-  padding: 0 0.4rem;
-}
-._tree ._tree-head[editing] > [rep=group] > [rep=label],
-._tree ._tree-head[editing] > [rep=label] {
-  padding: 0;
-}
-._tree ._tree-head[editing] > [rep=tools] {
-  position: absolute;
-  left: -100000px;
-}
-._tree ._tree-head[expanded] > [rep=group] > [rep=arrow][type=icon],
-._tree ._tree-head[expanded] > [rep=arrow][type=icon] {
-  color: var(--_c-prim);
-}
-._tree ._tree-head[selected]:not([editing]) > [rep=group] > [rep=label],
-._tree ._tree-head[selected]:not([editing]) > [rep=label] {
-  color: var(--_c-white);
-  background: var(--_c-prim);
-}
-._tree ._tree-head[drop=ing] > [rep=group] > [rep=label],
-._tree ._tree-head[drop=ing] > [rep=label] {
-  color: var(--_c-prim);
-  background: transparent;
-}
-._tree ._tree-head[drop=ing] > [rep=group] > [rep=label]:before,
-._tree ._tree-head[drop=ing] > [rep=label]:before {
-  content: '';
-  width: 0;
-  height: 0;
-  border-width: 4px;
-  border-style: solid;
-  border-color: transparent transparent transparent var(--_c-prim);
-  position: absolute;
-  left: -4px;
-  display: none;
-}
-._tree ._tree-head[drop=ing][point=before] > [rep=group] > [rep=label]:before ._tree ._tree-head[drop=ing][point=before] > [rep=label]:before {
-  display: block;
-  top: -6px;
-}
-._tree ._tree-head[drop=ing][point=after] > [rep=group] > [rep=label]:before ._tree ._tree-head[drop=ing][point=after] > [rep=label]:before {
-  display: block;
-  bottom: -6px;
-}
-._tree ._tree-head[drop=ing][point=inside] > [rep=group] > [rep=label]:before ._tree ._tree-head[drop=ing][point=inside] > [rep=label]:before {
-  display: block;
-  top: 7px;
-}
-._tree ._tree-head[drop=ing][point=inside] > [rep=group] > [rep=label]:after ._tree ._tree-head[drop=ing][point=inside] > [rep=label]:after {
-  content: '';
-  border: 1px solid var(--_c-prim);
-  border-radius: var(--_r);
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-._tree ._tree-head ._tree-head:where(:focus:not([selected])) > [rep=group] > [rep=label] ._tree-head:where(:focus:not([selected])) > [rep=label] {
-  color: var(--_c-prim);
-}
-._tree ._tree-head:hover {
-  background-color: var(--_c-text-bg);
-}
-._tree ._tree-head:where([readonly]) > [rep=tools] {
-  opacity: var(--_o-disabled);
-  pointer-events: none;
-}
-._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]),
-._tree ._tree-head:where([disabled]),
-._tree ._tree-head:where([uncheckable][unselectable]),
-._tree ._tree-head:where([unselectable][exceeded]) {
-  opacity: var(--_o-disabled);
-  pointer-events: none;
-}
-._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]) ~ ._tree-body,
-._tree ._tree-head:where([disabled]) ~ ._tree-body,
-._tree ._tree-head:where([uncheckable][unselectable]) ~ ._tree-body,
-._tree ._tree-head:where([unselectable][exceeded]) ~ ._tree-body,
-._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]) ~ ._tree-foot,
-._tree ._tree-head:where([disabled]) ~ ._tree-foot,
-._tree ._tree-head:where([uncheckable][unselectable]) ~ ._tree-foot,
-._tree ._tree-head:where([unselectable][exceeded]) ~ ._tree-foot {
-  opacity: var(--_o-disabled);
-  pointer-events: none;
-}
-._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]):where([readonly]) > [rep=tools],
-._tree ._tree-head:where([disabled]):where([readonly]) > [rep=tools],
-._tree ._tree-head:where([uncheckable][unselectable]):where([readonly]) > [rep=tools],
-._tree ._tree-head:where([unselectable][exceeded]):where([readonly]) > [rep=tools],
-._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]) > [rep=check]:where([disabled]),
-._tree ._tree-head:where([disabled]) > [rep=check]:where([disabled]),
-._tree ._tree-head:where([uncheckable][unselectable]) > [rep=check]:where([disabled]),
-._tree ._tree-head:where([unselectable][exceeded]) > [rep=check]:where([disabled]),
-._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]):where([readonly]) > [rep=group] > [rep=tools],
-._tree ._tree-head:where([disabled]):where([readonly]) > [rep=group] > [rep=tools],
-._tree ._tree-head:where([uncheckable][unselectable]):where([readonly]) > [rep=group] > [rep=tools],
-._tree ._tree-head:where([unselectable][exceeded]):where([readonly]) > [rep=group] > [rep=tools],
-._tree:where([check]:not([select])) ._tree-head:where([exceeded], [uncheckable]) > [rep=group] > [rep=check]:where([disabled]),
-._tree ._tree-head:where([disabled]) > [rep=group] > [rep=check]:where([disabled]),
-._tree ._tree-head:where([uncheckable][unselectable]) > [rep=group] > [rep=check]:where([disabled]),
-._tree ._tree-head:where([unselectable][exceeded]) > [rep=group] > [rep=check]:where([disabled]) {
-  opacity: 1;
-}
-._tree ._tree-wrap {
-  /*disabled禁止勾选*/
-  /*  &[disabled] {
-      opacity: .5;
-    } */
-  /*    &:where(:not([disabled])) [disabled] {
-      opacity: .5;
-      &~._tree-body,
-      &~._tree-foot {
-        opacity: .5;
-        pointer-events: none;
-      }
-    } */
-  /*readonly只读，禁止编辑*/
-  /*   &:where(:not([disabled])) ._tree-head[readonly]>[rep=tools] {
-      opacity: .5;
-      pointer-events: none;
-    } */
-}
-._tree ._tree-wrap:has(>._tree-children) > ._tree-head > [rep=legend] {
-  cursor: pointer;
-}
-._tree ._tree-body {
-  --_tree-body-lh: var(--_rem-list);
-  --_tree-body-dot: 0.4rem;
-  line-height: var(--_rem-subject);
-  display: flex;
-}
-._tree ._tree-body > ._none {
-  width: var(--_tree-lh);
-  position: relative;
-}
-._tree ._tree-brief {
-  flex: auto;
-  box-sizing: border-box;
-  margin: 0 0 var(--_rem-space) var(--_p);
-  position: relative;
-}
-._tree ._tree-brief:before {
-  content: '';
-  width: var(--_tree-body-dot);
-  height: var(--_tree-body-dot);
-  border-radius: var(--_tree-body-dot);
-  background-color: var(--_c-text-sd);
-  position: absolute;
-  left: calc(var(--_p)*-1 + var(--_tree-gap));
-  top: calc((var(--_tree-body-lh) - var(--_tree-body-dot))/2);
-}
-._tree ._tree-body:where(:has(._tree-brief:empty)) {
-  display: none;
-}
-._tree ._tree-foot {
-  line-height: var(--_tree-body-lh);
-}
-._tree ._tree-foot > ._none {
-  width: var(--_tree-lh);
-  position: relative;
-}
-._tree ._tree-foot:has([rep=info]:empty) {
-  display: none;
-}
-._tree ._tree-foot [rep=info] {
-  color: var(--_c-brief);
-}
-._tree ._tree-foot [rep=more],
-._tree ._tree-foot [rep=next],
-._tree ._tree-foot [rep=first] {
-  margin-left: var(--_rem-space);
-  cursor: pointer;
-}
-._tree ._tree-foot [rep=more],
-._tree ._tree-foot [rep=next] {
-  color: var(--_c-prim);
-}
-._tree li ._tree-foot {
-  display: none;
-}
-._tree > ._tree-foot,
-._tree ._tree-head[expanded] ~ ._tree-foot {
-  display: flex;
-}
-._tree ._tree-result {
-  padding: calc((var(--_tree-h) - var(--_tree-lh))/2) 0;
-  box-sizing: border-box;
-}
-._tree ._tree-result [rep=holder] {
-  color: var(--_c-ignore);
-}
-._tree ._tree-page {
-  padding-left: var(--_rem-space);
-  flex: auto;
-  box-sizing: border-box;
-}
-._tree ._tree-page [disabled] {
-  opacity: 0.5;
-}
-._tree ._tree-children:empty + ._tree-foot {
-  display: none;
-}
-._tree[tools-trigger="hover"] ._tree-head > [rep=tools],
-._tree[tools-trigger="click"] ._tree-head > [rep=tools] {
-  display: none;
-}
-._tree[tools-trigger="hover"] ._tree-head:hover > [rep=tools] {
-  display: inline-flex;
-}
-._tree[feature=check] {
-  --_tree-h: var(--_rem-input);
-}
-._tree[feature=check] ._tree-head {
-  padding: 0 var(--_rem-body);
-}
-._tree[feature=check] ._tree-head [rep=check] {
-  margin-right: var(--_tree-gap);
-}
-._tree[feature=check] ._tree-head[checked] {
-  color: var(--_c-prim);
-  background-color: var(--_c-prim-bg);
-}
-._tree[feature=check] ._tree-head[checked] > [rep=label],
-._tree[feature=check] ._tree-head[checked] > [rep=group] > [rep=label] {
-  color: var(--_c-prim);
-}
-._tree[feature=select],
-._tree[feature=dropdown] {
-  --_tree-h: var(--_rem-input);
-}
-._tree[feature=select] ._tree-head,
-._tree[feature=dropdown] ._tree-head {
-  padding: 0 var(--_rem-body);
-}
-._tree[feature=select] ._tree-head > [rep=label],
-._tree[feature=dropdown] ._tree-head > [rep=label],
-._tree[feature=select] ._tree-head > [rep=group] > [rep=label],
-._tree[feature=dropdown] ._tree-head > [rep=group] > [rep=label] {
-  padding: 0;
-}
-._tree[feature=select] ._tree-head[checked],
-._tree[feature=dropdown] ._tree-head[checked] {
-  color: var(--_c-prim);
-  background-color: var(--_c-prim-bg);
-}
-._tree[feature=select] ._tree-head[checked] > [rep=label],
-._tree[feature=dropdown] ._tree-head[checked] > [rep=label],
-._tree[feature=select] ._tree-head[checked] > [rep=group] > [rep=label],
-._tree[feature=dropdown] ._tree-head[checked] > [rep=group] > [rep=label] {
-  color: var(--_c-prim);
-}
-._tree[feature=select] ._tree-head[checked]:after,
-._tree[feature=dropdown] ._tree-head[checked]:after {
-  content: 'check';
-  font-family: var(--_ff-icon);
-  color: var(--_c-prim);
-  font-size: var(--_rem-ignore);
-  margin-left: var(--_tree-gap);
-}
-._tree[feature=select] {
-  box-sizing: border-box;
-  width: var(--_w-input);
-  height: calc((var(--_rem-input) + 1px)*5 - 1px);
-  overflow: auto;
-  background-color: var(--_c-stage);
-  border: 1px solid var(--_c-text-bd);
-  border-radius: var(--_r-input);
-}
-._tree[feature=select]:focus {
-  border-color: var(--_c-prim);
-  outline: var(--_w-outline) solid var(--_c-prim-sd);
-  outline-offset: 0px;
-}
-._tree[feature=select] > ._tree-children > li:where(:not(:last-child)) > ._tree-head,
-._tree[feature=select] > ._tree-children > li li > ._tree-head {
-  border-bottom: 1px solid var(--_c-text-bd);
-}
-._tree[feature=button] ._tree-children {
-  display: flow-root !important;
-}
-._tree[feature=button] ._tree-wrap:where(:not(:has(._tree-children))) {
-  display: inline-flex;
-  float: left;
-}
-._tree[feature=button] ._tree-head > [rep=label],
-._tree[feature=button] ._tree-head > [rep=group] > [rep=label] {
-  padding: 0;
-}
-._tree[feature=button] ._tree-head:where(:not(:has(+._tree-children))) {
-  display: inline-flex;
-  border: 1px solid var(--_c-text-bd);
-  border-radius: var(--_r);
-  padding: 0 var(--_rem-space);
-  margin: 0 var(--_rem-space) var(--_rem-space) 0;
-  position: relative;
-}
-._tree[feature=button] ._tree-head:where(:not(:has(+._tree-children)))[checked] {
-  color: var(--_c-prim);
-  background-color: var(--_c-prim-bg);
-  border-color: var(--_c-prim);
-}
-._tree[feature=button] ._tree-head:where(:not(:has(+._tree-children)))[checked] > [rep=label],
-._tree[feature=button] ._tree-head:where(:not(:has(+._tree-children)))[checked] > [rep=group] > [rep=label] {
-  color: var(--_c-prim);
-}
-._tree[feature=button] ._tree-head:where(:not(:has(+._tree-children)))[checked]:after {
-  content: '';
-  width: 0;
-  height: 0;
-  border-width: 4px;
-  border-style: solid;
-  border-color: transparent var(--_c-prim) var(--_c-prim) transparent;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-}
-._tree[feature=button] ._tree-head:where(:has(+._tree-children)) {
-  background-color: transparent;
-  margin-bottom: var(--_rem-space);
-}
-._tree[feature=button] ._tree-head:where(:has(+._tree-children))[checked] > [rep=group] > [rep=label],
-._tree[feature=button] ._tree-head:where(:has(+._tree-children))[checked] > [rep=label] {
-  color: var(--_c-prim);
-}
-._tree[feature=button] ._tree-head:where(:has(+._tree-children))[checked]:after {
-  content: 'check';
-  font-family: var(--_ff-icon);
-  color: var(--_c-prim);
-  font-size: var(--_rem-ignore);
-}
-._tree[feature=list] {
-  --_tree-h: auto;
-}
-._tree[feature=list] ._tree-head {
-  padding: var(--_rem-space) var(--_rem-body);
-}
-._tree[feature=list] ._tree-head > [rep=label],
-._tree[feature=list] ._tree-head > [rep=group] > [rep=label] {
-  padding: 0;
-}
-._tree[feature=list] ._tree-head[checked] {
-  background-color: var(--_c-prim-bg);
-}
-._tree[feature=list] ._tree-head[checked] > [rep=label],
-._tree[feature=list] ._tree-head[checked] > [rep=group] > [rep=label] {
-  color: var(--_c-prim);
-}
-._tree[feature=list] ._tree-head[checked]:after {
-  content: 'check';
-  font-family: var(--_ff-icon);
-  color: var(--_c-prim);
-  font-size: var(--_rem-ignore);
-  line-height: var(--_rem-subject);
-  margin-left: var(--_tree-gap);
-}
-._tree[feature=list] ._tree-head [rep=group] {
-  flex: auto;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-._tree[feature=list] ._tree-head [rep=tips],
-._tree[feature=list] ._tree-head [rep=custom] {
-  line-height: var(--_rem-subject);
-  width: 100%;
-  margin-left: 0;
-}
-._tree[feature=list] ._tree-head [rep=custom] {
-  color: var(--_c-brief);
-}
-._tree[chain] ._tree-head [rep=arrow]._none:before,
-._tree[chain] ._tree-head [rep=arrow]._none:after {
-  content: '';
-  width: calc(var(--_tree-lh) / 2);
-  height: calc(var(--_tree-h) / 2);
-  position: absolute;
-  right: 0;
-}
-._tree[chain] ._tree-head [rep=arrow]._none:before {
-  box-shadow: inset 1px -1px 0 0 var(--_c-text-fc);
-  top: 0;
-}
-._tree[chain] ._tree-head [rep=arrow]._none:after {
-  box-shadow: inset 1px 0 0 0 var(--_c-text-fc);
-  bottom: 0;
-}
-._tree[chain] > ._tree-children > li:first-child > ._tree-head [rep=arrow]._none:before {
-  box-shadow: inset 0 -1px 0 0 var(--_c-text-fc);
-}
-._tree[chain] ._tree-children > li:last-child > ._tree-head [rep=arrow]._none:after {
-  display: none;
-}
-._tree[chain] ._tree-body > ._none:before,
-._tree[chain] ._tree-foot > ._none:before {
-  content: '';
-  width: calc(var(--_tree-lh) / 2);
-  height: 100%;
-  box-shadow: inset 1px 0 0 0 var(--_c-text-fc);
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-._tree[chain] ._tree-children > li:last-child > ._tree-body > ._none:before,
-._tree[chain] ._tree-children > li:last-child > ._tree-foot > ._none:before {
-  display: none;
-}
-._tree ._tree-head > [rep=indent] i,
-._tree ._tree-body > [rep=indent] i,
-._tree ._tree-foot > [rep=indent] i {
-  width: var(--_tree-lh);
-}
-._tree[chain] ._tree-head > [rep=indent],
-._tree[chain] ._tree-body > [rep=indent],
-._tree[chain] ._tree-foot > [rep=indent] {
-  position: relative;
-}
-._tree[chain] ._tree-head > [rep=indent] i,
-._tree[chain] ._tree-body > [rep=indent] i,
-._tree[chain] ._tree-foot > [rep=indent] i {
-  height: 100%;
-  position: relative;
-}
-._tree[chain] ._tree-head > [rep=indent] i:before,
-._tree[chain] ._tree-body > [rep=indent] i:before,
-._tree[chain] ._tree-foot > [rep=indent] i:before {
-  content: '';
-  width: calc(var(--_tree-lh) / 2);
-  height: 100%;
-  box-shadow: inset 1px 0 0 0 var(--_c-text-fc);
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-._tree[chain] ._tree-head > [rep=indent] {
-  height: var(--_tree-h);
-}
-._tree[chain] ._tree-body > [rep=indent],
-._tree[chain] ._tree-foot > [rep=indent] {
-  height: auto;
 }
 /*Rate*/
 AX-RATE {

@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-16 20:41:4
+ * @since Last modified: 2025-3-21 23:17:36
  * @name AXUI front-end framework.
- * @version 3.0.31
+ * @version 3.0.32
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -480,6 +480,7 @@ const config = {
     wordHyphen: ' ',
     actClass: `${prefix}opened`,
     reqProp: 'REQRETRY',
+    parser: 'new Function',
     warn: {
         init: 'The initialization process of the instance has been stopped. You will need to manually initialize it using the init() method later!',
         emptyCont: 'Data was not obtained, but execution was not halted!',
@@ -669,16 +670,45 @@ const requireTypes = (data, require, cb) => {
     }
 };
 
+const parseStr = ({ content = '', type = 'object', method = config.parser, catchable = false, error }) => {
+    let dft = {
+        start: type === 'object' ? '{' : '[',
+        end: type === 'object' ? '}' : ']',
+        return: type === 'object' ? {} : type === 'array' ? [] : null,
+    }, result = dft.return;
+    if (!content)
+        return dft.return;
+    let trim = content.trim();
+    if (['object', 'array'].includes(type)) {
+        if (!trim.startsWith(dft.start) || !trim.endsWith(dft.end))
+            return result;
+    }
+    try {
+        let tmp = typeof method === 'function' ? method(trim) : method === 'JSON.parse' ? JSON.parse(trim) : new Function(`"use strict"; return ${trim}`)();
+        result = tmp;
+    }
+    catch (err) {
+        error && error(err);
+        if (catchable)
+            throw err;
+    }
+    return result;
+};
+
 const strToJson = (str, type = 'object') => {
     let dft = type === 'array' ? [] : {};
     if (typeof str !== 'string')
         return dft;
     str = str.trim();
     if (!str)
-        return {};
+        return dft;
+    str = (str.startsWith('[') && str.endsWith(']')) || (str.startsWith('{') && str.endsWith('}')) ? str : `{${str}}`;
     try {
-        str = (str.startsWith('[') && str.endsWith(']')) || (str.startsWith('{') && str.endsWith('}')) ? str : `{${str}}`;
-        return new Function('"use strict";return ' + str)();
+        return parseStr({
+            content: str,
+            type,
+            catchable: true,
+        });
     }
     catch {
         return dft;
@@ -2476,7 +2506,7 @@ const attrJoinVal = (attr, value, map) => {
     }, addFnShell = (str) => {
         let tmp = str.trim(), result = (!(tmp.startsWith('function') || tmp.startsWith('(')) && !tmp.endsWith('}')) ? `function(){${str}}` : str;
         return result;
-    }, fnVal = isFn() ? addFnShell(value) : value, fnStr = '"use strict";return ';
+    }, fnVal = isFn() ? addFnShell(value) : value;
     try {
         if (item) {
             if (value === null) {
@@ -2490,13 +2520,13 @@ const attrJoinVal = (attr, value, map) => {
                             (valType === 'Boolean' && trueVals.includes(trim)) ? { [item.prop]: true } :
                                 (valType === 'Boolean' && falseVals.includes(trim)) ? { [item.prop]: false } :
                                     (valType === 'Object' && item.value.hasOwnProperty('enable') && trueVals.includes(trim)) ? { [item.prop]: true } :
-                                        (valType === 'Object' && item.value.hasOwnProperty('enable') && item.value.hasOwnProperty('children') && trim.startsWith('[') && trim.endsWith(']')) ? { [item.prop]: { enable: true, children: new Function(fnStr + `${value}`)() } } :
+                                        (valType === 'Object' && item.value.hasOwnProperty('enable') && item.value.hasOwnProperty('children') && trim.startsWith('[') && trim.endsWith(']')) ? { [item.prop]: { enable: true, children: parseStr({ content: `${value}`, type: 'array', catchable: true }) } } :
                                             (valType === 'Object' && value.includes(':')) ? { [item.prop]: strToJson(value) } :
-                                                new Function(fnStr + `{"${item.prop}":${fnVal}}`)();
+                                                parseStr({ content: `{"${item.prop}":${fnVal}}`, type: 'object', catchable: true });
             }
         }
         else {
-            return value === '' ? { [attr]: '' } : new Function(fnStr + `{"${attr}":${fnVal}}`)();
+            return value === '' ? { [attr]: '' } : parseStr({ content: `{"${attr}":${fnVal}}`, type: 'object', catchable: true });
         }
     }
     catch (e) {
@@ -5848,9 +5878,13 @@ const paramToJson = (str) => {
             return (!k.includes(':') && !excludeStr.includes(k)) ? `${k}:true` : k;
         }).join(',');
         try {
-            result = new Function(`"use strict";return {${std}}`)();
+            result = parseStr({
+                content: `{${std}}`,
+                type: 'object',
+                catchable: true,
+            });
         }
-        catch (e) {
+        catch {
             result = {};
             console.warn('Data parsing error, an empty object "{}" has been returned!');
         }
@@ -6114,27 +6148,6 @@ const splice = ({ host = [], source, intent = 'end+', index = 0, cb }) => {
     }
     cb && cb(items);
     return host;
-};
-
-const parseStr = (source, type = 'array') => {
-    let dft = {
-        start: type === 'object' ? '{' : '[',
-        end: type === 'object' ? '}' : ']',
-        return: type === 'object' ? {} : [],
-    };
-    if (!source)
-        return dft.return;
-    let result = dft.return, trim = source.trim();
-    if (!trim.startsWith(dft.start) || !trim.endsWith(dft.end))
-        return result;
-    try {
-        let tmp = new Function(`"use strict"; return ${trim}`)();
-        result = tmp;
-    }
-    catch (err) {
-        console.error(config.error.parse, err);
-    }
-    return result;
 };
 
 const treeTools = {
@@ -6401,7 +6414,13 @@ const treeTools = {
                 arr = ul2Tree(node, nodeType);
             }
             else if (nodeName === 'SCRIPT' && node.getAttribute('type') === 'content') {
-                arr = this.toTree(parseStr(node.textContent));
+                arr = this.toTree(parseStr({
+                    content: node.textContent,
+                    type: 'array',
+                    error: (err) => {
+                        console.error(config.error.parse, err);
+                    }
+                }));
             }
             else if (nodeName === 'INPUT') {
                 arr = this.fromInput(node, splitHyphen);
@@ -6447,7 +6466,13 @@ const treeTools = {
                         else {
                             let str = resp.trim();
                             if ((str.startsWith('{') && str.endsWith('}')) || (str.startsWith('[') && str.endsWith(']'))) {
-                                treeData = this.toTree(strArr2ObjArr(parseStr(resp)));
+                                treeData = this.toTree(strArr2ObjArr(parseStr({
+                                    content: resp,
+                                    type: 'array',
+                                    error: (err) => {
+                                        console.error(config.error.parse, err);
+                                    }
+                                })));
                             }
                             else {
                                 treeData = strArr2ObjArr(resp.split(splitHyphen).filter(Boolean));
@@ -6590,7 +6615,11 @@ const getAttrArr = (val, dft = '') => {
                 result = dft.split(',').filter(Boolean);
             }
             else {
-                let val = new Function('"use strict";return ' + tmp)();
+                let val = parseStr({
+                    content: tmp,
+                    type: 'array',
+                    catchable: true,
+                });
                 result = Array.isArray(val) ? val : [tmp];
             }
         }
@@ -7614,7 +7643,11 @@ class CompBaseComm extends CompBase {
             let value = this.propsProxy[`on-${name.toLowerCase()}`], addFnShell = (str) => {
                 let tmp = str.trim(), result = (!(tmp.startsWith('function') || tmp.startsWith('(')) && !tmp.endsWith('}')) ? `function(){${str}}` : str;
                 return result;
-            }, fn = new Function('"use strict";return ' + addFnShell(value))();
+            }, fn = parseStr({
+                content: addFnShell(value),
+                type: 'other',
+                method: 'new Function'
+            });
             fn && fn.call(this, ...params);
         }
         cb && cb.call(this, ...params);
@@ -12352,7 +12385,7 @@ class Valid extends ModBaseListenCache {
     }
     loopValuesRules(types) {
         let result = {};
-        types.forEach((k) => {
+        for (let k of types) {
             result[k] = (data) => {
                 let value = (Array.isArray(data.value)) ? data.value : data.value.split(this.options.separator).filter(Boolean), fail = renderTpl(this.options.lang[k], { label: data.label, name: data.name, value: value.length, data: data.data }), condition = k === 'count>=<=' ? (value.length >= this.types[k][0] && value.length <= this.types[k][1]) :
                     k === 'count><=' ? (value.length > this.types[k][0] && value.length <= this.types[k][1]) :
@@ -12361,7 +12394,7 @@ class Valid extends ModBaseListenCache {
                                 k === 'count=' ? `${value.length} === ${this.types[k]}` : `${value.length} ${k.replace('count', '')} ${this.types[k]}`;
                 return new Function(`"use strict";return ${condition}`)() ? { passed: true } : { passed: false, fail, type: k };
             };
-        });
+        }
         return result;
     }
     testRegex({ regex, value, name }) {
@@ -12585,8 +12618,8 @@ class Valid extends ModBaseListenCache {
 let AXTMP_rootStart$1 = config.rootStart, AXTMP_idStart$1 = config.idStart, AXTMP_floorStart$1 = config.floorStart, AXTMP_pathHyphen$1 = config.pathHyphen;
 const optMenu$1 = [
     {
-        attr: 'scheme',
-        prop: 'scheme',
+        attr: 'theme',
+        prop: 'theme',
         value: 'light',
     },
     {
@@ -12675,27 +12708,17 @@ const optMenu$1 = [
         value: 0,
     },
     {
-        attr: 'arrow',
-        prop: 'arrow',
-        value: {
-            enable: true,
-            icon: ''
-        },
-    },
-    {
-        attr: 'max',
-        prop: 'max',
-        value: 0,
-    },
-    {
         attr: 'page-close',
         prop: 'pageClose',
         value: false,
     },
     {
-        attr: 'popup',
-        prop: 'popup',
-        value: {},
+        attr: 'arrow',
+        prop: 'arrow',
+        value: {
+            enable: true,
+            icon: '',
+        },
     },
     {
         attr: 'classes',
@@ -12703,18 +12726,13 @@ const optMenu$1 = [
         value: '',
     },
     {
-        attr: 'add-active',
-        prop: 'addActive',
+        attr: 'linkage',
+        prop: 'linkage',
         value: true,
     },
     {
-        attr: 'rise',
-        prop: 'rise',
-        value: false,
-    },
-    {
-        attr: 'gapless',
-        prop: 'gapless',
+        attr: 'unpadded',
+        prop: 'unpadded',
         value: false,
     },
     {
@@ -12733,18 +12751,27 @@ const optMenu$1 = [
         value: false,
     },
     {
+        attr: 'layout',
+        prop: 'layout',
+        value: 'indent|legend|icon|disk|cube|image|label|custom|tips||badge|arrow',
+    },
+    {
+        attr: 'tree',
+        prop: 'tree',
+        value: {},
+    },
+    {
         attr: 'drawer',
         prop: 'drawer',
         value: {
-            enable: false,
             host: '',
             placement: 'left',
             footer: false,
         },
     },
     {
-        attr: 'row',
-        prop: 'row',
+        attr: 'nav',
+        prop: 'nav',
         value: {
             enable: false,
             headWidth: '',
@@ -12752,6 +12779,314 @@ const optMenu$1 = [
             marginLeft: '',
             marginRight: '',
             align: 'left',
+        },
+    },
+    {
+        attr: 'on-activated',
+        prop: 'onActivated',
+        value: null
+    },
+    {
+        attr: 'on-updatedcont',
+        prop: 'onUpdatedCont',
+        value: null
+    },
+    ...optBase
+];
+
+let AXTMP_connector = config.labelHyphen, AXTMP_separator$4 = config.splitHyphen, AXTMP_rootStart = config.rootStart, AXTMP_idStart = config.idStart, AXTMP_floorStart = config.floorStart, AXTMP_pathHyphen = config.pathHyphen;
+const optTree = [
+    {
+        attr: 'name',
+        prop: 'name',
+        value: '',
+    },
+    {
+        attr: 'value',
+        prop: 'value',
+        value: '',
+    },
+    {
+        attr: 'content',
+        prop: 'content',
+        value: '',
+    },
+    {
+        attr: 'cont-type',
+        prop: 'contType',
+        value: 'text',
+    },
+    {
+        attr: 'cont-data',
+        prop: 'contData',
+        value: {},
+    },
+    {
+        attr: 'ajax',
+        prop: 'ajax',
+        value: {},
+    },
+    {
+        attr: 'passive',
+        prop: 'passive',
+        value: false,
+    },
+    {
+        attr: 'disable',
+        prop: 'disable',
+        value: '',
+    },
+    {
+        attr: 'readonly',
+        prop: 'readonly',
+        value: '',
+    },
+    {
+        attr: 'min',
+        prop: 'min',
+        value: 0,
+    },
+    {
+        attr: 'max',
+        prop: 'max',
+        value: 0,
+    },
+    {
+        attr: 'sliced',
+        prop: 'sliced',
+        value: true,
+    },
+    {
+        attr: 'expand',
+        prop: 'expand',
+        value: {
+            value: '',
+            all: false,
+            only: true,
+            linkage: false,
+        },
+    },
+    {
+        attr: 'select',
+        prop: 'select',
+        value: {
+            enable: true,
+            only: true,
+            value: '',
+            linkage: false,
+            span: 'tree',
+            addSelected: false,
+        },
+    },
+    {
+        attr: 'arrow',
+        prop: 'arrow',
+        value: {
+            enable: true,
+            show: `${prefix}icon-right`,
+            hide: `${prefix}icon-right`,
+            anim: `${prefix}rotate90`,
+            type: 'icon',
+            trigger: 'click',
+        },
+    },
+    {
+        attr: 'legend',
+        prop: 'legend',
+        value: {
+            enable: false,
+            parent: [`${prefix}icon-folder`, `${prefix}icon-folder-open`],
+            child: `${prefix}icon-file-text`,
+            type: 'icon',
+        },
+    },
+    {
+        attr: 'check',
+        prop: 'check',
+        value: {
+            enable: false,
+            type: 'checkbox',
+            value: '',
+            min: 0,
+            max: 0,
+            sliced: true,
+            linkage: true,
+            only: false,
+            span: 'tree',
+        },
+    },
+    {
+        attr: 'tools',
+        prop: 'tools',
+        value: {
+            enable: false,
+            trigger: 'hover',
+            children: ['folder', 'file', 'edit', 'remove'],
+        },
+    },
+    {
+        attr: 'output',
+        prop: 'output',
+        value: {
+            enable: true,
+            target: '',
+            connector: AXTMP_connector,
+            separator: AXTMP_separator$4,
+            type: '',
+            from: 'selected',
+            field: 'label',
+            instant: true,
+            autosort: false,
+        },
+    },
+    {
+        attr: 'sql-data',
+        prop: 'sqlData',
+        value: {
+            deep: 0,
+            start: 0,
+            count: 0,
+            order: 'id asc',
+            where: '',
+        },
+    },
+    {
+        attr: 'paginated',
+        prop: 'paginated',
+        value: {
+            enable: false,
+            count: 10,
+            override: false,
+            exception: false,
+        },
+    },
+    {
+        attr: 'delay',
+        prop: 'delay',
+        value: 100,
+    },
+    {
+        attr: 'deferred',
+        prop: 'deferred',
+        value: false,
+    },
+    {
+        attr: 'shortcut',
+        prop: 'shortcut',
+        value: {
+            enable: false,
+            span: 'blank',
+            mean: 'selected',
+        },
+    },
+    {
+        attr: 'search',
+        prop: 'search',
+        value: {
+            target: '',
+            trigger: 'input',
+            delay: 500,
+            value: '',
+            limit: 0,
+            fuzzy: true,
+            ignore: true,
+        },
+    },
+    {
+        attr: 'drag',
+        prop: 'drag',
+        value: {
+            enable: false,
+            exclude: '',
+        },
+    },
+    {
+        attr: 'drop',
+        prop: 'drop',
+        value: {
+            attr: 'dropnode',
+            global: false,
+        },
+    },
+    {
+        attr: 'chain',
+        prop: 'chain',
+        value: false,
+    },
+    {
+        attr: 'auto-fill',
+        prop: 'autoFill',
+        value: true,
+    },
+    {
+        attr: 'root-start',
+        prop: 'rootStart',
+        value: AXTMP_rootStart,
+    },
+    {
+        attr: 'id-start',
+        prop: 'idStart',
+        value: AXTMP_idStart,
+    },
+    {
+        attr: 'floor-start',
+        prop: 'floorStart',
+        value: AXTMP_floorStart,
+    },
+    {
+        attr: 'path-hyphen',
+        prop: 'pathHyphen',
+        value: AXTMP_pathHyphen,
+    },
+    {
+        attr: 'duration',
+        prop: 'duration',
+        value: 0,
+    },
+    {
+        attr: 'bubble',
+        prop: 'bubble',
+        value: {
+            enable: false,
+            type: 'popup',
+        },
+    },
+    {
+        attr: 'classes',
+        prop: 'classes',
+        value: '',
+    },
+    {
+        attr: 'display',
+        prop: 'display',
+        value: 'inline',
+    },
+    {
+        attr: 'layout',
+        prop: 'layout',
+        value: 'indent|arrow|check|legend|icon|disk|cube|image|label|badge|tips|custom|tools',
+    },
+    {
+        attr: 'feature',
+        prop: 'feature',
+        value: {
+            type: '',
+            expand: {
+                all: true,
+                only: false,
+            },
+            check: {
+                linkage: true,
+                only: false,
+                span: 'tree',
+            },
+            layout: {
+                dropdown: 'indent|arrow|icon|disk|cube|image|label|holder|tips|badge',
+                select: 'indent|arrow|icon|disk|cube|image|label|holder|tips|badge',
+                check: 'indent|arrow|check|icon|disk|cube|image|label|holder|tips|badge',
+                button: 'icon|arrow|disk|cube|image|label|tips|badge',
+                list: 'indent|arrow|icon|disk|cube|image(label|badge|tips|custom)'
+            }
         },
     },
     {
@@ -12820,13 +13155,28 @@ const optMenu$1 = [
         value: null
     },
     {
-        attr: 'on-disabledAll',
+        attr: 'on-disabledall',
         prop: 'onDisabledAll',
         value: null
     },
     {
-        attr: 'on-enabledAll',
+        attr: 'on-enabledall',
         prop: 'onEnabledAll',
+        value: null
+    },
+    {
+        attr: 'on-readonly',
+        prop: 'onReadonly',
+        value: null
+    },
+    {
+        attr: 'on-readonlyall',
+        prop: 'onReadonlyAll',
+        value: null
+    },
+    {
+        attr: 'on-expand',
+        prop: 'onExpand',
         value: null
     },
     {
@@ -12835,17 +13185,27 @@ const optMenu$1 = [
         value: null
     },
     {
+        attr: 'on-collapse',
+        prop: 'onCollapse',
+        value: null
+    },
+    {
         attr: 'on-collapsed',
         prop: 'onCollapsed',
         value: null
     },
     {
-        attr: 'on-expandAll',
+        attr: 'on-expandall',
         prop: 'onExpandAll',
         value: null
     },
     {
-        attr: 'on-collapsedAll',
+        attr: 'on-expandedAll',
+        prop: 'onExpandedAll',
+        value: null
+    },
+    {
+        attr: 'on-collapsedall',
         prop: 'onCollapsedAll',
         value: null
     },
@@ -12860,8 +13220,48 @@ const optMenu$1 = [
         value: null
     },
     {
-        attr: 'on-activated',
-        prop: 'onActivated',
+        attr: 'on-selectedall',
+        prop: 'onSelectedAll',
+        value: null
+    },
+    {
+        attr: 'on-checked',
+        prop: 'onChecked',
+        value: null
+    },
+    {
+        attr: 'on-unchecked',
+        prop: 'onUnchecked',
+        value: null
+    },
+    {
+        attr: 'on-checkedall',
+        prop: 'onCheckedAll',
+        value: null
+    },
+    {
+        attr: 'on-filled',
+        prop: 'onFilled',
+        value: null
+    },
+    {
+        attr: 'on-turned',
+        prop: 'onTurned',
+        value: null
+    },
+    {
+        attr: 'on-got',
+        prop: 'onGot',
+        value: null
+    },
+    {
+        attr: 'on-set',
+        prop: 'onSet',
+        value: null
+    },
+    {
+        attr: 'on-cleared',
+        prop: 'onCleared',
         value: null
     },
     {
@@ -12879,33 +13279,1187 @@ const optMenu$1 = [
         prop: 'onRequest',
         value: null
     },
+    {
+        attr: 'on-toofew',
+        prop: 'onTooFew',
+        value: null
+    },
+    {
+        attr: 'on-toomany',
+        prop: 'onTooMany',
+        value: null
+    },
+    {
+        attr: 'on-locked',
+        prop: 'onLocked',
+        value: null
+    },
+    {
+        attr: 'on-unlocked',
+        prop: 'onUnlocked',
+        value: null
+    },
+    {
+        attr: 'on-output',
+        prop: 'onOutput',
+        value: null
+    },
     ...optBase
 ];
 
-class Menu extends ModBaseListenCache {
+const optDrag$1 = [
+    {
+        attr: 'drops',
+        prop: 'drops',
+        value: '',
+    },
+    {
+        attr: 'parent',
+        prop: 'parent',
+        value: null,
+    },
+    {
+        attr: 'handle',
+        prop: 'handle',
+        value: '',
+    },
+    {
+        attr: 'data',
+        prop: 'data',
+        value: {},
+    },
+    {
+        attr: 'mode',
+        prop: 'mode',
+        value: 'cut',
+    },
+    {
+        attr: 'purpose',
+        prop: 'purpose',
+        value: 'sort',
+    },
+    {
+        attr: 'point',
+        prop: 'point',
+        value: {
+            before: ['t/3'],
+            after: ['b/3'],
+        },
+    },
+    {
+        attr: 'holder',
+        prop: 'holder',
+        value: {
+            from: false,
+            to: false,
+        },
+    },
+    {
+        attr: 'arrow',
+        prop: 'arrow',
+        value: {
+            enable: false,
+            icon: `${prefix}icon-right`,
+            placement: 'left',
+            selector: '',
+        },
+    },
+    {
+        attr: 'gesture',
+        prop: 'gesture',
+        value: {},
+    },
+    {
+        attr: 'delay',
+        prop: 'delay',
+        value: 50,
+    },
+    {
+        attr: 'duration',
+        prop: 'duration',
+        value: 200,
+    },
+    {
+        attr: 'b4-drop',
+        prop: 'b4Drop',
+        value: null,
+    },
+    {
+        attr: 'on-dropping',
+        prop: 'onDropping',
+        value: null,
+    },
+    {
+        attr: 'on-dropped',
+        prop: 'onDropped',
+        value: null,
+    },
+    {
+        attr: 'on-dragstart',
+        prop: 'onDragStart',
+        value: null,
+    },
+    {
+        attr: 'on-dragmove',
+        prop: 'onDragMove',
+        value: null,
+    },
+    {
+        attr: 'on-dragend',
+        prop: 'onDragEnd',
+        value: null,
+    },
+    {
+        attr: 'on-dragcancel',
+        prop: 'onDragCancel',
+        value: null,
+    },
+    ...optBase
+];
+
+class Drag extends ModBaseListen {
+    targetEl;
     options = {};
-    flatData;
-    treeData;
+    curX;
+    curY;
+    preX;
+    preY;
+    isActive;
+    enterTimer;
+    leaveTimer;
+    eventToggle;
+    holdEl;
+    enterCompare;
+    globalEvent;
+    moveEvent;
+    enterEvent;
+    leaveEvent;
+    enterHold;
+    leaveHold;
+    dragHolder;
+    dropHolder;
+    dropArrow;
+    orgHolder;
+    drops;
+    lastDrop;
+    lastPoint;
+    dftParams;
+    dropOver;
+    dropEnd;
+    targetTag;
+    holderAttr;
+    orgVal;
+    nowVal;
+    orgStyle;
+    gestureIns;
+    static hostType = 'node';
+    constructor(elem, options = {}, initial = true) {
+        super();
+        super.ready({
+            options,
+            maps: optDrag$1,
+            host: elem,
+            component: false,
+            spread: ['arrow']
+        });
+        if (!this.targetEl)
+            throw new Error('The target node for drag start is missing!');
+        this.dragHolder = createEl('div', { class: `${prefix}holder-drag` }, this.options.lang.holderDrag);
+        this.dropHolder = createEl('div', { class: `${prefix}holder-drop` }, this.options.lang.holderDrop);
+        this.dropArrow = createEl('i', { class: `${prefix}drop-arrow ${this.options.arrow.icon}`, placement: this.options.arrow.placement, point: 'inside' });
+        this.orgHolder = null;
+        this.drops = [this.dropHolder];
+        this.lastDrop = null;
+        this.lastPoint = '';
+        this.dftParams = { data: this.options.data, from: this.targetEl, holder: this.dropHolder, to: this.lastDrop, mode: this.options.mode, purpose: this.options.purpose, drops: this.drops, point: this.lastPoint };
+        this.dropOver = debounce((evt, target) => {
+            let drop = this.drops.find((k) => contains(target, k));
+            if (drop) {
+                if (drop === this.dropHolder) {
+                    this.toggleDropHolderAttr('set', this.lastDrop);
+                    this.toggleDropAttr();
+                }
+                else {
+                    this.toggleDropHolderAttr('remove');
+                    this.toggleDropAttr(drop, 'ing');
+                    this.updateHolderSize(this.dropHolder, drop, this.holderAttr === 'width' ? 'height' : this.holderAttr === 'height' ? 'width' : '');
+                }
+                if (drop === this.dropHolder || drop === this.targetEl)
+                    return;
+                this.lastDrop = drop;
+                let arrowRefer = getEl(this.options.arrow.selector, drop) || drop;
+                this.options.arrow.enable && arrowRefer.appendChild(this.dropArrow);
+                let points = getRectPoints(evt, drop), isBefore = points.find((k) => this.options.point.before.includes(k)), isAfter = points.find((k) => this.options.point.after.includes(k)), params = { ...this.dftParams, orgEvt: evt, to: drop, points };
+                if (this.options.purpose === 'sort' || this.options.purpose === 'auto') {
+                    if (isBefore) {
+                        this.lastPoint = 'before';
+                        this.options.holder.to && drop.insertAdjacentElement('beforebegin', this.dropHolder);
+                    }
+                    else if (isAfter) {
+                        this.lastPoint = 'after';
+                        this.options.holder.to && drop.insertAdjacentElement('afterend', this.dropHolder);
+                    }
+                    else {
+                        if (this.options.purpose === 'auto') {
+                            this.lastPoint = 'inside';
+                            elState(this.dropHolder).isCalc && this.dropHolder.remove();
+                        }
+                    }
+                }
+                else {
+                    this.lastPoint = 'inside';
+                }
+                drop.setAttribute('point', this.lastPoint);
+                this.options.arrow.enable && this.dropArrow.setAttribute('point', this.lastPoint);
+                super.listen({ name: 'dropping', params: [{ ...params, point: this.lastPoint }] });
+            }
+            else {
+                this.toggleDropAttr();
+                this.toggleDropHolderAttr('remove');
+                elState(this.dropHolder).isCalc && this.dropHolder.remove();
+            }
+        }, this.options.delay);
+        this.dropEnd = async (evt, target) => {
+            let drop = this.drops.find((k) => contains(target, k)), params = { ...this.dftParams, orgEvt: evt, to: this.lastDrop, point: this.lastPoint };
+            this.options.arrow.enable && this.dropArrow.remove();
+            if (drop) {
+                if (this.options.b4Drop) {
+                    let tmp = await this.options.b4Drop.call(this, params);
+                    if (tmp === false) {
+                        this.goback(this.options.mode, 'fail');
+                        return true;
+                    }
+                }
+                this.clearTransform();
+                this.toggleDropAttr(drop, 'ed');
+                drop.removeAttribute('point');
+                super.listen({ name: 'dropped', params: [params] });
+                return false;
+            }
+            else {
+                this.goback(this.options.mode, 'fail');
+                return true;
+            }
+        };
+        this.targetTag = 'dragnode';
+        super.listen({ name: 'constructed' });
+        initial && this.init();
+    }
+    async init(cb) {
+        super.listen({ name: 'initiate' });
+        try {
+            this.options.b4Init && await this.options.b4Init.call(this);
+        }
+        catch {
+            console.warn(config.warn.init);
+            return this;
+        }
+        this.setAttrs();
+        this.holderAttr = ['left', 'right'].includes(this.options.arrow.placement) ? 'height' :
+            ['top', 'bottom'].includes(this.options.arrow.placement) ? 'width' : '';
+        this.orgVal = transformTools.get(this.targetEl, ['translate'])['translate'];
+        this.nowVal = { ...this.orgVal };
+        this.orgStyle = this.targetEl.style.cssText;
+        this.getGestureIns();
+        super.listen({ name: 'initiated', cb });
+    }
+    setAttrs() {
+        this.targetEl.setAttribute([this.targetTag], '');
+    }
+    getGestureIns() {
+        this.gestureIns = new Gesture(this.targetEl, {
+            rotate: false,
+            scale: false,
+            drift: false,
+            wheel: false,
+            translate: {
+                target: this.options.handle,
+            },
+            onTranslate: (data) => {
+                this.orgHolder = this.targetEl.cloneNode(true);
+                this.orgHolder.classList.add(`${prefix}holder-origin`);
+                this.targetEl.setAttribute('drag', this.options.mode);
+                document.body.style.cursor = 'grabbing';
+                this.getDrops();
+                if (this.options.mode === 'cut' && this.options.holder.from) {
+                    this.updateHolderSize(this.dragHolder, this.targetEl);
+                    this.targetEl.insertAdjacentElement('afterend', this.dragHolder);
+                }
+                if (this.options.mode === 'copy' && this.options.holder.from) {
+                    this.targetEl.insertAdjacentElement('afterend', this.orgHolder);
+                }
+                super.listen({ name: 'dragStart', params: [{ ...data }] });
+            },
+            onTranslating: (data) => {
+                this.dropOver(data.orgEvt, data.evtTarget);
+                transformTools.set({
+                    el: this.targetEl,
+                    data: {
+                        translate: data.translate.value,
+                    },
+                });
+                this.nowVal = data.translate.value;
+                super.listen({ name: 'dragMove', params: [{ ...data, }] });
+            },
+            onTranslated: (data) => {
+                this.dropEnd(data.orgEvt, data.evtTarget).then((resp) => {
+                    !resp && this.restore();
+                });
+                super.listen({ name: 'dragEnd', params: [{ ...data }] });
+            },
+            onCanceled: (data) => {
+                this.toggleDropAttr();
+                this.restore();
+                super.listen({ name: 'dragCancel', params: [{ ...data }] });
+            }
+        });
+    }
+    updateHolderSize(target, relate, attr) {
+        if (!relate)
+            return;
+        let styleRelate = style(relate), styleTarget = style(target), width = styleRelate.width, height = styleRelate.height;
+        if (attr === 'width') {
+            target.style.width = width;
+            target.style.height = styleTarget.height;
+        }
+        else if (attr === 'height') {
+            target.style.height = height;
+            target.style.width = styleTarget.width;
+        }
+        else {
+            target.style.width = width;
+            target.style.height = height;
+        }
+    }
+    toggleDropAttr(exclude, type) {
+        if (exclude === this.dropHolder)
+            return;
+        exclude && exclude !== this.dropHolder && exclude.setAttribute('drop', type);
+        for (let k of this.drops) {
+            if (exclude === k)
+                continue;
+            k.removeAttribute('drop');
+        }
+    }
+    toggleDropHolderAttr(type = 'set', relate) {
+        if (type === 'remove') {
+            this.dropHolder.removeAttribute('moving');
+        }
+        else {
+            this.dropHolder.setAttribute('moving', '');
+            relate && this.updateHolderSize(this.dropHolder, relate, this.holderAttr);
+        }
+    }
+    clearTransform() {
+        this.targetEl.style.cssText = this.targetEl.style.cssText.replace('transform', '');
+    }
+    getDrops(drops = this.options.drops) {
+        this.drops = [this.dropHolder, ...elsSort(super.single2Els(drops || `[${this.targetTag}]`, this.options.parent))];
+    }
+    updateDrops(val) {
+        if (this.destroyed || isEmpty(val))
+            return;
+        this.options.drops = val;
+        return this;
+    }
+    goback(type, state) {
+        if (state === 'succ') {
+            if (type === 'copy') {
+                this.targetEl.style.transitionDuration = `0ms`;
+                transformTools.set({
+                    el: this.targetEl,
+                    data: {
+                        translate: this.orgVal,
+                    }
+                });
+                this.toggleDropAttr();
+                this.restore();
+            }
+        }
+        else if (state === 'fail') {
+            ease({
+                from: this.nowVal,
+                to: this.orgVal,
+                doing: (data) => {
+                    transformTools.set({
+                        el: this.targetEl,
+                        data: {
+                            translate: data.value,
+                        }
+                    });
+                },
+                done: () => {
+                    this.restore();
+                },
+                duration: this.options.duration,
+            });
+            this.toggleDropAttr();
+        }
+    }
+    restore() {
+        this.targetEl.removeAttribute('drag');
+        this.dropHolder.removeAttribute('moving');
+        this.dropHolder.style.cssText = this.dropHolder.style.cssText.replace('width', '').replace('height', '');
+        elState(this.dragHolder).isCalc && this.dragHolder.remove();
+        elState(this.dropHolder).isCalc && this.dropHolder.remove();
+        elState(this.orgHolder).isCalc && this.orgHolder.remove();
+        elState(this.dropArrow).isCalc && this.dropArrow.remove();
+        this.lastDrop = null;
+        this.lastPoint = '';
+        document.body.style.cssText = document.body.style.cssText.replace('cursor', '');
+    }
+    destroy(cb) {
+        if (this.destroyed)
+            return;
+        this.restore();
+        this.toggleDropAttr();
+        this.gestureIns.destroy();
+        this.destroyed = true;
+        super.listen({ name: 'destroyed', cb });
+        return this;
+    }
+}
+
+let AXTMP_emptyTpl = `<i class="${prefix}c-ignore">${config.lang.tags.emptyholder}</i>`, AXTMP_editorHolder = config.lang.tags.placeholder, AXTMP_separator$3 = config.splitHyphen;
+const optTags = [
+    {
+        attr: 'ajax',
+        prop: 'ajax',
+        value: {}
+    },
+    {
+        attr: 'content',
+        prop: 'content',
+        value: ''
+    },
+    {
+        attr: 'cont-type',
+        prop: 'contType',
+        value: 'text',
+    },
+    {
+        attr: 'cont-data',
+        prop: 'contData',
+        value: {},
+    },
+    {
+        attr: 'theme',
+        prop: 'theme',
+        value: '',
+    },
+    {
+        attr: 'size',
+        prop: 'size',
+        value: 'md',
+    },
+    {
+        attr: 'field',
+        prop: 'field',
+        value: 'label',
+    },
+    {
+        attr: 'type',
+        prop: 'type',
+        value: '',
+    },
+    {
+        attr: 'compact',
+        prop: 'compact',
+        value: false,
+    },
+    {
+        attr: 'shape',
+        prop: 'shape',
+        value: '',
+    },
+    {
+        attr: 'max',
+        prop: 'max',
+        value: 0,
+    },
+    {
+        attr: 'min',
+        prop: 'min',
+        value: 0,
+    },
+    {
+        attr: 'sliced',
+        prop: 'sliced',
+        value: true,
+    },
+    {
+        attr: 'classes',
+        prop: 'classes',
+        value: '',
+    },
+    {
+        attr: 'unique',
+        prop: 'unique',
+        value: {
+            enable: false,
+            refer: 'id',
+            template: `{{this.field}}<i class="${prefix}c-brief">({{this.key}}:{{this.value}})</i>`,
+        },
+    },
+    {
+        attr: 'empty',
+        prop: 'empty',
+        value: {
+            enable: true,
+            content: AXTMP_emptyTpl,
+        }
+    },
+    {
+        attr: 'editor',
+        prop: 'editor',
+        value: {
+            enable: false,
+            addable: true,
+            deletable: true,
+            selector: '',
+            placeholder: AXTMP_editorHolder,
+        },
+    },
+    {
+        attr: 'removable',
+        prop: 'removable',
+        value: false,
+    },
+    {
+        attr: 'separator',
+        prop: 'separator',
+        value: AXTMP_separator$3,
+    },
+    {
+        attr: 'b4-fill',
+        prop: 'b4Fill',
+        value: null,
+    },
+    {
+        attr: 'b4-add',
+        prop: 'b4Add',
+        value: null,
+    },
+    {
+        attr: 'b4-remove',
+        prop: 'b4Remove',
+        value: null,
+    },
+    {
+        attr: 'b4-edit',
+        prop: 'b4Edit',
+        value: null,
+    },
+    {
+        attr: 'b4-clear',
+        prop: 'b4Clear',
+        value: null,
+    },
+    {
+        attr: 'on-added',
+        prop: 'onAdded',
+        value: null,
+    },
+    {
+        attr: 'on-removed',
+        prop: 'onRemoved',
+        value: null,
+    },
+    {
+        attr: 'on-edited',
+        prop: 'onEdited',
+        value: null,
+    },
+    {
+        attr: 'on-cleared',
+        prop: 'onCleared',
+        value: null,
+    },
+    {
+        attr: 'on-duplicated',
+        prop: 'onDuplicated',
+        value: null,
+    },
+    {
+        attr: 'on-request',
+        prop: 'onRequest',
+        value: null
+    },
+    {
+        attr: 'on-output',
+        prop: 'onOutput',
+        value: null
+    },
+    ...optBase
+];
+
+class Tags extends ModBaseListenCache {
+    options = {};
+    emptyEl;
+    content;
+    editEvent;
+    toggleSelected;
+    output;
+    maxIndex;
+    dataOrig;
+    dataObs;
+    data;
+    editEl;
+    last;
+    labelEl;
+    static hostType = 'node';
+    static optMaps = optTags;
+    constructor(elem, options = {}, initial = config.initial) {
+        super();
+        super.ready({
+            options,
+            maps: Tags.optMaps,
+            host: elem,
+            component: true,
+            spread: ['edit', 'unique', 'empty']
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        this.emptyEl = createEl('span', { [alias]: 'empty' }, this.options.empty.content);
+        
+        this.content = '';
+        let _this = this;
+        this.editEvent = async (e) => {
+            let label = this.editEl.value.trim(), selectedItem = this.data.find((k) => k.selected);
+            if (label) {
+                this.editEl.style.width = label.length + 'em';
+                if (this.options.editor.addable && e.code === 'Enter') {
+                    this.add(label, () => {
+                        this.editEl.value = '';
+                        this.editEl.focus();
+                    });
+                }
+                selectedItem && (selectedItem.selected = false);
+            }
+            else {
+                this.editEl.style.cssText = this.editEl.style.cssText.replace('width:', '');
+                if (this.options.editor.deletable && e.code === 'Backspace' && this.data.length > 0) {
+                    let endItem = this.data.slice(-1)[0];
+                    if (endItem.selected) {
+                        this.remove(endItem);
+                    }
+                    else {
+                        endItem.selected = true;
+                    }
+                }
+                else {
+                    selectedItem && (selectedItem.selected = false);
+                }
+            }
+        };
+        this.toggleSelected = function (e) {
+            if (e.target.getAttribute(alias) !== 'remove') {
+                let item = _this.data.find((k) => k.wrapEl === this);
+                item.selected = true;
+                _this.data.filter((k) => k !== item).forEach((k) => {
+                    k.selected = false;
+                });
+            }
+        };
+        super.listen({ name: 'constructed' });
+        initial && this.init();
+    }
+    
+    async init(cb) {
+        super.listen({ name: 'initiate' });
+        try {
+            this.options.b4Init && await this.options.b4Init.call(this);
+        }
+        catch (err) {
+            err ? console.error(err) : console.warn(config.warn.init);
+            return this;
+        }
+        this.output = { value: '', raw: '', items: [] };
+        this.maxIndex = 0;
+        this.initContent();
+        this.setEmpty();
+        this.createEditor();
+        await getContent.call(this, {
+            content: this.content,
+            contType: this.options.contType,
+            contData: this.options.contData,
+            ajax: {
+                xhrName: 'contXhr',
+                spinSel: this.targetEl,
+                ...this.options.ajax
+            },
+            cb: async (data) => {
+                await this.renderContent(data);
+            }
+        });
+        this.setAttrs();
+        this.renderFinish();
+        super.listen({ name: 'initiated', cb });
+        return this;
+    }
+    initContent() {
+        if (this.options.content) {
+            this.content = this.options.content;
+        }
+        else {
+            this.content = this.rawHtml || this.targetEl.innerHTML;
+        }
+    }
+    setDataObs() {
+        this.dataOrig = [];
+        this.dataObs = new Observe(this.dataOrig, {
+            deep: true,
+            onSet: (obj) => {
+                if (obj.key === this.options.field || obj.key === 'label') {
+                    obj.target.labelEl.innerHTML = obj.value;
+                }
+                else if (['selected', 'disabled'].includes(obj.key)) {
+                    obj.target.wrapEl.toggleAttribute(obj.key, obj.value);
+                }
+                else if (obj.key === 'theme') {
+                    obj.target.wrapEl.setAttribute(obj.key, obj.value);
+                }
+                else if (obj.key === 'icon' && obj.proxy.iconEl) {
+                    classes(obj.proxy.iconEl).replace(obj.raw, obj.value);
+                }
+                else if (obj.key === 'cube' && obj.proxy.cubeEl) {
+                    obj.proxy.cubeEl.src = obj.value;
+                }
+                else if (obj.key === 'disk' && obj.proxy.diskEl) {
+                    obj.proxy.diskEl.src = obj.value;
+                }
+                else if (obj.key === 'image' && obj.proxy.imageEl) {
+                    obj.proxy.imageEl.src = obj.value;
+                }
+                else if (['href', 'target', 'rel', 'download'].includes(obj.key) && this.labelEl.nodeName === 'A') {
+                    obj.target.labelEl[obj.key] = obj.value;
+                }
+            },
+            onCompleted: (data) => {
+                this.toggleEmpty();
+                if (this.options.storName) {
+                    let tmp = {
+                        content: !isEmpty(this.options.content) ? deepClone(this.dataOrig) : '',
+                    };
+                    super.updateCache(tmp);
+                }
+                this.output.value = this.getStrVals();
+                this.output.items = [...this.data];
+                super.listen({ name: 'output', params: [this.output] });
+            }
+        });
+        this.data = this.dataObs.proxy;
+    }
+    async renderContent(data) {
+        try {
+            if (this.options.b4Fill) {
+                let resp = await this.options.b4Fill.call(this, data, this.targetEl);
+                resp && (data = resp);
+            }
+        }
+        catch (err) {
+            err ? console.error(err) : console.warn('The content was blocked from being filled!');
+            return this;
+        }
+        this.setDataObs();
+        let tmp = this.getSource(data);
+        try {
+            let resp = await this.moreExceed({ data: tmp, source: this.data });
+            resp && (tmp = resp);
+        }
+        catch {
+            return;
+        }
+        this.render(tmp);
+        this.data.push(...tmp);
+    }
+    getStrVals() {
+        return this.data.map((k) => k[this.options.field]).join(this.options.separator);
+    }
+    getSource(obj) {
+        let result = [];
+        if (!isEmpty(obj)) {
+            if (Array.isArray(obj)) {
+                if (typeof obj[0] === 'string') {
+                    result = obj.map(k => {
+                        return { [this.options.field]: k, theme: '' };
+                    });
+                }
+                else {
+                    result = obj;
+                }
+            }
+            else if (typeof obj === 'object') {
+                result = [obj];
+            }
+            else if (typeof obj === 'string') {
+                let tmp = createEl('div', {}, obj), children = [...tmp.children];
+                if (children.length) {
+                    if (children[0].nodeName === 'SELECT') {
+                        result = select2Tree(children[0]);
+                    }
+                    else if (children[0].nodeName === 'INPUT') {
+                        result = treeTools.fromInput(children[0], this.options.separator);
+                    }
+                    else {
+                        for (let k of children) {
+                            let obj = {};
+                            k.hasAttribute('label') && (obj.label = k.getAttribute('label'));
+                            k.hasAttribute('value') && (obj.value = k.getAttribute('value'));
+                            k.hasAttribute('icon') && (obj.icon = k.getAttribute('icon'));
+                            k.hasAttribute('disk') && (obj.disk = k.getAttribute('disk'));
+                            k.hasAttribute('cube') && (obj.cube = k.getAttribute('cube'));
+                            k.hasAttribute('image') && (obj.image = k.getAttribute('image'));
+                            k.hasAttribute('disabled') && (obj.disabled = true);
+                            k.hasAttribute('theme') && (obj.theme = k.getAttribute('theme'));
+                            obj[this.options.field] = k.hasAttribute(this.options.field) ? k.getAttribute(this.options.field) : k.textContent;
+                            if (k.nodeName === 'A') {
+                                obj = {
+                                    ...obj,
+                                    href: k.getAttribute('href'),
+                                    target: k.target,
+                                    rel: k.rel,
+                                    download: k.download,
+                                };
+                            }
+                            result.push(obj);
+                        }
+                    }
+                }
+                else {
+                    let arr = obj.trim().split(this.options.separator);
+                    result = arr.map(k => {
+                        return { [this.options.field]: k, theme: '' };
+                    });
+                }
+            }
+        }
+        result = result.filter((k) => k && !this.data.includes(k));
+        result.forEach((k, i) => {
+            !k.hasOwnProperty('id') && (k.id = this.maxIndex + i);
+        });
+        this.maxIndex += result.length;
+        return result;
+    }
+    render(content) {
+        if (!isEmpty(content)) {
+            let fragment = document.createDocumentFragment();
+            for (let k of content) {
+                k.wrapEl = this.createTag(k);
+                fragment.appendChild(k.wrapEl);
+            }
+            this.targetEl.appendChild(fragment);
+        }
+        this.options.editor.enable && !this.options.editor.selector && this.targetEl.appendChild(this.editEl);
+    }
+    setAttrs() {
+        this.targetEl.classList.add(`${prefix}tags`);
+        classes(this.targetEl).add(this.options.classes);
+        this.options.theme ? this.targetEl.setAttribute('theme', this.options.theme) : this.targetEl.removeAttribute('theme');
+        this.options.type ? this.targetEl.setAttribute('type', this.options.type) : this.targetEl.removeAttribute('type');
+        this.targetEl.toggleAttribute('compact', this.options.compact);
+        this.options.shape ? this.targetEl.setAttribute('shape', this.options.shape) : this.targetEl.removeAttribute('shape');
+        this.options.size ? this.targetEl.setAttribute('size', this.options.size) : this.targetEl.removeAttribute('size');
+    }
+    setEmpty() {
+        this.targetEl.innerHTML = '';
+    }
+    useLegend(obj) {
+        let imgNone = getImgNone();
+        if (obj.hasOwnProperty('icon')) {
+            obj.iconEl = createEl('i', { [alias]: 'icon', class: `${obj.icon}` });
+            obj.labelEl.insertAdjacentElement('beforebegin', obj.iconEl);
+        }
+        if (obj.hasOwnProperty('disk')) {
+            obj.diskEl = createEl('img', { [alias]: 'disk', src: `${obj.disk || imgNone}` });
+            obj.labelEl.insertAdjacentElement('beforebegin', obj.diskEl);
+        }
+        if (obj.hasOwnProperty('cube')) {
+            obj.cubeEl = createEl('img', { [alias]: 'cube', src: `${obj.cube || imgNone}` });
+            obj.labelEl.insertAdjacentElement('beforebegin', obj.cubeEl);
+        }
+        if (obj.hasOwnProperty('image')) {
+            obj.imageEl = createEl('img', { [alias]: 'image', src: `${obj.image || imgNone}` });
+            obj.labelEl.insertAdjacentElement('beforebegin', obj.imageEl);
+        }
+    }
+    createTag(obj) {
+        let labelObj = { [alias]: 'label' }, text = this.data.find((k) => k !== obj && k[this.options.field] === obj[this.options.field]) ?
+            renderTpl(this.options.unique.template, { field: obj[this.options.field], value: obj[this.options.unique.refer], key: this.options.unique.refer }) :
+            obj[this.options.field];
+        obj.hasOwnProperty('href') && (labelObj.href = obj.href);
+        obj.hasOwnProperty('href') && obj.target && (labelObj.target = obj.target);
+        obj.hasOwnProperty('href') && obj.rel && (labelObj.rel = obj.rel);
+        obj.hasOwnProperty('href') && obj.download && (labelObj.download = obj.download);
+        obj.labelEl = createEl(labelObj.hasOwnProperty('href') ? 'a' : 'i', labelObj, text);
+        obj.wrapEl = createEl('span', { class: `${prefix}tag` }, obj.labelEl);
+        obj.removeEl = createEl('i', { [alias]: 'remove' });
+        this.options.removable && obj.wrapEl.appendChild(obj.removeEl);
+        this.useLegend(obj);
+        !this.options.theme && obj.theme && obj.wrapEl.setAttribute('theme', obj.theme);
+        obj.disabled && obj.wrapEl.setAttribute('disabled', '');
+        obj.selected && obj.wrapEl.setAttribute('selected', '');
+        return obj.wrapEl;
+    }
+    createEditor() {
+        if (!this.options.editor.enable || this.destroyed)
+            return;
+        let tmp = getEl(this.options.editor.selector);
+        if (!tmp) {
+            this.editEl = createEl('input', { type: 'text', placeholder: this.options.editor.placeholder });
+        }
+        else {
+            this.editEl = tmp;
+            !this.editEl.hasAttribute('placeholder') && this.editEl.setAttribute('placeholder', this.options.editor.placeholder);
+        }
+        this.editEl.removeEventListener('keyup', this.editEvent);
+        this.editEl.addEventListener('keyup', this.editEvent);
+    }
+    toggleEmpty() {
+        if (!this.options.empty.enable)
+            return;
+        if (!this.data.length) {
+            this.targetEl.insertAdjacentElement('afterbegin', this.emptyEl);
+            this.maxIndex = 0;
+        }
+        else {
+            this.emptyEl.remove();
+        }
+    }
+    renderFinish() {
+        this.toggleEmpty();
+        for (let k of this.data) {
+            k.wrapEl.addEventListener('click', this.toggleSelected, false);
+            k.removeEl.onclick = () => {
+                this.remove(k);
+            };
+        }
+        this.last = this.dataOrig[this.data.length - 1];
+    }
+    getVals(cb) {
+        if (this.destroyed)
+            return this;
+        let value = {
+            value: this.getStrVals(),
+            items: [...this.data],
+        };
+        super.listen({ name: 'got', cb, params: [value] });
+        return value;
+    }
+    
+    async updateCont(content, cb) {
+        if (this.destroyed)
+            return this;
+        this.setEmpty();
+        await getContent.call(this, {
+            content,
+            contType: this.options.contType,
+            contData: this.options.contData,
+            ajax: {
+                xhrName: 'contXhr',
+                spinSel: this.targetEl,
+                ...this.options.ajax
+            },
+            cb: async (data) => {
+                this.saveRaw();
+                await this.renderContent(data);
+                this.renderFinish();
+                super.updateCache({ content });
+                super.listen({ name: 'updatedCont', cb, params: [this.dataOrig] });
+            }
+        });
+        return this;
+    }
+    saveRaw() {
+        this.output.raw = this.getStrVals();
+    }
+    async add(data, cb) {
+        if (isEmpty(data) || this.destroyed)
+            return this;
+        let arr = this.getSource(data), dupTags = [], oldLen = 0, oldValues = this.data.map((k) => k[this.options.field]);
+        if (this.options.unique.enable) {
+            arr = unique(arr, this.options.field);
+            oldLen = arr.length;
+            arr = arr.map((k) => {
+                let output;
+                if (oldValues.includes(k[this.options.field])) {
+                    dupTags.push(k);
+                }
+                else {
+                    output = k;
+                }
+                return output;
+            }).filter(Boolean);
+            if (oldLen !== arr.length) {
+                new Message({
+                    content: arr.length === 0 ? this.options.lang.includeFull : this.options.lang.includePart,
+                    status: 'warn',
+                    iconShow: true,
+                }).show();
+                super.listen({ name: 'duplicated', params: [dupTags] });
+            }
+        }
+        if (arr.length === 0)
+            return this;
+        try {
+            let resp = await super.moreExceed({ data: arr, source: this.data });
+            resp && (arr = resp);
+        }
+        catch {
+            return;
+        }
+        try {
+            if (this.options.b4Add) {
+                let resp = await this.options.b4Add.call(this, arr);
+                resp && (arr = resp);
+            }
+        }
+        catch (err) {
+            err ? console.error(err) : console.warn('Failed to add a new tags!');
+            return this;
+        }
+        if (!Array.isArray(arr) || !arr.length)
+            return this;
+        this.saveRaw();
+        this.render(arr);
+        this.data.push(...arr);
+        this.renderFinish();
+        super.listen({ name: 'added', cb, params: [arr] });
+        return this;
+    }
+    async remove(data, cb) {
+        if (isEmpty(data) || this.destroyed || !this.data.length)
+            return this;
+        let tags = findItems(data, this.data, '', { node: 'wrapEl', string: this.options.field, separator: this.options.separator });
+        try {
+            if (this.options.b4Remove) {
+                let resp = await this.options.b4Remove.call(this, tags);
+                resp && (tags = resp);
+            }
+        }
+        catch (err) {
+            err ? console.error(err) : console.warn('Failed to delete the old tags!');
+            return this;
+        }
+        try {
+            let resp = await this.lessExceed({ data: tags, source: this.data });
+            resp && (tags = resp);
+        }
+        catch {
+            return;
+        }
+        if (!Array.isArray(tags) || !tags.length)
+            return this;
+        this.saveRaw();
+        for (let i = 0; i < this.data.length; i++) {
+            let tmp = this.data[i];
+            if (tags.includes(tmp)) {
+                this.data.splice(i--, 1);
+                tmp.wrapEl.remove();
+            }
+        }
+        super.listen({ name: 'removed', cb, params: [tags] });
+        return this;
+    }
+    async edit(item, data, cb) {
+        if (isEmpty(item) || this.destroyed || !this.data.length)
+            return this;
+        let tag = findItem(item, this.data, '', { node: 'wrapEl', string: this.options.field });
+        if (!tag) {
+            return this;
+        }
+        try {
+            if (this.options.b4Edit) {
+                let resp = await this.options.b4Edit.call(this, tag);
+                resp && (tag = resp);
+            }
+        }
+        catch (err) {
+            err ? console.error(err) : console.warn('Failed to eidit the tag!');
+            return this;
+        }
+        if (!tag)
+            return this;
+        Object.assign(tag, data);
+        super.listen({ name: 'edited', cb, params: [tag] });
+        return this;
+    }
+    async clear(cb) {
+        if (this.destroyed || !this.data.length)
+            return this;
+        this.options.b4Clear && await this.options.b4Clear.call(this);
+        this.saveRaw();
+        this.data.splice(0);
+        this.maxIndex = 0;
+        this.targetEl.innerHTML = '';
+        this.options.editor.enable && this.targetEl.appendChild(this.editEl);
+        super.listen({ name: 'cleared', cb });
+        return this;
+    }
+    
+    destroy(cb) {
+        this.data.forEach((k) => {
+            k.wrapEl.removeEventListener('click', this.toggleSelected);
+            k.removeEl.onclick = null;
+        });
+        this.options.editor.enable && this.editEl.removeEventListener('keyup', this.editEvent);
+        this.destroyed = true;
+        super.listen({ name: 'destroyed', cb });
+        return this;
+    }
+}
+
+class Tree extends ModBaseListenCacheNest {
+    options = {};
+    treeDataOrig;
+    searchs;
+    ignores;
+    editorEl;
+    lastExpanded;
+    dropTag;
+    pagination;
+    searchEl;
+    resultIns;
+    resultEl;
+    inputEl;
+    output;
+    value;
     expandEvt;
     selectEvt;
-    pageEvt;
-    lastExpanded;
-    treeDataOrig;
-    drawerHost;
-    drawerIns;
+    searchEvgt;
+    lineEvt;
+    bubbleIns;
+    receiver;
     hoverIns;
     contXhr;
+    treeData;
+    floorMax;
+    chainChecking;
+    seqItems;
+    maxIndex;
+    excludeDrags;
+    rawData;
     observeIns;
     static hostType = 'node';
-    static optMaps = optMenu$1;
+    static optMaps = optTree;
     constructor(elem, options = {}, initial = true) {
         super();
         super.ready({
             options,
             host: elem,
-            maps: Menu.optMaps,
+            maps: Tree.optMaps,
             component: true,
-            spread: ['arrow', 'row', 'drawer']
+            spread: ['output', 'arrow', 'check', 'legend', 'select', 'shortcut', 'tools', 'drag', 'paginated', 'bubble']
         });
         
         
@@ -12921,20 +14475,62 @@ class Menu extends ModBaseListenCache {
         
         
         let _this = this;
-        this.expandEvt = function () {
-            let attr = this.getAttribute(alias) === 'arrow' ? 'arrowEl' : 'headEl', item = findItem(this, _this.flatData, attr);
+        this.expandEvt = debounce(function () {
+            let attr = this.getAttribute(alias) === 'arrow' ? 'arrowEl' : this.getAttribute(alias) === 'legend' ? 'legendEl' : 'headEl', item = findItem(this, _this.flatData, attr);
             _this.toggleExpanded(item);
-        };
-        this.selectEvt = function () {
-            _this.select(this);
-        };
-        this.pageEvt = function (event) {
-            if (!contains(event.target, _this.targetEl)) {
-                _this.collapseAll();
+        }, this.options.delay);
+        this.selectEvt = debounce(function () {
+            let item = findItem(this, _this.flatData, 'labelEl');
+            _this.toggleSelected(item);
+            if (item && item.toolsEl && _this.options.tools.trigger === 'click') {
+                if (item.selected) {
+                    show({ el: item.toolsEl });
+                }
+                else {
+                    hide({ el: item.toolsEl });
+                }
             }
-        };
+        }, this.options.delay);
+        this.searchEvgt = debounce(function () {
+            _this.search(this.value);
+        }, this.options.search.delay);
+        this.lineEvt = debounce(function (e) {
+            if (!_this.options.shortcut.enable)
+                return;
+            let item = findItem(this, _this.flatData, 'headEl'), condition = false;
+            if (!item)
+                return;
+            if (_this.options.shortcut.span === 'blank' && (e.target === item.headEl || ['holder', 'group', 'gap'].includes(e.target.getAttribute(alias)))) {
+                condition = true;
+            }
+            else if (!contains(e.target, [item.arrowEl, item.checkEl, item.toolsEl, ((_this.options.select.enable && !item.headEl.hasAttribute('unselectable')) || (item.labelEl.nodeName === 'A' && item.labelEl.hasAttribute('href'))) ? item.labelEl : null])) {
+                condition = true;
+            }
+            if (!condition)
+                return;
+            if (_this.options.shortcut.mean === 'selected') {
+                _this.toggleSelected(item);
+            }
+            else if (_this.options.shortcut.mean === 'checked') {
+                !item.checkEl.hasAttribute('disabled') && _this.toggleCheck(item);
+            }
+            else if (_this.options.shortcut.mean === 'expanded') {
+                _this.toggleExpanded(item);
+            }
+            else if (_this.options.shortcut.mean === 'auto') {
+                if (item.children) {
+                    _this.toggleExpanded(item);
+                }
+                else {
+                    _this.options.check.enable && !item.checkEl.hasAttribute('disabled') ? _this.toggleCheck(item) : _this.toggleSelected(item);
+                }
+            }
+        }, this.options.delay);
+        this.editorEl = createEl('input', { type: 'text' });
         this.lastExpanded = -1;
+        this.dropTag = this.options.drop.attr || 'dropnode';
         this.treeDataOrig = [];
+        this.pagination = { label: this.options.lang.paginated.main, id: this.options.rootStart, children: [], wrapEl: this.targetEl };
         super.listen({ name: 'constructed' });
         initial && this.init();
     }
@@ -12944,32 +14540,133 @@ class Menu extends ModBaseListenCache {
         try {
             this.options.b4Init && await this.options.b4Init.call(this);
         }
-        catch {
-            console.warn(config.warn.init);
+        catch (err) {
+            err ? console.error(err) : console.warn(config.warn.init);
             return this;
         }
-        await this.getDataToRender();
-        if (this.options.drawer.enable) {
-            this.drawerHost = getEl(this.options.drawer.host);
-            this.drawerIns = new Drawer(this.drawerHost, Object.assign({
+        this.output = { value: '', raw: '', items: [] };
+        this.correctOpts();
+        super.useTpl();
+        this.searchs = [];
+        this.floorMax = 0;
+        this.chainChecking = false;
+        this.seqItems = [];
+        this.setFeature();
+        this.maxIndex = this.options.idStart;
+        if (this.options.bubble.enable) {
+            let host = this.targetEl;
+            this.receiver = getEl(this.options.output.target) || this.targetEl;
+            (this.receiver.nodeName.includes('INPUT') || this.receiver.nodeName.includes('TEXTAREA')) && this.receiver.toggleAttribute('readonly', true);
+            this.targetEl = createEl('div');
+            let footParam = this.options.output.enable && !this.options.output.instant ? {
+                enable: true,
+                children: [
+                    'close',
+                    {
+                        name: 'clear',
+                        action: (resp) => {
+                            resp.el.onclick = () => {
+                                this.clearVals();
+                            };
+                        },
+                    },
+                    {
+                        name: 'confirm',
+                        action: (resp) => {
+                            resp.el.onclick = () => {
+                                this.setVals();
+                                this.bubbleIns.hide();
+                            };
+                        }
+                    }
+                ]
+            } : false;
+            this.bubbleIns = new Function('host', 'module', 'options', `"use strict";return new module(host,options)`)(host, ax[capStart(this.options.bubble.type.trim())], Object.assign({
+                trigger: 'click',
                 content: this.targetEl,
                 contType: 'node',
-            }, this.options.drawer));
-        }
-        this.setAttrs();
-        if (this.initCount === 0) {
-            this.activate([...this.getActive(), ...valToArr(this.options.active)]);
+                placement: this.options.bubble.type === 'popup' ? 'bottom-start' : '',
+                footer: footParam,
+            }, this.options.bubble));
         }
         else {
-            this.activate(valToArr(this.options.active));
+            this.receiver = getEl(this.options.output.target);
         }
-        this.disable(valToArr(this.options.disable));
-        if (this.options.expandAll && this.options.multiple) {
-            this.expandAll();
-        }
+        await this.getDataToRender();
+        this.excludeDrags = !isEmpty(this.options.drag.exclude) ? findItems(this.options.drag.exclude, this.flatData) : [];
+        this.setAttrs();
+        this.setResult();
         this.renderFinish();
+        super.initCheckeds();
+        this.initExpandeds();
+        this.initSelecteds();
+        super.initDisableds();
+        super.initReadonlys();
+        this.updateResult(this.getVals().value);
+        this.setSearch();
         super.listen({ name: 'initiated', cb });
         return this;
+    }
+    correctOpts() {
+        if (!isEmpty(this.options.value)) {
+            if (this.options.output.from === 'checked') {
+                this.options.check.value = this.options.value;
+            }
+            else {
+                this.options.select.value = this.options.value;
+            }
+        }
+    }
+    setFeature() {
+        if (!this.options.feature.type)
+            return;
+        extend({
+            target: this.options,
+            source: {
+                shortcut: {
+                    enable: true,
+                    mean: 'checked',
+                    span: 'whole'
+                },
+                expand: { ...this.options.feature.expand },
+                check: {
+                    enable: true,
+                    ...this.options.feature.check
+                },
+                select: {
+                    enable: false,
+                },
+                arrow: {
+                    enable: !this.options.feature.expand.all || this.options.feature.expand.only ? true : false
+                },
+                output: {
+                    from: 'checked'
+                },
+                layout: this.options.feature.layout[this.options.feature.type]
+            }
+        });
+    }
+    async sqlToAdd(item) {
+        if (!this.options.content)
+            return;
+        let promise = treeTools.allToTree({
+            content: this.options.content,
+            contType: this.options.contType,
+            contData: { pId: item.id, pLabel: item.label, pValue: item.value, ...this.options.sqlData },
+            ajax: { spinSel: item.arrowEl, xhrName: 'contXhr' },
+            ins: this,
+            fill: false,
+        });
+        await promise.then(async (resp) => {
+            let data = resp.hasOwnProperty('data') && Array.isArray(resp.data) ? resp.data : resp;
+            await this.add({
+                data,
+                target: item,
+                isFront: false,
+                autoFill: !this.options.paginated.enable,
+            });
+            this.options.paginated.enable && this.turnFirstPage(item);
+        });
     }
     async getDataToRender() {
         let base = {
@@ -12986,289 +14683,717 @@ class Menu extends ModBaseListenCache {
                 ins: this,
                 ...base
             });
-            await promise.then((res) => {
-                
-                this.treeDataOrig = res;
-                this.targetEl.innerHTML = '';
-                this.renderData(res);
-            });
         }
         else {
-            this.treeDataOrig = this.ulToArr();
-            treeTools.addIdPath({ source: this.treeDataOrig });
+            promise = treeTools.allToTree({
+                content: this.targetEl.innerHTML,
+                ...base
+            });
         }
+        await promise.then((res) => {
+            
+            this.treeDataOrig = res.data && Array.isArray(res.data) ? res.data : res;
+            this.rawData = res;
+        });
+        this.targetEl.innerHTML = '';
+        await this.renderData(this.treeDataOrig);
         this.getTreeFlat();
         super.listen({ name: 'rendered', params: [this.treeData, this.flatData] });
         return this;
     }
     getTreeFlat() {
         this.treeData = this.getObserver(this.treeDataOrig).proxy;
+        this.pagination.children = this.treeData;
         
         this.flatData = treeTools.toFlat(this.treeData);
     }
     getObserver(data) {
         this.observeIns = new Observe(data, {
-            deep: true,
+            deep: {
+                enable: true,
+                exclude: ['tools'],
+            },
             onSet: (obj) => {
-                if (obj.key === 'icon' && obj.target.iconEl) {
-                    obj.target.iconEl.class = obj.value;
+                if (obj.key === 'icon' && obj.proxy.iconEl) {
+                    classes(obj.proxy.iconEl).replace(obj.raw, obj.value);
                 }
-                else if (obj.key === 'cube' && obj.target.cubeEl) {
-                    obj.target.cubeEl.src = obj.value;
+                else if (obj.key === 'cube' && obj.proxy.cubeEl) {
+                    obj.proxy.cubeEl.src = obj.value;
                 }
-                else if (obj.key === 'disk' && obj.target.diskEl) {
-                    obj.target.diskEl.src = obj.value;
+                else if (obj.key === 'disk' && obj.proxy.diskEl) {
+                    obj.proxy.diskEl.src = obj.value;
+                }
+                else if (obj.key === 'image' && obj.proxy.imageEl) {
+                    obj.proxy.imageEl.src = obj.value;
                 }
                 else if (obj.key === 'label') {
-                    obj.target.labelEl.innerHTML = obj.value;
+                    obj.proxy.labelEl.innerHTML = obj.value;
                 }
-                else if (obj.key === 'tips' && obj.target.tipsEl) {
-                    obj.target.tipsEl.innerHTML = obj.value;
+                else if (obj.key === 'tips' && obj.proxy.tipsEl) {
+                    obj.proxy.tipsEl.innerHTML = obj.value;
                 }
-                else if (obj.key === 'badge' && obj.target.badgeEl) {
-                    obj.target.badgeEl.setAttribute('label', obj.value);
+                else if (obj.key === 'brief' && obj.proxy.briefEl) {
+                    super.updateElCont(obj.proxy, obj.value);
                 }
-                else if (obj.key === 'href' && obj.target.labelEl.nodeName === 'A') {
-                    obj.target.labelEl.href = obj.value;
+                else if (obj.key === 'custom' && obj.proxy.customEl) {
+                    super.updateElCont(obj.proxy, obj.value, 'custom');
                 }
-                else if (obj.key === 'rel' && obj.target.labelEl.nodeName === 'A') {
-                    obj.target.labelEl.rel = obj.value;
+                else if (obj.key === 'badge' && obj.proxy.badgeEl) {
+                    obj.proxy.badgeEl.setAttribute('label', obj.value);
                 }
-                else if (obj.key === 'target' && obj.target.labelEl.nodeName === 'A') {
-                    obj.target.labelEl.target = obj.value;
+                else if (obj.key === 'href' && obj.proxy.labelEl.nodeName === 'A') {
+                    obj.proxy.labelEl.href = obj.value;
+                }
+                else if (obj.key === 'rel' && obj.proxy.labelEl.nodeName === 'A') {
+                    obj.proxy.labelEl.rel = obj.value;
+                }
+                else if (obj.key === 'target' && obj.proxy.labelEl.nodeName === 'A') {
+                    obj.proxy.labelEl.target = obj.value;
                 }
                 else if (obj.key === 'floor') {
-                    obj.target.indentEl.innerHTML = `${'<i></i>'.repeat(obj.value * 2 + 1)}`;
+                    obj.proxy.indentHeadEl.innerHTML = obj.proxy.indentBodyEl.innerHTML = obj.proxy.indentFootEl.innerHTML = this.getIndentHtml(obj.value);
+                    this.updateChildrenFloor(obj.proxy);
                 }
-                else if (obj.key === 'expanded' && obj.target.children) {
-                    obj.target.headEl.toggleAttribute('expanded', obj.value);
+                else if (obj.key === 'atEnd') ;
+                else if (obj.key === 'expanded' && obj.proxy.children) {
+                    obj.proxy.arrowEl && super.toggleArrow(obj.value, obj.proxy);
+                    this.toggleParentLegend(obj.proxy);
                 }
-                else if (obj.key === 'selected' && !obj.target.children) {
-                    obj.target.headEl.toggleAttribute('selected', obj.value);
+                else if (obj.key === 'selected') {
+                    obj.proxy.headEl.toggleAttribute('selected', obj.value);
+                    this.updateSeqItems(obj, 'selected');
                 }
                 else if (obj.key === 'disabled') {
-                    obj.target.headEl.toggleAttribute('disabled', obj.value);
+                    obj.proxy.headEl.toggleAttribute('disabled', obj.value);
+                }
+                else if (obj.key === 'readonly') {
+                    obj.proxy.headEl.toggleAttribute('readonly', obj.value);
+                }
+                else if (obj.key === 'checked') {
+                    obj.proxy.headEl.toggleAttribute('checked', obj.value);
+                    obj.proxy.checkEl && obj.proxy.checkEl.setAttribute('check', obj.value ? 'ed' : '');
+                    this.updateSeqItems(obj, 'checked');
                 }
                 else if (obj.key === 'children') {
-                    treeTools.childToParent(obj.target, true);
+                    if (!obj.raw && obj.value) {
+                        this.child2Parent(obj.proxy);
+                    }
+                    else if (obj.raw && !obj.value) {
+                        this.parent2Child(obj.proxy);
+                    }
                 }
             },
             onDeleted: (obj) => {
                 if (obj.key === 'children') {
-                    treeTools.parentToChild(obj.target);
+                    treeTools.parentToChild(obj.proxy);
                 }
             },
-            onCompleted: () => {
-                let tmp = {
-                    active: this.getActive().map((k) => k.id),
-                    disabled: this.getDisabled().map((k) => k.id),
-                    content: !isEmpty(this.options.content) ? deepClone(this.treeDataOrig) : '',
-                };
-                super.updateCache(tmp);
+            onCompleted: (data) => {
+                ((data.keys.set.includes('selected') && this.options.output.from === 'selected')
+                    ||
+                        (data.keys.set.includes('checked') && this.options.output.from === 'checked'))
+                    && this.updateVals();
+                if (this.options.check.enable && this.options.check.max) {
+                    let checkeds = super.getCheckeds(), uncheckeds = super.getUncheckeds(), setDisabled = (data) => {
+                        for (let k of data) {
+                            !k.disabled && k.checkEl.toggleAttribute('disabled', true);
+                            k.headEl.toggleAttribute('exceeded', true);
+                        }
+                    };
+                    if (checkeds.length >= this.options.check.max) {
+                        setDisabled(uncheckeds);
+                        super.listen({ name: 'stopChecked', params: [uncheckeds] });
+                    }
+                    else if (checkeds.length <= this.options.check.min) {
+                        setDisabled(checkeds);
+                        super.listen({ name: 'stopUnchecked', params: [checkeds] });
+                    }
+                    else {
+                        for (let k of this.flatData) {
+                            k.checkEl.removeAttribute('disabled');
+                            k.headEl.toggleAttribute('exceeded', false);
+                        }
+                        super.listen({ name: 'rechecked' });
+                    }
+                }
+                if (this.options.storName) {
+                    let tmp = {
+                        select: { value: treeTools.getBoolItems(this.flatData, 'selected').map((k) => k.id) },
+                        check: { value: treeTools.getBoolItems(this.flatData, 'checked').map((k) => k.id) },
+                        expand: treeTools.getBoolItems(this.flatData, 'expanded').map((k) => k.id),
+                        disable: treeTools.getBoolItems(this.flatData, 'disabled').map((k) => k.id),
+                        readonly: treeTools.getBoolItems(this.flatData, 'readonly').map((k) => k.id),
+                        content: !isEmpty(this.options.content) ? deepClone(this.treeDataOrig) : '',
+                    };
+                    super.updateCache(tmp);
+                }
             }
         });
         return this.observeIns;
     }
-    ulToArr() {
-        
-        let data = [], setBoolean = (obj, props) => {
-            let loop = (prop) => {
-                let val = obj.headEl.hasAttribute(prop);
-                if (val && val !== 'false' && val !== '0') {
-                    obj[prop] = true;
-                    obj.headEl.setAttribute(prop, '');
-                }
-                else {
-                    obj[prop] = false;
-                }
-            };
-            if (Array.isArray(props)) {
-                props.forEach((k) => {
-                    loop(k);
-                });
-            }
-            else {
-                loop(props);
-            }
-        }, getObj = (elem, floor) => {
-            let obj = {};
-            obj.wrapEl = elem;
-            obj.headEl = elem.firstElementChild;
-            obj.childrenEl = elem.querySelector('ul');
-            obj.labelEl = obj.headEl.querySelector(`[${alias}="label"]`) || obj.headEl;
-            obj.label = obj.labelEl.textContent.trim();
-            obj.value = isNull(obj.headEl.getAttribute('value')) ? obj.label : obj.headEl.getAttribute('value');
-            obj.tipsEl = obj.headEl.querySelector(`[${alias}="tips"]`);
-            obj.tips = obj.tipsEl ? obj.tipsEl.textContent.trim() : '';
-            obj.href = (obj.labelEl.nodeName === 'A' && obj.labelEl.href && !obj.labelEl.href.includes('##') && !obj.labelEl.href.includes('javascript:;')) ? obj.labelEl.href : '';
-            obj.target = (obj.labelEl.nodeName === 'A' && obj.labelEl.target) ? obj.labelEl.target : '';
-            obj.rel = (obj.labelEl.nodeName === 'A' && obj.labelEl.rel) ? obj.labelEl.rel : '';
-            obj.arrowEl = obj.headEl.querySelector(`[${alias}="arrow"]`);
-            obj.iconEl = obj.headEl.querySelector(`[${alias}="icon"]`);
-            obj.icon = obj.iconEl ? obj.iconEl.getAttribute('class') : '';
-            obj.cubeEl = obj.headEl.querySelector(`[${alias}="cube"]`);
-            obj.cube = obj.cubeEl ? obj.cubeEl.src : '';
-            obj.diskEl = obj.headEl.querySelector(`[${alias}="disk"]`);
-            obj.disk = obj.diskEl ? obj.diskEl.src : '';
-            obj.badgeEl = obj.headEl.querySelector(`[${alias}="badge"],ax-badge`);
-            obj.badge = obj.badgeEl ? obj.badgeEl.getAttribute('label') || obj.badgeEl.textContent.trim() : '';
-            setBoolean(obj, ['expanded', 'selected', 'disabled']);
-            if (!obj.headEl.querySelector(`[${alias}="indent"]`)) {
-                obj.indentEl = createEl('span', { [alias]: 'indent' });
-                obj.indentEl.innerHTML = `${'<i></i>'.repeat(floor * 2 + 1)}`;
-                obj.headEl.insertAdjacentElement('afterBegin', obj.indentEl);
-            }
-            else {
-                obj.indentEl = obj.headEl.querySelector(`[${alias}="indent"]`);
-            }
-            if (obj.childrenEl) {
-                obj.children = [];
-                [...obj.childrenEl.children].forEach(k => {
-                    obj.children.push(getObj(k, floor + 1));
-                });
-            }
-            return obj;
-        };
-        let getData = () => {
-            [...this.targetEl.children].forEach(k => {
-                data.push(getObj(k, 0));
-            });
-        };
-        getData();
-        return data;
-    }
-    renderData(data) {
-        let outer = createEl('ul'), fragment = document.createDocumentFragment();
-        let plantTree = (parent, data) => {
-            let ul = createEl('ul');
-            data.forEach((k) => {
-                this.createHeadEl(k);
-                if (k.hasOwnProperty('children')) {
-                    k.childrenEl = plantTree(k.wrapEl, k.children);
-                }
-                ul.appendChild(k.wrapEl);
-            });
-            parent.appendChild(ul);
-            return ul;
-        };
-        plantTree(outer, data);
-        let list = outer.childNodes[0].childNodes;
-        [...list].forEach(k => {
-            fragment.appendChild(k);
-        });
-        this.targetEl.appendChild(fragment);
-    }
-    createHeadEl(item) {
-        item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [alias]: 'label' }, item.label);
-        item.href ? item.labelEl.href = item.href : null;
-        item.target ? item.labelEl.target = item.target : null;
-        item.iconEl = item.icon ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
-        item.diskEl = item.disk ? createEl('img', { [alias]: 'disk', src: item.disk }) : null;
-        item.cubeEl = item.cube ? createEl('img', { [alias]: 'cube', src: item.cube }) : null;
-        item.arrowEl = this.options.arrow.enable && item.children ? createEl('i', { [alias]: 'arrow' }) : null;
-        item.arrowEl && this.options.arrow.icon ? item.arrowEl.classList.add(this.options.arrow.icon) : null;
-        item.headEl = createEl('div');
-        item.wrapEl = createEl('li');
-        item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge' }, item?.badge?.trim()) : null;
-        item.tipsEl = item.tips ? createEl('i', { [alias]: 'tips' }, item.tips) : null;
-        item.indentEl = createEl('span', { [alias]: 'indent' });
-        item.indentEl.innerHTML = `${'<i></i>'.repeat((item.floor - this.options.floorStart) * 2 + 1)}`;
-        item.expanded ? item.headEl.setAttribute('expanded', '') : null;
-        item.selected ? item.headEl.setAttribute('selected', '') : null;
-        item.disabled ? item.headEl.setAttribute('disabled', '') : null;
-        item.wrapEl.appendChild(item.headEl);
-        item.headEl.appendChild(item.indentEl);
-        item.iconEl ? item.headEl.appendChild(item.iconEl) : null;
-        item.diskEl ? item.headEl.appendChild(item.disk) : null;
-        item.cubeEl ? item.headEl.appendChild(item.cube) : null;
-        item.headEl.appendChild(item.labelEl);
-        item.tipsEl ? item.headEl.appendChild(item.tipsEl) : null;
-        item.arrowEl ? item.headEl.appendChild(item.arrowEl) : null;
-    }
-    setAttrs() {
-        this.targetEl.classList.add(`${prefix}menu`);
-        this.options.classes && classes(this.targetEl).add(this.options.classes);
-        this.targetEl.setAttribute('scheme', this.options.scheme);
-        this.targetEl.toggleAttribute('inert', this.options.passive);
-        this.targetEl.toggleAttribute('expose', this.options.expose);
-        this.targetEl.toggleAttribute('spill', (this.options.spill && !this.options.row.enable));
-        this.targetEl.toggleAttribute('gapless', this.options.gapless);
-        this.options.lamp ? this.targetEl.setAttribute('lamp', this.options.lamp) : this.targetEl.removeAttribute('lamp');
-        this.targetEl.setAttribute('full', (this.options.full && !this.options.row.enable));
-        this.options.zIndex ? addStyle(this.targetEl, 'z-index', this.options.zIndex) : removeStyle(this.targetEl, 'z-index');
-        this.targetEl.toggleAttribute('row', this.options.row.enable);
-        if (this.options.row.enable) {
-            this.options.row.align ? this.targetEl.setAttribute('align', this.options.row.align) : this.targetEl.removeAttribute('align');
-            if (this.options.row.bodyWidth) {
-                for (let k of this.flatData) {
-                    k.childrenEl ? addStyle(k.childrenEl, 'width', this.options.row.bodyWidth) : removeStyle(k.childrenEl, 'width');
-                }
-            }
-            let firstItems = this.flatData.filter((k) => k.floor === this.options.floorStart);
-            for (let k of firstItems) {
-                this.options.row.headWidth ? addStyle(k.wrapEl, 'width', this.options.row.headWidth) : removeStyle(k.wrapEl, 'width');
-                this.options.row.marginLeft ? addStyle(k.wrapEl, 'margin-left', this.options.row.marginLeft) : removeStyle(k.wrapEl, 'margin-left');
-                this.options.row.marginRight ? addStyle(k.wrapEl, 'margin-right', this.options.row.marginRight) : removeStyle(k.wrapEl, 'margin-right');
+    updateSeqItems(data, type = 'selected') {
+        this.options.output.from === type && splice({ host: this.seqItems, source: data.proxy, intent: data.value ? 'end+' : 'remove' });
+        if (this.seqItems.length) {
+            if ((type === 'checked' && this.options.check.type === 'radio') || (type === 'selected' && this.options.select.only)) {
+                this.seqItems = this.seqItems.slice(-1);
             }
         }
     }
-    renderFinish() {
-        this.flatData.forEach((k) => {
-            if (this.options.expose) {
-                return this;
+    initExpandeds() {
+        let vals = valToArr(this.options.expand.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => k.expanded && k.children), tmp = [...items, ...vals];
+        for (let k of items)
+            k.expanded = false;
+        if (this.options.expand.all) {
+            if (this.options.expand.only) {
+                let firsts = this.getParentsGroupBy(this.flatData);
+                for (let k in firsts) {
+                    firsts[k][0] && super.expand(firsts[k][0]);
+                }
             }
-            if (k.children) {
-                if (k.disabled) {
-                    return this;
+            else {
+                super.expandAll();
+            }
+        }
+        else {
+            if (this.options.expand.only) {
+                let firsts = this.getParentsGroupBy(tmp);
+                for (let k in firsts) {
+                    firsts[k][0] && super.expand(firsts[k][0]);
                 }
-                let triggerEl = k.href && k.arrowEl ? k.arrowEl : k.headEl;
-                if (this.options.trigger === 'click') {
-                    triggerEl.removeEventListener('click', this.expandEvt);
-                    triggerEl.addEventListener('click', this.expandEvt, false);
+            }
+            else {
+                super.expand(tmp);
+            }
+        }
+    }
+    initSelecteds() {
+        if (!this.options.select.enable)
+            return;
+        let vals = valToArr(this.options.select.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => k.selected), tmp = [...items, ...vals];
+        for (let k of items)
+            k.selected = false;
+        this.select(this.options.select.only ? tmp[0] : tmp);
+    }
+    getSelecteds() {
+        return this.flatData.filter((k) => k.selected);
+    }
+    getParentsGroupBy(items, key = 'pId') {
+        if (isEmpty(items))
+            return [];
+        return items.reduce((result, item) => {
+            let groupKey = item[key];
+            if (!result[groupKey]) {
+                result[groupKey] = [];
+            }
+            item.children && result[groupKey].push(item);
+            return result;
+        }, {});
+    }
+    getIndentHtml(floor) {
+        return '<i></i>'.repeat(floor);
+    }
+    updateChildrenFloor(item) {
+        if (item.children) {
+            for (let k of item.children) {
+                k.floor = item.floor + 1;
+                this.updateChildrenFloor(k);
+            }
+        }
+    }
+    async renderData(data) {
+        let outer = createEl('ul');
+        let plantTree = async (parent, data) => {
+            let ul = createEl('ul', { class: `${prefix}reset ${prefix}tree-children` });
+            for (let k of data) {
+                this.createHeadEl(k, parent);
+                await this.createBodyEl(k);
+                if (k.hasOwnProperty('children')) {
+                    k.childrenEl = await plantTree(k, k.children);
                 }
-                else if (this.options.trigger === 'hover') {
-                    k.hoverIns ? k.hoverIns.destroy() : null;
-                    k.hoverIns = new Hover(k.wrapEl, {
+                
+                ((!this.options.deferred && !this.options.paginated.enable)
+                    ||
+                        (this.options.deferred && !this.options.paginated.enable && k.floor === this.options.floorStart)
+                    ||
+                        (this.options.paginated.enable && k.floor === this.options.floorStart && this.options.paginated.exception))
+                    && ul.appendChild(k.wrapEl);
+            }
+            (parent.wrapEl || parent).appendChild(ul);
+            parent.wrapEl && this.createFootEl(parent);
+            return ul;
+        };
+        await plantTree(outer, data);
+        this.resultEl = createEl('div', { class: `${prefix}tree-result` });
+        this.options.output.enable && !this.options.output.instant && this.targetEl.appendChild(this.resultEl);
+        if (this.options.name) {
+            this.inputEl = createEl('input', { type: 'hidden', name: this.options.name });
+            this.targetEl.appendChild(this.inputEl);
+        }
+        this.pagination.childrenEl = outer.childNodes[0];
+        super.listen({ name: 'insertItems', params: [data] });
+        this.targetEl.appendChild(this.pagination.childrenEl);
+        if (this.options.paginated.enable && !this.options.paginated.exception) {
+            this.createFootEl(this.pagination);
+        }
+    }
+    updateArrowEl(item) {
+        if (!this.options.arrow.enable)
+            return;
+        if (item.hasOwnProperty('children')) {
+            item.arrowEl.setAttribute('type', this.options.arrow.type);
+            this.options.lang.title.arrow && item.arrowEl.setAttribute('title', this.options.lang.title.arrow);
+            if (this.options.arrow.type === 'image') {
+                this.options.arrow.hide && (item.arrowEl.style.backgroundImage = `url("${this.options.arrow.hide}")`);
+            }
+            else {
+                item.arrowEl.classList.remove(`${prefix}none`);
+                this.options.arrow.hide && item.arrowEl.classList.add(this.options.arrow.hide);
+            }
+        }
+        else {
+            item.arrowEl.removeAttribute('type');
+            item.arrowEl.removeAttribute('title');
+            if (this.options.arrow.type === 'image') {
+                item.arrowEl.removeAttribute('style');
+            }
+            else {
+                classes(item.arrowEl).remove([this.options.arrow.show, this.options.arrow.hide]).add(`${prefix}none`);
+            }
+        }
+    }
+    async setBrief(target, data = {}, cb) {
+        if (this.destroyed)
+            return;
+        let item = findItem(target, this.flatData);
+        await this.createBodyEl(item, false);
+        await super.setElCont({
+            item,
+            data,
+            cb: (cont, target) => {
+                super.listen({ name: 'filled', cb, params: [cont, target] });
+            }
+        });
+        return this;
+    }
+    setLegendVal(el, val, type = 'icon') {
+        if (type === 'image') {
+            el.removeAttribute('class');
+            el.style.backgroundImage = `url("${val}")`;
+        }
+        else {
+            el.removeAttribute('style');
+            el.setAttribute('class', val);
+        }
+    }
+    toggleParentLegend(item) {
+        if (!this.options.legend.enable || item.legend || !Array.isArray(this.options.legend.parent) || !this.options.legend.parent[1])
+            return;
+        this.setLegendVal(item.legendEl, this.options.legend.parent[item.expanded ? 1 : 0], this.options.legend.type);
+    }
+    updateLegendEl(item) {
+        if (!this.options.legend.enable)
+            return;
+        if (item.legend) {
+            this.setLegendVal(item.legendEl, item.legend, this.options.legend.type);
+        }
+        else {
+            if (item.hasOwnProperty('children')) {
+                this.setLegendVal(item.legendEl, this.options.legend.parent[item.expanded ? 1 : 0], this.options.legend.type);
+            }
+            else {
+                this.setLegendVal(item.legendEl, this.options.legend.child, this.options.legend.type);
+            }
+        }
+    }
+    getLegendEl(item) {
+        item.legendEl = createEl('i', { [alias]: 'legend' });
+        this.updateLegendEl(item);
+    }
+    createHeadEl(item, parent) {
+        if (item.wrapEl)
+            return;
+        item.wrapEl = createEl('li', { class: `${prefix}tree-wrap` });
+        item.groupEl = createEl('div', { [alias]: 'group' });
+        if (item.headEl) {
+            if (!item.labelEl) {
+                item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [alias]: 'label' }, item.label);
+                item.headEl.appendChild(item.labelEl);
+            }
+        }
+        else {
+            item.headEl = createEl('div', { class: `${prefix}tree-head` });
+            !item.labelEl && (item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [alias]: 'label' }, item.label));
+            item.headEl.appendChild(item.labelEl);
+        }
+        item.wrapEl.appendChild(item.headEl);
+        item.href && (item.labelEl.href = item.href);
+        item.target && (item.labelEl.target = item.target);
+        item.indentHeadEl = createEl('span', { [alias]: 'indent' });
+        item.indentBodyEl = createEl('span', { [alias]: 'indent' });
+        item.indentFootEl = createEl('span', { [alias]: 'indent' });
+        item.indentHeadEl.innerHTML = item.indentBodyEl.innerHTML = item.indentFootEl.innerHTML = this.getIndentHtml(item.floor);
+        this.options.arrow.enable && super.getArrowEl(item);
+        let imgNone = getImgNone();
+        if (!item.iconEl) {
+            item.iconEl = item.hasOwnProperty('icon') ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
+        }
+        if (!item.diskEl) {
+            item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || imgNone }) : null;
+        }
+        if (!item.cubeEl) {
+            item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || imgNone }) : null;
+        }
+        if (!item.imageEl) {
+            item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || imgNone }) : null;
+        }
+        if (!item.badgeEl) {
+            item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge', label: item.badge.toString().trim() }) : null;
+        }
+        if (!item.tipsEl) {
+            item.tipsEl = item.tips ? createEl('i', { [alias]: 'tips' }, item.tips) : null;
+        }
+        if (!item.customEl) {
+            item.customEl = item.custom ? createEl('div', { [alias]: 'custom' }, item.custom) : null;
+        }
+        item.expanded && item.headEl.toggleAttribute('expanded', true);
+        item.selected && item.headEl.toggleAttribute('selected', true);
+        item.disabled && item.headEl.toggleAttribute('disabled', true);
+        item.readonly && item.headEl.toggleAttribute('readonly', true);
+        item.checked && item.headEl.toggleAttribute('checked', true);
+        this.options.drag.enable && item.headEl.toggleAttribute([this.dropTag], true);
+        if (this.options.check.enable) {
+            item.checkType = this.getCheckType(parent);
+            item.checkEl = createEl(`ax-${item.checkType}`, { [alias]: 'check' });
+        }
+        if (this.options.legend.enable) {
+            this.getLegendEl(item);
+        }
+        if (this.options.tools.enable) {
+            item.toolsEl = createTools(this.options.tools.children, item.headEl);
+            item.toolsEl.setAttribute(alias, 'tools');
+            item.tools = deepClone(this.options.tools.children);
+            for (let k of item.tools) {
+                this.options.lang.title[k.name] && k.wrapEl.setAttribute('title', this.options.lang.title[k.name]);
+                if (k.name === 'file') {
+                    item.addfileEl = k.wrapEl;
+                }
+                else if (k.name === 'folder') {
+                    item.addfolderEl = k.wrapEl;
+                }
+                else if (k.name === 'remove') {
+                    item.removeEl = k.wrapEl;
+                }
+                else if (k.name === 'edit') {
+                    item.editEl = k.wrapEl;
+                }
+            }
+        }
+        super.parseLayout(item.headEl, this.options.layout, {
+            indent: item.indentHeadEl,
+            arrow: item.arrowEl,
+            label: item.labelEl,
+            check: item.checkEl,
+            legend: item.legendEl,
+            icon: item.iconEl,
+            disk: item.diskEl,
+            cube: item.cubeEl,
+            image: item.imageEl,
+            badge: item.badgeEl,
+            tips: item.tipsEl,
+            custom: item.customEl,
+            tools: item.toolsEl,
+            group: item.groupEl,
+        });
+    }
+    async createBodyEl(item, autoFill = this.options.autoFill) {
+        if (item.bodyEl)
+            return;
+        item.bodyEl = createEl('div', { class: `${prefix}tree-body` });
+        item.bodyEl.appendChild(item.indentBodyEl);
+        item.indentBodyEl.insertAdjacentHTML('afterend', `<i  class="${prefix}none"></i>`);
+        if (!item.briefEl) {
+            item.briefEl = createEl('div', { class: `${prefix}tree-brief` });
+            if (autoFill) {
+                
+                await super.getElCont({
+                    target: item,
+                    data: item.brief,
+                    cb: (cont) => {
+                        item.brief = cont;
+                        super.updateElCont(item);
+                    }
+                });
+            }
+        }
+        item.bodyEl.appendChild(item.briefEl);
+        item.headEl.insertAdjacentElement('afterend', item.bodyEl);
+    }
+    createFootEl(item) {
+        if (!this.options.paginated.enable || item.pageEl)
+            return;
+        item.moreEl = createEl('i', { [alias]: 'more' }, this.options.lang.paginated.more);
+        item.nextEl = createEl('i', { [alias]: 'next' }, this.options.lang.paginated.next);
+        item.firstEl = createEl('i', { [alias]: 'first' }, this.options.lang.paginated.first);
+        item.infoEl = createEl('i', { [alias]: 'info' });
+        item.pageEl = createEl('div', { class: `${prefix}tree-page` }, item.infoEl);
+        this.options.paginated.override ? item.pageEl.append(item.nextEl, item.firstEl) : item.pageEl.appendChild(item.moreEl);
+        item.footEl = createEl('div', { class: `${prefix}tree-foot` });
+        if (item !== this.pagination) {
+            item.footEl.appendChild(item.indentFootEl);
+            item.indentFootEl.insertAdjacentHTML('afterend', `<i  class="${prefix}none"></i>`);
+        }
+        item.footEl.appendChild(item.pageEl);
+        item.children && item.wrapEl.appendChild(item.footEl);
+    }
+    togglePgnDisabled(item) {
+        if (this.options.paginated.enable) {
+            item.moreEl.toggleAttribute('disabled', item.atEnd);
+            item.nextEl.toggleAttribute('disabled', item.atEnd);
+            item.firstEl.toggleAttribute('disabled', item.current == 1 ? true : false);
+        }
+    }
+    turnNextPage(item, cb) {
+        if (this.destroyed)
+            return;
+        let target = item === this.pagination ? this.pagination : findItem(item, this.flatData);
+        if (!target)
+            return;
+        if (!this.options.paginated.enable || !target.children)
+            return;
+        let pages = Math.ceil(target.children.length / this.options.paginated.count);
+        if (this.options.paginated.override) {
+            if (target.current >= pages)
+                return;
+            target.current = target.current || 1;
+            let nextData = target.children.slice(target.current * this.options.paginated.count, (target.current + 1) * this.options.paginated.count);
+            target.childrenEl.innerHTML = '';
+            target.childrenEl.append(...nextData.map((k) => k.wrapEl));
+            target.current++;
+        }
+        else {
+            if (target.childrenEl.children.length >= target.children.length)
+                return;
+            let curCount = target.childrenEl.children.length, nextData = target.children.slice(curCount, curCount + this.options.paginated.count);
+            target.childrenEl.append(...nextData.map((k) => k.wrapEl));
+            target.current = Math.ceil(target.childrenEl.children.length / this.options.paginated.count);
+        }
+        target.atEnd = (pages === target.current) ? true : false;
+        this.togglePgnDisabled(target);
+        this.updateInfoEl(target);
+        super.listen({ name: 'turned', cb, params: [target] });
+        return this;
+    }
+    turnFirstPage(item, cb) {
+        if (this.destroyed)
+            return;
+        let target = item === this.pagination ? this.pagination : findItem(item, this.flatData);
+        if (!target)
+            return;
+        if (!this.options.paginated.enable || !target.children)
+            return;
+        let firstData = target.children.slice(0, this.options.paginated.count);
+        this.options.paginated.override && (target.childrenEl.innerHTML = '');
+        target.childrenEl.append(...firstData.map((k) => k.wrapEl));
+        target.current = 1;
+        target.atEnd = (target.childrenEl.children.length === target.children.length) ? true : false;
+        this.togglePgnDisabled(target);
+        this.updateInfoEl(target);
+        super.listen({ name: 'turned', cb, params: [target] });
+        return this;
+    }
+    updateInfoEl(item) {
+        if (!this.options.paginated.enable)
+            return;
+        let total = item.children.length, pages = Math.ceil(total / this.options.paginated.count), current = item.current, rest = Math.max(total - current * this.options.paginated.count, 0), obj = { total, current, pages, rest, count: this.options.paginated.count, label: item.label, id: item.id };
+        item.infoEl.innerHTML = renderTpl(this.options.lang.paginated.info, obj);
+    }
+    createChildrenEl(item) {
+        if (item.childrenEl)
+            return;
+        item.childrenEl = createEl('ul', { class: `${prefix}reset ${prefix}tree-children` });
+        let target = item.hasOwnProperty('brief') ? item.bodyEl : item.headEl;
+        target.insertAdjacentElement('afterEnd', item.childrenEl);
+    }
+    child2Parent(item) {
+        this.createChildrenEl(item);
+        this.updateArrowEl(item);
+        this.updateLegendEl(item);
+        this.updateEvt(item);
+    }
+    parent2Child(item) {
+        item.childrenEl.remove();
+        this.updateArrowEl(item);
+        this.updateLegendEl(item);
+        this.updateEvt(item);
+    }
+    setAttrs() {
+        this.targetEl.classList.add(`${prefix}tree`);
+        this.options.classes && classes(this.targetEl).add(this.options.classes);
+        this.targetEl.toggleAttribute('inert', this.options.passive);
+        this.targetEl.setAttribute('tools-trigger', this.options.tools.trigger);
+        this.targetEl.toggleAttribute('chain', this.options.chain);
+        this.options.feature.type && this.targetEl.setAttribute('feature', this.options.feature.type);
+        this.options.check.enable ? this.targetEl.setAttribute('check', this.options.check.span) : this.targetEl.removeAttribute('check');
+        this.options.select.enable ? this.targetEl.setAttribute('select', this.options.select.span) : this.targetEl.removeAttribute('select');
+    }
+    setDragDrop(item) {
+        if (!this.options.drag.enable || item.disabled || this.excludeDrags.includes(item))
+            return;
+        item.dragIns = new Drag(item.wrapEl, extend({
+            target: {
+                drops: `[${this.dropTag}]`,
+                handle: item.headEl,
+                purpose: 'auto',
+                parent: !this.options.drop.global ? this.targetEl : null,
+                gesture: {
+                    unbound: [item.toolsEl]
+                },
+                onDropped: (data) => {
+                    if (data.point === 'before') {
+                        this.graft({ source: data.from, target: data.to, isFront: true, isChild: false });
+                    }
+                    else if (data.point === 'after') {
+                        this.graft({ source: data.from, target: data.to, isFront: false, isChild: false });
+                    }
+                    else if (data.point === 'inside') {
+                        this.graft({ source: data.from, target: data.to, isFront: true, isChild: true });
+                    }
+                }
+            },
+            source: this.options.drag,
+        }));
+    }
+    updateExpandEvt(k) {
+        if (k.children) {
+            if (k.arrowEl) {
+                if (this.options.arrow.trigger === 'click') {
+                    k.arrowEl.removeEventListener('click', this.expandEvt);
+                    k.arrowEl.addEventListener('click', this.expandEvt, false);
+                }
+                else if (this.options.arrow.trigger === 'hover') {
+                    k.hoverIns && k.hoverIns.destroy();
+                    k.hoverIns = new Hover(k.arrowEl, {
                         onMove: (isIn) => {
-                            !isIn && !this.options.multiple ? this.collapse(k) : null;
+                            !isIn && this.options.expand.only ? super.collapse(k) : null;
                         },
                         onEnter: () => {
-                            this.expand(k);
+                            super.expand(k);
                         },
                         onLeave: () => {
-                            this.collapse(k);
+                            super.collapse(k);
                         }
                     });
                 }
             }
-            else {
-                if (k.disabled) {
-                    return this;
-                }
-                k.headEl.removeEventListener('click', this.selectEvt);
-                k.headEl.addEventListener('click', this.selectEvt, false);
+            if (k.legendEl) {
+                k.legendEl.removeEventListener('click', this.expandEvt);
+                k.legendEl.addEventListener('click', this.expandEvt, false);
             }
-            k.action && k.action.call(this, k);
-        });
-        if (this.options.trigger === 'click' && this.options.pageClose) {
-            document.body.removeEventListener('click', this.pageEvt);
-            document.body.addEventListener('click', this.pageEvt, false);
+        }
+        else {
+            if (this.options.arrow.trigger === 'click') {
+                k.arrowEl && k.arrowEl.removeEventListener('click', this.expandEvt);
+            }
+            else if (this.options.arrow.trigger === 'hover') {
+                k.hoverIns && k.hoverIns.destroy();
+            }
+            k.legendEl && k.legendEl.removeEventListener('click', this.expandEvt);
         }
     }
-    getDisabled() {
-        return this.flatData.filter((k) => k.disabled);
+    updateEvt(k) {
+        if (this.options.paginated.enable && k.children) {
+            this.turnFirstPage(k);
+            k.moreEl.onclick = () => this.turnNextPage(k);
+            k.nextEl.onclick = k.moreEl.onclick;
+            k.firstEl.onclick = () => this.turnFirstPage(k);
+        }
+        this.updateExpandEvt(k);
+        k.labelEl.removeEventListener('click', this.selectEvt);
+        k.labelEl.addEventListener('click', this.selectEvt, false);
+        if (k.toolsEl) {
+            if (k.removeEl) {
+                k.removeEl.onclick = () => {
+                    if (k.readonly)
+                        return;
+                    this.remove(k);
+                };
+            }
+            if (k.editEl) {
+                k.editEl.onclick = () => {
+                    if (k.readonly)
+                        return;
+                    this.inputLabel(k);
+                };
+            }
+            if (k.addfileEl) {
+                k.addfileEl.onclick = () => {
+                    if (k.readonly)
+                        return;
+                    this.add({ target: k, isChild: true, expand: true });
+                };
+            }
+            if (k.addfolderEl) {
+                k.addfolderEl.onclick = () => {
+                    if (k.readonly)
+                        return;
+                    this.add({ target: k, isChild: true, isLeaf: false, expand: true });
+                };
+            }
+            for (let [i, o] of this.options.tools.children.entries()) {
+                let tool = k.tools[i], refer = { ins: this, item: k };
+                o.action && o.action.call(refer, tool);
+                tool.action && tool.action.call(refer, tool);
+            }
+        }
+        if (this.options.shortcut.enable) {
+            k.headEl.removeEventListener('click', this.lineEvt);
+            k.headEl.addEventListener('click', this.lineEvt, false);
+        }
+        k.disabled && k.headEl.toggleAttribute('disabled', true);
+        k.readonly && k.headEl.toggleAttribute('readonly', true);
+        if (this.options.check.enable) {
+            k.checkEl.on('check', async (val) => {
+                !this.chainChecking && val.checked !== k.checked && await this.check(k, val.checked);
+            });
+        }
+        if (this.options.drag.enable) {
+            !k.dragIns && this.setDragDrop(k);
+        }
+        if (this.options.check.enable) {
+            if (this.options.check.span === 'leaf') {
+                k.children && (k.checkEl.toggleAttribute('disabled', true), k.headEl.toggleAttribute('uncheckable', true));
+            }
+            else if (this.options.check.span === 'branch') {
+                !k.children && (k.checkEl.toggleAttribute('disabled', true), k.headEl.toggleAttribute('uncheckable', true));
+            }
+        }
+        if (this.options.select.enable) {
+            if (this.options.select.span === 'leaf') {
+                k.children && k.headEl.toggleAttribute('unselectable', true);
+            }
+            else if (this.options.select.span === 'branch') {
+                !k.children && k.headEl.toggleAttribute('unselectable', true);
+            }
+        }
+        k.action && k.action.call(this, k);
     }
-    getEnabled() {
-        return this.flatData.filter((k) => !k.disabled);
+    renderFinish() {
+        for (let k of this.flatData) {
+            this.updateEvt(k);
+        }
+        if (this.options.paginated.enable && !this.options.paginated.exception) {
+            this.turnFirstPage(this.pagination);
+            this.pagination.moreEl.onclick = () => this.turnNextPage(this.pagination);
+            this.pagination.nextEl.onclick = this.pagination.moreEl.onclick;
+            this.pagination.firstEl.onclick = () => this.turnFirstPage(this.pagination);
+        }
     }
-    getExpanded() {
-        return this.flatData.filter((k) => k.expanded);
+    getDrops() {
+        return isEmpty(this.options.drag.drops) ? this.flatData.map((k) => !k.disabled ? k.headEl : null).filter(Boolean) :
+            this.options.drag.value.map((k) => findItem(k, this.flatData)).filter((k) => k && !k.disabled).map((k) => k.headEl);
     }
-    getActive() {
-        return this.flatData.filter((k) => k.expanded || k.selected);
-    }
-    getSelected() {
-        return this.flatData.find((k) => k.selected);
+    getReadonly() {
+        return this.flatData.find((k) => k.readonly);
     }
     getTriggerEl(item) {
         return (item.href && item.arrowEl ? item.arrowEl : item.headEl);
@@ -13277,19 +15402,19 @@ class Menu extends ModBaseListenCache {
         if (item.children) {
             if (!item.disabled) {
                 let triggerEl = target || this.getTriggerEl(item);
-                if (this.options.trigger === 'click') {
+                if (this.options.arrow.trigger === 'click') {
                     triggerEl.removeEventListener('click', this.expandEvt);
                     triggerEl.addEventListener('click', this.expandEvt, false);
                 }
-                else if (this.options.trigger === 'hover') {
+                else if (this.options.arrow.trigger === 'hover') {
                     this.hoverIns ? this.hoverIns.destroy() : null;
                     this.hoverIns = new Hover(item.wrapEl, {
                         onEnter: () => {
-                            this.expand(item);
+                            super.expand(item);
                             super.listen({ name: 'trigger', params: [item] });
                         },
                         onLeave: () => {
-                            this.collapse(item);
+                            super.collapse(item);
                         }
                     });
                 }
@@ -13306,10 +15431,10 @@ class Menu extends ModBaseListenCache {
         if (item.children) {
             if (!item.disabled) {
                 let triggerEl = target || this.getTriggerEl(item);
-                if (this.options.trigger === 'click') {
+                if (this.options.arrow.trigger === 'click') {
                     triggerEl.removeEventListener('click', this.expandEvt);
                 }
-                else if (this.options.trigger === 'hover') {
+                else if (this.options.arrow.trigger === 'hover') {
                     this.hoverIns ? this.hoverIns.destroy() : null;
                 }
             }
@@ -13320,46 +15445,45 @@ class Menu extends ModBaseListenCache {
             }
         }
     }
-    toggleDisabled(item, type = 'disable') {
-        let triggerEl = item.href && item.arrowEl ? item.arrowEl : item.headEl;
-        if (type === 'enable') {
-            item.disabled = false;
-            this.addTrigger(item, triggerEl);
-        }
-        else if (type === 'disable') {
-            item.disabled = true;
-            this.removeTrigger(item, triggerEl);
-        }
-    }
     toggleExpanded(data) {
-        if (this.destroyed) {
-            return this;
-        }
+        if (this.destroyed)
+            return;
         let item = findItem(data, this.flatData);
-        if (!item || !item.children) {
-            return this;
-        }
-        if (item.expanded) {
-            this.collapse(item);
-        }
-        else {
-            this.expand(item);
-        }
+        if (!item || !item.children)
+            return;
+        item.expanded ? super.collapse(item) : super.expand(item);
         super.listen({ name: 'trigger', params: [item] });
     }
-    async collapse(data, cb) {
-        if (this.destroyed) {
-            return this;
+    toggleSelected(data) {
+        let item = findItem(data, this.flatData);
+        if (!item || item.headEl.hasAttribute('editing') || !this.options.select.enable)
+            return;
+        if (item.selected) {
+            this.deselect(item);
+        }
+        else {
+            this.select(item);
+            this.options.select.only && this.deselect(this.flatData.filter((k) => k !== item && k.selected));
+        }
+    }
+    async eachCollapse(data, cb) {
+        if (isNull(data))
+            return;
+        try {
+            if (this.options.b4Collapse) {
+                let resp = await this.options.b4Collapse.call(this, data);
+                resp && (data = resp);
+            }
+        }
+        catch (err) {
+            err ? console.error(err) : console.warn('Branch collapsing has been prevented!');
+            return;
         }
         let item = findItem(data, this.flatData);
-        if (!item || !item.children || !elState(item.childrenEl).isVisible || item.childrenEl.style.height) {
-            return this;
-        }
-        this.options.b4Collapse && await this.options.b4Collapse.call(this, item);
+        if (!item || !item.children || !elState(item.childrenEl).isVisible || item.childrenEl.style.height)
+            return;
+        super.listen({ name: 'collapse', cb, params: [item] });
         item.expanded = false;
-        if (this.options.spill || this.options.row.enable) {
-            item.wrapEl.style.cssText = item.wrapEl.style.cssText.replace('z-index:', '');
-        }
         slideUp({
             el: item.childrenEl,
             duration: this.options.duration,
@@ -13367,213 +15491,316 @@ class Menu extends ModBaseListenCache {
                 super.listen({ name: 'collapsed', cb, params: [item] });
             }
         });
-        return this;
     }
-    async expand(data, cb) {
-        if (this.destroyed) {
-            return this;
-        }
+    async eachExpand(data, cb) {
+        if (isNull(data))
+            return;
         let item = findItem(data, this.flatData);
-        if (!item || !item.children || elState(item.childrenEl).isVisible) {
-            return this;
+        if (!item || !item.children || elState(item.childrenEl).isVisible)
+            return;
+        try {
+            if (this.options.b4Expand) {
+                let resp = await this.options.b4Expand.call(this, data);
+                resp && (data = resp);
+            }
         }
-        this.options.b4Expand && await this.options.b4Expand.call(this, item);
+        catch (err) {
+            err ? console.error(err) : console.warn('Branch expansion has been prevented!');
+            return;
+        }
+        super.listen({ name: 'expand', cb, params: [item] });
+        if (!item.children.length && !isEmpty(this.options.contData) && this.options.contType === 'async') {
+            await this.sqlToAdd(item);
+        }
+        else {
+            if (this.options.deferred && !item.childrenEl.firstElementChild) {
+                item.arrowEl && item.arrowEl.toggleAttribute('spinning', true);
+                this.options.paginated.enable ? this.turnFirstPage(item) : item.childrenEl.append(...item.children.map((k) => k.wrapEl));
+                item.arrowEl && item.arrowEl.removeAttribute('spinning');
+            }
+        }
         item.expanded = true;
-        this.options.rise && this.expandParents(item);
-        if (this.options.spill || this.options.row.enable) {
-            item.wrapEl.style.zIndex = item.childrenEl.style.zIndex + 1;
-        }
+        this.options.expand.linkage && this.expandParents(item);
         this.lastExpanded = item.id;
         slideDown({
             el: item.childrenEl,
             duration: this.options.duration,
             done: () => {
-                if (!this.options.multiple && this.lastExpanded !== item.id) {
-                    this.collapse(item);
-                }
                 super.listen({ name: 'expanded', cb, params: [item] });
             }
         });
-        if (!this.options.multiple) {
+        if (this.options.expand.only) {
             let others = this.flatData.filter((k) => (k !== item && k.expanded && k.floor === item.floor && k.children));
-            others.forEach((k) => {
-                this.collapse(k);
-            });
-        }
-        return this;
-    }
-    collapseAll(cb) {
-        if (this.destroyed) {
-            return this;
-        }
-        this.flatData.filter((k) => k.expanded).forEach((k) => {
-            this.collapse(k);
-        });
-        super.listen({ name: 'collapsedAll', cb });
-        return this;
-    }
-    expandAll(cb) {
-        if (this.destroyed || !this.options.multiple) {
-            return this;
-        }
-        this.flatData.forEach((k) => {
-            this.expand(k);
-        });
-        super.listen({ name: 'expandedAll', cb });
-        return this;
-    }
-    expandParents(data) {
-        let item = findItem(data, this.flatData);
-        if (this.options.rise && item) {
-            let parents = treeTools.getParentsFromPath({ path: item.path, flatData: this.flatData, field: 'id', pathHyphen: this.options.pathHyphen, pop: true }).parents;
-            parents.forEach((k) => {
-                this.expand(k);
-            });
+            for (let k of others)
+                super.collapse(k);
         }
     }
-    disable(data, cb) {
-        if (this.destroyed) {
-            return this;
-        }
-        if (data !== 0 && isEmpty(data)) {
-            this.enableAll();
-        }
-        let tmp = Array.isArray(data) ? data : [data], arr = tmp.map((k) => findItem(k, this.flatData)).filter(Boolean), fun = (k) => this.toggleDisabled(k, 'disable');
-        arr.forEach(k => fun(k));
-        super.listen({ name: 'disabled', cb, params: [arr] });
-        return this;
-    }
-    disableAll(cb) {
-        if (this.destroyed) {
-            return this;
-        }
-        this.disable(this.flatData);
-        super.listen({ name: 'disabledAll', cb });
-        return this;
-    }
-    enable(data, cb) {
-        if (this.destroyed || (data !== 0 && isEmpty(data))) {
-            return this;
-        }
-        let tmp = Array.isArray(data) ? data : [data], arr = tmp.map((k) => findItem(k, this.flatData)).filter((k) => k && k.disabled), fun = (k) => this.toggleDisabled(k, 'enable');
-        arr.forEach((k) => fun(k));
-        super.listen({ name: 'enabled', cb, params: [arr] });
-        return this;
-    }
-    enableAll(cb) {
-        if (this.destroyed) {
-            return this;
-        }
-        this.enable(this.flatData);
-        super.listen({ name: 'enabledAll', cb });
-        return this;
-    }
-    select(data, cb) {
-        if (this.destroyed || isNull(data)) {
-            return this;
-        }
-        let item = findItem(data, this.flatData);
-        if (!item || item.children || item.selected) {
-            return this;
-        }
-        item.selected = true;
-        this.options.rise && this.expandParents(item);
-        let others = this.flatData.filter((k) => k !== item && k.selected && !k.children);
-        others.forEach((i) => {
-            i.selected = false;
-        });
-        super.listen({ name: 'selected', cb, params: [item] });
-        return this;
-    }
-    deselect(data, cb) {
-        if (this.destroyed || isNull(data)) {
-            return this;
-        }
-        let item = findItem(data, this.flatData);
-        if (!item || item.children || !item.selected) {
-            return this;
-        }
-        item.selected = false;
-        super.listen({ name: 'deselected', cb, params: [item] });
-        return this;
-    }
-    activate(data, cb) {
-        if (this.destroyed) {
-            return this;
-        }
-        if (data !== 0 && isEmpty(data)) {
-            if (this.getExpanded().length > 0) {
-                this.getExpanded().forEach((k) => {
-                    this.collapse(k);
-                });
+    floatDown(obj) {
+        if (!obj.hasOwnProperty('children') || !Array.isArray(obj.children))
+            return;
+        let enables = obj.children.filter((k) => !k.disabled), type = this.getCheckType(obj);
+        for (let k of enables) {
+            if (obj.checked) {
+                type === 'checkbox' && (k.checked = true);
             }
-            this.getSelected() && this.deselect(this.getSelected());
+            else {
+                k.checked = false;
+            }
+            k.hasOwnProperty('children') && this.floatDown(k);
         }
-        let tmp = Array.isArray(data) ? data : [data], arr = unique(tmp.map((k) => findItem(k, this.flatData)).filter(Boolean), 'id'), expandedItems = arr.filter((k) => k.children), expendedItem = (!this.options.multiple) ? expandedItems.slice(-1) : expandedItems, selectedItems = arr.filter((k) => !k.children), selectedItem = selectedItems[selectedItems.length - 1], expands = [];
-        expands = expendedItem.filter(Boolean).map((k) => treeTools.getParentsFromPath({ path: k.path, flatData: this.flatData }).parents).flat().filter(Boolean);
-        expands.forEach((k) => {
-            this.expand(k);
-        });
-        selectedItem ? this.select(selectedItem) : null;
-        super.listen({ name: 'activated', cb, params: selectedItem ? [...expands, selectedItem] : expands });
+    }
+    floatUp(obj) {
+        if (obj.floor === this.options.floorStart)
+            return;
+        let parents = treeTools.getParentsFromPath({ path: obj.path, flatData: this.flatData, pathHyphen: this.options.pathHyphen, pop: true }).parents.reverse(), setCheck = (item, enables, type) => {
+            if (type === 'checkbox') {
+                if (enables.every((k) => !k.checked)) {
+                    item.checked = false;
+                    item.checkEl.setAttribute('check', '');
+                }
+                else if (enables.every((k) => k.checked)) {
+                    item.checked = true;
+                    item.checkType === 'radio' && this.uncheckSibings(item);
+                }
+                else {
+                    item.checked = false;
+                    item.checkEl.setAttribute('check', 'ing');
+                }
+            }
+            else if (type === 'radio') {
+                if (enables.some((k) => k.checked)) {
+                    item.checked = true;
+                    item.checkType === 'radio' && this.uncheckSibings(item);
+                }
+                else {
+                    item.checked = false;
+                    item.checkEl.setAttribute('check', item.children.some((k) => k.checkEl.properties.check === 'ing') ? 'ing' : '');
+                }
+            }
+        };
+        for (let i of parents) {
+            let enables = i.children.filter((k) => !k.disabled), type = this.getCheckType(i);
+            setCheck(i, enables, type);
+        }
+    }
+    eachCheck(item) {
+        this.chainChecking = true;
+        this.floatDown(item);
+        this.floatUp(item);
+        this.chainChecking = false;
+    }
+    getCheckType(parent) {
+        return parent?.childType || (['checkbox', 'radio'].includes(this.options.check.type) ? this.options.check.type : 'checkbox');
+    }
+    uncheckSibings(item) {
+        this.chainChecking = true;
+        let siblings = super.getSiblings(item).filter((k) => k.checked);
+        for (let k of siblings) {
+            k.checked = false;
+            this.options.check.linkage && this.floatDown(k);
+        }
+        this.chainChecking = false;
+    }
+    expandParents(data, cb) {
+        let tmp = findItems(data, this.flatData), items = tmp.map((k) => findItem(k, this.flatData)).filter(Boolean), pSet = [];
+        if (items.length) {
+            let parents = [];
+            for (let k of items) {
+                let p = treeTools.getParentsFromPath({ path: k.path, flatData: this.flatData, field: 'id', pathHyphen: this.options.pathHyphen }).parents;
+                p.pop();
+                parents.push(...p);
+            }
+            pSet = unique(parents);
+            for (let k of pSet)
+                super.expand(k);
+        }
+        cb && cb(pSet);
+    }
+    select(data, flag = true, cb) {
+        if (this.destroyed || !this.options.select.enable || isNull(data))
+            return;
+        let tmp = findItems(data, this.flatData), items = tmp.map((k) => findItem(k, this.flatData)).filter((k) => !k.selected === flag && (this.options.select.span === 'leaf' ? !k.children : this.options.select.span === 'branch' ? k.children : true)), param = items, fn = (obj) => {
+            if (obj.headEl.hasAttribute('editing') || obj.headEl.hasAttribute('unselectable') || obj.selected)
+                return;
+            obj.selected = true;
+        };
+        if (!items.length)
+            return;
+        if (flag) {
+            if (this.options.select.only) {
+                let item = items[0];
+                if (item) {
+                    fn(item);
+                    this.deselect(this.flatData.filter((k) => k !== item && k.selected));
+                }
+                param = [item];
+            }
+            else {
+                this.saveRaw();
+                for (let k of items)
+                    fn(k);
+            }
+            this.options.select.linkage && this.expandParents(param);
+        }
+        else {
+            this.deselect(items);
+        }
+        super.listen({ name: flag ? 'selected' : 'deselected', cb, params: [param] });
         return this;
     }
-    async add({ data, target, isChild = true, brother, isFront = true, repeat = true, cb }) {
-        if (this.destroyed || isNull(data)) {
-            return this;
+    selectAll(cb) {
+        if (this.destroyed || !this.options.select.enable || this.options.select.only)
+            return;
+        this.select(this.flatData);
+        super.listen({ name: 'selectedAll', cb });
+        return this;
+    }
+    deselectAll(cb) {
+        if (this.destroyed || !this.options.select.enable)
+            return;
+        this.select(this.flatData, false);
+        super.listen({ name: 'deselectedAll', cb });
+        return this;
+    }
+    deselect(data) {
+        if (isNull(data))
+            return;
+        let items = Array.isArray(data) ? data : [data], fn = (obj) => {
+            if (!obj.selected)
+                return;
+            obj.selected = false;
+        };
+        this.saveRaw();
+        for (let k of items)
+            fn(k);
+    }
+    checkOnlyone(item) {
+        this.saveRaw();
+        item.checked = true;
+        this.chainChecking = true;
+        let others = this.flatData.filter((k) => k !== item);
+        for (let k of others) {
+            k.checked = false;
+            k.checkEl && k.checkEl.removeAttribute('check');
         }
-        if (this.flatData.length >= this.options.max && this.options.max > 0) {
-            throw new Error('The number of children exceeds the maximum!');
+        this.chainChecking = false;
+    }
+    async check(data, flag = true, cb) {
+        if (this.destroyed)
+            return;
+        let filters = findItems(data, this.flatData), items = filters.filter((k) => !k.checked === flag && (flag ? (this.options.check.span === 'leaf' ? !k.children : this.options.check.span === 'branch' ? !!k.children : true) : true)), fn = (obj) => {
+            obj.checked = flag;
+            flag && obj.checkType === 'radio' && this.uncheckSibings(obj);
+            this.options.check.linkage && this.eachCheck(obj);
+        };
+        if (!items.length)
+            return;
+        if (this.options.check.max) {
+            try {
+                let param = { data: items, source: this.getCheckeds(), min: this.options.check.min, max: this.options.check.max, sliced: this.options.check.sliced }, resp = await (flag ? this.moreExceed(param) : this.lessExceed(param));
+                resp && (items = resp);
+            }
+            catch {
+                return;
+            }
         }
-        let type = getDataType(data), tmp = [], items = [], appendFun = (data) => {
+        if (flag && this.options.check.only) {
+            this.checkOnlyone(items[0]);
+        }
+        else {
+            this.saveRaw();
+            for (let k of items)
+                fn(k);
+        }
+        
+        super.listen({ name: flag ? 'checked' : 'unchecked', cb, params: [items] });
+        return this;
+    }
+    checkAll(cb) {
+        if (this.destroyed || !this.options.check.enable || this.options.check.type !== 'checkbox' || this.options.check.only)
+            return;
+        this.saveRaw();
+        for (let k of this.flatData) {
+            k.checked = true;
+        }
+        super.listen({ name: 'checkedAll', cb });
+        return this;
+    }
+    async add(options) {
+        if (this.destroyed)
+            return;
+        
+        let opts = Object.assign({ isChild: true, isFront: true, repeat: true, isLeaf: true, autoFill: true, expand: true, }, options), type = getDataType(opts.data), target = findItem(opts.target, this.flatData), brother = findItem(opts.brother, this.flatData), tmp = [], items = [], appendFun = async (data) => {
             let obj = treeTools.createBranchObj({
                 source: data,
                 flatData: this.flatData,
                 target,
-                isChild
+                isLeaf: opts.isLeaf,
+                isChild: opts.isChild
             });
             this.createHeadEl(obj);
+            await this.createBodyEl(obj);
+            this.createFootEl(obj);
+            this.createChildrenEl(obj);
+            super.listen({ name: 'insertItem', params: [obj] });
             treeTools.addBranch({
                 source: obj,
                 rootEl: this.targetEl,
                 flatData: this.flatData,
                 treeData: this.treeData,
-                brother: target && !isChild ? target : brother,
-                isFront,
-                repeat,
+                brother: target && !opts.isChild ? target : brother,
+                isFront: opts.isFront,
+                repeat: opts.repeat,
+                autoFill: opts.autoFill,
                 cb: (item) => {
                     items.push(item);
+                    this.updateEvt(item);
                 }
             });
         };
-        tmp = (type === 'Array' && data.length > 0) ? data : [data];
-        tmp.forEach((k) => appendFun(k));
-        this.options.b4Add && await this.options.b4Add.call(this, items);
-        if (items.length > 0) {
-            if (this.options.addActive) {
-                if (this.options.multiple) {
-                    items.forEach(k => {
-                        k.children ? this.expand(k) : null;
-                    });
-                }
-                else {
-                    let lastItem = items[items.length - 1];
-                    lastItem.children ? this.expand(lastItem) : null;
+        tmp = isNull(opts.data) ? [null] : ((type === 'Array' && opts.data.length > 0) ? opts.data : [opts.data]);
+        try {
+            let resp = await super.moreExceed({ data: tmp, source: this.flatData });
+            resp && (tmp = resp);
+        }
+        catch {
+            return;
+        }
+        for (let k of tmp) {
+            try {
+                if (this.options.b4Add) {
+                    let resp = await this.options.b4Add.call(this, k);
+                    resp && (k = resp);
                 }
             }
-            this.flatData = treeTools.toFlat(this.treeData);
-            this.renderFinish();
+            catch (err) {
+                err ? console.error(err) : console.warn(`Adding new branche (${JSON.stringify(k)}) has been prevented!`);
+                continue;
+            }
+            await appendFun(k);
         }
-        super.listen({ name: 'added', cb, params: [items] });
+        if (items.length > 0) {
+            this.flatData = treeTools.toFlat(this.treeData);
+            opts.isChild && opts.expand && target && this.eachExpand(target);
+            if (this.options.select.enable && this.options.select.addSelected) {
+                if (!this.options.select.only) {
+                    for (let k of items)
+                        this.select(k);
+                }
+                else {
+                    this.select(items.at(-1));
+                }
+            }
+        }
+        super.listen({ name: 'added', cb: opts.cb, params: [items, target] });
         return this;
     }
     async remove(data, cb) {
-        if (this.destroyed || isNull(data)) {
-            return this;
-        }
+        if (this.destroyed || isNull(data) || !this.flatData.length)
+            return;
         if (this.flatData.length === 0) {
             console.warn('The source data is already empty!');
-            return this;
+            return;
         }
         let tmp = [], items = [], removeItem = (child) => {
             treeTools.removeBranch({
@@ -13583,74 +15810,282 @@ class Menu extends ModBaseListenCache {
                 remove: false,
                 cb: (obj) => {
                     items.push(obj);
+                    setTimeout(() => {
+                        let parent = this.flatData.find((k) => k.id === obj.pId);
+                        parent && !parent.children.length && super.collapse(parent);
+                    }, 0);
                 }
             });
         };
-        this.options.b4Remove && await this.options.b4Remove.call(this, items);
-        tmp = Array.isArray(data) ? data : [data];
-        tmp.forEach(k => {
+        tmp = findItems(data, this.flatData);
+        try {
+            let resp = await super.lessExceed({ data: tmp, source: this.flatData });
+            resp && (tmp = resp);
+        }
+        catch {
+            return;
+        }
+        for (let k of tmp) {
+            try {
+                if (this.options.b4Remove) {
+                    let resp = await this.options.b4Remove.call(this, k);
+                    resp && (k = resp);
+                }
+            }
+            catch (err) {
+                err ? console.error(err) : console.warn(`Removing old branch (${JSON.stringify(k)}) has been prevented!`);
+                continue;
+            }
             removeItem(k);
-        });
+        }
         this.flatData = treeTools.toFlat(this.treeData);
         super.listen({ name: 'removed', cb, params: [items] });
         return this;
     }
-    async edit({ item, data, cb }) {
-        if (this.destroyed || isNull(item) || isEmpty(data)) {
+    search(value, opts = {}, cb) {
+        if (this.destroyed || !this.flatData.length)
+            return;
+        let hyphen = config.splitHyphen;
+        if (typeof value === 'string') {
+            let tmp = value.trim();
+            hyphen = tmp.includes('，') ? '，' : tmp.includes(',') ? ',' : tmp.includes(' ') ? ' ' : config.splitHyphen;
+        }
+        let keys = valToArr(value, hyphen, false).map((k) => clearRegx(k)).filter(Boolean);
+        if (!keys.length) {
+            for (let k of this.searchs) {
+                k.labelEl.innerHTML = k.label;
+            }
+            if (!isEmpty(this.ignores)) {
+                for (let k of this.ignores)
+                    k.wrapEl.classList.remove(`${prefix}d-none`);
+            }
+            this.searchs = [];
+            this.ignores = [];
+        }
+        else {
+            let tmp = this.searchs;
+            this.searchs = arrSearch(Object.assign({ keys, props: 'label', source: this.flatData }, { fuzzy: this.options.search.fuzzy, ignore: this.options.search.ignore }, opts)).map((k) => k.source);
+            for (let k of this.searchs) {
+                k.labelEl.innerHTML = super.replaceMult(k.label, keys);
+            }
+            if (!isEmpty(tmp)) {
+                for (let k of tmp) {
+                    if (!this.searchs.includes(k)) {
+                        k.labelEl.innerHTML = k.label;
+                    }
+                }
+            }
+            this.expandParents(this.searchs, (p) => {
+                let currents = unique([...p, ...this.searchs]);
+                this.ignores = this.flatData.filter((k) => !currents.includes(k));
+                for (let k of this.ignores)
+                    k.wrapEl.classList.add(`${prefix}d-none`);
+                for (let k of currents)
+                    k.wrapEl.classList.remove(`${prefix}d-none`);
+            });
+        }
+        super.updateCache({ search: { value: keys } });
+        super.listen({ name: 'searched', cb, params: [this.searchs, keys] });
+        return this;
+    }
+    inputLabel(item) {
+        let headEl = item.headEl, labelEl = item.labelEl;
+        if (headEl.hasAttribute('editing'))
+            return;
+        headEl.toggleAttribute('editing', true);
+        labelEl.innerHTML = '';
+        labelEl.appendChild(this.editorEl);
+        this.editorEl.focus();
+        this.editorEl.value = item.label;
+        this.editorEl.onblur = async () => {
+            let value = this.editorEl.value;
+            try {
+                if (this.options.b4Edit) {
+                    let resp = await this.options.b4Edit.call(this, { key: 'label', value }, item);
+                    resp && (value = resp);
+                }
+                item.label = value;
+                headEl.removeAttribute('editing');
+            }
+            catch (err) {
+                item.labelEl.innerHTML = item.label;
+                headEl.removeAttribute('editing');
+                err ? console.error(err) : console.warn(`No changes have been made to the label property!`);
+                return;
+            }
+            super.listen({ name: 'edited', params: [item] });
+        };
+        this.editorEl.onkeyup = (e) => {
+            (e.code === 'Enter') && this.editorEl.blur();
+        };
+    }
+    async edit(item, data, cb) {
+        if (this.destroyed || isNull(item) || isEmpty(data) || !this.flatData.length) {
             return this;
         }
         let source = findItem(item, this.flatData);
-        if (!source) {
+        if (!source)
             return this;
-        }
-        this.options.b4Edit && await this.options.b4Edit.call(this, source);
         for (let k in data) {
             let val = data[k];
-            if (k === 'action') {
-                source[k] = val.call(source);
+            try {
+                if (this.options.b4Edit) {
+                    let resp = await this.options.b4Edit.call(this, { key: k, value: val }, source);
+                    resp && (val = resp);
+                }
+                if (k === 'action') {
+                    source[k] = val.call({ ins: this, item: k }, source);
+                }
+                else if (['icon', 'disk', 'cube', 'href', 'target', 'rel', 'label', 'brief', 'tips', 'badge'].includes(k)) {
+                    source[k] = val;
+                }
             }
-            else if (['icon', 'disk', 'cube', 'href', 'target', 'rel', 'label', 'tips', 'badge', 'disabled', 'expanded', 'selected'].includes(k)) {
-                source[k] = val;
+            catch (err) {
+                err ? console.error(err) : console.warn(`No changes have been made to the ${k} property!`);
+                return this;
             }
         }
         super.listen({ name: 'edited', cb, params: [source] });
         return this;
     }
     async graft({ source, target, isFront = true, isChild = true, cb }) {
-        if (this.destroyed || isNull(source)) {
+        if (this.destroyed || isNull(source))
+            return;
+        try {
+            if (this.options.b4Graft) {
+                let resp = await this.options.b4Graft.call(this, source, target);
+                resp && resp.source && (source = resp.source);
+                resp && resp.target && (source = resp.target);
+            }
+        }
+        catch (err) {
+            err ? console.error(err) : console.warn(`The branch relationship between source and target in the tree remains unchanged!`);
             return this;
         }
-        let item = findItem(source, this.flatData);
-        if (!item) {
-            return this;
-        }
-        this.options.b4Graft && await this.options.b4Graft.call(this, item);
+        let sourceObj = findItem(source, this.flatData, '', { node: 'wrapEl' }), targetObj = findItem(target, this.flatData);
+        if (!sourceObj)
+            return;
         treeTools.graftBranch({
-            source: item,
-            target,
+            source: sourceObj,
+            target: targetObj,
             isFront,
             isChild,
             flatData: this.flatData,
             treeData: this.treeData,
             rootEl: this.targetEl,
             cb: (obj, refer) => {
-                if (refer && refer.children) {
-                    this.expand(refer);
-                    this.deselect(refer);
-                }
-                super.listen({ name: 'grafted', cb, params: [obj] });
+                refer && refer.children && isChild && this.eachExpand(refer);
+                this.flatData = treeTools.toFlat(this.treeData);
+                super.listen({ name: 'grafted', cb, params: [obj, refer] });
                 return this;
             }
         });
-        this.flatData = treeTools.toFlat(this.treeData);
-        this.renderFinish();
         return this;
+    }
+    setSearch() {
+        !isEmpty(this.options.search.value) && this.search(this.options.search.value);
+        this.searchEl = getEl(this.options.search.target);
+        if (this.searchEl) {
+            if (this.searchEl[ax.compSign]) {
+                this.searchEl.on(this.options.search.trigger, this.searchEvgt);
+            }
+            else {
+                this.searchEl.addEventListener(this.options.search.trigger, this.searchEvgt, false);
+            }
+        }
+    }
+    setResult() {
+        if (!this.options.output.enable || this.options.output.instant)
+            return;
+        this.resultIns = this.resultIns || new Tags(this.resultEl, {
+            content: '',
+            size: 'sm',
+            type: 'plain',
+            removable: true,
+            empty: { enable: true, content: this.options.lang.result },
+        });
+        this.resultIns.on('removed', async (items) => {
+            for (let k of items) {
+                let tmp = k.label.split(this.options.output.connector);
+                for (let i of tmp) {
+                    this.options.output.form === 'checked' ? await this.check(i, false) : this.select(i, false);
+                }
+            }
+        });
+    }
+    updateVals() {
+        if (!this.options.output.enable)
+            return;
+        let { value, items } = this.getVals();
+        this.updateResult(value);
+        this.options.name && (this.inputEl.value = value);
+        this.output.value = value;
+        this.output.items = items;
+        super.listen({ name: 'output', params: [this.output] });
+        if (!this.options.output.instant)
+            return;
+        this.setVals();
+    }
+    saveRaw() {
+        this.output.raw = this.getVals().value;
+    }
+    updateResult(val) {
+        this.resultIns && (val ? this.resultIns.updateCont(val.split(this.options.output.separator)) : this.resultIns.clear());
+    }
+    clearResult() {
+        this.resultIns && this.resultIns.clear();
+    }
+    setVals(target = this.receiver, cb) {
+        if (this.destroyed)
+            return;
+        let receiver = getEl(target), val = this.getVals().value;
+        fieldTools.setVals({ target: receiver, value: val });
+        super.listen({ name: 'set', cb, params: [val] });
+        return this;
+    }
+    clearVals(all = false, cb) {
+        if (this.destroyed || !this.flatData.length)
+            return this;
+        if (all) {
+            super.uncheckAll();
+            this.deselectAll();
+        }
+        else {
+            this.options.output.from === 'checked' ? super.uncheckAll() : this.deselectAll();
+        }
+        this.value = '';
+        this.clearResult();
+        super.listen({ name: 'cleared', cb });
+        return this;
+    }
+    getVals(opt = {}, cb) {
+        if (this.destroyed)
+            return this;
+        let options = Object.assign({ ...this.options.output, isStr: true }, opt), items = this.getValItems(options.from), result = [];
+        if (options.type === 'chain') {
+            result = items.map((k) => {
+                let tmp = treeTools
+                    .getParentsFromPath({ path: k.path, flatData: this.flatData, pathHyphen: this.options.pathHyphen, labelHyphen: options.connector, field: options.field })
+                    .parents
+                    .map((k) => k[options.field]);
+                return options.isStr ? tmp.join(options.connector) : tmp;
+            });
+        }
+        else {
+            let tmp = (options.type === 'leaf') ? items.filter((k) => !k.children) : (options.type === 'branch') ? items.filter((k) => k.children) : items;
+            result = tmp.map((k) => k[options.field]);
+        }
+        let value = options.isStr ? result.join(options.separator) : result;
+        super.listen({ name: 'got', cb, params: [value] });
+        return { value, items };
+    }
+    getValItems(from = 'selected') {
+        return !this.options.output.autosort ? this.seqItems : (from === 'checked' ? super.getCheckeds() : this.getSelecteds());
     }
     
     async updateCont(content, cb) {
-        if (this.destroyed) {
+        if (this.destroyed)
             return this;
-        }
         await getContent.call(this, {
             content,
             contType: this.options.contType,
@@ -13662,12 +16097,12 @@ class Menu extends ModBaseListenCache {
             request: (data) => {
                 this.listen({ name: 'request', params: [data] });
             },
-            cb: (data) => {
+            cb: async (data) => {
                 if (Array.isArray(data)) {
                     this.treeDataOrig = deepClone(data);
                     treeTools.addIdPath({ source: this.treeDataOrig });
                     this.targetEl.innerHTML = '';
-                    this.renderData(this.treeDataOrig);
+                    await this.renderData(this.treeDataOrig);
                     this.getTreeFlat();
                     this.renderFinish();
                     super.updateCache({ content });
@@ -13679,23 +16114,249 @@ class Menu extends ModBaseListenCache {
     }
     
     destroy(cb) {
-        if (this.destroyed) {
+        if (this.destroyed)
+            return this;
+        for (let k of this.flatData) {
+            if (k.children) {
+                if (this.options.arrow.trigger === 'click') {
+                    let triggerEl = k.hasOwnProperty('href') && k.arrowEl ? k.arrowEl : k.headEl;
+                    triggerEl.removeEventListener('click', this.expandEvt);
+                }
+                else if (this.options.arrow.trigger === 'hover') {
+                    this.hoverIns.destroy();
+                }
+                k.legendEl && k.legendEl.removeEventListener('click', this.expandEvt);
+            }
+            !k.children && k.headEl.removeEventListener('click', this.selectEvt);
+            this.options.shortcut.enable && k.headEl.removeEventListener('click', this.lineEvt);
+            this.options.drag.enable && k.dragIns.destroy();
+            if (this.options.paginated.enable && !this.options.deferred) {
+                k.moreEl.onclick = null;
+                k.nextEl.onclick = null;
+                k.firstEl.onclick = null;
+            }
+        }
+        this.resultIns && this.resultIns.destroy();
+        if (this.searchEl) {
+            if (this.searchEl[ax.compSign]) {
+                this.searchEl.off(this.options.search.trigger, this.searchEvgt);
+            }
+            else {
+                this.searchEl.removeEventListener(this.options.search.trigger, this.searchEvgt);
+            }
+        }
+        this.contXhr && this.contXhr.abort();
+        this.destroyed = true;
+        super.listen({ name: 'destroyed', cb });
+        return this;
+    }
+}
+
+class Menu extends ModBaseListenCache {
+    options = {};
+    flatData;
+    treeData;
+    expandEvt;
+    selectEvt;
+    pageEvt;
+    lastExpanded;
+    treeDataOrig;
+    drawerHost;
+    drawerIns;
+    treeIns;
+    hoverIns;
+    contXhr;
+    observeIns;
+    static hostType = 'node';
+    static optMaps = optMenu$1;
+    constructor(elem, options = {}, initial = true) {
+        super();
+        super.ready({
+            options,
+            host: elem,
+            maps: Menu.optMaps,
+            component: true,
+            spread: ['arrow', 'nav']
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        let _this = this;
+        this.pageEvt = function (event) {
+            if (!contains(event.target, _this.targetEl)) {
+                _this.treeIns.collapseAll();
+            }
+        };
+        super.listen({ name: 'constructed' });
+        initial && this.init();
+    }
+    
+    async init(cb) {
+        super.listen({ name: 'initiate' });
+        try {
+            this.options.b4Init && await this.options.b4Init.call(this);
+        }
+        catch {
+            console.warn(config.warn.init);
             return this;
         }
-        this.flatData.forEach((k) => {
-            if (this.options.trigger === 'click') {
-                let triggerEl = k.hasOwnProperty('href') && k.arrowEl ? k.arrowEl : k.headEl;
-                triggerEl.removeEventListener('click', this.expandEvt);
+        this.setTree();
+        this.drawerHost = getEl(this.options.drawer.host);
+        if (this.drawerHost) {
+            this.drawerIns = new Drawer(this.drawerHost, Object.assign({
+                content: this.targetEl,
+                contType: 'node',
+            }, this.options.drawer));
+        }
+        this.setAttrs();
+        
+        super.listen({ name: 'initiated', cb });
+        return this;
+    }
+    setTree() {
+        let _this = this;
+        let targetObj = {
+            storName: this.options.storName ? this.options.storName + '_tree' : '',
+            content: this.options.content,
+            contType: this.options.contType,
+            contData: this.options.contData,
+            ajax: this.options.ajax,
+            passive: this.options.passive,
+            layout: this.options.layout,
+            disable: this.options.disable,
+            duration: this.options.duration,
+            select: {
+                value: this.options.active,
+                linkage: this.options.linkage,
+                span: 'leaf',
+            },
+            expand: {
+                value: this.options.active,
+                all: this.options.expose || this.options.expandAll ? true : false,
+                only: this.options.multiple || this.options.expose ? false : true,
+                linkage: this.options.linkage,
+            },
+            shortcut: {
+                enable: !this.options.expose,
+                span: 'blank',
+                mean: this.options.trigger === 'hover' ? 'selected' : 'auto',
+            },
+            arrow: {
+                enable: this.options.arrow.enable,
+                show: this.options.arrow.icon || `${prefix}icon-${this.options.nav.enable ? 'down' : 'right'}`,
+                hide: this.options.arrow.icon || `${prefix}icon-${this.options.nav.enable ? 'down' : 'right'}`,
+                anim: `${prefix}rotate${this.options.nav.enable || this.options.spill ? '180' : '90'}`,
+                type: 'icon',
+                trigger: this.options.trigger,
+            },
+            onInitiated: function () {
+                if (this.options.trigger === 'hover') {
+                    for (let k of this.flatData) {
+                        _this.setHover(k);
+                    }
+                }
+                if (_this.options.trigger === 'click' && _this.options.pageClose) {
+                    document.body.removeEventListener('click', _this.pageEvt);
+                    document.body.addEventListener('click', _this.pageEvt, false);
+                }
+            },
+            onAdded: (items, refer) => {
+                this.setHover(refer);
+            },
+            onGrafted: (item, refer) => {
+                this.setHover(refer);
+            },
+            onInsertItem: (item) => {
+                this.options.nav.enable && this.addNavAttr(item, item.floor === this.options.floorStart);
+            },
+            onInsertItems: (items) => {
+                let tmp = treeTools.toFlat(items);
+                for (let k of tmp) {
+                    this.options.nav.enable && this.addNavAttr(k, k.floor === this.options.floorStart);
+                }
             }
-            else if (this.options.trigger === 'hover') {
-                this.hoverIns.destroy();
-            }
-            if (!k.children) {
-                k.headEl.removeEventListener('click', this.selectEvt);
+        }, params = extend({ target: targetObj, source: this.options.tree, });
+        this.treeIns && this.treeIns.initiated && this.treeIns.destroy();
+        this.treeIns = new Tree(this.targetEl, params);
+    }
+    setHover(item) {
+        if (this.options.trigger !== 'hover' || !item?.children)
+            return;
+        item.hoverIns && item.hoverIns && item.hoverIns.destroy();
+        item.hoverIns = new Hover(item.wrapEl, {
+            onEnter: () => {
+                this.treeIns.expand(item);
+            },
+            onLeave: () => {
+                this.treeIns.collapse(item);
             }
         });
+    }
+    addNavAttr(item, firstItem = false) {
+        if (this.options.nav.bodyWidth) {
+            item.childrenEl ? addStyle(item.childrenEl, 'width', this.options.nav.bodyWidth) : removeStyle(item.childrenEl, 'width');
+        }
+        if (firstItem) {
+            this.options.nav.headWidth ? addStyle(item.wrapEl, 'width', this.options.nav.headWidth) : removeStyle(item.wrapEl, 'width');
+            this.options.nav.marginLeft ? addStyle(item.wrapEl, 'margin-left', this.options.nav.marginLeft) : removeStyle(item.wrapEl, 'margin-left');
+            this.options.nav.marginRight ? addStyle(item.wrapEl, 'margin-right', this.options.nav.marginRight) : removeStyle(item.wrapEl, 'margin-right');
+        }
+    }
+    setAttrs() {
+        this.targetEl.classList.add(`${prefix}menu`);
+        this.options.classes && classes(this.targetEl).add(this.options.classes);
+        this.targetEl.setAttribute('theme', this.options.theme);
+        this.targetEl.toggleAttribute('inert', this.options.passive);
+        this.targetEl.toggleAttribute('expose', this.options.expose);
+        this.targetEl.setAttribute('trigger', this.options.trigger);
+        this.targetEl.toggleAttribute('spill', (this.options.spill && !this.options.nav.enable));
+        this.targetEl.toggleAttribute('unpadded', this.options.unpadded);
+        this.options.lamp ? this.targetEl.setAttribute('lamp', this.options.lamp) : this.targetEl.removeAttribute('lamp');
+        this.targetEl.toggleAttribute('full', (this.options.full && !this.options.nav.enable));
+        this.options.zIndex ? addStyle(this.targetEl, 'z-index', this.options.zIndex) : removeStyle(this.targetEl, 'z-index');
+        this.targetEl.toggleAttribute('nav', this.options.nav.enable);
+        this.options.nav.align ? this.targetEl.setAttribute('align', this.options.nav.align) : this.targetEl.removeAttribute('align');
+    }
+    activate(data, cb) {
+        if (this.destroyed)
+            return;
+        let tmp = findItems(data, this.treeIns.flatData), branches = tmp.filter((k) => k.children), leaves = tmp.filter((k) => !k.children);
+        if (leaves.length) {
+            this.treeIns.select(leaves, true, () => {
+                this.treeIns.expand(branches);
+            });
+        }
+        else {
+            this.treeIns.expand(branches);
+        }
+        super.listen({ name: 'activated', cb, params: [tmp] });
+        return this;
+    }
+    
+    async updateCont(content, cb) {
+        if (this.destroyed)
+            return this;
+        await this.treeIns.updateCont(content, (resp) => {
+            super.listen({ name: 'updatedCont', cb, params: [resp] });
+        });
+        return this;
+    }
+    
+    destroy(cb) {
+        if (this.destroyed)
+            return this;
+        this.treeIns.destroy();
         document.body.removeEventListener('click', this.pageEvt);
-        this.contXhr && this.contXhr.abort();
         this.destroyed = true;
         super.listen({ name: 'destroyed', cb });
         return this;
@@ -14638,705 +17299,6 @@ class Dropdown extends ModBaseListenCache {
         if (this.destroyed)
             return this;
         this.popupIns.destroy();
-        return this;
-    }
-}
-
-let AXTMP_emptyTpl = `<i class="${prefix}c-ignore">${config.lang.tags.emptyholder}</i>`, AXTMP_editorHolder = config.lang.tags.placeholder, AXTMP_separator$4 = config.splitHyphen;
-const optTags = [
-    {
-        attr: 'ajax',
-        prop: 'ajax',
-        value: {}
-    },
-    {
-        attr: 'content',
-        prop: 'content',
-        value: ''
-    },
-    {
-        attr: 'cont-type',
-        prop: 'contType',
-        value: 'text',
-    },
-    {
-        attr: 'cont-data',
-        prop: 'contData',
-        value: {},
-    },
-    {
-        attr: 'theme',
-        prop: 'theme',
-        value: '',
-    },
-    {
-        attr: 'size',
-        prop: 'size',
-        value: 'md',
-    },
-    {
-        attr: 'field',
-        prop: 'field',
-        value: 'label',
-    },
-    {
-        attr: 'type',
-        prop: 'type',
-        value: '',
-    },
-    {
-        attr: 'compact',
-        prop: 'compact',
-        value: false,
-    },
-    {
-        attr: 'shape',
-        prop: 'shape',
-        value: '',
-    },
-    {
-        attr: 'max',
-        prop: 'max',
-        value: 0,
-    },
-    {
-        attr: 'min',
-        prop: 'min',
-        value: 0,
-    },
-    {
-        attr: 'sliced',
-        prop: 'sliced',
-        value: true,
-    },
-    {
-        attr: 'classes',
-        prop: 'classes',
-        value: '',
-    },
-    {
-        attr: 'unique',
-        prop: 'unique',
-        value: {
-            enable: false,
-            refer: 'id',
-            template: `{{this.field}}<i class="${prefix}c-brief">({{this.key}}:{{this.value}})</i>`,
-        },
-    },
-    {
-        attr: 'empty',
-        prop: 'empty',
-        value: {
-            enable: true,
-            content: AXTMP_emptyTpl,
-        }
-    },
-    {
-        attr: 'editor',
-        prop: 'editor',
-        value: {
-            enable: false,
-            addable: true,
-            deletable: true,
-            selector: '',
-            placeholder: AXTMP_editorHolder,
-        },
-    },
-    {
-        attr: 'removable',
-        prop: 'removable',
-        value: false,
-    },
-    {
-        attr: 'separator',
-        prop: 'separator',
-        value: AXTMP_separator$4,
-    },
-    {
-        attr: 'b4-fill',
-        prop: 'b4Fill',
-        value: null,
-    },
-    {
-        attr: 'b4-add',
-        prop: 'b4Add',
-        value: null,
-    },
-    {
-        attr: 'b4-remove',
-        prop: 'b4Remove',
-        value: null,
-    },
-    {
-        attr: 'b4-edit',
-        prop: 'b4Edit',
-        value: null,
-    },
-    {
-        attr: 'b4-clear',
-        prop: 'b4Clear',
-        value: null,
-    },
-    {
-        attr: 'on-added',
-        prop: 'onAdded',
-        value: null,
-    },
-    {
-        attr: 'on-removed',
-        prop: 'onRemoved',
-        value: null,
-    },
-    {
-        attr: 'on-edited',
-        prop: 'onEdited',
-        value: null,
-    },
-    {
-        attr: 'on-cleared',
-        prop: 'onCleared',
-        value: null,
-    },
-    {
-        attr: 'on-duplicated',
-        prop: 'onDuplicated',
-        value: null,
-    },
-    {
-        attr: 'on-request',
-        prop: 'onRequest',
-        value: null
-    },
-    {
-        attr: 'on-output',
-        prop: 'onOutput',
-        value: null
-    },
-    ...optBase
-];
-
-class Tags extends ModBaseListenCache {
-    options = {};
-    emptyEl;
-    content;
-    editEvent;
-    toggleSelected;
-    output;
-    maxIndex;
-    dataOrig;
-    dataObs;
-    data;
-    editEl;
-    last;
-    labelEl;
-    static hostType = 'node';
-    static optMaps = optTags;
-    constructor(elem, options = {}, initial = config.initial) {
-        super();
-        super.ready({
-            options,
-            maps: Tags.optMaps,
-            host: elem,
-            component: true,
-            spread: ['edit', 'unique', 'empty']
-        });
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        this.emptyEl = createEl('span', { [alias]: 'empty' }, this.options.empty.content);
-        
-        this.content = '';
-        let _this = this;
-        this.editEvent = async (e) => {
-            let label = this.editEl.value.trim(), selectedItem = this.data.find((k) => k.selected);
-            if (label) {
-                this.editEl.style.width = label.length + 'em';
-                if (this.options.editor.addable && e.code === 'Enter') {
-                    this.add(label, () => {
-                        this.editEl.value = '';
-                        this.editEl.focus();
-                    });
-                }
-                selectedItem && (selectedItem.selected = false);
-            }
-            else {
-                this.editEl.style.cssText = this.editEl.style.cssText.replace('width:', '');
-                if (this.options.editor.deletable && e.code === 'Backspace' && this.data.length > 0) {
-                    let endItem = this.data.slice(-1)[0];
-                    if (endItem.selected) {
-                        this.remove(endItem);
-                    }
-                    else {
-                        endItem.selected = true;
-                    }
-                }
-                else {
-                    selectedItem && (selectedItem.selected = false);
-                }
-            }
-        };
-        this.toggleSelected = function (e) {
-            if (e.target.getAttribute(alias) !== 'remove') {
-                let item = _this.data.find((k) => k.wrapEl === this);
-                item.selected = true;
-                _this.data.filter((k) => k !== item).forEach((k) => {
-                    k.selected = false;
-                });
-            }
-        };
-        super.listen({ name: 'constructed' });
-        initial && this.init();
-    }
-    
-    async init(cb) {
-        super.listen({ name: 'initiate' });
-        try {
-            this.options.b4Init && await this.options.b4Init.call(this);
-        }
-        catch (err) {
-            err ? console.error(err) : console.warn(config.warn.init);
-            return this;
-        }
-        this.output = { value: '', raw: '', items: [] };
-        this.maxIndex = 0;
-        this.initContent();
-        this.setEmpty();
-        this.createEditor();
-        await getContent.call(this, {
-            content: this.content,
-            contType: this.options.contType,
-            contData: this.options.contData,
-            ajax: {
-                xhrName: 'contXhr',
-                spinSel: this.targetEl,
-                ...this.options.ajax
-            },
-            cb: async (data) => {
-                await this.renderContent(data);
-            }
-        });
-        this.setAttrs();
-        this.renderFinish();
-        super.listen({ name: 'initiated', cb });
-        return this;
-    }
-    initContent() {
-        if (this.options.content) {
-            this.content = this.options.content;
-        }
-        else {
-            this.content = this.rawHtml || this.targetEl.innerHTML;
-        }
-    }
-    setDataObs() {
-        this.dataOrig = [];
-        this.dataObs = new Observe(this.dataOrig, {
-            deep: true,
-            onSet: (obj) => {
-                if (obj.key === this.options.field || obj.key === 'label') {
-                    obj.target.labelEl.innerHTML = obj.value;
-                }
-                else if (['selected', 'disabled'].includes(obj.key)) {
-                    obj.target.wrapEl.toggleAttribute(obj.key, obj.value);
-                }
-                else if (obj.key === 'theme') {
-                    obj.target.wrapEl.setAttribute(obj.key, obj.value);
-                }
-                else if (obj.key === 'icon' && obj.proxy.iconEl) {
-                    classes(obj.proxy.iconEl).replace(obj.raw, obj.value);
-                }
-                else if (obj.key === 'cube' && obj.proxy.cubeEl) {
-                    obj.proxy.cubeEl.src = obj.value;
-                }
-                else if (obj.key === 'disk' && obj.proxy.diskEl) {
-                    obj.proxy.diskEl.src = obj.value;
-                }
-                else if (obj.key === 'image' && obj.proxy.imageEl) {
-                    obj.proxy.imageEl.src = obj.value;
-                }
-                else if (['href', 'target', 'rel', 'download'].includes(obj.key) && this.labelEl.nodeName === 'A') {
-                    obj.target.labelEl[obj.key] = obj.value;
-                }
-            },
-            onCompleted: (data) => {
-                this.toggleEmpty();
-                if (this.options.storName) {
-                    let tmp = {
-                        content: !isEmpty(this.options.content) ? deepClone(this.dataOrig) : '',
-                    };
-                    super.updateCache(tmp);
-                }
-                this.output.value = this.getStrVals();
-                this.output.items = [...this.data];
-                super.listen({ name: 'output', params: [this.output] });
-            }
-        });
-        this.data = this.dataObs.proxy;
-    }
-    async renderContent(data) {
-        try {
-            if (this.options.b4Fill) {
-                let resp = await this.options.b4Fill.call(this, data, this.targetEl);
-                resp && (data = resp);
-            }
-        }
-        catch (err) {
-            err ? console.error(err) : console.warn('The content was blocked from being filled!');
-            return this;
-        }
-        this.setDataObs();
-        let tmp = this.getSource(data);
-        try {
-            let resp = await this.moreExceed({ data: tmp, source: this.data });
-            resp && (tmp = resp);
-        }
-        catch {
-            return;
-        }
-        this.render(tmp);
-        this.data.push(...tmp);
-    }
-    getStrVals() {
-        return this.data.map((k) => k[this.options.field]).join(this.options.separator);
-    }
-    getSource(obj) {
-        let result = [];
-        if (!isEmpty(obj)) {
-            if (Array.isArray(obj)) {
-                if (typeof obj[0] === 'string') {
-                    result = obj.map(k => {
-                        return { [this.options.field]: k, theme: '' };
-                    });
-                }
-                else {
-                    result = obj;
-                }
-            }
-            else if (typeof obj === 'object') {
-                result = [obj];
-            }
-            else if (typeof obj === 'string') {
-                let tmp = createEl('div', {}, obj), children = [...tmp.children];
-                if (children.length) {
-                    if (children[0].nodeName === 'SELECT') {
-                        result = select2Tree(children[0]);
-                    }
-                    else if (children[0].nodeName === 'INPUT') {
-                        result = treeTools.fromInput(children[0], this.options.separator);
-                    }
-                    else {
-                        for (let k of children) {
-                            let obj = {};
-                            k.hasAttribute('label') && (obj.label = k.getAttribute('label'));
-                            k.hasAttribute('value') && (obj.value = k.getAttribute('value'));
-                            k.hasAttribute('icon') && (obj.icon = k.getAttribute('icon'));
-                            k.hasAttribute('disk') && (obj.disk = k.getAttribute('disk'));
-                            k.hasAttribute('cube') && (obj.cube = k.getAttribute('cube'));
-                            k.hasAttribute('image') && (obj.image = k.getAttribute('image'));
-                            k.hasAttribute('disabled') && (obj.disabled = true);
-                            k.hasAttribute('theme') && (obj.theme = k.getAttribute('theme'));
-                            obj[this.options.field] = k.hasAttribute(this.options.field) ? k.getAttribute(this.options.field) : k.textContent;
-                            if (k.nodeName === 'A') {
-                                obj = {
-                                    ...obj,
-                                    href: k.getAttribute('href'),
-                                    target: k.target,
-                                    rel: k.rel,
-                                    download: k.download,
-                                };
-                            }
-                            result.push(obj);
-                        }
-                    }
-                }
-                else {
-                    let arr = obj.trim().split(this.options.separator);
-                    result = arr.map(k => {
-                        return { [this.options.field]: k, theme: '' };
-                    });
-                }
-            }
-        }
-        result = result.filter((k) => k && !this.data.includes(k));
-        result.forEach((k, i) => {
-            !k.hasOwnProperty('id') && (k.id = this.maxIndex + i);
-        });
-        this.maxIndex += result.length;
-        return result;
-    }
-    render(content) {
-        if (!isEmpty(content)) {
-            let fragment = document.createDocumentFragment();
-            for (let k of content) {
-                k.wrapEl = this.createTag(k);
-                fragment.appendChild(k.wrapEl);
-            }
-            this.targetEl.appendChild(fragment);
-        }
-        this.options.editor.enable && !this.options.editor.selector && this.targetEl.appendChild(this.editEl);
-    }
-    setAttrs() {
-        this.targetEl.classList.add(`${prefix}tags`);
-        classes(this.targetEl).add(this.options.classes);
-        this.options.theme ? this.targetEl.setAttribute('theme', this.options.theme) : this.targetEl.removeAttribute('theme');
-        this.options.type ? this.targetEl.setAttribute('type', this.options.type) : this.targetEl.removeAttribute('type');
-        this.targetEl.toggleAttribute('compact', this.options.compact);
-        this.options.shape ? this.targetEl.setAttribute('shape', this.options.shape) : this.targetEl.removeAttribute('shape');
-        this.options.size ? this.targetEl.setAttribute('size', this.options.size) : this.targetEl.removeAttribute('size');
-    }
-    setEmpty() {
-        this.targetEl.innerHTML = '';
-    }
-    useLegend(obj) {
-        let imgNone = getImgNone();
-        if (obj.hasOwnProperty('icon')) {
-            obj.iconEl = createEl('i', { [alias]: 'icon', class: `${obj.icon}` });
-            obj.labelEl.insertAdjacentElement('beforebegin', obj.iconEl);
-        }
-        if (obj.hasOwnProperty('disk')) {
-            obj.diskEl = createEl('img', { [alias]: 'disk', src: `${obj.disk || imgNone}` });
-            obj.labelEl.insertAdjacentElement('beforebegin', obj.diskEl);
-        }
-        if (obj.hasOwnProperty('cube')) {
-            obj.cubeEl = createEl('img', { [alias]: 'cube', src: `${obj.cube || imgNone}` });
-            obj.labelEl.insertAdjacentElement('beforebegin', obj.cubeEl);
-        }
-        if (obj.hasOwnProperty('image')) {
-            obj.imageEl = createEl('img', { [alias]: 'image', src: `${obj.image || imgNone}` });
-            obj.labelEl.insertAdjacentElement('beforebegin', obj.imageEl);
-        }
-    }
-    createTag(obj) {
-        let labelObj = { [alias]: 'label' }, text = this.data.find((k) => k !== obj && k[this.options.field] === obj[this.options.field]) ?
-            renderTpl(this.options.unique.template, { field: obj[this.options.field], value: obj[this.options.unique.refer], key: this.options.unique.refer }) :
-            obj[this.options.field];
-        obj.hasOwnProperty('href') && (labelObj.href = obj.href);
-        obj.hasOwnProperty('href') && obj.target && (labelObj.target = obj.target);
-        obj.hasOwnProperty('href') && obj.rel && (labelObj.rel = obj.rel);
-        obj.hasOwnProperty('href') && obj.download && (labelObj.download = obj.download);
-        obj.labelEl = createEl(labelObj.hasOwnProperty('href') ? 'a' : 'i', labelObj, text);
-        obj.wrapEl = createEl('span', { class: `${prefix}tag` }, obj.labelEl);
-        obj.removeEl = createEl('i', { [alias]: 'remove' });
-        this.options.removable && obj.wrapEl.appendChild(obj.removeEl);
-        this.useLegend(obj);
-        !this.options.theme && obj.theme && obj.wrapEl.setAttribute('theme', obj.theme);
-        obj.disabled && obj.wrapEl.setAttribute('disabled', '');
-        obj.selected && obj.wrapEl.setAttribute('selected', '');
-        return obj.wrapEl;
-    }
-    createEditor() {
-        if (!this.options.editor.enable || this.destroyed)
-            return;
-        let tmp = getEl(this.options.editor.selector);
-        if (!tmp) {
-            this.editEl = createEl('input', { type: 'text', placeholder: this.options.editor.placeholder });
-        }
-        else {
-            this.editEl = tmp;
-            !this.editEl.hasAttribute('placeholder') && this.editEl.setAttribute('placeholder', this.options.editor.placeholder);
-        }
-        this.editEl.removeEventListener('keyup', this.editEvent);
-        this.editEl.addEventListener('keyup', this.editEvent);
-    }
-    toggleEmpty() {
-        if (!this.options.empty.enable)
-            return;
-        if (!this.data.length) {
-            this.targetEl.insertAdjacentElement('afterbegin', this.emptyEl);
-            this.maxIndex = 0;
-        }
-        else {
-            this.emptyEl.remove();
-        }
-    }
-    renderFinish() {
-        this.toggleEmpty();
-        for (let k of this.data) {
-            k.wrapEl.addEventListener('click', this.toggleSelected, false);
-            k.removeEl.onclick = () => {
-                this.remove(k);
-            };
-        }
-        this.last = this.dataOrig[this.data.length - 1];
-    }
-    getVals(cb) {
-        if (this.destroyed)
-            return this;
-        let value = {
-            value: this.getStrVals(),
-            items: [...this.data],
-        };
-        super.listen({ name: 'got', cb, params: [value] });
-        return value;
-    }
-    
-    async updateCont(content, cb) {
-        if (this.destroyed)
-            return this;
-        this.setEmpty();
-        await getContent.call(this, {
-            content,
-            contType: this.options.contType,
-            contData: this.options.contData,
-            ajax: {
-                xhrName: 'contXhr',
-                spinSel: this.targetEl,
-                ...this.options.ajax
-            },
-            cb: async (data) => {
-                this.saveRaw();
-                await this.renderContent(data);
-                this.renderFinish();
-                super.updateCache({ content });
-                super.listen({ name: 'updatedCont', cb, params: [this.dataOrig] });
-            }
-        });
-        return this;
-    }
-    saveRaw() {
-        this.output.raw = this.getStrVals();
-    }
-    async add(data, cb) {
-        if (isEmpty(data) || this.destroyed)
-            return this;
-        let arr = this.getSource(data), dupTags = [], oldLen = 0, oldValues = this.data.map((k) => k[this.options.field]);
-        if (this.options.unique.enable) {
-            arr = unique(arr, this.options.field);
-            oldLen = arr.length;
-            arr = arr.map((k) => {
-                let output;
-                if (oldValues.includes(k[this.options.field])) {
-                    dupTags.push(k);
-                }
-                else {
-                    output = k;
-                }
-                return output;
-            }).filter(Boolean);
-            if (oldLen !== arr.length) {
-                new Message({
-                    content: arr.length === 0 ? this.options.lang.includeFull : this.options.lang.includePart,
-                    status: 'warn',
-                    iconShow: true,
-                }).show();
-                super.listen({ name: 'duplicated', params: [dupTags] });
-            }
-        }
-        if (arr.length === 0)
-            return this;
-        try {
-            let resp = await super.moreExceed({ data: arr, source: this.data });
-            resp && (arr = resp);
-        }
-        catch {
-            return;
-        }
-        try {
-            if (this.options.b4Add) {
-                let resp = await this.options.b4Add.call(this, arr);
-                resp && (arr = resp);
-            }
-        }
-        catch (err) {
-            err ? console.error(err) : console.warn('Failed to add a new tags!');
-            return this;
-        }
-        if (!Array.isArray(arr) || !arr.length)
-            return this;
-        this.saveRaw();
-        this.render(arr);
-        this.data.push(...arr);
-        this.renderFinish();
-        super.listen({ name: 'added', cb, params: [arr] });
-        return this;
-    }
-    async remove(data, cb) {
-        if (isEmpty(data) || this.destroyed || !this.data.length)
-            return this;
-        let tags = findItems(data, this.data, '', { node: 'wrapEl', string: this.options.field, separator: this.options.separator });
-        try {
-            if (this.options.b4Remove) {
-                let resp = await this.options.b4Remove.call(this, tags);
-                resp && (tags = resp);
-            }
-        }
-        catch (err) {
-            err ? console.error(err) : console.warn('Failed to delete the old tags!');
-            return this;
-        }
-        try {
-            let resp = await this.lessExceed({ data: tags, source: this.data });
-            resp && (tags = resp);
-        }
-        catch {
-            return;
-        }
-        if (!Array.isArray(tags) || !tags.length)
-            return this;
-        this.saveRaw();
-        for (let i = 0; i < this.data.length; i++) {
-            let tmp = this.data[i];
-            if (tags.includes(tmp)) {
-                this.data.splice(i--, 1);
-                tmp.wrapEl.remove();
-            }
-        }
-        super.listen({ name: 'removed', cb, params: [tags] });
-        return this;
-    }
-    async edit(item, data, cb) {
-        if (isEmpty(item) || this.destroyed || !this.data.length)
-            return this;
-        let tag = findItem(item, this.data, '', { node: 'wrapEl', string: this.options.field });
-        if (!tag) {
-            return this;
-        }
-        try {
-            if (this.options.b4Edit) {
-                let resp = await this.options.b4Edit.call(this, tag);
-                resp && (tag = resp);
-            }
-        }
-        catch (err) {
-            err ? console.error(err) : console.warn('Failed to eidit the tag!');
-            return this;
-        }
-        if (!tag)
-            return this;
-        Object.assign(tag, data);
-        super.listen({ name: 'edited', cb, params: [tag] });
-        return this;
-    }
-    async clear(cb) {
-        if (this.destroyed || !this.data.length)
-            return this;
-        this.options.b4Clear && await this.options.b4Clear.call(this);
-        this.saveRaw();
-        this.data.splice(0);
-        this.maxIndex = 0;
-        this.targetEl.innerHTML = '';
-        this.options.editor.enable && this.targetEl.appendChild(this.editEl);
-        super.listen({ name: 'cleared', cb });
-        return this;
-    }
-    
-    destroy(cb) {
-        this.data.forEach((k) => {
-            k.wrapEl.removeEventListener('click', this.toggleSelected);
-            k.removeEl.onclick = null;
-        });
-        this.options.editor.enable && this.editEl.removeEventListener('keyup', this.editEvent);
-        this.destroyed = true;
-        super.listen({ name: 'destroyed', cb });
         return this;
     }
 }
@@ -17039,419 +19001,6 @@ class Scroll extends ModBaseListenCache {
         this.sizeObs.disconnect();
         this.wrapStyleObs.disconnect();
         this.options.bar.enable && this.options.bar.triggerable && !this.isMobi && this.barIns.destroy();
-        this.gestureIns.destroy();
-        this.destroyed = true;
-        super.listen({ name: 'destroyed', cb });
-        return this;
-    }
-}
-
-const optDrag$1 = [
-    {
-        attr: 'drops',
-        prop: 'drops',
-        value: '',
-    },
-    {
-        attr: 'parent',
-        prop: 'parent',
-        value: null,
-    },
-    {
-        attr: 'handle',
-        prop: 'handle',
-        value: '',
-    },
-    {
-        attr: 'data',
-        prop: 'data',
-        value: {},
-    },
-    {
-        attr: 'mode',
-        prop: 'mode',
-        value: 'cut',
-    },
-    {
-        attr: 'purpose',
-        prop: 'purpose',
-        value: 'sort',
-    },
-    {
-        attr: 'point',
-        prop: 'point',
-        value: {
-            before: ['t/3'],
-            after: ['b/3'],
-        },
-    },
-    {
-        attr: 'holder',
-        prop: 'holder',
-        value: {
-            from: false,
-            to: false,
-        },
-    },
-    {
-        attr: 'arrow',
-        prop: 'arrow',
-        value: {
-            enable: false,
-            icon: `${prefix}icon-right`,
-            placement: 'left',
-            selector: '',
-        },
-    },
-    {
-        attr: 'gesture',
-        prop: 'gesture',
-        value: {},
-    },
-    {
-        attr: 'delay',
-        prop: 'delay',
-        value: 50,
-    },
-    {
-        attr: 'duration',
-        prop: 'duration',
-        value: 200,
-    },
-    {
-        attr: 'b4-drop',
-        prop: 'b4Drop',
-        value: null,
-    },
-    {
-        attr: 'on-dropping',
-        prop: 'onDropping',
-        value: null,
-    },
-    {
-        attr: 'on-dropped',
-        prop: 'onDropped',
-        value: null,
-    },
-    {
-        attr: 'on-dragstart',
-        prop: 'onDragStart',
-        value: null,
-    },
-    {
-        attr: 'on-dragmove',
-        prop: 'onDragMove',
-        value: null,
-    },
-    {
-        attr: 'on-dragend',
-        prop: 'onDragEnd',
-        value: null,
-    },
-    {
-        attr: 'on-dragcancel',
-        prop: 'onDragCancel',
-        value: null,
-    },
-    ...optBase
-];
-
-class Drag extends ModBaseListen {
-    targetEl;
-    options = {};
-    curX;
-    curY;
-    preX;
-    preY;
-    isActive;
-    enterTimer;
-    leaveTimer;
-    eventToggle;
-    holdEl;
-    enterCompare;
-    globalEvent;
-    moveEvent;
-    enterEvent;
-    leaveEvent;
-    enterHold;
-    leaveHold;
-    dragHolder;
-    dropHolder;
-    dropArrow;
-    orgHolder;
-    drops;
-    lastDrop;
-    lastPoint;
-    dftParams;
-    dropOver;
-    dropEnd;
-    targetTag;
-    holderAttr;
-    orgVal;
-    nowVal;
-    orgStyle;
-    gestureIns;
-    static hostType = 'node';
-    constructor(elem, options = {}, initial = true) {
-        super();
-        super.ready({
-            options,
-            maps: optDrag$1,
-            host: elem,
-            component: false,
-            spread: ['arrow']
-        });
-        if (!this.targetEl)
-            throw new Error('The target node for drag start is missing!');
-        this.dragHolder = createEl('div', { class: `${prefix}holder-drag` }, this.options.lang.holderDrag);
-        this.dropHolder = createEl('div', { class: `${prefix}holder-drop` }, this.options.lang.holderDrop);
-        this.dropArrow = createEl('i', { class: `${prefix}drop-arrow ${this.options.arrow.icon}`, placement: this.options.arrow.placement, point: 'inside' });
-        this.orgHolder = null;
-        this.drops = [this.dropHolder];
-        this.lastDrop = null;
-        this.lastPoint = '';
-        this.dftParams = { data: this.options.data, from: this.targetEl, holder: this.dropHolder, to: this.lastDrop, mode: this.options.mode, purpose: this.options.purpose, drops: this.drops, point: this.lastPoint };
-        this.dropOver = debounce((evt, target) => {
-            let drop = this.drops.find((k) => contains(target, k));
-            if (drop) {
-                if (drop === this.dropHolder) {
-                    this.toggleDropHolderAttr('set', this.lastDrop);
-                    this.toggleDropAttr();
-                }
-                else {
-                    this.toggleDropHolderAttr('remove');
-                    this.toggleDropAttr(drop, 'ing');
-                    this.updateHolderSize(this.dropHolder, drop, this.holderAttr === 'width' ? 'height' : this.holderAttr === 'height' ? 'width' : '');
-                }
-                if (drop === this.dropHolder || drop === this.targetEl)
-                    return;
-                this.lastDrop = drop;
-                let arrowRefer = getEl(this.options.arrow.selector, drop) || drop;
-                this.options.arrow.enable && arrowRefer.appendChild(this.dropArrow);
-                let points = getRectPoints(evt, drop), isBefore = points.find((k) => this.options.point.before.includes(k)), isAfter = points.find((k) => this.options.point.after.includes(k)), params = { ...this.dftParams, orgEvt: evt, to: drop, points };
-                if (this.options.purpose === 'sort' || this.options.purpose === 'auto') {
-                    if (isBefore) {
-                        this.lastPoint = 'before';
-                        this.options.holder.to && drop.insertAdjacentElement('beforebegin', this.dropHolder);
-                    }
-                    else if (isAfter) {
-                        this.lastPoint = 'after';
-                        this.options.holder.to && drop.insertAdjacentElement('afterend', this.dropHolder);
-                    }
-                    else {
-                        if (this.options.purpose === 'auto') {
-                            this.lastPoint = 'inside';
-                            elState(this.dropHolder).isCalc && this.dropHolder.remove();
-                        }
-                    }
-                }
-                else {
-                    this.lastPoint = 'inside';
-                }
-                drop.setAttribute('point', this.lastPoint);
-                this.options.arrow.enable && this.dropArrow.setAttribute('point', this.lastPoint);
-                super.listen({ name: 'dropping', params: [{ ...params, point: this.lastPoint }] });
-            }
-            else {
-                this.toggleDropAttr();
-                this.toggleDropHolderAttr('remove');
-                elState(this.dropHolder).isCalc && this.dropHolder.remove();
-            }
-        }, this.options.delay);
-        this.dropEnd = async (evt, target) => {
-            let drop = this.drops.find((k) => contains(target, k)), params = { ...this.dftParams, orgEvt: evt, to: this.lastDrop, point: this.lastPoint };
-            this.options.arrow.enable && this.dropArrow.remove();
-            if (drop) {
-                if (this.options.b4Drop) {
-                    let tmp = await this.options.b4Drop.call(this, params);
-                    if (tmp === false) {
-                        this.goback(this.options.mode, 'fail');
-                        return true;
-                    }
-                }
-                this.clearTransform();
-                this.toggleDropAttr(drop, 'ed');
-                drop.removeAttribute('point');
-                super.listen({ name: 'dropped', params: [params] });
-                return false;
-            }
-            else {
-                this.goback(this.options.mode, 'fail');
-                return true;
-            }
-        };
-        this.targetTag = 'dragnode';
-        super.listen({ name: 'constructed' });
-        initial && this.init();
-    }
-    async init(cb) {
-        super.listen({ name: 'initiate' });
-        try {
-            this.options.b4Init && await this.options.b4Init.call(this);
-        }
-        catch {
-            console.warn(config.warn.init);
-            return this;
-        }
-        this.setAttrs();
-        this.holderAttr = ['left', 'right'].includes(this.options.arrow.placement) ? 'height' :
-            ['top', 'bottom'].includes(this.options.arrow.placement) ? 'width' : '';
-        this.orgVal = transformTools.get(this.targetEl, ['translate'])['translate'];
-        this.nowVal = { ...this.orgVal };
-        this.orgStyle = this.targetEl.style.cssText;
-        this.getGestureIns();
-        super.listen({ name: 'initiated', cb });
-    }
-    setAttrs() {
-        this.targetEl.setAttribute([this.targetTag], '');
-    }
-    getGestureIns() {
-        this.gestureIns = new Gesture(this.targetEl, {
-            rotate: false,
-            scale: false,
-            drift: false,
-            wheel: false,
-            translate: {
-                target: this.options.handle,
-            },
-            onTranslate: (data) => {
-                this.orgHolder = this.targetEl.cloneNode(true);
-                this.orgHolder.classList.add(`${prefix}holder-origin`);
-                this.targetEl.setAttribute('drag', this.options.mode);
-                document.body.style.cursor = 'grabbing';
-                this.getDrops();
-                if (this.options.mode === 'cut' && this.options.holder.from) {
-                    this.updateHolderSize(this.dragHolder, this.targetEl);
-                    this.targetEl.insertAdjacentElement('afterend', this.dragHolder);
-                }
-                if (this.options.mode === 'copy' && this.options.holder.from) {
-                    this.targetEl.insertAdjacentElement('afterend', this.orgHolder);
-                }
-                super.listen({ name: 'dragStart', params: [{ ...data }] });
-            },
-            onTranslating: (data) => {
-                this.dropOver(data.orgEvt, data.evtTarget);
-                transformTools.set({
-                    el: this.targetEl,
-                    data: {
-                        translate: data.translate.value,
-                    },
-                });
-                this.nowVal = data.translate.value;
-                super.listen({ name: 'dragMove', params: [{ ...data, }] });
-            },
-            onTranslated: (data) => {
-                this.dropEnd(data.orgEvt, data.evtTarget).then((resp) => {
-                    !resp && this.restore();
-                });
-                super.listen({ name: 'dragEnd', params: [{ ...data }] });
-            },
-            onCanceled: (data) => {
-                this.toggleDropAttr();
-                this.restore();
-                super.listen({ name: 'dragCancel', params: [{ ...data }] });
-            }
-        });
-    }
-    updateHolderSize(target, relate, attr) {
-        if (!relate)
-            return;
-        let styleRelate = style(relate), styleTarget = style(target), width = styleRelate.width, height = styleRelate.height;
-        if (attr === 'width') {
-            target.style.width = width;
-            target.style.height = styleTarget.height;
-        }
-        else if (attr === 'height') {
-            target.style.height = height;
-            target.style.width = styleTarget.width;
-        }
-        else {
-            target.style.width = width;
-            target.style.height = height;
-        }
-    }
-    toggleDropAttr(exclude, type) {
-        if (exclude === this.dropHolder)
-            return;
-        exclude && exclude !== this.dropHolder && exclude.setAttribute('drop', type);
-        for (let k of this.drops) {
-            if (exclude === k)
-                continue;
-            k.removeAttribute('drop');
-        }
-    }
-    toggleDropHolderAttr(type = 'set', relate) {
-        if (type === 'remove') {
-            this.dropHolder.removeAttribute('moving');
-        }
-        else {
-            this.dropHolder.setAttribute('moving', '');
-            relate && this.updateHolderSize(this.dropHolder, relate, this.holderAttr);
-        }
-    }
-    clearTransform() {
-        this.targetEl.style.cssText = this.targetEl.style.cssText.replace('transform', '');
-    }
-    getDrops(drops = this.options.drops) {
-        this.drops = [this.dropHolder, ...elsSort(super.single2Els(drops || `[${this.targetTag}]`, this.options.parent))];
-    }
-    updateDrops(val) {
-        if (this.destroyed || isEmpty(val))
-            return;
-        this.options.drops = val;
-        return this;
-    }
-    goback(type, state) {
-        if (state === 'succ') {
-            if (type === 'copy') {
-                this.targetEl.style.transitionDuration = `0ms`;
-                transformTools.set({
-                    el: this.targetEl,
-                    data: {
-                        translate: this.orgVal,
-                    }
-                });
-                this.toggleDropAttr();
-                this.restore();
-            }
-        }
-        else if (state === 'fail') {
-            ease({
-                from: this.nowVal,
-                to: this.orgVal,
-                doing: (data) => {
-                    transformTools.set({
-                        el: this.targetEl,
-                        data: {
-                            translate: data.value,
-                        }
-                    });
-                },
-                done: () => {
-                    this.restore();
-                },
-                duration: this.options.duration,
-            });
-            this.toggleDropAttr();
-        }
-    }
-    restore() {
-        this.targetEl.removeAttribute('drag');
-        this.dropHolder.removeAttribute('moving');
-        this.dropHolder.style.cssText = this.dropHolder.style.cssText.replace('width', '').replace('height', '');
-        elState(this.dragHolder).isCalc && this.dragHolder.remove();
-        elState(this.dropHolder).isCalc && this.dropHolder.remove();
-        elState(this.orgHolder).isCalc && this.orgHolder.remove();
-        elState(this.dropArrow).isCalc && this.dropArrow.remove();
-        this.lastDrop = null;
-        this.lastPoint = '';
-        document.body.style.cssText = document.body.style.cssText.replace('cursor', '');
-    }
-    destroy(cb) {
-        if (this.destroyed)
-            return;
-        this.restore();
-        this.toggleDropAttr();
         this.gestureIns.destroy();
         this.destroyed = true;
         super.listen({ name: 'destroyed', cb });
@@ -21407,7 +22956,7 @@ class Pagination extends ModBaseListenCache {
     }
 }
 
-let AXTMP_separator$3 = config.rangeHyphen, AXTMP_hyphen = config.rangeHyphen;
+let AXTMP_separator$2 = config.rangeHyphen, AXTMP_hyphen = config.rangeHyphen;
 const optRange = [
     {
         attr: 'name',
@@ -21513,7 +23062,7 @@ const optRange = [
     {
         attr: 'separator',
         prop: 'separator',
-        value: AXTMP_separator$3,
+        value: AXTMP_separator$2,
     },
     {
         attr: 'hyphen',
@@ -24517,2239 +26066,6 @@ class Datetime extends ModBaseListenCache {
         this.clearEl && (this.clearEl.onclick = null);
         this.cancelEl && (this.cancelEl.onclick = null);
         this.closeEl && (this.closeEl.onclick = null);
-        this.destroyed = true;
-        super.listen({ name: 'destroyed', cb });
-        return this;
-    }
-}
-
-let AXTMP_connector = config.labelHyphen, AXTMP_separator$2 = config.splitHyphen, AXTMP_rootStart = config.rootStart, AXTMP_idStart = config.idStart, AXTMP_floorStart = config.floorStart, AXTMP_pathHyphen = config.pathHyphen;
-const optTree = [
-    {
-        attr: 'name',
-        prop: 'name',
-        value: '',
-    },
-    {
-        attr: 'value',
-        prop: 'value',
-        value: '',
-    },
-    {
-        attr: 'content',
-        prop: 'content',
-        value: '',
-    },
-    {
-        attr: 'cont-type',
-        prop: 'contType',
-        value: 'text',
-    },
-    {
-        attr: 'cont-data',
-        prop: 'contData',
-        value: {},
-    },
-    {
-        attr: 'ajax',
-        prop: 'ajax',
-        value: {},
-    },
-    {
-        attr: 'passive',
-        prop: 'passive',
-        value: false,
-    },
-    {
-        attr: 'disable',
-        prop: 'disable',
-        value: '',
-    },
-    {
-        attr: 'readonly',
-        prop: 'readonly',
-        value: '',
-    },
-    {
-        attr: 'min',
-        prop: 'min',
-        value: 0,
-    },
-    {
-        attr: 'max',
-        prop: 'max',
-        value: 0,
-    },
-    {
-        attr: 'sliced',
-        prop: 'sliced',
-        value: true,
-    },
-    {
-        attr: 'expand',
-        prop: 'expand',
-        value: {
-            value: '',
-            all: false,
-            only: true,
-            linkage: false,
-        },
-    },
-    {
-        attr: 'select',
-        prop: 'select',
-        value: {
-            enable: true,
-            only: true,
-            value: '',
-            linkage: false,
-            span: 'tree',
-            addSelected: false,
-        },
-    },
-    {
-        attr: 'arrow',
-        prop: 'arrow',
-        value: {
-            enable: true,
-            show: `${prefix}icon-right`,
-            hide: `${prefix}icon-right`,
-            anim: `${prefix}rotate90`,
-            type: 'icon',
-            trigger: 'click',
-        },
-    },
-    {
-        attr: 'legend',
-        prop: 'legend',
-        value: {
-            enable: false,
-            parent: [`${prefix}icon-folder`, `${prefix}icon-folder-open`],
-            child: `${prefix}icon-file-text`,
-            type: 'icon',
-        },
-    },
-    {
-        attr: 'check',
-        prop: 'check',
-        value: {
-            enable: false,
-            type: 'checkbox',
-            value: '',
-            min: 0,
-            max: 0,
-            sliced: true,
-            linkage: true,
-            only: false,
-            span: 'tree',
-        },
-    },
-    {
-        attr: 'tools',
-        prop: 'tools',
-        value: {
-            enable: false,
-            trigger: 'hover',
-            children: ['folder', 'file', 'edit', 'remove'],
-        },
-    },
-    {
-        attr: 'output',
-        prop: 'output',
-        value: {
-            enable: true,
-            target: '',
-            connector: AXTMP_connector,
-            separator: AXTMP_separator$2,
-            type: '',
-            from: 'selected',
-            field: 'label',
-            instant: true,
-            autosort: false,
-        },
-    },
-    {
-        attr: 'sql-data',
-        prop: 'sqlData',
-        value: {
-            deep: 0,
-            start: 0,
-            count: 0,
-            order: 'id asc',
-            where: '',
-        },
-    },
-    {
-        attr: 'paginated',
-        prop: 'paginated',
-        value: {
-            enable: false,
-            count: 10,
-            override: false,
-            exception: false,
-        },
-    },
-    {
-        attr: 'delay',
-        prop: 'delay',
-        value: 100,
-    },
-    {
-        attr: 'deferred',
-        prop: 'deferred',
-        value: false,
-    },
-    {
-        attr: 'shortcut',
-        prop: 'shortcut',
-        value: {
-            enable: false,
-            span: 'blank',
-            mean: 'selected',
-        },
-    },
-    {
-        attr: 'search',
-        prop: 'search',
-        value: {
-            target: '',
-            trigger: 'input',
-            delay: 500,
-            value: '',
-            limit: 0,
-            fuzzy: true,
-            ignore: true,
-        },
-    },
-    {
-        attr: 'drag',
-        prop: 'drag',
-        value: {
-            enable: false,
-            exclude: '',
-        },
-    },
-    {
-        attr: 'drop',
-        prop: 'drop',
-        value: {
-            attr: 'dropnode',
-            global: false,
-        },
-    },
-    {
-        attr: 'chain',
-        prop: 'chain',
-        value: false,
-    },
-    {
-        attr: 'auto-fill',
-        prop: 'autoFill',
-        value: true,
-    },
-    {
-        attr: 'root-start',
-        prop: 'rootStart',
-        value: AXTMP_rootStart,
-    },
-    {
-        attr: 'id-start',
-        prop: 'idStart',
-        value: AXTMP_idStart,
-    },
-    {
-        attr: 'floor-start',
-        prop: 'floorStart',
-        value: AXTMP_floorStart,
-    },
-    {
-        attr: 'path-hyphen',
-        prop: 'pathHyphen',
-        value: AXTMP_pathHyphen,
-    },
-    {
-        attr: 'duration',
-        prop: 'duration',
-        value: 0,
-    },
-    {
-        attr: 'bubble',
-        prop: 'bubble',
-        value: {
-            enable: false,
-            type: 'popup',
-        },
-    },
-    {
-        attr: 'classes',
-        prop: 'classes',
-        value: '',
-    },
-    {
-        attr: 'display',
-        prop: 'display',
-        value: 'inline',
-    },
-    {
-        attr: 'layout',
-        prop: 'layout',
-        value: 'indent|arrow|check|legend|icon|disk|cube|image|label|badge|tips|custom|tools',
-    },
-    {
-        attr: 'feature',
-        prop: 'feature',
-        value: {
-            type: '',
-            expand: {
-                all: true,
-                only: false,
-            },
-            check: {
-                linkage: true,
-                only: false,
-                span: 'tree',
-            },
-            layout: {
-                dropdown: 'indent|arrow|icon|disk|cube|image|label|holder|tips|badge',
-                select: 'indent|arrow|icon|disk|cube|image|label|holder|tips|badge',
-                check: 'indent|arrow|check|icon|disk|cube|image|label|holder|tips|badge',
-                button: 'icon|arrow|disk|cube|image|label|tips|badge',
-                list: 'indent|arrow|icon|disk|cube|image(label|badge|tips|custom)'
-            }
-        },
-    },
-    {
-        attr: 'b4-expand',
-        prop: 'b4Expand',
-        value: null,
-    },
-    {
-        attr: 'b4-collapse',
-        prop: 'b4Collapse',
-        value: null,
-    },
-    {
-        attr: 'b4-add',
-        prop: 'b4Add',
-        value: null,
-    },
-    {
-        attr: 'b4-edit',
-        prop: 'b4Edit',
-        value: null,
-    },
-    {
-        attr: 'b4-remove',
-        prop: 'b4Remove',
-        value: null,
-    },
-    {
-        attr: 'b4-graft',
-        prop: 'b4Graft',
-        value: null,
-    },
-    {
-        attr: 'on-rendered',
-        prop: 'onRendered',
-        value: null,
-    },
-    {
-        attr: 'on-trigger',
-        prop: 'onTrigger',
-        value: null
-    },
-    {
-        attr: 'on-added',
-        prop: 'onAdded',
-        value: null
-    },
-    {
-        attr: 'on-edited',
-        prop: 'onEdited',
-        value: null
-    },
-    {
-        attr: 'on-removed',
-        prop: 'onRemoved',
-        value: null
-    },
-    {
-        attr: 'on-disabled',
-        prop: 'onDisabled',
-        value: null
-    },
-    {
-        attr: 'on-enabled',
-        prop: 'onEnabled',
-        value: null
-    },
-    {
-        attr: 'on-disabledall',
-        prop: 'onDisabledAll',
-        value: null
-    },
-    {
-        attr: 'on-enabledall',
-        prop: 'onEnabledAll',
-        value: null
-    },
-    {
-        attr: 'on-readonly',
-        prop: 'onReadonly',
-        value: null
-    },
-    {
-        attr: 'on-readonlyall',
-        prop: 'onReadonlyAll',
-        value: null
-    },
-    {
-        attr: 'on-expand',
-        prop: 'onExpand',
-        value: null
-    },
-    {
-        attr: 'on-expanded',
-        prop: 'onExpanded',
-        value: null
-    },
-    {
-        attr: 'on-collapse',
-        prop: 'onCollapse',
-        value: null
-    },
-    {
-        attr: 'on-collapsed',
-        prop: 'onCollapsed',
-        value: null
-    },
-    {
-        attr: 'on-expandall',
-        prop: 'onExpandAll',
-        value: null
-    },
-    {
-        attr: 'on-expandedAll',
-        prop: 'onExpandedAll',
-        value: null
-    },
-    {
-        attr: 'on-collapsedall',
-        prop: 'onCollapsedAll',
-        value: null
-    },
-    {
-        attr: 'on-selected',
-        prop: 'onSelected',
-        value: null
-    },
-    {
-        attr: 'on-deselected',
-        prop: 'onDeselected',
-        value: null
-    },
-    {
-        attr: 'on-selectedall',
-        prop: 'onSelectedAll',
-        value: null
-    },
-    {
-        attr: 'on-checked',
-        prop: 'onChecked',
-        value: null
-    },
-    {
-        attr: 'on-unchecked',
-        prop: 'onUnchecked',
-        value: null
-    },
-    {
-        attr: 'on-checkedall',
-        prop: 'onCheckedAll',
-        value: null
-    },
-    {
-        attr: 'on-filled',
-        prop: 'onFilled',
-        value: null
-    },
-    {
-        attr: 'on-turned',
-        prop: 'onTurned',
-        value: null
-    },
-    {
-        attr: 'on-got',
-        prop: 'onGot',
-        value: null
-    },
-    {
-        attr: 'on-set',
-        prop: 'onSet',
-        value: null
-    },
-    {
-        attr: 'on-cleared',
-        prop: 'onCleared',
-        value: null
-    },
-    {
-        attr: 'on-grafted',
-        prop: 'onGrafted',
-        value: null
-    },
-    {
-        attr: 'on-updatedcont',
-        prop: 'onUpdatedCont',
-        value: null
-    },
-    {
-        attr: 'on-request',
-        prop: 'onRequest',
-        value: null
-    },
-    {
-        attr: 'on-toofew',
-        prop: 'onTooFew',
-        value: null
-    },
-    {
-        attr: 'on-toomany',
-        prop: 'onTooMany',
-        value: null
-    },
-    {
-        attr: 'on-locked',
-        prop: 'onLocked',
-        value: null
-    },
-    {
-        attr: 'on-unlocked',
-        prop: 'onUnlocked',
-        value: null
-    },
-    {
-        attr: 'on-output',
-        prop: 'onOutput',
-        value: null
-    },
-    ...optBase
-];
-
-class Tree extends ModBaseListenCacheNest {
-    options = {};
-    treeDataOrig;
-    searchs;
-    ignores;
-    editorEl;
-    lastExpanded;
-    dropTag;
-    pagination;
-    searchEl;
-    resultIns;
-    resultEl;
-    inputEl;
-    output;
-    value;
-    expandEvt;
-    selectEvt;
-    searchEvgt;
-    lineEvt;
-    bubbleIns;
-    receiver;
-    hoverIns;
-    contXhr;
-    treeData;
-    floorMax;
-    chainChecking;
-    seqItems;
-    maxIndex;
-    excludeDrags;
-    rawData;
-    observeIns;
-    static hostType = 'node';
-    static optMaps = optTree;
-    constructor(elem, options = {}, initial = true) {
-        super();
-        super.ready({
-            options,
-            host: elem,
-            maps: Tree.optMaps,
-            component: true,
-            spread: ['output', 'arrow', 'check', 'legend', 'select', 'shortcut', 'tools', 'drag', 'paginated', 'bubble']
-        });
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        let _this = this;
-        this.expandEvt = debounce(function () {
-            let attr = this.getAttribute(alias) === 'arrow' ? 'arrowEl' : this.getAttribute(alias) === 'legend' ? 'legendEl' : 'headEl', item = findItem(this, _this.flatData, attr);
-            _this.toggleExpanded(item);
-        }, this.options.delay);
-        this.selectEvt = debounce(function () {
-            let item = findItem(this, _this.flatData, 'labelEl');
-            _this.toggleSelected(item);
-            if (item && item.toolsEl && _this.options.tools.trigger === 'click') {
-                if (item.selected) {
-                    show({ el: item.toolsEl });
-                }
-                else {
-                    hide({ el: item.toolsEl });
-                }
-            }
-        }, this.options.delay);
-        this.searchEvgt = debounce(function () {
-            _this.search(this.value);
-        }, this.options.search.delay);
-        this.lineEvt = debounce(function (e) {
-            if (!_this.options.shortcut.enable)
-                return;
-            let item = findItem(this, _this.flatData, 'headEl'), condition = false;
-            if (!item)
-                return;
-            if (_this.options.shortcut.span === 'blank' && (e.target === item.headEl || ['holder', 'group', 'gap'].includes(e.target.getAttribute(alias)))) {
-                condition = true;
-            }
-            else if (!contains(e.target, [item.arrowEl, item.checkEl, item.toolsEl, _this.options.select.enable ? item.labelEl : null])) {
-                condition = true;
-            }
-            if (!condition)
-                return;
-            if (_this.options.shortcut.mean === 'selected') {
-                _this.toggleSelected(item);
-            }
-            else if (_this.options.shortcut.mean === 'checked') {
-                !item.checkEl.hasAttribute('disabled') && _this.toggleCheck(item);
-            }
-        }, this.options.delay);
-        this.editorEl = createEl('input', { type: 'text' });
-        this.lastExpanded = -1;
-        this.dropTag = this.options.drop.attr || 'dropnode';
-        this.treeDataOrig = [];
-        this.pagination = { label: this.options.lang.paginated.main, id: this.options.rootStart, children: [], wrapEl: this.targetEl };
-        super.listen({ name: 'constructed' });
-        initial && this.init();
-    }
-    
-    async init(cb) {
-        super.listen({ name: 'initiate' });
-        try {
-            this.options.b4Init && await this.options.b4Init.call(this);
-        }
-        catch (err) {
-            err ? console.error(err) : console.warn(config.warn.init);
-            return this;
-        }
-        this.output = { value: '', raw: '', items: [] };
-        this.correctOpts();
-        super.useTpl();
-        this.searchs = [];
-        this.floorMax = 0;
-        this.chainChecking = false;
-        this.seqItems = [];
-        this.setFeature();
-        this.maxIndex = this.options.idStart;
-        if (this.options.bubble.enable) {
-            let host = this.targetEl;
-            this.receiver = getEl(this.options.output.target) || this.targetEl;
-            (this.receiver.nodeName.includes('INPUT') || this.receiver.nodeName.includes('TEXTAREA')) && this.receiver.toggleAttribute('readonly', true);
-            this.targetEl = createEl('div');
-            let footParam = this.options.output.enable && !this.options.output.instant ? {
-                enable: true,
-                children: [
-                    'close',
-                    {
-                        name: 'clear',
-                        action: (resp) => {
-                            resp.el.onclick = () => {
-                                this.clearVals();
-                            };
-                        },
-                    },
-                    {
-                        name: 'confirm',
-                        action: (resp) => {
-                            resp.el.onclick = () => {
-                                this.setVals();
-                                this.bubbleIns.hide();
-                            };
-                        }
-                    }
-                ]
-            } : false;
-            this.bubbleIns = new Function('host', 'module', 'options', `"use strict";return new module(host,options)`)(host, ax[capStart(this.options.bubble.type.trim())], Object.assign({
-                trigger: 'click',
-                content: this.targetEl,
-                contType: 'node',
-                placement: this.options.bubble.type === 'popup' ? 'bottom-start' : '',
-                footer: footParam,
-            }, this.options.bubble));
-        }
-        else {
-            this.receiver = getEl(this.options.output.target);
-        }
-        await this.getDataToRender();
-        this.excludeDrags = !isEmpty(this.options.drag.exclude) ? findItems(this.options.drag.exclude, this.flatData) : [];
-        this.setAttrs();
-        this.setResult();
-        this.renderFinish();
-        super.initCheckeds();
-        this.initExpandeds();
-        this.initSelecteds();
-        super.initDisableds();
-        super.initReadonlys();
-        this.updateResult(this.getVals().value);
-        this.setSearch();
-        super.listen({ name: 'initiated', cb });
-        return this;
-    }
-    correctOpts() {
-        if (!isEmpty(this.options.value)) {
-            if (this.options.output.from === 'checked') {
-                this.options.check.value = this.options.value;
-            }
-            else {
-                this.options.select.value = this.options.value;
-            }
-        }
-    }
-    setFeature() {
-        if (!this.options.feature.type)
-            return;
-        extend({
-            target: this.options,
-            source: {
-                shortcut: {
-                    enable: true,
-                    mean: 'checked',
-                    span: 'whole'
-                },
-                expand: { ...this.options.feature.expand },
-                check: {
-                    enable: true,
-                    ...this.options.feature.check
-                },
-                select: {
-                    enable: false,
-                },
-                arrow: {
-                    enable: !this.options.feature.expand.all || this.options.feature.expand.only ? true : false
-                },
-                output: {
-                    from: 'checked'
-                },
-                layout: this.options.feature.layout[this.options.feature.type]
-            }
-        });
-    }
-    async sqlToAdd(item) {
-        if (!this.options.content)
-            return;
-        let promise = treeTools.allToTree({
-            content: this.options.content,
-            contType: this.options.contType,
-            contData: { pId: item.id, pLabel: item.label, pValue: item.value, ...this.options.sqlData },
-            ajax: { spinSel: item.arrowEl, xhrName: 'contXhr' },
-            ins: this,
-            fill: false,
-        });
-        await promise.then(async (resp) => {
-            let data = resp.hasOwnProperty('data') && Array.isArray(resp.data) ? resp.data : resp;
-            await this.add({
-                data,
-                target: item,
-                isFront: false,
-                autoFill: !this.options.paginated.enable,
-            });
-            this.options.paginated.enable && this.turnFirstPage(item);
-        });
-    }
-    async getDataToRender() {
-        let base = {
-            rootStart: this.options.rootStart,
-            idStart: this.options.idStart,
-            floorStart: this.options.floorStart,
-        }, promise;
-        if (this.options.content) {
-            promise = treeTools.allToTree({
-                content: this.options.content,
-                contType: this.options.contType,
-                contData: this.options.contData,
-                ajax: { spinSel: this.targetEl, xhrName: 'contXhr' },
-                ins: this,
-                ...base
-            });
-        }
-        else {
-            promise = treeTools.allToTree({
-                content: this.targetEl.innerHTML,
-                ...base
-            });
-        }
-        await promise.then((res) => {
-            
-            this.treeDataOrig = res.data && Array.isArray(res.data) ? res.data : res;
-            this.rawData = res;
-        });
-        this.targetEl.innerHTML = '';
-        await this.renderData(this.treeDataOrig);
-        this.getTreeFlat();
-        super.listen({ name: 'rendered', params: [this.treeData, this.flatData] });
-        return this;
-    }
-    getTreeFlat() {
-        this.treeData = this.getObserver(this.treeDataOrig).proxy;
-        this.pagination.children = this.treeData;
-        
-        this.flatData = treeTools.toFlat(this.treeData);
-    }
-    getObserver(data) {
-        this.observeIns = new Observe(data, {
-            deep: {
-                enable: true,
-                exclude: ['tools'],
-            },
-            onSet: (obj) => {
-                if (obj.key === 'icon' && obj.proxy.iconEl) {
-                    classes(obj.proxy.iconEl).replace(obj.raw, obj.value);
-                }
-                else if (obj.key === 'cube' && obj.proxy.cubeEl) {
-                    obj.proxy.cubeEl.src = obj.value;
-                }
-                else if (obj.key === 'disk' && obj.proxy.diskEl) {
-                    obj.proxy.diskEl.src = obj.value;
-                }
-                else if (obj.key === 'image' && obj.proxy.imageEl) {
-                    obj.proxy.imageEl.src = obj.value;
-                }
-                else if (obj.key === 'label') {
-                    obj.proxy.labelEl.innerHTML = obj.value;
-                }
-                else if (obj.key === 'tips' && obj.proxy.tipsEl) {
-                    obj.proxy.tipsEl.innerHTML = obj.value;
-                }
-                else if (obj.key === 'brief' && obj.proxy.briefEl) {
-                    super.updateElCont(obj.proxy, obj.value);
-                }
-                else if (obj.key === 'custom' && obj.proxy.customEl) {
-                    super.updateElCont(obj.proxy, obj.value, 'custom');
-                }
-                else if (obj.key === 'badge' && obj.proxy.badgeEl) {
-                    obj.proxy.badgeEl.setAttribute('label', obj.value);
-                }
-                else if (obj.key === 'href' && obj.proxy.labelEl.nodeName === 'A') {
-                    obj.proxy.labelEl.href = obj.value;
-                }
-                else if (obj.key === 'rel' && obj.proxy.labelEl.nodeName === 'A') {
-                    obj.proxy.labelEl.rel = obj.value;
-                }
-                else if (obj.key === 'target' && obj.proxy.labelEl.nodeName === 'A') {
-                    obj.proxy.labelEl.target = obj.value;
-                }
-                else if (obj.key === 'floor') {
-                    obj.proxy.indentHeadEl.innerHTML = obj.proxy.indentBodyEl.innerHTML = obj.proxy.indentFootEl.innerHTML = this.getIndentHtml(obj.value);
-                    this.updateChildrenFloor(obj.proxy);
-                }
-                else if (obj.key === 'atEnd') ;
-                else if (obj.key === 'expanded' && obj.proxy.children) {
-                    obj.proxy.arrowEl && super.toggleArrow(obj.value, obj.proxy);
-                    this.toggleParentLegend(obj.proxy);
-                }
-                else if (obj.key === 'selected') {
-                    obj.proxy.headEl.toggleAttribute('selected', obj.value);
-                    this.updateSeqItems(obj, 'selected');
-                }
-                else if (obj.key === 'disabled') {
-                    obj.proxy.headEl.toggleAttribute('disabled', obj.value);
-                }
-                else if (obj.key === 'readonly') {
-                    obj.proxy.headEl.toggleAttribute('readonly', obj.value);
-                }
-                else if (obj.key === 'checked') {
-                    obj.proxy.headEl.toggleAttribute('checked', obj.value);
-                    obj.proxy.checkEl && obj.proxy.checkEl.setAttribute('check', obj.value ? 'ed' : '');
-                    this.updateSeqItems(obj, 'checked');
-                }
-                else if (obj.key === 'children') {
-                    if (!obj.raw && obj.value) {
-                        this.child2Parent(obj.proxy);
-                    }
-                    else if (obj.raw && !obj.value) {
-                        this.parent2Child(obj.proxy);
-                    }
-                }
-            },
-            onDeleted: (obj) => {
-                if (obj.key === 'children') {
-                    treeTools.parentToChild(obj.proxy);
-                }
-            },
-            onCompleted: (data) => {
-                ((data.keys.set.includes('selected') && this.options.output.from === 'selected')
-                    ||
-                        (data.keys.set.includes('checked') && this.options.output.from === 'checked'))
-                    && this.updateVals();
-                if (this.options.check.enable && this.options.check.max) {
-                    let checkeds = super.getCheckeds(), uncheckeds = super.getUncheckeds(), setDisabled = (data) => {
-                        for (let k of data) {
-                            !k.disabled && k.checkEl.toggleAttribute('disabled', true);
-                            k.headEl.toggleAttribute('exceeded', true);
-                        }
-                    };
-                    if (checkeds.length >= this.options.check.max) {
-                        setDisabled(uncheckeds);
-                        super.listen({ name: 'stopChecked', params: [uncheckeds] });
-                    }
-                    else if (checkeds.length <= this.options.check.min) {
-                        setDisabled(checkeds);
-                        super.listen({ name: 'stopUnchecked', params: [checkeds] });
-                    }
-                    else {
-                        for (let k of this.flatData) {
-                            k.checkEl.removeAttribute('disabled');
-                            k.headEl.toggleAttribute('exceeded', false);
-                        }
-                        super.listen({ name: 'rechecked' });
-                    }
-                }
-                if (this.options.storName) {
-                    let tmp = {
-                        select: { value: treeTools.getBoolItems(this.flatData, 'selected').map((k) => k.id) },
-                        check: { value: treeTools.getBoolItems(this.flatData, 'checked').map((k) => k.id) },
-                        expand: treeTools.getBoolItems(this.flatData, 'expanded').map((k) => k.id),
-                        disable: treeTools.getBoolItems(this.flatData, 'disabled').map((k) => k.id),
-                        readonly: treeTools.getBoolItems(this.flatData, 'readonly').map((k) => k.id),
-                        content: !isEmpty(this.options.content) ? deepClone(this.treeDataOrig) : '',
-                    };
-                    super.updateCache(tmp);
-                }
-            }
-        });
-        return this.observeIns;
-    }
-    updateSeqItems(data, type = 'selected') {
-        this.options.output.from === type && splice({ host: this.seqItems, source: data.proxy, intent: data.value ? 'end+' : 'remove' });
-        if (this.seqItems.length) {
-            if ((type === 'checked' && this.options.check.type === 'radio') || (type === 'selected' && this.options.select.only)) {
-                this.seqItems = this.seqItems.slice(-1);
-            }
-        }
-    }
-    initExpandeds() {
-        let vals = valToArr(this.options.expand.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => k.expanded && k.children), tmp = [...items, ...vals];
-        for (let k of items)
-            k.expanded = false;
-        if (this.options.expand.all) {
-            if (this.options.expand.only) {
-                let firsts = this.getParentsGroupBy(this.flatData);
-                for (let k in firsts) {
-                    firsts[k][0] && super.expand(firsts[k][0]);
-                }
-            }
-            else {
-                super.expandAll();
-            }
-        }
-        else {
-            if (this.options.expand.only) {
-                let firsts = this.getParentsGroupBy(tmp);
-                for (let k in firsts) {
-                    firsts[k][0] && super.expand(firsts[k][0]);
-                }
-            }
-            else {
-                super.expand(tmp);
-            }
-        }
-    }
-    initSelecteds() {
-        if (!this.options.select.enable)
-            return;
-        let vals = valToArr(this.options.select.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => k.selected), tmp = [...items, ...vals];
-        for (let k of items)
-            k.selected = false;
-        this.select(this.options.select.only ? tmp[0] : tmp);
-    }
-    getSelecteds() {
-        return this.flatData.filter((k) => k.selected);
-    }
-    getParentsGroupBy(items, key = 'pId') {
-        if (isEmpty(items))
-            return [];
-        return items.reduce((result, item) => {
-            let groupKey = item[key];
-            if (!result[groupKey]) {
-                result[groupKey] = [];
-            }
-            item.children && result[groupKey].push(item);
-            return result;
-        }, {});
-    }
-    getIndentHtml(floor) {
-        return '<i></i>'.repeat(floor);
-    }
-    updateChildrenFloor(item) {
-        if (item.children) {
-            for (let k of item.children) {
-                k.floor = item.floor + 1;
-                this.updateChildrenFloor(k);
-            }
-        }
-    }
-    async renderData(data) {
-        let outer = createEl('ul');
-        let plantTree = async (parent, data) => {
-            let ul = createEl('ul', { class: `${prefix}reset ${prefix}tree-children` });
-            for (let k of data) {
-                this.createHeadEl(k, parent);
-                await this.createBodyEl(k);
-                if (k.hasOwnProperty('children')) {
-                    k.childrenEl = await plantTree(k, k.children);
-                }
-                
-                ((!this.options.deferred && !this.options.paginated.enable)
-                    ||
-                        (this.options.deferred && !this.options.paginated.enable && k.floor === this.options.floorStart)
-                    ||
-                        (this.options.paginated.enable && k.floor === this.options.floorStart && this.options.paginated.exception))
-                    && ul.appendChild(k.wrapEl);
-            }
-            (parent.wrapEl || parent).appendChild(ul);
-            parent.wrapEl && this.createFootEl(parent);
-            return ul;
-        };
-        await plantTree(outer, data);
-        this.resultEl = createEl('div', { class: `${prefix}tree-result` });
-        this.options.output.enable && !this.options.output.instant && this.targetEl.appendChild(this.resultEl);
-        if (this.options.name) {
-            this.inputEl = createEl('input', { type: 'hidden', name: this.options.name });
-            this.targetEl.appendChild(this.inputEl);
-        }
-        this.pagination.childrenEl = outer.childNodes[0];
-        this.targetEl.appendChild(this.pagination.childrenEl);
-        if (this.options.paginated.enable && !this.options.paginated.exception) {
-            this.createFootEl(this.pagination);
-        }
-    }
-    updateArrowEl(item) {
-        if (!this.options.arrow.enable)
-            return;
-        if (item.hasOwnProperty('children')) {
-            item.arrowEl.setAttribute('type', this.options.arrow.type);
-            this.options.lang.title.arrow && item.arrowEl.setAttribute('title', this.options.lang.title.arrow);
-            if (this.options.arrow.type === 'image') {
-                this.options.arrow.hide && (item.arrowEl.style.backgroundImage = `url("${this.options.arrow.hide}")`);
-            }
-            else {
-                item.arrowEl.classList.remove(`${prefix}none`);
-                this.options.arrow.hide && item.arrowEl.classList.add(this.options.arrow.hide);
-            }
-        }
-        else {
-            item.arrowEl.removeAttribute('type');
-            item.arrowEl.removeAttribute('title');
-            if (this.options.arrow.type === 'image') {
-                item.arrowEl.removeAttribute('style');
-            }
-            else {
-                classes(item.arrowEl).remove([this.options.arrow.show, this.options.arrow.hide]).add(`${prefix}none`);
-            }
-        }
-    }
-    async setBrief(target, data = {}, cb) {
-        if (this.destroyed)
-            return;
-        let item = findItem(target, this.flatData);
-        await this.createBodyEl(item, false);
-        await super.setElCont({
-            item,
-            data,
-            cb: (cont, target) => {
-                super.listen({ name: 'filled', cb, params: [cont, target] });
-            }
-        });
-        return this;
-    }
-    setLegendVal(el, val, type = 'icon') {
-        if (type === 'image') {
-            el.removeAttribute('class');
-            el.style.backgroundImage = `url("${val}")`;
-        }
-        else {
-            el.removeAttribute('style');
-            el.setAttribute('class', val);
-        }
-    }
-    toggleParentLegend(item) {
-        if (!this.options.legend.enable || item.legend || !Array.isArray(this.options.legend.parent) || !this.options.legend.parent[1])
-            return;
-        this.setLegendVal(item.legendEl, this.options.legend.parent[item.expanded ? 1 : 0], this.options.legend.type);
-    }
-    updateLegendEl(item) {
-        if (!this.options.legend.enable)
-            return;
-        if (item.legend) {
-            this.setLegendVal(item.legendEl, item.legend, this.options.legend.type);
-        }
-        else {
-            if (item.hasOwnProperty('children')) {
-                this.setLegendVal(item.legendEl, this.options.legend.parent[item.expanded ? 1 : 0], this.options.legend.type);
-            }
-            else {
-                this.setLegendVal(item.legendEl, this.options.legend.child, this.options.legend.type);
-            }
-        }
-    }
-    getLegendEl(item) {
-        item.legendEl = createEl('i', { [alias]: 'legend' });
-        this.updateLegendEl(item);
-    }
-    createHeadEl(item, parent) {
-        if (item.wrapEl)
-            return;
-        item.wrapEl = createEl('li', { class: `${prefix}tree-wrap` });
-        item.groupEl = createEl('div', { [alias]: 'group' });
-        if (item.headEl) {
-            if (!item.labelEl) {
-                item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [alias]: 'label' }, item.label);
-                item.headEl.appendChild(item.labelEl);
-            }
-        }
-        else {
-            item.headEl = createEl('div', { class: `${prefix}tree-head` });
-            !item.labelEl && (item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [alias]: 'label' }, item.label));
-            item.headEl.appendChild(item.labelEl);
-        }
-        item.wrapEl.appendChild(item.headEl);
-        item.href && (item.labelEl.href = item.href);
-        item.target && (item.labelEl.target = item.target);
-        item.indentHeadEl = createEl('span', { [alias]: 'indent' });
-        item.indentBodyEl = createEl('span', { [alias]: 'indent' });
-        item.indentFootEl = createEl('span', { [alias]: 'indent' });
-        item.indentHeadEl.innerHTML = item.indentBodyEl.innerHTML = item.indentFootEl.innerHTML = this.getIndentHtml(item.floor);
-        this.options.arrow.enable && super.getArrowEl(item);
-        let imgNone = getImgNone();
-        if (!item.iconEl) {
-            item.iconEl = item.hasOwnProperty('icon') ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
-        }
-        if (!item.diskEl) {
-            item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || imgNone }) : null;
-        }
-        if (!item.cubeEl) {
-            item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || imgNone }) : null;
-        }
-        if (!item.imageEl) {
-            item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || imgNone }) : null;
-        }
-        if (!item.badgeEl) {
-            item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge', label: item.badge.toString().trim() }) : null;
-        }
-        if (!item.tipsEl) {
-            item.tipsEl = item.tips ? createEl('i', { [alias]: 'tips' }, item.tips) : null;
-        }
-        if (!item.customEl) {
-            item.customEl = item.custom ? createEl('div', { [alias]: 'custom' }, item.custom) : null;
-        }
-        item.expanded && item.headEl.toggleAttribute('expanded', true);
-        item.selected && item.headEl.toggleAttribute('selected', true);
-        item.disabled && item.headEl.toggleAttribute('disabled', true);
-        item.readonly && item.headEl.toggleAttribute('readonly', true);
-        item.checked && item.headEl.toggleAttribute('checked', true);
-        this.options.drag.enable && item.headEl.toggleAttribute([this.dropTag], true);
-        if (this.options.check.enable) {
-            item.checkType = this.getCheckType(parent);
-            item.checkEl = createEl(`ax-${item.checkType}`, { [alias]: 'check' });
-        }
-        if (this.options.legend.enable) {
-            this.getLegendEl(item);
-        }
-        if (this.options.tools.enable) {
-            item.toolsEl = createTools(this.options.tools.children, item.headEl);
-            item.toolsEl.setAttribute(alias, 'tools');
-            item.tools = deepClone(this.options.tools.children);
-            for (let k of item.tools) {
-                this.options.lang.title[k.name] && k.wrapEl.setAttribute('title', this.options.lang.title[k.name]);
-                if (k.name === 'file') {
-                    item.addfileEl = k.wrapEl;
-                }
-                else if (k.name === 'folder') {
-                    item.addfolderEl = k.wrapEl;
-                }
-                else if (k.name === 'remove') {
-                    item.removeEl = k.wrapEl;
-                }
-                else if (k.name === 'edit') {
-                    item.editEl = k.wrapEl;
-                }
-            }
-        }
-        super.parseLayout(item.headEl, this.options.layout, {
-            indent: item.indentHeadEl,
-            arrow: item.arrowEl,
-            label: item.labelEl,
-            check: item.checkEl,
-            legend: item.legendEl,
-            icon: item.iconEl,
-            disk: item.diskEl,
-            cube: item.cubeEl,
-            image: item.imageEl,
-            badge: item.badgeEl,
-            tips: item.tipsEl,
-            custom: item.customEl,
-            tools: item.toolsEl,
-            group: item.groupEl,
-        });
-    }
-    async createBodyEl(item, autoFill = this.options.autoFill) {
-        if (item.bodyEl)
-            return;
-        item.bodyEl = createEl('div', { class: `${prefix}tree-body` });
-        item.bodyEl.appendChild(item.indentBodyEl);
-        item.indentBodyEl.insertAdjacentHTML('afterend', `<i  class="${prefix}none"></i>`);
-        if (!item.briefEl) {
-            item.briefEl = createEl('div', { class: `${prefix}tree-brief` });
-            if (autoFill) {
-                
-                await super.getElCont({
-                    target: item,
-                    data: item.brief,
-                    cb: (cont) => {
-                        item.brief = cont;
-                        super.updateElCont(item);
-                    }
-                });
-            }
-        }
-        item.bodyEl.appendChild(item.briefEl);
-        item.headEl.insertAdjacentElement('afterend', item.bodyEl);
-    }
-    createFootEl(item) {
-        if (!this.options.paginated.enable || item.pageEl)
-            return;
-        item.moreEl = createEl('i', { [alias]: 'more' }, this.options.lang.paginated.more);
-        item.nextEl = createEl('i', { [alias]: 'next' }, this.options.lang.paginated.next);
-        item.firstEl = createEl('i', { [alias]: 'first' }, this.options.lang.paginated.first);
-        item.infoEl = createEl('i', { [alias]: 'info' });
-        item.pageEl = createEl('div', { class: `${prefix}tree-page` }, item.infoEl);
-        this.options.paginated.override ? item.pageEl.append(item.nextEl, item.firstEl) : item.pageEl.appendChild(item.moreEl);
-        item.footEl = createEl('div', { class: `${prefix}tree-foot` });
-        if (item !== this.pagination) {
-            item.footEl.appendChild(item.indentFootEl);
-            item.indentFootEl.insertAdjacentHTML('afterend', `<i  class="${prefix}none"></i>`);
-        }
-        item.footEl.appendChild(item.pageEl);
-        item.children && item.wrapEl.appendChild(item.footEl);
-    }
-    togglePgnDisabled(item) {
-        if (this.options.paginated.enable) {
-            item.moreEl.toggleAttribute('disabled', item.atEnd);
-            item.nextEl.toggleAttribute('disabled', item.atEnd);
-            item.firstEl.toggleAttribute('disabled', item.current == 1 ? true : false);
-        }
-    }
-    turnNextPage(item, cb) {
-        if (this.destroyed)
-            return;
-        let target = item === this.pagination ? this.pagination : findItem(item, this.flatData);
-        if (!target)
-            return;
-        if (!this.options.paginated.enable || !target.children)
-            return;
-        let pages = Math.ceil(target.children.length / this.options.paginated.count);
-        if (this.options.paginated.override) {
-            if (target.current >= pages)
-                return;
-            target.current = target.current || 1;
-            let nextData = target.children.slice(target.current * this.options.paginated.count, (target.current + 1) * this.options.paginated.count);
-            target.childrenEl.innerHTML = '';
-            target.childrenEl.append(...nextData.map((k) => k.wrapEl));
-            target.current++;
-        }
-        else {
-            if (target.childrenEl.children.length >= target.children.length)
-                return;
-            let curCount = target.childrenEl.children.length, nextData = target.children.slice(curCount, curCount + this.options.paginated.count);
-            target.childrenEl.append(...nextData.map((k) => k.wrapEl));
-            target.current = Math.ceil(target.childrenEl.children.length / this.options.paginated.count);
-        }
-        target.atEnd = (pages === target.current) ? true : false;
-        this.togglePgnDisabled(target);
-        this.updateInfoEl(target);
-        super.listen({ name: 'turned', cb, params: [target] });
-        return this;
-    }
-    turnFirstPage(item, cb) {
-        if (this.destroyed)
-            return;
-        let target = item === this.pagination ? this.pagination : findItem(item, this.flatData);
-        if (!target)
-            return;
-        if (!this.options.paginated.enable || !target.children)
-            return;
-        let firstData = target.children.slice(0, this.options.paginated.count);
-        this.options.paginated.override && (target.childrenEl.innerHTML = '');
-        target.childrenEl.append(...firstData.map((k) => k.wrapEl));
-        target.current = 1;
-        target.atEnd = (target.childrenEl.children.length === target.children.length) ? true : false;
-        this.togglePgnDisabled(target);
-        this.updateInfoEl(target);
-        super.listen({ name: 'turned', cb, params: [target] });
-        return this;
-    }
-    updateInfoEl(item) {
-        if (!this.options.paginated.enable)
-            return;
-        let total = item.children.length, pages = Math.ceil(total / this.options.paginated.count), current = item.current, rest = Math.max(total - current * this.options.paginated.count, 0), obj = { total, current, pages, rest, count: this.options.paginated.count, label: item.label, id: item.id };
-        item.infoEl.innerHTML = renderTpl(this.options.lang.paginated.info, obj);
-    }
-    createChildrenEl(item) {
-        if (item.childrenEl)
-            return;
-        item.childrenEl = createEl('ul', { class: `${prefix}reset ${prefix}tree-children` });
-        let target = item.hasOwnProperty('brief') ? item.bodyEl : item.headEl;
-        target.insertAdjacentElement('afterEnd', item.childrenEl);
-    }
-    child2Parent(item) {
-        this.createChildrenEl(item);
-        this.updateArrowEl(item);
-        this.updateLegendEl(item);
-        this.updateEvt(item);
-    }
-    parent2Child(item) {
-        item.childrenEl.remove();
-        this.updateArrowEl(item);
-        this.updateLegendEl(item);
-        this.updateEvt(item);
-    }
-    setAttrs() {
-        this.targetEl.classList.add(`${prefix}tree`);
-        this.options.classes && classes(this.targetEl).add(this.options.classes);
-        this.targetEl.toggleAttribute('inert', this.options.passive);
-        this.targetEl.setAttribute('tools-trigger', this.options.tools.trigger);
-        this.targetEl.toggleAttribute('chain', this.options.chain);
-        this.options.feature.type && this.targetEl.setAttribute('feature', this.options.feature.type);
-        this.options.check.enable ? this.targetEl.setAttribute('check', this.options.check.span) : this.targetEl.removeAttribute('check');
-        this.options.select.enable ? this.targetEl.setAttribute('select', this.options.select.span) : this.targetEl.removeAttribute('select');
-    }
-    setDragDrop(item) {
-        if (!this.options.drag.enable || item.disabled || this.excludeDrags.includes(item))
-            return;
-        item.dragIns = new Drag(item.wrapEl, extend({
-            target: {
-                drops: `[${this.dropTag}]`,
-                handle: item.headEl,
-                purpose: 'auto',
-                parent: !this.options.drop.global ? this.targetEl : null,
-                gesture: {
-                    unbound: [item.toolsEl]
-                },
-                onDropped: (data) => {
-                    if (data.point === 'before') {
-                        this.graft({ source: data.from, target: data.to, isFront: true, isChild: false });
-                    }
-                    else if (data.point === 'after') {
-                        this.graft({ source: data.from, target: data.to, isFront: false, isChild: false });
-                    }
-                    else if (data.point === 'inside') {
-                        this.graft({ source: data.from, target: data.to, isFront: true, isChild: true });
-                    }
-                }
-            },
-            source: this.options.drag,
-        }));
-    }
-    updateExpandEvt(k) {
-        if (k.children) {
-            if (k.arrowEl) {
-                if (this.options.arrow.trigger === 'click') {
-                    k.arrowEl.removeEventListener('click', this.expandEvt);
-                    k.arrowEl.addEventListener('click', this.expandEvt, false);
-                }
-                else if (this.options.arrow.trigger === 'hover') {
-                    k.hoverIns && k.hoverIns.destroy();
-                    k.hoverIns = new Hover(k.arrowEl, {
-                        onMove: (isIn) => {
-                            !isIn && this.options.expand.only ? super.collapse(k) : null;
-                        },
-                        onEnter: () => {
-                            super.expand(k);
-                        },
-                        onLeave: () => {
-                            super.collapse(k);
-                        }
-                    });
-                }
-            }
-            if (k.legendEl) {
-                k.legendEl.removeEventListener('click', this.expandEvt);
-                k.legendEl.addEventListener('click', this.expandEvt, false);
-            }
-        }
-        else {
-            if (this.options.arrow.trigger === 'click') {
-                k.arrowEl && k.arrowEl.removeEventListener('click', this.expandEvt);
-            }
-            else if (this.options.arrow.trigger === 'hover') {
-                k.hoverIns && k.hoverIns.destroy();
-            }
-            k.legendEl && k.legendEl.removeEventListener('click', this.expandEvt);
-        }
-    }
-    updateEvt(k) {
-        if (this.options.paginated.enable && k.children) {
-            this.turnFirstPage(k);
-            k.moreEl.onclick = () => this.turnNextPage(k);
-            k.nextEl.onclick = k.moreEl.onclick;
-            k.firstEl.onclick = () => this.turnFirstPage(k);
-        }
-        this.updateExpandEvt(k);
-        k.labelEl.removeEventListener('click', this.selectEvt);
-        k.labelEl.addEventListener('click', this.selectEvt, false);
-        if (k.toolsEl) {
-            if (k.removeEl) {
-                k.removeEl.onclick = () => {
-                    if (k.readonly)
-                        return;
-                    this.remove(k);
-                };
-            }
-            if (k.editEl) {
-                k.editEl.onclick = () => {
-                    if (k.readonly)
-                        return;
-                    this.inputLabel(k);
-                };
-            }
-            if (k.addfileEl) {
-                k.addfileEl.onclick = () => {
-                    if (k.readonly)
-                        return;
-                    this.add({ target: k, isChild: true, expand: true });
-                };
-            }
-            if (k.addfolderEl) {
-                k.addfolderEl.onclick = () => {
-                    if (k.readonly)
-                        return;
-                    this.add({ target: k, isChild: true, isLeaf: false, expand: true });
-                };
-            }
-            for (let [i, o] of this.options.tools.children.entries()) {
-                let tool = k.tools[i], refer = { ins: this, item: k };
-                o.action && o.action.call(refer, tool);
-                tool.action && tool.action.call(refer, tool);
-            }
-        }
-        if (this.options.shortcut.enable) {
-            k.headEl.removeEventListener('click', this.lineEvt);
-            k.headEl.addEventListener('click', this.lineEvt, false);
-        }
-        k.disabled && k.headEl.toggleAttribute('disabled', true);
-        k.readonly && k.headEl.toggleAttribute('readonly', true);
-        if (this.options.check.enable) {
-            k.checkEl.on('check', async (val) => {
-                !this.chainChecking && val.checked !== k.checked && await this.check(k, val.checked);
-            });
-        }
-        if (this.options.drag.enable) {
-            !k.dragIns && this.setDragDrop(k);
-        }
-        if (this.options.check.enable) {
-            if (this.options.check.span === 'leaf') {
-                k.children && (k.checkEl.toggleAttribute('disabled', true), k.headEl.toggleAttribute('uncheckable', true));
-            }
-            else if (this.options.check.span === 'branch') {
-                !k.children && (k.checkEl.toggleAttribute('disabled', true), k.headEl.toggleAttribute('uncheckable', true));
-            }
-        }
-        if (this.options.select.enable) {
-            if (this.options.select.span === 'leaf') {
-                k.children && (k.labelEl.toggleAttribute('disabled', true), k.headEl.toggleAttribute('unselectable', true));
-            }
-            else if (this.options.select.span === 'branch') {
-                !k.children && (k.labelEl.toggleAttribute('disabled', true), k.headEl.toggleAttribute('unselectable', true));
-            }
-        }
-        k.action && k.action.call(this, k);
-    }
-    renderFinish() {
-        for (let k of this.flatData) {
-            this.updateEvt(k);
-        }
-        if (this.options.paginated.enable && !this.options.paginated.exception) {
-            this.turnFirstPage(this.pagination);
-            this.pagination.moreEl.onclick = () => this.turnNextPage(this.pagination);
-            this.pagination.nextEl.onclick = this.pagination.moreEl.onclick;
-            this.pagination.firstEl.onclick = () => this.turnFirstPage(this.pagination);
-        }
-    }
-    getDrops() {
-        return isEmpty(this.options.drag.drops) ? this.flatData.map((k) => !k.disabled ? k.headEl : null).filter(Boolean) :
-            this.options.drag.value.map((k) => findItem(k, this.flatData)).filter((k) => k && !k.disabled).map((k) => k.headEl);
-    }
-    getReadonly() {
-        return this.flatData.find((k) => k.readonly);
-    }
-    getTriggerEl(item) {
-        return (item.href && item.arrowEl ? item.arrowEl : item.headEl);
-    }
-    addTrigger(item, target) {
-        if (item.children) {
-            if (!item.disabled) {
-                let triggerEl = target || this.getTriggerEl(item);
-                if (this.options.arrow.trigger === 'click') {
-                    triggerEl.removeEventListener('click', this.expandEvt);
-                    triggerEl.addEventListener('click', this.expandEvt, false);
-                }
-                else if (this.options.arrow.trigger === 'hover') {
-                    this.hoverIns ? this.hoverIns.destroy() : null;
-                    this.hoverIns = new Hover(item.wrapEl, {
-                        onEnter: () => {
-                            super.expand(item);
-                            super.listen({ name: 'trigger', params: [item] });
-                        },
-                        onLeave: () => {
-                            super.collapse(item);
-                        }
-                    });
-                }
-            }
-        }
-        else {
-            if (!item.disabled) {
-                item.headEl.removeEventListener('click', this.selectEvt);
-                item.headEl.addEventListener('click', this.selectEvt, false);
-            }
-        }
-    }
-    removeTrigger(item, target) {
-        if (item.children) {
-            if (!item.disabled) {
-                let triggerEl = target || this.getTriggerEl(item);
-                if (this.options.arrow.trigger === 'click') {
-                    triggerEl.removeEventListener('click', this.expandEvt);
-                }
-                else if (this.options.arrow.trigger === 'hover') {
-                    this.hoverIns ? this.hoverIns.destroy() : null;
-                }
-            }
-        }
-        else {
-            if (!item.disabled) {
-                item.headEl.removeEventListener('click', this.selectEvt);
-            }
-        }
-    }
-    toggleExpanded(data) {
-        if (this.destroyed)
-            return;
-        let item = findItem(data, this.flatData);
-        if (!item || !item.children)
-            return;
-        item.expanded ? super.collapse(item) : super.expand(item);
-        super.listen({ name: 'trigger', params: [item] });
-    }
-    toggleSelected(data) {
-        let item = findItem(data, this.flatData);
-        if (!item || item.headEl.hasAttribute('editing') || !this.options.select.enable)
-            return;
-        if (item.selected) {
-            this.deselect(item);
-        }
-        else {
-            this.select(item);
-            this.options.select.only && this.deselect(this.flatData.filter((k) => k !== item && k.selected));
-        }
-    }
-    async eachCollapse(data, cb) {
-        if (isNull(data))
-            return;
-        try {
-            if (this.options.b4Collapse) {
-                let resp = await this.options.b4Collapse.call(this, data);
-                resp && (data = resp);
-            }
-        }
-        catch (err) {
-            err ? console.error(err) : console.warn('Branch collapsing has been prevented!');
-            return;
-        }
-        let item = findItem(data, this.flatData);
-        if (!item || !item.children || !elState(item.childrenEl).isVisible || item.childrenEl.style.height)
-            return;
-        super.listen({ name: 'collapse', cb, params: [item] });
-        item.expanded = false;
-        slideUp({
-            el: item.childrenEl,
-            duration: this.options.duration,
-            done: () => {
-                super.listen({ name: 'collapsed', cb, params: [item] });
-            }
-        });
-    }
-    async eachExpand(data, cb) {
-        if (isNull(data))
-            return;
-        try {
-            if (this.options.b4Expand) {
-                let resp = await this.options.b4Expand.call(this, data);
-                resp && (data = resp);
-            }
-        }
-        catch (err) {
-            err ? console.error(err) : console.warn('Branch expansion has been prevented!');
-            return;
-        }
-        let item = findItem(data, this.flatData);
-        if (!item || !item.children || elState(item.childrenEl).isVisible)
-            return;
-        super.listen({ name: 'expand', cb, params: [item] });
-        if (!item.children.length && !isEmpty(this.options.contData) && this.options.contType === 'async') {
-            await this.sqlToAdd(item);
-        }
-        else {
-            if (this.options.deferred && !item.childrenEl.firstElementChild) {
-                item.arrowEl && item.arrowEl.toggleAttribute('spinning', true);
-                this.options.paginated.enable ? this.turnFirstPage(item) : item.childrenEl.append(...item.children.map((k) => k.wrapEl));
-                item.arrowEl && item.arrowEl.removeAttribute('spinning');
-            }
-        }
-        item.expanded = true;
-        this.options.expand.linkage && this.expandParents(item);
-        this.lastExpanded = item.id;
-        slideDown({
-            el: item.childrenEl,
-            duration: this.options.duration,
-            done: () => {
-                super.listen({ name: 'expanded', cb, params: [item] });
-            }
-        });
-        if (this.options.expand.only) {
-            let others = this.flatData.filter((k) => (k !== item && k.expanded && k.floor === item.floor && k.children));
-            for (let k of others)
-                super.collapse(k);
-        }
-    }
-    floatDown(obj) {
-        if (!obj.hasOwnProperty('children') || !Array.isArray(obj.children))
-            return;
-        let enables = obj.children.filter((k) => !k.disabled), type = this.getCheckType(obj);
-        for (let k of enables) {
-            if (obj.checked) {
-                type === 'checkbox' && (k.checked = true);
-            }
-            else {
-                k.checked = false;
-            }
-            k.hasOwnProperty('children') && this.floatDown(k);
-        }
-    }
-    floatUp(obj) {
-        if (obj.floor === this.options.floorStart)
-            return;
-        let parents = treeTools.getParentsFromPath({ path: obj.path, flatData: this.flatData, pathHyphen: this.options.pathHyphen, pop: true }).parents.reverse(), setCheck = (item, enables, type) => {
-            if (type === 'checkbox') {
-                if (enables.every((k) => !k.checked)) {
-                    item.checked = false;
-                    item.checkEl.setAttribute('check', '');
-                }
-                else if (enables.every((k) => k.checked)) {
-                    item.checked = true;
-                    item.checkType === 'radio' && this.uncheckSibings(item);
-                }
-                else {
-                    item.checked = false;
-                    item.checkEl.setAttribute('check', 'ing');
-                }
-            }
-            else if (type === 'radio') {
-                if (enables.some((k) => k.checked)) {
-                    item.checked = true;
-                    item.checkType === 'radio' && this.uncheckSibings(item);
-                }
-                else {
-                    item.checked = false;
-                    item.checkEl.setAttribute('check', item.children.some((k) => k.checkEl.properties.check === 'ing') ? 'ing' : '');
-                }
-            }
-        };
-        for (let i of parents) {
-            let enables = i.children.filter((k) => !k.disabled), type = this.getCheckType(i);
-            setCheck(i, enables, type);
-        }
-    }
-    eachCheck(item) {
-        this.chainChecking = true;
-        this.floatDown(item);
-        this.floatUp(item);
-        this.chainChecking = false;
-    }
-    getCheckType(parent) {
-        return parent?.childType || (['checkbox', 'radio'].includes(this.options.check.type) ? this.options.check.type : 'checkbox');
-    }
-    uncheckSibings(item) {
-        this.chainChecking = true;
-        let siblings = super.getSiblings(item).filter((k) => k.checked);
-        for (let k of siblings) {
-            k.checked = false;
-            this.options.check.linkage && this.floatDown(k);
-        }
-        this.chainChecking = false;
-    }
-    expandParents(data, cb) {
-        let tmp = findItems(data, this.flatData), items = tmp.map((k) => findItem(k, this.flatData)).filter(Boolean), pSet = [];
-        if (items.length) {
-            let parents = [];
-            for (let k of items) {
-                let p = treeTools.getParentsFromPath({ path: k.path, flatData: this.flatData, field: 'id', pathHyphen: this.options.pathHyphen }).parents;
-                p.pop();
-                parents.push(...p);
-            }
-            pSet = unique(parents);
-            for (let k of pSet)
-                super.expand(k);
-        }
-        cb && cb(pSet);
-    }
-    select(data, flag = true, cb) {
-        if (this.destroyed || !this.options.select.enable || isNull(data))
-            return;
-        let tmp = findItems(data, this.flatData), items = tmp.map((k) => findItem(k, this.flatData)).filter((k) => !k.selected === flag && (this.options.select.span === 'leaf' ? !k.children : this.options.select.span === 'branch' ? k.children : true)), param = items, fn = (obj) => {
-            if (obj.headEl.hasAttribute('editing') || obj.selected)
-                return;
-            obj.selected = true;
-        };
-        if (!items.length)
-            return;
-        if (flag) {
-            if (this.options.select.only) {
-                let item = items[0];
-                if (item) {
-                    fn(item);
-                    this.deselect(this.flatData.filter((k) => k !== item && k.selected));
-                }
-                param = [item];
-            }
-            else {
-                this.saveRaw();
-                for (let k of items)
-                    fn(k);
-            }
-            this.options.select.linkage && this.expandParents(param);
-        }
-        else {
-            this.deselect(items);
-        }
-        super.listen({ name: flag ? 'selected' : 'deselected', cb, params: [param] });
-        return this;
-    }
-    selectAll(cb) {
-        if (this.destroyed || !this.options.select.enable || this.options.select.only)
-            return;
-        this.select(this.flatData);
-        super.listen({ name: 'selectedAll', cb });
-        return this;
-    }
-    deselectAll(cb) {
-        if (this.destroyed || !this.options.select.enable)
-            return;
-        this.select(this.flatData, false);
-        super.listen({ name: 'deselectedAll', cb });
-        return this;
-    }
-    deselect(data) {
-        if (isNull(data))
-            return;
-        let items = Array.isArray(data) ? data : [data], fn = (obj) => {
-            if (!obj.selected)
-                return;
-            obj.selected = false;
-        };
-        this.saveRaw();
-        for (let k of items)
-            fn(k);
-    }
-    checkOnlyone(item) {
-        this.saveRaw();
-        item.checked = true;
-        this.chainChecking = true;
-        let others = this.flatData.filter((k) => k !== item);
-        for (let k of others) {
-            k.checked = false;
-            k.checkEl && k.checkEl.removeAttribute('check');
-        }
-        this.chainChecking = false;
-    }
-    async check(data, flag = true, cb) {
-        if (this.destroyed)
-            return;
-        let filters = findItems(data, this.flatData), items = filters.filter((k) => !k.checked === flag && (flag ? (this.options.check.span === 'leaf' ? !k.children : this.options.check.span === 'branch' ? !!k.children : true) : true)), fn = (obj) => {
-            obj.checked = flag;
-            flag && obj.checkType === 'radio' && this.uncheckSibings(obj);
-            this.options.check.linkage && this.eachCheck(obj);
-        };
-        if (!items.length)
-            return;
-        if (this.options.check.max) {
-            try {
-                let param = { data: items, source: this.getCheckeds(), min: this.options.check.min, max: this.options.check.max, sliced: this.options.check.sliced }, resp = await (flag ? this.moreExceed(param) : this.lessExceed(param));
-                resp && (items = resp);
-            }
-            catch {
-                return;
-            }
-        }
-        if (flag && this.options.check.only) {
-            this.checkOnlyone(items[0]);
-        }
-        else {
-            this.saveRaw();
-            for (let k of items)
-                fn(k);
-        }
-        
-        super.listen({ name: flag ? 'checked' : 'unchecked', cb, params: [items] });
-        return this;
-    }
-    checkAll(cb) {
-        if (this.destroyed || !this.options.check.enable || this.options.check.type !== 'checkbox' || this.options.check.only)
-            return;
-        this.saveRaw();
-        for (let k of this.flatData) {
-            k.checked = true;
-        }
-        super.listen({ name: 'checkedAll', cb });
-        return this;
-    }
-    async add(options) {
-        if (this.destroyed)
-            return;
-        
-        let opts = Object.assign({ isChild: true, isFront: true, repeat: true, isLeaf: true, autoFill: true, expand: true, }, options), type = getDataType(opts.data), target = findItem(opts.target, this.flatData), brother = findItem(opts.brother, this.flatData), tmp = [], items = [], appendFun = async (data) => {
-            let obj = treeTools.createBranchObj({
-                source: data,
-                flatData: this.flatData,
-                target,
-                isLeaf: opts.isLeaf,
-                isChild: opts.isChild
-            });
-            this.createHeadEl(obj);
-            await this.createBodyEl(obj);
-            this.createFootEl(obj);
-            this.createChildrenEl(obj);
-            treeTools.addBranch({
-                source: obj,
-                rootEl: this.targetEl,
-                flatData: this.flatData,
-                treeData: this.treeData,
-                brother: target && !opts.isChild ? target : brother,
-                isFront: opts.isFront,
-                repeat: opts.repeat,
-                autoFill: opts.autoFill,
-                cb: (item) => {
-                    items.push(item);
-                    this.updateEvt(item);
-                }
-            });
-        };
-        tmp = isNull(opts.data) ? [null] : ((type === 'Array' && opts.data.length > 0) ? opts.data : [opts.data]);
-        try {
-            let resp = await super.moreExceed({ data: tmp, source: this.flatData });
-            resp && (tmp = resp);
-        }
-        catch {
-            return;
-        }
-        for (let k of tmp) {
-            try {
-                if (this.options.b4Add) {
-                    let resp = await this.options.b4Add.call(this, k);
-                    resp && (k = resp);
-                }
-            }
-            catch (err) {
-                err ? console.error(err) : console.warn(`Adding new branche (${JSON.stringify(k)}) has been prevented!`);
-                continue;
-            }
-            await appendFun(k);
-        }
-        if (items.length > 0) {
-            this.flatData = treeTools.toFlat(this.treeData);
-            opts.isChild && opts.expand && target && this.eachExpand(target);
-            if (this.options.select.enable && this.options.select.addSelected) {
-                if (!this.options.select.only) {
-                    for (let k of items)
-                        this.select(k);
-                }
-                else {
-                    this.select(items.at(-1));
-                }
-            }
-        }
-        super.listen({ name: 'added', cb: opts.cb, params: [items] });
-        return this;
-    }
-    async remove(data, cb) {
-        if (this.destroyed || isNull(data) || !this.flatData.length)
-            return;
-        if (this.flatData.length === 0) {
-            console.warn('The source data is already empty!');
-            return;
-        }
-        let tmp = [], items = [], removeItem = (child) => {
-            treeTools.removeBranch({
-                source: child,
-                flatData: this.flatData,
-                treeData: this.treeData,
-                remove: false,
-                cb: (obj) => {
-                    items.push(obj);
-                    setTimeout(() => {
-                        let parent = this.flatData.find((k) => k.id === obj.pId);
-                        parent && !parent.children.length && super.collapse(parent);
-                    }, 0);
-                }
-            });
-        };
-        tmp = findItems(data, this.flatData);
-        try {
-            let resp = await super.lessExceed({ data: tmp, source: this.flatData });
-            resp && (tmp = resp);
-        }
-        catch {
-            return;
-        }
-        for (let k of tmp) {
-            try {
-                if (this.options.b4Remove) {
-                    let resp = await this.options.b4Remove.call(this, k);
-                    resp && (k = resp);
-                }
-            }
-            catch (err) {
-                err ? console.error(err) : console.warn(`Removing old branch (${JSON.stringify(k)}) has been prevented!`);
-                continue;
-            }
-            removeItem(k);
-        }
-        this.flatData = treeTools.toFlat(this.treeData);
-        super.listen({ name: 'removed', cb, params: [items] });
-        return this;
-    }
-    search(value, opts = {}, cb) {
-        if (this.destroyed || !this.flatData.length)
-            return;
-        let hyphen = config.splitHyphen;
-        if (typeof value === 'string') {
-            let tmp = value.trim();
-            hyphen = tmp.includes('，') ? '，' : tmp.includes(',') ? ',' : tmp.includes(' ') ? ' ' : config.splitHyphen;
-        }
-        let keys = valToArr(value, hyphen, false).map((k) => clearRegx(k)).filter(Boolean);
-        if (!keys.length) {
-            for (let k of this.searchs) {
-                k.labelEl.innerHTML = k.label;
-            }
-            if (!isEmpty(this.ignores)) {
-                for (let k of this.ignores)
-                    k.wrapEl.classList.remove(`${prefix}d-none`);
-            }
-            this.searchs = [];
-            this.ignores = [];
-        }
-        else {
-            let tmp = this.searchs;
-            this.searchs = arrSearch(Object.assign({ keys, props: 'label', source: this.flatData }, { fuzzy: this.options.search.fuzzy, ignore: this.options.search.ignore }, opts)).map((k) => k.source);
-            for (let k of this.searchs) {
-                k.labelEl.innerHTML = super.replaceMult(k.label, keys);
-            }
-            if (!isEmpty(tmp)) {
-                for (let k of tmp) {
-                    if (!this.searchs.includes(k)) {
-                        k.labelEl.innerHTML = k.label;
-                    }
-                }
-            }
-            this.expandParents(this.searchs, (p) => {
-                let currents = unique([...p, ...this.searchs]);
-                this.ignores = this.flatData.filter((k) => !currents.includes(k));
-                for (let k of this.ignores)
-                    k.wrapEl.classList.add(`${prefix}d-none`);
-                for (let k of currents)
-                    k.wrapEl.classList.remove(`${prefix}d-none`);
-            });
-        }
-        super.updateCache({ search: { value: keys } });
-        super.listen({ name: 'searched', cb, params: [this.searchs, keys] });
-        return this;
-    }
-    inputLabel(item) {
-        let headEl = item.headEl, labelEl = item.labelEl;
-        if (headEl.hasAttribute('editing'))
-            return;
-        headEl.toggleAttribute('editing', true);
-        labelEl.innerHTML = '';
-        labelEl.appendChild(this.editorEl);
-        this.editorEl.focus();
-        this.editorEl.value = item.label;
-        this.editorEl.onblur = async () => {
-            let value = this.editorEl.value;
-            try {
-                if (this.options.b4Edit) {
-                    let resp = await this.options.b4Edit.call(this, { key: 'label', value }, item);
-                    resp && (value = resp);
-                }
-                item.label = value;
-                headEl.removeAttribute('editing');
-            }
-            catch (err) {
-                item.labelEl.innerHTML = item.label;
-                headEl.removeAttribute('editing');
-                err ? console.error(err) : console.warn(`No changes have been made to the label property!`);
-                return;
-            }
-            super.listen({ name: 'edited', params: [item] });
-        };
-        this.editorEl.onkeyup = (e) => {
-            (e.code === 'Enter') && this.editorEl.blur();
-        };
-    }
-    async edit(item, data, cb) {
-        if (this.destroyed || isNull(item) || isEmpty(data) || !this.flatData.length) {
-            return this;
-        }
-        let source = findItem(item, this.flatData);
-        if (!source)
-            return this;
-        for (let k in data) {
-            let val = data[k];
-            try {
-                if (this.options.b4Edit) {
-                    let resp = await this.options.b4Edit.call(this, { key: k, value: val }, source);
-                    resp && (val = resp);
-                }
-                if (k === 'action') {
-                    source[k] = val.call({ ins: this, item: k }, source);
-                }
-                else if (['icon', 'disk', 'cube', 'href', 'target', 'rel', 'label', 'brief', 'tips', 'badge'].includes(k)) {
-                    source[k] = val;
-                }
-            }
-            catch (err) {
-                err ? console.error(err) : console.warn(`No changes have been made to the ${k} property!`);
-                return this;
-            }
-        }
-        super.listen({ name: 'edited', cb, params: [source] });
-        return this;
-    }
-    async graft({ source, target, isFront = true, isChild = true, cb }) {
-        if (this.destroyed || isNull(source))
-            return;
-        try {
-            if (this.options.b4Graft) {
-                let resp = await this.options.b4Graft.call(this, source, target);
-                resp && resp.source && (source = resp.source);
-                resp && resp.target && (source = resp.target);
-            }
-        }
-        catch (err) {
-            err ? console.error(err) : console.warn(`The branch relationship between source and target in the tree remains unchanged!`);
-            return this;
-        }
-        let sourceObj = findItem(source, this.flatData, '', { node: 'wrapEl' }), targetObj = findItem(target, this.flatData);
-        if (!sourceObj)
-            return;
-        treeTools.graftBranch({
-            source: sourceObj,
-            target: targetObj,
-            isFront,
-            isChild,
-            flatData: this.flatData,
-            treeData: this.treeData,
-            rootEl: this.targetEl,
-            cb: (obj, refer) => {
-                refer && refer.children && isChild && this.eachExpand(refer);
-                this.flatData = treeTools.toFlat(this.treeData);
-                super.listen({ name: 'grafted', cb, params: [obj] });
-                return this;
-            }
-        });
-        return this;
-    }
-    setSearch() {
-        !isEmpty(this.options.search.value) && this.search(this.options.search.value);
-        this.searchEl = getEl(this.options.search.target);
-        if (this.searchEl) {
-            if (this.searchEl[ax.compSign]) {
-                this.searchEl.on(this.options.search.trigger, this.searchEvgt);
-            }
-            else {
-                this.searchEl.addEventListener(this.options.search.trigger, this.searchEvgt, false);
-            }
-        }
-    }
-    setResult() {
-        if (!this.options.output.enable || this.options.output.instant)
-            return;
-        this.resultIns = this.resultIns || new Tags(this.resultEl, {
-            content: '',
-            size: 'sm',
-            type: 'plain',
-            removable: true,
-            empty: { enable: true, content: this.options.lang.result },
-        });
-        this.resultIns.on('removed', async (items) => {
-            for (let k of items) {
-                let tmp = k.label.split(this.options.output.connector);
-                for (let i of tmp) {
-                    this.options.output.form === 'checked' ? await this.check(i, false) : this.select(i, false);
-                }
-            }
-        });
-    }
-    updateVals() {
-        if (!this.options.output.enable)
-            return;
-        let { value, items } = this.getVals();
-        this.updateResult(value);
-        this.options.name && (this.inputEl.value = value);
-        this.output.value = value;
-        this.output.items = items;
-        super.listen({ name: 'output', params: [this.output] });
-        if (!this.options.output.instant)
-            return;
-        this.setVals();
-    }
-    saveRaw() {
-        this.output.raw = this.getVals().value;
-    }
-    updateResult(val) {
-        this.resultIns && (val ? this.resultIns.updateCont(val.split(this.options.output.separator)) : this.resultIns.clear());
-    }
-    clearResult() {
-        this.resultIns && this.resultIns.clear();
-    }
-    setVals(target = this.receiver, cb) {
-        if (this.destroyed)
-            return;
-        let receiver = getEl(target), val = this.getVals().value;
-        fieldTools.setVals({ target: receiver, value: val });
-        super.listen({ name: 'set', cb, params: [val] });
-        return this;
-    }
-    clearVals(all = false, cb) {
-        if (this.destroyed || !this.flatData.length)
-            return this;
-        if (all) {
-            super.uncheckAll();
-            this.deselectAll();
-        }
-        else {
-            this.options.output.from === 'checked' ? super.uncheckAll() : this.deselectAll();
-        }
-        this.value = '';
-        this.clearResult();
-        super.listen({ name: 'cleared', cb });
-        return this;
-    }
-    getVals(opt = {}, cb) {
-        if (this.destroyed)
-            return this;
-        let options = Object.assign({ ...this.options.output, isStr: true }, opt), items = this.getValItems(options.from), result = [];
-        if (options.type === 'chain') {
-            result = items.map((k) => {
-                let tmp = treeTools
-                    .getParentsFromPath({ path: k.path, flatData: this.flatData, pathHyphen: this.options.pathHyphen, labelHyphen: options.connector, field: options.field })
-                    .parents
-                    .map((k) => k[options.field]);
-                return options.isStr ? tmp.join(options.connector) : tmp;
-            });
-        }
-        else {
-            let tmp = (options.type === 'leaf') ? items.filter((k) => !k.children) : (options.type === 'branch') ? items.filter((k) => k.children) : items;
-            result = tmp.map((k) => k[options.field]);
-        }
-        let value = options.isStr ? result.join(options.separator) : result;
-        super.listen({ name: 'got', cb, params: [value] });
-        return { value, items };
-    }
-    getValItems(from = 'selected') {
-        return !this.options.output.autosort ? this.seqItems : (from === 'checked' ? super.getCheckeds() : this.getSelecteds());
-    }
-    
-    async updateCont(content, cb) {
-        if (this.destroyed)
-            return this;
-        await getContent.call(this, {
-            content,
-            contType: this.options.contType,
-            contData: this.options.contData,
-            ajax: {
-                xhrName: 'contXhr',
-                ...this.options.ajax
-            },
-            request: (data) => {
-                this.listen({ name: 'request', params: [data] });
-            },
-            cb: async (data) => {
-                if (Array.isArray(data)) {
-                    this.treeDataOrig = deepClone(data);
-                    treeTools.addIdPath({ source: this.treeDataOrig });
-                    this.targetEl.innerHTML = '';
-                    await this.renderData(this.treeDataOrig);
-                    this.getTreeFlat();
-                    this.renderFinish();
-                    super.updateCache({ content });
-                    super.listen({ name: 'updatedCont', cb, params: [this.treeDataOrig] });
-                }
-            }
-        });
-        return this;
-    }
-    
-    destroy(cb) {
-        if (this.destroyed)
-            return this;
-        for (let k of this.flatData) {
-            if (k.children) {
-                if (this.options.arrow.trigger === 'click') {
-                    let triggerEl = k.hasOwnProperty('href') && k.arrowEl ? k.arrowEl : k.headEl;
-                    triggerEl.removeEventListener('click', this.expandEvt);
-                }
-                else if (this.options.arrow.trigger === 'hover') {
-                    this.hoverIns.destroy();
-                }
-                k.legendEl && k.legendEl.removeEventListener('click', this.expandEvt);
-            }
-            !k.children && k.headEl.removeEventListener('click', this.selectEvt);
-            this.options.shortcut.enable && k.headEl.removeEventListener('click', this.lineEvt);
-            this.options.drag.enable && k.dragIns.destroy();
-            if (this.options.paginated.enable && !this.options.deferred) {
-                k.moreEl.onclick = null;
-                k.nextEl.onclick = null;
-                k.firstEl.onclick = null;
-            }
-        }
-        this.resultIns && this.resultIns.destroy();
-        if (this.searchEl) {
-            if (this.searchEl[ax.compSign]) {
-                this.searchEl.off(this.options.search.trigger, this.searchEvgt);
-            }
-            else {
-                this.searchEl.removeEventListener(this.options.search.trigger, this.searchEvgt);
-            }
-        }
-        this.contXhr && this.contXhr.abort();
         this.destroyed = true;
         super.listen({ name: 'destroyed', cb });
         return this;
@@ -33991,13 +33307,23 @@ class MenuElem extends CompBaseComm {
         this.createShadow();
         super.createPropsObs();
     }
+    static get observedAttributes() {
+        return [...optMenu$1.map((k) => k.attr), 'options'];
+    }
     attributeChangedCallback(name, oldVal, newVal) {
-        super.updateProxy(name, newVal, optMenu$1);
+        if (name === 'active') {
+            this.ins && newVal && this.ins.activate(newVal);
+        }
+        if (name === 'disable') {
+            this.ins && newVal && this.ins.treeIns.disable(newVal);
+        }
+        else {
+            super.updateProxy(name, newVal, optMenu$1);
+        }
     }
     render() {
         this.insertSource();
-        this.wrapEl = this.querySelector('ul') ? tplToEl(this.querySelector('ul')?.outerHTML) : createEl('ul');
-        this.wrapEl.setAttribute(alias, 'slot-host');
+        this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.ins = new Menu(this.wrapEl);
         setTimeout(() => {
@@ -36895,7 +36221,13 @@ class StepElem extends CompBaseComm {
         if (trim.startsWith('<') && firstChild) {
             let nodeName = firstChild.nodeName;
             if (nodeName === 'SCRIPT' && firstChild.getAttribute('type').includes('content')) {
-                result = parseStr(firstChild.textContent);
+                result = parseStr({
+                    content: firstChild.textContent,
+                    type: 'array',
+                    error: (err) => {
+                        console.info(config.error.parse, err);
+                    }
+                });
             }
             else {
                 result = [...tmp.children].map((k, i) => {
@@ -36918,7 +36250,12 @@ class StepElem extends CompBaseComm {
             }
         }
         else {
-            result = parseStr(content);
+            result = parseStr({
+                content,
+                error: (err) => {
+                    console.info(config.error.parse, err);
+                }
+            });
         }
         return result;
     }
