@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-21 23:17:36
+ * @since Last modified: 2025-3-25 19:7:42
  * @name AXUI front-end framework.
- * @version 3.0.32
+ * @version 3.0.34
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -229,6 +229,24 @@
             },
             message: {
                 remove: '确定要删除"{{this.label}}"板块么',
+            },
+        },
+        tab: {
+            label: '新标签',
+            content: '新内容',
+            title: {
+                add: '新增页签',
+                edit: '编辑页签',
+                close: '删除页签',
+                move: '移动页签',
+                update: '更新页签',
+            },
+            message: {
+                add: '确定要新增"{{this.label}}"页签么',
+                edit: '确定要编辑"{{this.label}}"页签么',
+                close: '确定要删除"{{this.label}}"页签么',
+                move: '确定要移动"{{this.label}}"页签么',
+                update: '确定要更新"{{this.label}}"页签么',
             },
         },
         flat: {
@@ -2696,7 +2714,7 @@
             let options = {};
             if (this.isComp(elem)) {
                 let target = elem.parentNode, attributes = target?.attributes;
-                if (!target || !target.nodeName.startsWith('AX-') || !attributes)
+                if (!target || target.nodeName.toLowerCase() !== `ax-${this.moduleName}` || !attributes)
                     return {};
                 for (let k of attributes) {
                     let item = map.find((i) => i.attr === k.name);
@@ -3042,7 +3060,7 @@
                     if (!this.canRun(key))
                         return;
                     if (key === '_isProxy')
-                        return;
+                        return true;
                     let value = target[key], baseProps = { target, key, value, raw: value, proxy };
                     !this.keys.got.includes(key) && this.keys.got.push(key);
                     super.listen({ name: 'got', params: [{ ...baseProps, type: 'got' }] });
@@ -6113,8 +6131,9 @@
         else if (intent === 'add') {
             if (!tmp)
                 return host;
-            host.splice(idx, 0, ...data);
-            items = host.slice(idx, idx + data.length);
+            let start = (idx >= host.length) ? (host.length - 1) : idx;
+            host.splice(start, 0, ...data);
+            items = host.slice(start, start + data.length);
         }
         else if (intent === 'remove') {
             let _tmp = source !== undefined ? host.indexOf(source) : idx;
@@ -6154,6 +6173,27 @@
         }
         cb && cb(items);
         return host;
+    };
+
+    const dl2Tree = (el) => {
+        let elem = getEl(el), result = [];
+        if (!elem) {
+            console.warn(`No node, no access to data!`);
+            return result;
+        }
+        let heads = [...elem.querySelectorAll('dt')], bodys = [...elem.querySelectorAll('dd')];
+        if (heads.length !== bodys.length) {
+            console.warn('Inconsistent number of "dt" and "dd" tags!');
+            return result;
+        }
+        if (heads.length === 0) {
+            console.warn('No "dt" and "dd" tags!');
+            return result;
+        }
+        result = heads.map((k, i) => {
+            return { content: bodys[i].innerHTML, ...getValsFromAttrs(k) };
+        });
+        return result;
     };
 
     const treeTools = {
@@ -6419,6 +6459,9 @@
                 else if (nodeName === 'UL' || nodeName === 'OL') {
                     arr = ul2Tree(node, nodeType);
                 }
+                else if (nodeName === 'DL') {
+                    arr = dl2Tree(node);
+                }
                 else if (nodeName === 'SCRIPT' && node.getAttribute('type') === 'content') {
                     arr = this.toTree(parseStr({
                         content: node.textContent,
@@ -6456,7 +6499,7 @@
                             treeData = getFromArray(strArr2ObjArr(resp));
                         }
                         else if (dataType.includes('HTML')) {
-                            if (['UL', 'OL', 'DATALIST', 'SELECT', 'SCRIPT'].includes(resp.nodeName)) {
+                            if (['UL', 'OL', 'DATALIST', 'DL', 'SELECT', 'SCRIPT'].includes(resp.nodeName)) {
                                 treeData = strArr2ObjArr(getFromNode(resp));
                             }
                             else if (resp.nodeName.includes('INPUT')) {
@@ -6464,17 +6507,17 @@
                             }
                         }
                         else if (dataType === 'String') {
-                            let tmp = createEl('div', '', resp), node = tmp.querySelector(':scope > ul,:scope > ol,:scope > datalist,:scope > select,:scope > script,:scope > input');
+                            let tmp = createEl('div', '', resp), node = tmp.querySelector(':scope > ul,:scope > ol,:scope > datalist,:scope > dl,:scope > select,:scope > script,:scope > input');
                             if (node) {
                                 treeData = strArr2ObjArr(getFromNode(node));
                                 tmp.remove();
                             }
                             else {
-                                let str = resp.trim();
-                                if ((str.startsWith('{') && str.endsWith('}')) || (str.startsWith('[') && str.endsWith(']'))) {
+                                let str = resp.trim(), type = (str.startsWith('{') && str.endsWith('}')) ? 'object' : (str.startsWith('[') && str.endsWith(']')) ? 'array' : 'other';
+                                if (type) {
                                     treeData = this.toTree(strArr2ObjArr(parseStr({
                                         content: resp,
-                                        type: 'array',
+                                        type,
                                         error: (err) => {
                                             console.error(config.error.parse, err);
                                         }
@@ -6578,27 +6621,6 @@
         data.splice(from, 1);
         from < to ? to-- : null;
         data.splice(to + offset, 0, sourceObj);
-    };
-
-    const dlToArr = (el) => {
-        let elem = getEl(el), result = [];
-        if (!elem) {
-            console.warn(`No node, no access to data!`);
-            return result;
-        }
-        let heads = [...elem.querySelectorAll('dt')], bodys = [...elem.querySelectorAll('dd')];
-        if (heads.length !== bodys.length) {
-            console.warn('Inconsistent number of "dt" and "dd" tags!');
-            return result;
-        }
-        if (heads.length === 0) {
-            console.warn('No "dt" and "dd" tags!');
-            return result;
-        }
-        result = heads.map((k, i) => {
-            return { content: bodys[i].innerHTML, ...getValsFromAttrs(k) };
-        });
-        return result;
     };
 
     const findItems = (vals, source, key, pio) => {
@@ -6850,9 +6872,15 @@
         let elem = getEl(el), result = [];
         if (!elem || isEmpty(data))
             return;
-        let tmp = Array.isArray(data) ? data : [data];
-        for (let k of tmp)
-            result.push(setAttr(elem, k.key, k.value));
+        if (!Array.isArray(data) && !data.hasOwnProperty('key') && !data.hasOwnProperty('value')) {
+            for (let k in data)
+                result.push(setAttr(elem, k, data[k]));
+        }
+        else {
+            let tmp = Array.isArray(data) ? data : [data];
+            for (let k of tmp)
+                result.push(setAttr(elem, k.key, k.value));
+        }
         cb && cb(result.filter(Boolean));
     };
 
@@ -7796,13 +7824,19 @@
         }
     };
 
-    const appendEls = ({ parent, nodes, reverse = false, prepend = false }) => {
-        let fragment = document.createDocumentFragment(), tmp = Array.isArray(nodes) ? nodes : [nodes], data = tmp.filter((k) => k && k.nodeType && (k.nodeType === k.ELEMENT_NODE)), host = getEl(parent);
+    const appendEls = ({ parent, nodes, reverse = false, target, prepend = false }) => {
+        let fragment = document.createDocumentFragment(), tmp = Array.isArray(nodes) ? nodes : [nodes], data = tmp.filter((k) => k && k.nodeType && (k.nodeType === k.ELEMENT_NODE)), host = getEl(parent), targetEl = getEl(target, host), refer;
         if (!host || !data.length)
             return;
         for (let k of data)
             reverse ? fragment.prepend(k) : fragment.appendChild(k);
-        prepend ? host.prepend(fragment) : host.appendChild(fragment);
+        if (targetEl) {
+            refer = prepend ? targetEl : targetEl.nextElementSibling;
+        }
+        else {
+            refer = prepend ? host.firstElementChild : null;
+        }
+        host.insertBefore(fragment, refer);
     };
 
     const decompTask = ({ tasks, run, count = 20, cb }) => {
@@ -10089,6 +10123,7 @@
 
     class ModBaseListenCacheNest extends ModBaseListenCache {
         flatData;
+        treeData;
         treeInputEl;
         check(param, bool) {
         }
@@ -10113,19 +10148,19 @@
             this.disable(valToArr(this.options.disable));
         }
         getReadonlys() {
-            return this.flatData.filter((k) => k.readonly);
+            return (this.flatData || this.treeData).filter((k) => k.readonly);
         }
         getDisableds() {
-            return this.flatData.filter((k) => k.disabled);
+            return (this.flatData || this.treeData).filter((k) => k.disabled);
         }
         getExpandeds() {
-            return this.flatData.filter((k) => k.expanded);
+            return (this.flatData || this.treeData).filter((k) => k.expanded);
         }
         getCheckeds() {
-            return this.flatData.filter((k) => k.checked);
+            return (this.flatData || this.treeData).filter((k) => k.checked);
         }
         getUncheckeds() {
-            return this.flatData.filter((k) => !k.checked);
+            return (this.flatData || this.treeData).filter((k) => !k.checked);
         }
         getArrowEl(item) {
             if (!this.options.arrow.enable)
@@ -13131,6 +13166,16 @@
             value: null,
         },
         {
+            attr: 'on-insertitem',
+            prop: 'onInsertItem',
+            value: null,
+        },
+        {
+            attr: 'on-insertitems',
+            prop: 'onInsertItems',
+            value: null,
+        },
+        {
             attr: 'on-trigger',
             prop: 'onTrigger',
             value: null
@@ -14448,7 +14493,6 @@
         receiver;
         hoverIns;
         contXhr;
-        treeData;
         floorMax;
         chainChecking;
         seqItems;
@@ -16216,7 +16260,9 @@
                 console.warn(config.warn.init);
                 return this;
             }
-            this.setTree();
+            this.setAttrs();
+            this.getTree();
+            await this.treeIns.init();
             this.drawerHost = getEl(this.options.drawer.host);
             if (this.drawerHost) {
                 this.drawerIns = new Drawer(this.drawerHost, Object.assign({
@@ -16224,12 +16270,11 @@
                     contType: 'node',
                 }, this.options.drawer));
             }
-            this.setAttrs();
             
             super.listen({ name: 'initiated', cb });
             return this;
         }
-        setTree() {
+        getTree() {
             let _this = this;
             let targetObj = {
                 storName: this.options.storName ? this.options.storName + '_tree' : '',
@@ -16266,11 +16311,6 @@
                     trigger: this.options.trigger,
                 },
                 onInitiated: function () {
-                    if (this.options.trigger === 'hover') {
-                        for (let k of this.flatData) {
-                            _this.setHover(k);
-                        }
-                    }
                     if (_this.options.trigger === 'click' && _this.options.pageClose) {
                         document.body.removeEventListener('click', _this.pageEvt);
                         document.body.addEventListener('click', _this.pageEvt, false);
@@ -16289,22 +16329,23 @@
                     let tmp = treeTools.toFlat(items);
                     for (let k of tmp) {
                         this.options.nav.enable && this.addNavAttr(k, k.floor === this.options.floorStart);
+                        k?.children && this.setHover(k);
                     }
                 }
             }, params = extend({ target: targetObj, source: this.options.tree, });
             this.treeIns && this.treeIns.initiated && this.treeIns.destroy();
-            this.treeIns = new Tree(this.targetEl, params);
+            this.treeIns = new Tree(this.targetEl, params, false);
         }
         setHover(item) {
             if (this.options.trigger !== 'hover' || !item?.children)
                 return;
-            item.hoverIns && item.hoverIns && item.hoverIns.destroy();
-            item.hoverIns = new Hover(item.wrapEl, {
+            item.triggerIns && item.triggerIns.destroy();
+            item.triggerIns = new Hover(item.wrapEl, {
                 onEnter: () => {
-                    this.treeIns.expand(item);
+                    this.treeIns.expand(item.id);
                 },
                 onLeave: () => {
-                    this.treeIns.collapse(item);
+                    this.treeIns.collapse(item.id);
                 }
             });
         }
@@ -16401,8 +16442,8 @@
             value: '',
         },
         {
-            attr: 'disabled',
-            prop: 'disabled',
+            attr: 'disable',
+            prop: 'disable',
             value: '',
         },
         {
@@ -16459,9 +16500,30 @@
             },
         },
         {
+            attr: 'attrs',
+            prop: 'attrs',
+            value: {
+                target: {},
+                head: {},
+                body: {},
+            },
+        },
+        {
             attr: 'classes',
             prop: 'classes',
-            value: '',
+            value: {
+                target: '',
+                head: '',
+                body: '',
+            },
+        },
+        {
+            attr: 'divider',
+            prop: 'divider',
+            value: {
+                enable: false,
+                size: '',
+            },
         },
         {
             attr: 'add-active',
@@ -16473,7 +16535,7 @@
             prop: 'tools',
             value: {
                 enable: false,
-                children: [],
+                children: ['close'],
             },
         },
         {
@@ -16482,13 +16544,11 @@
             value: 'lamp',
         },
         {
-            attr: 'render',
-            prop: 'render',
+            attr: 'selector',
+            prop: 'selector',
             value: {
-                head: 'ul',
-                body: 'ul',
-                headChild: 'li',
-                bodyChild: 'li',
+                head: '',
+                body: '',
             },
         },
         {
@@ -16497,13 +16557,43 @@
             value: 0,
         },
         {
+            attr: 'b4-activate',
+            prop: 'b4Activate',
+            value: null,
+        },
+        {
+            attr: 'b4-add',
+            prop: 'b4Add',
+            value: null,
+        },
+        {
+            attr: 'b4-edit',
+            prop: 'b4Edit',
+            value: null,
+        },
+        {
+            attr: 'b4-remove',
+            prop: 'b4Remove',
+            value: null,
+        },
+        {
+            attr: 'b4-graft',
+            prop: 'b4Graft',
+            value: null,
+        },
+        {
             attr: 'on-rendered',
             prop: 'onRendered',
             value: null,
         },
         {
-            attr: 'on-planted',
-            prop: 'onPlanted',
+            attr: 'on-insertitem',
+            prop: 'onInsertItem',
+            value: null,
+        },
+        {
+            attr: 'on-insertitems',
+            prop: 'onInsertItems',
             value: null,
         },
         {
@@ -16517,13 +16607,18 @@
             value: null
         },
         {
-            attr: 'on-beforeremove',
-            prop: 'onBeforeRemove',
+            attr: 'on-removed',
+            prop: 'onRemoved',
             value: null
         },
         {
-            attr: 'on-removed',
-            prop: 'onRemoved',
+            attr: 'on-edited',
+            prop: 'onEdited',
+            value: null
+        },
+        {
+            attr: 'on-grafted',
+            prop: 'onGrafted',
             value: null
         },
         {
@@ -16552,6 +16647,11 @@
             value: null
         },
         {
+            attr: 'on-updatedItemcont',
+            prop: 'onUpdatedItemCont',
+            value: null
+        },
+        {
             attr: 'on-updatedcont',
             prop: 'onUpdatedCont',
             value: null
@@ -16564,15 +16664,16 @@
         ...optBase
     ];
 
-    class Tab extends ModBaseListenCache {
+    class Tab extends ModBaseListenCacheNest {
         options = {};
-        treeData;
         actEvt;
         trigger;
-        dataOrig;
+        treeDataOrig;
         observeIns;
         headsEl;
-        bodysEl;
+        bodiesEl;
+        dividerEl;
+        rawData;
         headLayout;
         contXhr;
         static hostType = 'node';
@@ -16584,7 +16685,7 @@
                 host: elem,
                 maps: Tab.optMaps,
                 component: false,
-                spread: ['slider', 'col', 'menu', 'tools']
+                spread: ['slider', 'col', 'menu', 'tools', 'divider']
             });
             
             
@@ -16601,15 +16702,17 @@
             
             
             let _this = this;
-            this.actEvt = function () {
-                let attr = this.getAttribute(alias) === 'label' ? 'labelEl' : 'headEl', item = findItem(this, _this.treeData, attr);
-                if (item.disabled) {
-                    return false;
-                }
+            this.actEvt = function (evt) {
+                if (this.hasAttribute('selected') || this.hasAttribute('disabled'))
+                    return;
+                let toolsEl = this.querySelector(`:scope > [${alias}="tools"]`);
+                if (toolsEl && toolsEl.contains(evt.target))
+                    return;
+                let item = _this.treeData.find((k) => k.headEl === this);
                 _this.activate(item);
             };
             this.trigger = this.options.trigger === 'hover' ? 'mouseenter' : 'click';
-            this.dataOrig = [];
+            this.treeDataOrig = [];
             super.listen({ name: 'constructed' });
             initial && this.init();
         }
@@ -16623,65 +16726,86 @@
                 console.warn(config.warn.init);
                 return this;
             }
+            super.useTpl();
             await this.getDataToRender();
             this.setAttrs();
-            this.activate(this.options.active || 0);
-            this.disable(valToArr(this.options.disabled));
+            super.initDisableds();
             this.renderFinish();
             super.listen({ name: 'initiated', cb });
             return this;
         }
+        initActive() {
+            let activeItem = this.treeData.findIndex((k) => k.selected);
+            if (this.options.active === 0 || this.options.active) {
+                this.activate(this.options.active);
+            }
+            else if (activeItem < 0) {
+                this.activate(0);
+            }
+        }
         async getDataToRender() {
-            if (!isEmpty(this.options.content)) {
-                await getContent.call(this, {
+            let base = {
+                nodeType: 'tab',
+            }, promise;
+            if (this.options.content) {
+                promise = treeTools.allToTree({
                     content: this.options.content,
                     contType: this.options.contType,
                     contData: this.options.contData,
-                    ajax: {
-                        xhrName: 'contXhr',
-                        spinSel: this.targetEl,
-                    },
-                    cb: (data) => {
-                        let dataType = getDataType(data);
-                        if (dataType === 'Array') {
-                            this.dataOrig = deepClone(data);
-                        }
-                        else if (dataType.includes('HTML')) {
-                            let dts = data.querySelectorAll('dt'), dds = data.querySelectorAll('dd');
-                            dts && dds && dts.length === dds.length && (this.dataOrig = dlToArr(data));
-                        }
-                        else if (dataType === 'String') {
-                            let tmp = createEl('div', '', data), dts = tmp.querySelectorAll('dt'), dds = tmp.querySelectorAll('dd');
-                            if (dts && dds && dts.length === dds.length) {
-                                this.dataOrig = dlToArr(tmp);
-                                tmp.remove();
-                            }
-                        }
-                    }
+                    ajax: { spinSel: this.targetEl, xhrName: 'contXhr' },
+                    ins: this,
+                    ...base
                 });
-                this.targetEl.innerHTML = '';
-                this.renderData(this.dataOrig);
             }
             else {
-                this.dataOrig = this.htmlToArr();
+                if (this.targetEl.querySelector(`.${prefix}tab-head`) && this.targetEl.querySelector(`.${prefix}tab-body`)) {
+                    this.treeDataOrig = this.htmlToArr();
+                    treeTools.addIdPath({ source: this.treeDataOrig });
+                    this.rawData = this.treeDataOrig;
+                    this.updateHeadBodyAttrs();
+                }
+                else {
+                    promise = treeTools.allToTree({
+                        content: this.targetEl.innerHTML,
+                        ...base
+                    });
+                }
             }
-            this.treeData = this.getObserver(this.dataOrig).proxy;
+            if (promise) {
+                await promise.then((res) => {
+                    
+                    this.treeDataOrig = res.data && Array.isArray(res.data) ? res.data : res;
+                    this.rawData = res;
+                });
+                this.targetEl.innerHTML = '';
+                this.renderData(this.treeDataOrig);
+            }
+            this.getTreeFlat();
             super.listen({ name: 'rendered', params: [this.treeData] });
             return this;
+        }
+        getTreeFlat() {
+            this.treeData = this.getObserver(this.treeDataOrig).proxy;
         }
         getObserver(data) {
             this.observeIns ? this.observeIns.destroy() : null;
             this.observeIns = new Observe(data, {
-                deep: true,
+                deep: {
+                    enable: true,
+                    exclude: ['tools'],
+                },
                 onSet: (obj) => {
                     if (obj.key === 'icon' && obj.target.iconEl) {
-                        obj.target.iconEl.class = obj.value;
+                        obj.target.iconEl.className = obj.value;
                     }
                     else if (obj.key === 'cube' && obj.target.cubeEl) {
                         obj.target.cubeEl.src = obj.value;
                     }
                     else if (obj.key === 'disk' && obj.target.diskEl) {
                         obj.target.diskEl.src = obj.value;
+                    }
+                    else if (obj.key === 'image' && obj.target.imageEl) {
+                        obj.target.imageEl.src = obj.value;
                     }
                     else if (obj.key === 'label') {
                         obj.target.labelEl.innerHTML = obj.value;
@@ -16696,7 +16820,7 @@
                         if (obj.value === true) {
                             obj.target.headEl.setAttribute('selected', '');
                             obj.target.bodyEl.setAttribute('selected', '');
-                            !obj.target.bodyEl.innerHTML ? this.fillContent(obj.target) : null;
+                            !obj.target.bodyEl.innerHTML && this.fillContent(obj.target);
                         }
                         else {
                             obj.target.headEl.removeAttribute('selected');
@@ -16704,14 +16828,17 @@
                         }
                     }
                     else if (obj.key === 'disabled') {
-                        obj.value === true ? obj.target.headEl.setAttribute('disabled', '') : obj.target.headEl.removeAttribute('disabled');
+                        obj.target.headEl.toggleAttribute('disabled', obj.value);
+                    }
+                    else if (obj.key === 'content') {
+                        this.fillContent(obj.target);
                     }
                 },
                 onCompleted: () => {
-                    let activeItem = this.getActive(), tmp = {
+                    let activeItem = this.getSelected(), tmp = {
                         active: activeItem ? (activeItem.hasOwnProperty('id') ? activeItem.id : this.treeData.indexOf(activeItem)) : 0,
-                        disabled: this.getDisabled().map((k, i) => k.hasOwnProperty('id') ? k.id : i),
-                        content: !isEmpty(this.options.content) ? deepClone(this.dataOrig) : {},
+                        disabled: super.getDisableds().map((k, i) => k.hasOwnProperty('id') ? k.id : i),
+                        content: !isEmpty(this.options.content) ? deepClone(this.treeDataOrig) : [],
                     };
                     super.updateCache(tmp);
                 }
@@ -16722,13 +16849,13 @@
             
             let data = [];
             this.headsEl = this.targetEl.querySelector(`.${prefix}tab-head`);
-            this.bodysEl = this.targetEl.querySelector(`.${prefix}tab-body`);
-            if (!this.headsEl || !this.bodysEl) {
+            this.bodiesEl = this.targetEl.querySelector(`.${prefix}tab-body`);
+            if (!this.headsEl || !this.bodiesEl) {
                 return data;
             }
-            let headsArr = [...this.headsEl.children], bodysArr = [...this.bodysEl.children];
-            if (headsArr.length !== bodysArr.length) {
-                console.warn('Inconsistent number of heads and bodys!');
+            let tmpHeads = getEls(this.options.selector.head, this.headsEl), tmpBodys = getEls(this.options.selector.body, this.bodiesEl), headsArr = tmpHeads.length ? tmpHeads : [...this.headsEl.children], bodiesArr = tmpBodys.length ? tmpBodys : [...this.bodiesEl.children];
+            if (headsArr.length !== bodiesArr.length) {
+                console.warn('Inconsistent number of heads and bodies!');
                 return data;
             }
             let setBoolean = (obj, props) => {
@@ -16769,13 +16896,19 @@
                 return obj;
             };
             data = headsArr.map((k, i) => {
-                return { ...getPropsFromHead(k), bodyEl: bodysArr[i], content: bodysArr[i].innerHTML };
+                let tmp = getPropsFromHead(k), bodyEl = bodiesArr[i];
+                bodyEl.toggleAttribute('selected', !!tmp.selected);
+                this.options.tools.enable && this.getTools(tmp);
+                return { ...tmp, bodyEl, content: bodyEl.innerHTML };
             });
             return data;
         }
         renderData(data) {
-            this.headsEl = createEl(this.options.render.head);
-            this.bodysEl = createEl(this.options.render.body);
+            this.dividerEl = createEl('ax-br');
+            this.options.divider.size && this.dividerEl.setAttribute('size', this.options.divider.size);
+            this.headsEl = createEl('ul', { class: `${prefix}tab-head` });
+            this.bodiesEl = createEl('ul', { class: `${prefix}tab-body` });
+            this.updateHeadBodyAttrs();
             for (let k of data) {
                 if (!k.hasOwnProperty('label') || !k.hasOwnProperty('content')) {
                     continue;
@@ -16783,28 +16916,51 @@
                 else {
                     this.createItemEl(k);
                     this.headsEl.appendChild(k.headEl);
-                    this.bodysEl.appendChild(k.bodyEl);
+                    this.bodiesEl.appendChild(k.bodyEl);
                 }
             }
-            this.targetEl.appendChild(this.headsEl);
-            this.targetEl.appendChild(this.bodysEl);
+            super.listen({ name: 'insertItems', params: [data] });
+            this.targetEl.append(this.headsEl, this.options.divider.enable ? this.dividerEl : '', this.bodiesEl);
         }
         createItemEl(item) {
             item.labelEl = createEl('i', { [alias]: 'label' }, item.label);
             item.iconEl = item.icon ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
             item.diskEl = item.disk ? createEl('img', { [alias]: 'disk', src: item.disk }) : null;
             item.cubeEl = item.cube ? createEl('img', { [alias]: 'cube', src: item.cube }) : null;
-            item.headEl = createEl(this.options.render.headChild);
-            item.bodyEl = createEl(this.options.render.bodyChild, '');
+            item.imageEl = item.image ? createEl('img', { [alias]: 'image', src: item.image }) : null;
+            item.headEl = createEl('li');
+            item.bodyEl = createEl('li');
             item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge' }, item?.badge?.trim()) : null;
             item.tipsEl = item.tips ? createEl('i', { [alias]: 'tips' }, item.tips) : null;
-            item.selected ? (item.headEl.setAttribute('selected', '') && item.bodyEl.setAttribute('selected', '')) : null;
-            item.disabled ? item.headEl.setAttribute('disabled', '') : null;
-            item.iconEl ? item.headEl.appendChild(item.iconEl) : null;
-            item.diskEl ? item.headEl.appendChild(item.disk) : null;
-            item.cubeEl ? item.headEl.appendChild(item.cube) : null;
-            item.headEl.appendChild(item.labelEl);
-            item.tipsEl ? item.headEl.appendChild(item.tipsEl) : null;
+            item.selected && (item.headEl.toggleAttribute('selected', true), item.bodyEl.toggleAttribute('selected', true));
+            item.disabled && item.headEl.toggleAttribute('disabled', true);
+            item.headEl.append(...[item.iconEl, item.diskEl, item.cubeEl, item.imageEl, item.labelEl, item.tipsEl, item.badgeEl].filter(Boolean));
+            this.options.tools.enable && this.getTools(item);
+        }
+        getTools(item) {
+            if (this.options.tools.enable) {
+                item.toolsEl = createTools(this.options.tools.children, item.headEl);
+                item.toolsEl.setAttribute(alias, 'tools');
+                item.tools = deepClone(this.options.tools.children);
+                for (let k of item.tools) {
+                    this.options.lang.title[k.name] && k.wrapEl.setAttribute('title', this.options.lang.title[k.name]);
+                    if (k.name === 'add') {
+                        item.addEl = k.wrapEl;
+                    }
+                    else if (k.name === 'edit') {
+                        item.editEl = k.wrapEl;
+                    }
+                    else if (k.name === 'close') {
+                        item.closeEl = k.wrapEl;
+                    }
+                    else if (k.name === 'update') {
+                        item.updateEl = k.wrapEl;
+                    }
+                    else if (k.name === 'move') {
+                        item.moveEl = k.wrapEl;
+                    }
+                }
+            }
         }
         async fillContent(obj, cb) {
             await getContent.call(this, {
@@ -16812,7 +16968,7 @@
                 contType: obj.contType,
                 contData: obj.contData,
                 ajax: {
-                    ajaxType: obj.ajaxType,
+                    ajaxType: obj.ajaxType || this.options.ajaxType,
                     xhrName: 'contXhr',
                     spinSel: obj.bodyEl,
                 },
@@ -16820,19 +16976,20 @@
                     setContent({
                         content: data,
                         target: obj.bodyEl,
-                        engine: obj.engine,
-                        template: obj.template
+                        engine: obj.engine || this.tplStr,
+                        template: obj.template || this.tplEng
                     });
                     cb && cb(data);
                 }
             });
         }
-        setAttrs() {
-            this.targetEl.classList.add(`${prefix}tab`);
-            this.options.classes && classes(this.targetEl).add(this.options.classes);
-            this.targetEl.toggleAttribute('inert', this.options.passive);
+        updateHeadBodyAttrs() {
+            this.options.classes?.head && classes(this.headsEl).add(this.options.classes.head);
+            this.options.classes?.body && classes(this.bodiesEl).add(this.options.classes.body);
+            !isEmpty(this.options.attrs?.head) && setAttrs(this.headsEl, this.options.attrs.head);
+            !isEmpty(this.options.attrs?.body) && setAttrs(this.bodiesEl, this.options.attrs.body);
             if (this.options.layout) {
-                if (!this.headsEl.getAttribute('class').includes(`${prefix}group-`)) {
+                if (!this.headsEl.getAttribute('class')?.includes(`${prefix}group-`)) {
                     this.headLayout = `${prefix}group-${this.options.layout}`;
                     this.headsEl.classList.add(this.headLayout);
                 }
@@ -16840,23 +16997,59 @@
             else {
                 this.headLayout && this.headsEl.classList.remove(this.headLayout);
             }
+        }
+        setAttrs() {
+            this.targetEl.classList.add(`${prefix}tab`);
+            this.options.classes?.target && classes(this.targetEl).add(this.options.classes.target);
+            !isEmpty(this.options.attrs?.target) && setAttrs(this.targetEl, this.options.attrs.target);
+            this.targetEl.toggleAttribute('inert', this.options.passive);
             this.targetEl.toggleAttribute('embed', this.options.embed);
             this.options.col.enable ? this.targetEl.setAttribute('col', this.options.col.position) : this.targetEl.removeAttribute('col');
         }
+        updateEvt(k) {
+            this.addTrigger(k);
+            if (k.toolsEl) {
+                if (k.closeEl) {
+                    k.closeEl.onclick = () => {
+                        if (k.readonly)
+                            return;
+                        this.remove(k);
+                    };
+                }
+                if (k.editEl) {
+                    k.editEl.onclick = debounce(() => {
+                    });
+                }
+                if (k.addEl) {
+                    k.addEl.onclick = debounce(() => {
+                        if (k.disabled)
+                            return;
+                        this.add({ data: {}, isFront: false, target: k });
+                    });
+                }
+                if (k.updateEl) {
+                    k.updateEl.onclick = debounce(() => {
+                        if (k.disabled)
+                            return;
+                        this.updateItemCont({ content: k.content, target: k });
+                    });
+                }
+                for (let [i, o] of this.options.tools.children.entries()) {
+                    let tool = k.tools[i], refer = { ins: this, item: k };
+                    o.action && o.action.call(refer, tool);
+                    tool.action && tool.action.call(refer, tool);
+                }
+            }
+            k.disabled && k.headEl.toggleAttribute('disabled', true);
+            k.action && k.action.call(this, k);
+        }
         renderFinish() {
-            this.treeData.forEach((k) => {
-                k.headEl.removeEventListener(this.trigger, this.actEvt);
-                k.headEl.addEventListener(this.trigger, this.actEvt, false);
-                k.action && k.action.call(this, k);
-            });
+            this.initActive();
+            for (let k of this.treeData) {
+                this.updateEvt(k);
+            }
         }
-        getDisabled() {
-            return this.treeData.filter((k) => k.disabled);
-        }
-        getEnabled() {
-            return this.treeData.filter((k) => !k.disabled);
-        }
-        getActive() {
+        getSelected() {
             return this.treeData.find((k) => k.selected);
         }
         addTrigger(item) {
@@ -16866,7 +17059,7 @@
             }
         }
         removeTrigger(item) {
-            if (!item.disabled) {
+            if (item.disabled) {
                 item.headEl.removeEventListener(this.trigger, this.actEvt);
             }
         }
@@ -16914,28 +17107,40 @@
             super.listen({ name: 'enabledAll', cb });
             return this;
         }
-        activate(data, cb) {
+        async activate(data, cb) {
             if (this.destroyed || isNull(data))
                 return;
             let item = findItem(data, this.treeData), other = this.treeData.find((k) => k !== item && k.selected);
-            if (!item || item.selected)
+            if (!item)
                 return;
-            other ? other.selected = false : null;
-            item.selected = true;
-            item.disabled = false;
-            super.listen({ name: 'activated', cb, params: [item] });
+            if (item.selected) {
+                !item.bodyEl.innerHTML && this.fillContent(item);
+            }
+            else {
+                try {
+                    if (this.options.b4Activate) {
+                        let resp = await this.options.b4Add.call(this, item);
+                        resp && (item = resp);
+                    }
+                }
+                catch (err) {
+                    err ? console.error(err) : console.warn(`Activating branche (${item.label}) has been prevented!`);
+                }
+                other && (other.selected = false);
+                item.selected = true;
+                item.disabled = false;
+                super.listen({ name: 'activated', cb, params: [item] });
+            }
             return this;
         }
-        add({ data, target, isFront = true, repeat = true, cb }) {
-            if (this.destroyed || isNull(data)) {
+        async add(options) {
+            if (this.destroyed)
                 return this;
-            }
             if (this.treeData.length >= this.options.max && this.options.max > 0) {
                 throw new Error('The number of children exceeds the maximum!');
             }
-            let type = getDataType(data), targetObj = findItem(target, this.treeData), items = type === 'Array' ? data : type === 'Object' ? [data] : [];
-            items = items.filter((k) => k.hasOwnProperty('label') && k.hasOwnProperty('content'));
-            if (!repeat) {
+            let opts = Object.assign({ repeat: true, autoFill: true, isFront: false }, options), type = getDataType(opts.data), targetObj = findItem(opts.target, this.treeData), items = type === 'Array' ? opts.data : type === 'Object' ? [opts.data] : [{}];
+            if (!opts.repeat) {
                 let labels = this.treeData.map((k) => k.label);
                 items = items.filter((k) => !labels.includes(k.label));
             }
@@ -16943,46 +17148,50 @@
                 return this;
             }
             for (let k of items) {
-                if (!k.hasOwnProperty('label') || !k.hasOwnProperty('content')) {
+                try {
+                    if (this.options.b4Add) {
+                        let resp = await this.options.b4Add.call(this, k);
+                        resp && (k = resp);
+                    }
+                }
+                catch (err) {
+                    err ? console.error(err) : console.warn(`Adding new branche (${JSON.stringify(k)}) has been prevented!`);
                     continue;
                 }
-                else {
-                    this.createItemEl(k);
-                }
+                !k.hasOwnProperty('id') && (k.id = increaseId(this.treeData));
+                !k.hasOwnProperty('label') && (k.label = `${this.options.lang.label}${k.id}`);
+                !k.hasOwnProperty('content') && (k.content = `${this.options.lang.content}${k.id}`);
+                this.createItemEl(k);
             }
             if (targetObj) {
-                let index = this.treeData.indexOf(targetObj), i = isFront ? index : index + 1, position = isFront ? 'beforeBegin' : 'afterEnd';
-                this.treeData.splice(i, 0, ...items);
-                !isFront ? items.reverse() : null;
-                items.forEach((k) => {
-                    targetObj.headEl.insertAdjacentElement(position, k.headEl);
-                    targetObj.bodyEl.insertAdjacentElement(position, k.bodyEl);
+                let tmp = this.treeData.indexOf(targetObj), index = opts.isFront ? tmp : tmp + 1;
+                splice({
+                    host: this.treeData,
+                    intent: 'add',
+                    source: items,
+                    index,
                 });
             }
             else {
-                if (isFront) {
-                    this.treeData.unshift(...items);
-                    items.reverse().forEach((k) => {
-                        this.headsEl.insertAdjacentElement('afterBegin', k.headEl);
-                        this.bodysEl.insertAdjacentElement('afterBegin', k.bodyEl);
-                    });
-                }
-                else {
-                    this.treeData.push(...items);
-                    items.forEach((k) => {
-                        this.headsEl.appendChild(k.headEl);
-                        this.bodysEl.appendChild(k.bodyEl);
-                    });
-                }
+                splice({
+                    host: this.treeData,
+                    intent: opts.isFront ? 'start+' : 'end+',
+                    source: items,
+                });
             }
-            if (this.options.addActive) {
-                this.activate(items[items.length - 1]);
-            }
-            this.renderFinish();
-            super.listen({ name: 'added', cb, params: [items] });
+            let heads = items.map((k) => k.headEl), bodies = items.map((k) => k.bodyEl);
+            appendEls({ parent: this.headsEl, nodes: heads, target: targetObj?.headEl, prepend: opts.isFront ? true : false });
+            appendEls({ parent: this.bodiesEl, nodes: bodies, target: targetObj?.bodyEl, prepend: opts.isFront ? true : false });
+            this.options.addActive && this.activate(items[items.length - 1]);
+            let tmp = items.map((k) => {
+                let _tmp = this.treeData.find((i) => (i.id === k.id));
+                this.updateEvt(_tmp);
+                return _tmp;
+            });
+            super.listen({ name: 'added', cb: opts.cb, params: [tmp] });
             return this;
         }
-        remove(data, cb) {
+        async remove(data, cb) {
             if (this.destroyed || isNull(data)) {
                 return this;
             }
@@ -16996,74 +17205,97 @@
                 obj.headEl.remove();
                 obj.bodyEl.remove();
             };
-            items.forEach(k => {
+            for (let k of items) {
+                try {
+                    if (this.options.b4Remove) {
+                        let resp = await this.options.b4Remove.call(this, k);
+                        resp && (k = resp);
+                    }
+                }
+                catch (err) {
+                    err ? console.error(err) : console.warn(`Removing old branch (${JSON.stringify(k)}) has been prevented!`);
+                    continue;
+                }
                 removeItem(k);
-            });
+            }
             super.listen({ name: 'removed', cb, params: [items] });
             return this;
         }
-        edit({ source, target, cb }) {
-            if (this.destroyed || isNull(source) || isEmpty(target)) {
+        async edit({ source, target, cb }) {
+            if (this.destroyed || isEmpty(source) || isNull(target)) {
                 return this;
             }
-            let item = findItem(source, this.treeData);
-            if (!item) {
+            let item = findItem(target, this.treeData);
+            if (!item)
                 return this;
-            }
-            for (let k in target) {
-                let val = target[k];
-                if (k === 'action') {
-                    item[k] = val.call(item);
+            for (let k in source) {
+                let val = source[k];
+                try {
+                    if (this.options.b4Edit) {
+                        let resp = await this.options.b4Edit.call(this, { key: k, value: val }, item);
+                        resp && (val = resp);
+                    }
+                    if (k === 'action') {
+                        item[k] = val.call({ ins: this, item: k }, item);
+                    }
+                    else if (['icon', 'disk', 'cube', 'image', 'label', 'tips', 'badge', 'disabled', 'content', 'contType', 'contData', 'ajaxType'].includes(k)) {
+                        item[k] = val;
+                    }
+                    else if (k === 'selected') {
+                        val === true ? this.activate(item) : item[k] = val;
+                    }
                 }
-                else if (['icon', 'disk', 'cube', 'label', 'tips', 'badge', 'disabled'].includes(k)) {
-                    item[k] = val;
-                }
-                else if (k === 'selected') {
-                    val === true ? this.activate(item) : item[k] = val;
+                catch (err) {
+                    err ? console.error(err) : console.warn(`No changes have been made to the ${k} property!`);
+                    return this;
                 }
             }
             super.listen({ name: 'edited', cb, params: [item] });
             return this;
         }
-        move({ source, target, isFront = true, cb }) {
+        async graft({ source, target, isFront = true, cb }) {
             if (this.destroyed || isNull(source)) {
                 return this;
             }
             let sourceObj = findItem(source, this.treeData), targetObj = findItem(target, this.treeData);
-            if (!sourceObj) {
+            if (!sourceObj)
+                return this;
+            try {
+                if (this.options.b4Graft) {
+                    let resp = await this.options.b4Graft.call(this, sourceObj, targetObj);
+                    resp && resp.source && (sourceObj = resp.source);
+                    resp && resp.target && (targetObj = resp.target);
+                }
+            }
+            catch (err) {
+                err ? console.error(err) : console.warn(`The branch relationship between source and target in the tree remains unchanged!`);
                 return this;
             }
+            let position = '';
             if (targetObj) {
-                let position = isFront ? 'beforeBegin' : 'afterEnd';
+                position = isFront ? 'beforeBegin' : 'afterEnd';
                 targetObj.headEl.insertAdjacentElement(position, sourceObj.headEl);
                 targetObj.bodyEl.insertAdjacentElement(position, sourceObj.bodyEl);
-                moveItem({ source: sourceObj, target: targetObj, data: this.treeData, isFront });
             }
             else {
-                let position = isFront ? 'afterBegin' : 'beforeEnd';
+                position = isFront ? 'afterBegin' : 'beforeEnd';
                 this.headsEl.insertAdjacentElement(position, sourceObj.headEl);
-                this.bodysEl.insertAdjacentElement('beforeEnd', sourceObj.bodyEl);
-                moveItem({ source: sourceObj, data: this.treeData, isFront });
+                this.bodiesEl.insertAdjacentElement('beforeEnd', sourceObj.bodyEl);
             }
-            super.listen({ name: 'moved', cb, params: [sourceObj, targetObj] });
+            moveItem({ source: sourceObj, target: targetObj, data: this.treeData, isFront });
+            super.listen({ name: 'grafted', cb, params: [sourceObj, targetObj] });
             return this;
         }
-        
-        async updateItemContent({ content, contType, contData, ajaxType, target, cb }) {
-            if (this.destroyed) {
+        updateItemCont({ target, content, contType, contData, ajaxType, cb }) {
+            if (this.destroyed)
                 return this;
-            }
             let targetObj = findItem(target, this.treeData);
-            if (isEmpty(content) || !targetObj) {
+            if (isEmpty(content) || !targetObj || content == targetObj.content)
                 return this;
-            }
-            Object.assign(targetObj, {
-                content,
-                contType,
-                contData,
-                ajaxType,
-            });
-            await this.fillContent(targetObj);
+            contType ? (targetObj.contType = contType) : this.options.contType !== 'text' ? (targetObj.contType = this.options.contType) : null;
+            contData && (targetObj.contData = contData);
+            ajaxType && (targetObj.ajaxType = ajaxType);
+            targetObj.content = content;
             super.listen({ name: 'updatedItemCont', cb, params: [targetObj] });
             return this;
         }
@@ -17081,10 +17313,16 @@
                     xhrName: 'contXhr',
                 },
                 cb: (data) => {
-                    this.targetEl.innerHTML = '';
-                    this.renderData(data);
-                    super.updateCache({ content });
-                    super.listen({ name: 'updatedCont', cb, params: [data] });
+                    if (Array.isArray(data)) {
+                        this.treeDataOrig = deepClone(data);
+                        treeTools.addIdPath({ source: this.treeDataOrig });
+                        this.targetEl.innerHTML = '';
+                        this.renderData(this.treeDataOrig);
+                        this.getTreeFlat();
+                        this.renderFinish();
+                        super.updateCache({ content });
+                        super.listen({ name: 'updatedCont', cb, params: [this.treeDataOrig] });
+                    }
                 }
             });
             return this;
@@ -17095,7 +17333,7 @@
                 return this;
             }
             this.treeData.forEach((k) => {
-                k.headEl.removeEventListener(this.trigger, this.actEvt);
+                this.removeTrigger(k);
             });
             this.contXhr && this.contXhr.abort();
             this.destroyed = true;
@@ -26913,7 +27151,6 @@
     ];
 
     class Accordion extends ModBaseListenCacheNest {
-        treeData;
         expandEvt;
         lineEvt;
         treeDataOrig;
@@ -36784,7 +37021,7 @@
         valToArr,
         moveItem,
         getValsFromAttrs,
-        dlToArr,
+        dl2Tree,
         findItem,
         findItems,
         getAttrBool,
@@ -37080,7 +37317,7 @@
         deepMerge: deepMerge,
         default: ax_comm,
         delay: delay,
-        dlToArr: dlToArr,
+        dl2Tree: dl2Tree,
         ease: ease,
         easeHeight: easeHeight,
         elProps: elProps,

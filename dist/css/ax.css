@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-21 23:18:2
+ * @since Last modified: 2025-3-25 19:8:10
  * @name AXUI front-end framework.
- * @version 3.0.32
+ * @version 3.0.34
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-21 23:15:34
+ * @since Last modified: 2025-03-25 19:06:51
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -3383,7 +3383,7 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
   color: var(--_c-prim);
 }
 /*
- *Last modified: 2025-03-05 09:13:32
+ *Last modified: 2025-03-23 10:07:44
  */
 /*grid layout*/
 ._grid {
@@ -3928,13 +3928,12 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
 /*Background*/
 ._bg,
 [class*="_bg-"] {
-  --_bg-c: var(--_c-prim);
+  --_bg-c: var(--_c-stage);
   background-color: var(--_bg-c);
 }
 ._bg-prim {
   --_bg-c: var(--_c-prim);
 }
-._bg-lt,
 ._bg-prim-lt {
   --_bg-c: var(--_c-prim-bg);
 }
@@ -4641,6 +4640,16 @@ AX-DIVIDER[size=lg] {
 }
 ._d-inblock {
   display: inline-block;
+}
+._d-show {
+  visibility: visible;
+  position: relative;
+  pointer-events: auto;
+}
+._d-hide {
+  visibility: hidden;
+  position: absolute;
+  pointer-events: none;
 }
 ._d-full {
   width: 100%;
@@ -12750,10 +12759,7 @@ ol:where(._group-lamp) li:before {
   transform: translate(-50%, 0) scaleX(1);
 }
 ._group-lamp > *:where([disabled]) {
-  cursor: not-allowed;
-  color: var(--_c-ignore);
-  user-select: none;
-  pointer-events: none;
+  opacity: var(--_o-disabled);
 }
 ._group-lamp > *:where([disabled][selected]:not(:has([rep=label]))):after,
 ._group-lamp > *:where([disabled][selected]:has([rep=label])) [rep=label]:after {
@@ -12939,7 +12945,7 @@ ol:where(._group-page) li:before {
   --_group-fs: var(--_fs-body);
   --_group-c: var(--_c-text);
   --_group-c-bg: var(--_c-prim);
-  --_group-p: var(--_rem-space);
+  --_group-p: var(--_rem-body);
   font-size: var(--_group-fs);
   line-height: var(--_group-h);
   display: flex;
@@ -14312,6 +14318,7 @@ AX-MENU {
 ._tab > ._tab-body,
 ._tab ._panel-body > ._tab-body,
 ._tab ._panel-body > ._panel-inner > ._tab-body {
+  position: relative;
   box-sizing: border-box;
   transition: all var(--_dur-2) linear;
   min-height: var(--_rem-title);
@@ -14339,8 +14346,10 @@ AX-MENU {
 ._tab > ._tab-body > *:where(:not([selected])),
 ._tab ._panel-body > ._tab-body > *:where(:not([selected])),
 ._tab ._panel-body > ._panel-inner > ._tab-body > *:where(:not([selected])) {
-  height: 0;
-  overflow: hidden;
+  width: 100%;
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
 }
 ._tab > ._tab-body iframe,
 ._tab ._panel-body > ._tab-body iframe,
