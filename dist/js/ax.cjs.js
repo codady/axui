@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-25 19:7:42
+ * @since Last modified: 2025-3-29 21:6:38
  * @name AXUI front-end framework.
- * @version 3.0.34
+ * @version 3.0.35
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -5080,6 +5080,8 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
     }
 }
 
+const getAutoDur = (val) => isNull(val) ? 200 : ~~(parseFloat(val) / 3 + 250);
+
 class Drawer extends ModBaseListenCacheBubble {
     options = {};
     parentEl;
@@ -5311,7 +5313,7 @@ class Drawer extends ModBaseListenCacheBubble {
         elState(this.mainEl).isVirtual && this.parentEl.appendChild(this.mainEl);
         super.listen({ name: 'show', cb });
         this.wrapSize = parseInt(style(this.wrapEl)[this.sizeProp]);
-        this.duration = this.options.duration || (this.options.autoDur ? Math.floor(this.wrapSize / 3 + 250) : parseFloat(style(this.wrapEl).animationDuration) * 1000);
+        this.duration = this.options.duration || (this.options.autoDur ? getAutoDur(this.wrapHeight) : parseFloat(style(this.wrapEl).animationDuration) * 1000);
         this.wrapEl.style.transitionDuration = `${this.duration}ms`;
         this.targetEl && this.targetEl.classList.add(this.options.actClass);
         this.lastShowTime = Date.now();
@@ -5596,9 +5598,9 @@ let slideDown = ({ el, display = 'block', before, doing, done, duration, curve =
     }
     let state = elState(target);
     if (state.isHidden) {
-        let dftTime = (height) => height / 3 + 250, rawStyle = target.style.cssText, dftCss = `${rawStyle}display: ${display};`, startCss = `${dftCss}${cut ? 'overflow:hidden;' : ''}`;
+        let rawStyle = target.style.cssText, dftCss = `${rawStyle}display: ${display};`, startCss = `${dftCss}${cut ? 'overflow:hidden;' : ''}`;
         target.style.cssText = startCss;
-        let { height, paddingTop, paddingBottom, marginTop, marginBottom } = getHeights(target), time = ~~duration && duration !== 0 ? ~~duration : dftTime(height);
+        let { height, paddingTop, paddingBottom, marginTop, marginBottom } = getHeights(target), time = ~~duration && duration !== 0 ? ~~duration : getAutoDur(height);
         target.style.cssText += `padding-top: 0; padding-bottom: 0;margin-top: 0; margin-bottom: 0;`;
         ease({
             from: { height: 0, paddingTop: 0, paddingBottom: 0, marginTop: 0, marginBottom: 0 },
@@ -5638,7 +5640,7 @@ let slideUp = ({ el, display = 'block', before, doing, done, duration, curve = '
     }
     let state = elState(target);
     if (state.isCalc) {
-        let dftTime = (height) => height / 3 + 250, rawStyle = target.style.cssText, { height, paddingTop, paddingBottom, marginTop, marginBottom } = getHeights(target), time = ~~duration && duration !== 0 ? ~~duration : dftTime(height), dftCss = `${rawStyle}display: ${display};`, startCss = `${dftCss}${cut ? 'overflow:hidden;' : ''}`;
+        let rawStyle = target.style.cssText, { height, paddingTop, paddingBottom, marginTop, marginBottom } = getHeights(target), time = ~~duration && duration !== 0 ? ~~duration : getAutoDur(height), dftCss = `${rawStyle}display: ${display};`, startCss = `${dftCss}${cut ? 'overflow:hidden;' : ''}`;
         target.style.cssText = `${startCss}padding-top: 0; padding-bottom: 0;margin-top: 0; margin-bottom: 0;`;
         ease({
             from: { height, paddingTop, paddingBottom, marginTop, marginBottom },
@@ -5690,7 +5692,7 @@ let easeHeight = ({ el, height, type = 'down', doing, done, duration, curve = 'e
         throw new Error('The target node does not exist!');
     }
     if (elState(target).isCalc) {
-        let dftTime = (height) => height / 3 + 250, size = getHeights(target).height, _height = ~~height && height !== 0 ? ~~height : size, time = ~~duration && duration !== 0 ? ~~duration : dftTime(_height), dftCss = `${target.style.cssText} ${cut ? 'overflow:hidden;' : ''};`, from = {}, to = {};
+        let size = getHeights(target).height, _height = ~~height && height !== 0 ? ~~height : size, time = ~~duration && duration !== 0 ? ~~duration : getAutoDur(_height), dftCss = `${target.style.cssText} ${cut ? 'overflow:hidden;' : ''};`, from = {}, to = {};
         target.style.cssText = `${dftCss}`;
         if (type === 'to' && ~~height) {
             from = { height: size };
@@ -7001,6 +7003,12 @@ const transformTools = {
         if (!dom)
             return;
         dom.style.transitionDuration = `${duration}ms`;
+    },
+    clear: (el) => {
+        let dom = getEl(el);
+        if (!dom)
+            return;
+        dom.style.transition = `none`;
     },
     
     matrix: (elem) => {
@@ -8634,6 +8642,8 @@ class Spy extends ModBaseListen {
     }
 }
 
+const getHypotenuse = (x = 0, y = 0) => Math.sqrt(x * x + y * y);
+
 class Gesture extends ModBaseListen {
     options = {};
     started;
@@ -9195,7 +9205,7 @@ class Gesture extends ModBaseListen {
         this.nowVals = {
             translate: {
                 ...this.startVals.translate,
-                h: ~~this.calcDist(this.startVals.translate.x, this.startVals.translate.y)
+                h: ~~getHypotenuse(this.startVals.translate.x, this.startVals.translate.y)
             },
             scale: { ...this.startVals.scale },
             rotate: this.startVals.rotate,
@@ -9404,11 +9414,8 @@ class Gesture extends ModBaseListen {
         }
         return result;
     }
-    calcDist(x, y) {
-        return Math.sqrt(x * x + y * y);
-    }
     getTriangleVals(now, last) {
-        let x = now.x - last.x, y = now.y - last.y, h = this.calcDist(x, y), a = Math.atan2(y, x) * 180 / Math.PI;
+        let x = now.x - last.x, y = now.y - last.y, h = getHypotenuse(x, y), a = Math.atan2(y, x) * 180 / Math.PI;
         return { x, y, h, a };
     }
     correctRangeTrans() {
@@ -9429,7 +9436,7 @@ class Gesture extends ModBaseListen {
             tmpY = this.nowVals.translate.y;
             diffY = this.diffVals.translate.y;
         }
-        diffH = this.calcDist(diffX, diffY);
+        diffH = getHypotenuse(diffX, diffY);
         this.diffVals.translate = { x: diffX, y: diffY, h: diffH };
         this.nowVals.translate = { x: tmpX, y: tmpY };
     }
@@ -9919,7 +9926,7 @@ class Dialog extends ModBaseListenCacheBubble {
         elState(this.mainEl).isVirtual && this.parentEl.appendChild(this.mainEl);
         super.listen({ name: 'show', cb });
         this.wrapHeight = parseInt(style(this.wrapEl).height);
-        this.duration = this.options.duration || (this.options.autoDur ? Math.floor(this.wrapSize / 3 + 250) : parseFloat(style(this.wrapEl).animationDuration) * 1000);
+        this.duration = this.options.duration || (this.options.autoDur ? getAutoDur(this.wrapHeight) : parseFloat(style(this.wrapEl).animationDuration) * 1000);
         this.wrapEl.style.transitionDuration = `${this.duration}ms`;
         this.targetEl && this.targetEl.classList.add(this.options.actClass);
         if (this.aniIn === 'slideDown') {
@@ -11823,7 +11830,7 @@ class Popup extends ModBaseListenCacheBubble {
         elState(this.mainEl).isVirtual && document.body.appendChild(this.mainEl);
         super.listen({ name: 'show', cb });
         this.wrapHeight = parseInt(style(this.wrapEl).height);
-        this.duration = this.options.duration || (this.options.autoDur ? Math.floor(this.wrapHeight / 3 + 250) : parseFloat(style(this.mainEl).animationDuration) * 1000);
+        this.duration = this.options.duration || (this.options.autoDur ? getAutoDur(this.wrapHeight) : parseFloat(style(this.mainEl).animationDuration) * 1000);
         this.positionIns.change();
         this.mainEl.setAttribute('visibility', 'visible');
         this.targetEl && this.targetEl.classList.add(this.options.actClass);
@@ -13466,6 +13473,242 @@ const optDrag$1 = [
     ...optBase
 ];
 
+const optFlip = [
+    {
+        attr: 'parent',
+        prop: 'parent',
+        value: ''
+    },
+    {
+        attr: 'children',
+        prop: 'children',
+        value: '',
+    },
+    {
+        attr: 'duration',
+        prop: 'duration',
+        value: 0,
+    },
+    {
+        attr: 'easing',
+        prop: 'easing',
+        value: 'ease-out',
+    },
+    {
+        attr: 'prevent',
+        prop: 'prevent',
+        value: false,
+    },
+    {
+        attr: 'b4-add',
+        prop: 'b4Add',
+        value: null,
+    },
+    {
+        attr: 'b4-remove',
+        prop: 'b4Remove',
+        value: null,
+    },
+    {
+        attr: 'b4-play',
+        prop: 'b4Play',
+        value: null,
+    },
+    {
+        attr: 'b4-play',
+        prop: 'b4Play',
+        value: null,
+    },
+    {
+        attr: 'b4-playall',
+        prop: 'b4PlayAll',
+        value: null,
+    },
+    {
+        attr: 'on-played',
+        prop: 'onPlayed',
+        value: null,
+    },
+    {
+        attr: 'on-playedall',
+        prop: 'onPlayedAll',
+        value: null,
+    },
+    ...optBase
+];
+
+class Flip extends ModBaseListen {
+    options = {};
+    parentEl;
+    flipEls;
+    flipData;
+    childrenObs;
+    canPlay;
+    playedEls;
+    srcNode;
+    allPlayed;
+    parentH;
+    static hostType = 'none';
+    static optMaps = optFlip;
+    constructor(options = {}, initial = true) {
+        super();
+        super.ready({
+            options,
+            maps: Flip.optMaps,
+        });
+        super.listen({ name: 'constructed' });
+        initial && this.init();
+    }
+    
+    async init(cb) {
+        super.listen({ name: 'initiate' });
+        try {
+            this.options.b4Init && await this.options.b4Init.call(this);
+        }
+        catch (err) {
+            err ? console.error(err) : console.warn(config.warn.init);
+            return this;
+        }
+        this.parentEl = getEl(this.options.parent);
+        this.allPlayed = true;
+        this.playedEls = [];
+        this.canPlay = !this.options.prevent;
+        this.updateFlipEls();
+        super.listen({ name: 'initiated', cb });
+        return this;
+    }
+    async play(target) {
+        if (this.destroyed || !target?.flip)
+            return;
+        if (this.options.b4Play) {
+            let resp = await this.options.b4Play.call(this, target);
+            resp && (target = resp);
+        }
+        let restDur = target.flip.anim ? (target.flip.anim.effect.getTiming().duration - target.flip.anim.currentTime) : 0;
+        target.flip.anim?.cancel();
+        let nowTranslate = this.getTranslate(target), nowRect = this.getRect(target), dist = {
+            x: target.flip.now.x - nowRect.x,
+            y: target.flip.now.y - nowRect.y,
+        };
+        let isSamePos = target.flip.last.x === nowRect.x && target.flip.last.y === nowRect.y;
+        if (!dist.x && !dist.y)
+            return new Promise(resolve => { resolve(null); });
+        target.flip.last = nowRect;
+        let anim = target.animate([
+            {
+                transform: `translate(${dist.x + nowTranslate.x}px,${dist.y + nowTranslate.y}px)`,
+            },
+            {
+                transform: `translate(${nowTranslate.x}px,${nowTranslate.y}px)`,
+            }
+        ], {
+            duration: isSamePos ? restDur : this.getDuration(dist),
+            easing: this.options.easing,
+            fill: 'forwards'
+        });
+        target.flip.anim = anim;
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        return new Promise(resolve => {
+            anim.onfinish = () => {
+                anim.cancel();
+                this.setFirstRect(target);
+                this.playedEls.push(target);
+                super.listen({ name: 'played', params: [target] });
+                resolve(null);
+            };
+        });
+    }
+    getDuration(dist) {
+        return Math.max(0, getAutoDur(getHypotenuse(dist.x, dist.y)) + this.options.duration);
+    }
+    getTranslate(target) {
+        let m = new DOMMatrix(style(target).transform);
+        return { x: m.m41, y: m.m42 };
+    }
+    getRect(target) {
+        let tmp = target.getBoundingClientRect();
+        return {
+            x: tmp.left,
+            y: tmp.top,
+        };
+    }
+    setFirstRect(target) {
+        !target.flip && (target.flip = {});
+        target.flip.last = this.getRect(target);
+        target.flip.now = { ...target.flip.last };
+    }
+    setNowRects() {
+        for (let k of this.flipEls) {
+            k.flip.now = this.getRect(k);
+        }
+    }
+    updateFlipEls() {
+        if (!this.options.children) {
+            this.flipEls = this.parentEl ? [...this.parentEl.children] : [];
+        }
+        else {
+            this.flipEls = getEls(this.options.children, this.parentEl);
+        }
+        for (let k of this.flipEls)
+            this.setFirstRect(k);
+    }
+    async add(target, cb) {
+        let els = getEls(target);
+        if (!els.length)
+            return this;
+        if (this.options.b4Add) {
+            let resp = await this.options.b4Add.call(this, els);
+            resp && (els = resp);
+        }
+        for (let k of els) {
+            this.flipEls.push(k);
+            this.setFirstRect(k);
+        }
+        super.listen({ name: 'added', cb, params: [els] });
+        return this;
+    }
+    async remove(target, cb) {
+        let els = getEls(target);
+        if (!els.length)
+            return this;
+        if (this.options.b4Remove) {
+            let resp = await this.options.b4Remove.call(this, els);
+            resp && (els = resp);
+        }
+        this.flipEls = this.flipEls.filter((k) => !els.includes(k));
+        for (let el of els)
+            Reflect.deleteProperty(el, 'flip');
+        super.listen({ name: 'removed', cb, params: [els] });
+        return this;
+    }
+    async playAll(cb) {
+        if (this.flipEls.length < 2 || !this.canPlay || this.destroyed)
+            return this;
+        if (this.options.b4PlayAll) {
+            let resp = await this.options.b4PlayAll.call(this, this.flipEls);
+            resp && (this.flipEls = resp);
+        }
+        let promises = [...this.flipEls].map(k => this.play(k));
+        this.allPlayed = false;
+        await Promise.all(promises);
+        this.allPlayed = true;
+        super.listen({ name: 'playedAll', cb, params: [unique(this.playedEls)] });
+        this.playedEls = [];
+        return this;
+    }
+    destroy(cb) {
+        if (this.destroyed)
+            return this;
+        for (let k of this.flipEls) {
+            k.flip.anim.cancel();
+            Reflect.deleteProperty(k, 'flip');
+        }
+        this.destroyed = true;
+        super.listen({ name: 'destroyed', cb });
+        return this;
+    }
+}
+
 class Drag extends ModBaseListen {
     targetEl;
     options = {};
@@ -13501,6 +13744,8 @@ class Drag extends ModBaseListen {
     nowVal;
     orgStyle;
     gestureIns;
+    tmpEl;
+    flipIns;
     static hostType = 'node';
     constructor(elem, options = {}, initial = true) {
         super();
@@ -13609,7 +13854,8 @@ class Drag extends ModBaseListen {
         this.orgVal = transformTools.get(this.targetEl, ['translate'])['translate'];
         this.nowVal = { ...this.orgVal };
         this.orgStyle = this.targetEl.style.cssText;
-        this.getGestureIns();
+        this.flipIns = new Flip({ children: this.options.drops, duration: 5000 }),
+            this.getGestureIns();
         super.listen({ name: 'initiated', cb });
     }
     setAttrs() {
@@ -13625,6 +13871,10 @@ class Drag extends ModBaseListen {
                 target: this.options.handle,
             },
             onTranslate: (data) => {
+                if (data.target?.flip?.anim?.playState === 'running')
+                    return;
+                this.tmpEl = createEl('div', { class: `${prefix}drag-tmp` }, '正在拖拽');
+                document.body.appendChild(this.tmpEl);
                 this.orgHolder = this.targetEl.cloneNode(true);
                 this.orgHolder.classList.add(`${prefix}holder-origin`);
                 this.targetEl.setAttribute('drag', this.options.mode);
@@ -13640,25 +13890,40 @@ class Drag extends ModBaseListen {
                 super.listen({ name: 'dragStart', params: [{ ...data }] });
             },
             onTranslating: (data) => {
+                if (data.target?.flip?.anim?.playState !== 'running')
+                    return;
+                this.tmpEl.style.left = `${data.coord.x + 8}px`;
+                this.tmpEl.style.top = `${data.coord.y + 8}px`;
+                this.getDrops();
+                let dropEl = this.drops.find((k) => k.contains(data.evtTarget));
+                if (dropEl && dropEl !== data.target && dropEl?.flip?.anim?.playState !== 'running') {
+                    let dropParent = dropEl.parentNode, children = [...dropParent.children], sourceIdx = children.indexOf(data.target), targetIdx = children.indexOf(dropEl);
+                    this.flipIns.setNowRects();
+                    if (sourceIdx < targetIdx) {
+                        dropParent.insertBefore(data.target, dropEl.nextElementSibling);
+                    }
+                    else {
+                        dropParent.insertBefore(data.target, dropEl);
+                    }
+                    this.flipIns.playAll();
+                }
                 this.dropOver(data.orgEvt, data.evtTarget);
-                transformTools.set({
-                    el: this.targetEl,
-                    data: {
-                        translate: data.translate.value,
-                    },
-                });
-                this.nowVal = data.translate.value;
+                
                 super.listen({ name: 'dragMove', params: [{ ...data, }] });
             },
             onTranslated: (data) => {
-                this.dropEnd(data.orgEvt, data.evtTarget).then((resp) => {
-                    !resp && this.restore();
-                });
+                let k = setInterval(() => {
+                    (data.target?.flip?.playing);
+                    if (!data.target?.flip?.playing) {
+                        clearInterval(k);
+                    }
+                }, 100);
+                this.tmpEl.remove();
+                
                 super.listen({ name: 'dragEnd', params: [{ ...data }] });
             },
             onCanceled: (data) => {
-                this.toggleDropAttr();
-                this.restore();
+                this.tmpEl.remove();
                 super.listen({ name: 'dragCancel', params: [{ ...data }] });
             }
         });
@@ -13703,7 +13968,7 @@ class Drag extends ModBaseListen {
         this.targetEl.style.cssText = this.targetEl.style.cssText.replace('transform', '');
     }
     getDrops(drops = this.options.drops) {
-        this.drops = [this.dropHolder, ...elsSort(super.single2Els(drops || `[${this.targetTag}]`, this.options.parent))];
+        this.drops = [...document.body.querySelectorAll(this.options.drops)];
     }
     updateDrops(val) {
         if (this.destroyed || isEmpty(val))
@@ -31956,204 +32221,6 @@ class Router extends ModBaseListen {
     }
 }
 
-const optFlip = [
-    {
-        attr: 'parent',
-        prop: 'parent',
-        value: ''
-    },
-    {
-        attr: 'children',
-        prop: 'children',
-        value: '',
-    },
-    {
-        attr: 'duration',
-        prop: 'duration',
-        value: 300,
-    },
-    {
-        attr: 'prevent',
-        prop: 'prevent',
-        value: false,
-    },
-    {
-        attr: 'transition',
-        prop: 'transition',
-        value: '',
-    },
-    
-    {
-        attr: 'b4-play',
-        prop: 'b4Play',
-        value: null,
-    },
-    {
-        attr: 'b4-playall',
-        prop: 'b4PlayAll',
-        value: null,
-    },
-    {
-        attr: 'on-played',
-        prop: 'onPlayed',
-        value: null,
-    },
-    {
-        attr: 'on-playedall',
-        prop: 'onPlayedAll',
-        value: null,
-    },
-    ...optBase
-];
-
-class Flip extends ModBaseListen {
-    options = {};
-    parentEl;
-    flipEls;
-    flipData;
-    childrenObs;
-    canPlay;
-    playedEls;
-    static hostType = 'none';
-    static optMaps = optFlip;
-    constructor(options = {}, initial = true) {
-        super();
-        super.ready({
-            options,
-            maps: Flip.optMaps,
-        });
-        super.listen({ name: 'constructed' });
-        initial && this.init();
-    }
-    
-    async init(cb) {
-        super.listen({ name: 'initiate' });
-        try {
-            this.options.b4Init && await this.options.b4Init.call(this);
-        }
-        catch (err) {
-            err ? console.error(err) : console.warn(config.warn.init);
-            return this;
-        }
-        this.playedEls = [];
-        this.canPlay = !this.options.prevent;
-        this.updateFlipEls();
-        for (let k of this.flipEls)
-            this.setFirstRect(k);
-        super.listen({ name: 'initiated', cb });
-        return this;
-    }
-    disableTrans(target) {
-        if (this.options.transition) {
-            target.style.transition = this.options.transition;
-        }
-        else {
-            transformTools.disable(target);
-        }
-    }
-    enableTrans(target) {
-        if (this.options.transition) {
-            target.style.transition = this.options.transition + `,transform ${this.options.duration}ms`;
-        }
-        else {
-            transformTools.enable(target, this.options.duration);
-        }
-    }
-    async play(target) {
-        if (this.destroyed || !target?.flip)
-            return;
-        if (this.options.b4Play) {
-            let resp = await this.options.b4Play.call(this, target);
-            resp && (target = resp);
-        }
-        let nowTranslate = transformTools.get(target, ['translate']).translate;
-        if (!target.flip?.playing) {
-            this.disableTrans(target);
-            let lastRect = this.getRect(target), dist = {
-                x: target.flip.x - lastRect.x,
-                y: target.flip.y - lastRect.y,
-            };
-            if (!dist.x && !dist.y)
-                return;
-            transformTools.set({
-                el: target,
-                data: {
-                    translate: {
-                        x: dist.x + nowTranslate.x,
-                        y: dist.y + nowTranslate.y
-                    }
-                }
-            });
-            await new Promise(resolve => requestAnimationFrame(resolve));
-            target.flip.playing = true;
-        }
-        return new Promise(resolve => {
-            this.enableTrans(target);
-            transformTools.set({
-                el: target,
-                data: {
-                    translate: nowTranslate
-                }
-            });
-            let endEvt = () => {
-                target.removeEventListener('transitionend', endEvt);
-                this.setFirstRect(target);
-                this.disableTrans(target);
-                this.playedEls.push(target);
-                super.listen({ name: 'played', params: [target] });
-                resolve(null);
-            };
-            target.addEventListener('transitionend', endEvt);
-        });
-    }
-    getRect(target) {
-        let tmp = target.getBoundingClientRect();
-        return {
-            x: tmp.left,
-            y: tmp.top,
-        };
-    }
-    setFirstRect(target) {
-        let tmp = target.getBoundingClientRect();
-        target.flip = {
-            x: tmp.left,
-            y: tmp.top,
-            playing: false,
-        };
-    }
-    updateFlipEls() {
-        if (this.options.parent && !this.options.children) {
-            let tmp = getEl(this.options.parent);
-            this.flipEls = tmp ? [...tmp.children] : [];
-        }
-        else {
-            this.flipEls = getEls(this.options.children, this.options.parent);
-        }
-    }
-    async playAll(cb) {
-        if (this.flipEls.length < 2 || !this.canPlay || this.destroyed)
-            return this;
-        if (this.options.b4PlayAll) {
-            let resp = await this.options.b4PlayAll.call(this, this.flipEls);
-            resp && (this.flipEls = resp);
-        }
-        let promises = [...this.flipEls].map(k => this.play(k));
-        await Promise.all(promises);
-        super.listen({ name: 'playedAll', cb, params: [this.playedEls] });
-        this.playedEls = [];
-        return this;
-    }
-    destroy(cb) {
-        if (this.destroyed)
-            return this;
-        for (let k of this.flipEls)
-            Reflect.deleteProperty(k, 'flip');
-        this.destroyed = true;
-        super.listen({ name: 'destroyed', cb });
-        return this;
-    }
-}
-
 class CompBaseCommField extends CompBaseComm {
     name;
     value;
@@ -37087,6 +37154,8 @@ var ax_comm = {
     select2Tree,
     ul2Tree,
     parseStr,
+    getAutoDur,
+    getHypotenuse,
     ModBase,
     ModBaseListen,
     ModBaseListenCache,
@@ -37335,6 +37404,7 @@ exports.formTools = formTools;
 exports.getArrMap = getArrMap;
 exports.getAttrArr = getAttrArr;
 exports.getAttrBool = getAttrBool;
+exports.getAutoDur = getAutoDur;
 exports.getBetweenEls = getBetweenEls;
 exports.getClasses = getClasses;
 exports.getClientObj = getClientObj;
@@ -37348,6 +37418,7 @@ exports.getEvtTarget = getEvtTarget;
 exports.getExpiration = getExpiration;
 exports.getFullGap = getFullGap;
 exports.getHeights = getHeights;
+exports.getHypotenuse = getHypotenuse;
 exports.getImgAvatar = getImgAvatar;
 exports.getImgEmpty = getImgEmpty;
 exports.getImgNone = getImgNone;
