@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-29 21:7:12
+ * @since Last modified: 2025-4-14 1:30:13
  * @name AXUI front-end framework.
- * @version 3.0.35
+ * @version 3.0.36
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-03-29 21:06:25
+ * @since Last modified: 2025-04-14 00:44:41
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -11606,37 +11606,47 @@ AX-ICON[dir=v][bg] [rep=disk] img {
   height: 1em;
 }
 /*Drag & drop*/
-._holder-drag,
 ._holder-drop {
-  --_holder-radius: var(--_r);
+  --_holder-r: var(--_r);
+  --_holder-h: auto;
+  --_holder-w: auto;
+  --_holder-m: auto;
   --_holder-c-bd: var(--_c-ignore);
   --_holder-c-txt: var(--_c-ignore);
   color: var(--_holder-c-txt);
+  height: var(--_holder-h);
+  width: var(--_holder-w);
   border: 2px dashed var(--_holder-c-bd);
-  border-radius: var(--_holder-radius);
+  border-radius: var(--_holder-r);
+  margin: var(--_holder-m);
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  min-width: var(--_rem-title);
-  min-height: var(--_rem-title);
-}
-._holder-drag {
-  pointer-events: none;
-  z-index: 0;
 }
 ._holder-drop {
   transition: all var(--_dur-1) linear;
-  min-height: var(--_rem-body);
 }
-._holder-drop[moving] {
+._holder-drop[dropping] {
   --_holder-c-bd: var(--_c-prim);
   --_holder-c-txt: var(--_c-prim);
 }
-._holder-origin {
+._holder-empty {
+  color: var(--_c-ignore);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+._drag-wait {
+  opacity: 0.5;
+}
+._drag-ghost {
   opacity: 0.5;
   pointer-events: none;
-  z-index: 0;
+  position: fixed !important;
+  z-index: 720;
 }
 ._drop-arrow {
   font-size: var(--_rem-ignore);
@@ -11709,30 +11719,17 @@ AX-ICON[dir=v][bg] [rep=disk] img {
   left: 50%;
   translate: -50% 100%;
 }
-[dragnode]:where(:not(:has([handle]))),
-[dragnode] [handle] {
+[dragbody] {
+  cursor: grabbing;
+}
+:where([dragnode]:not(:has([handle]))),
+:where([dragnode]) [handle] {
   touch-action: none;
-  position: relative;
-  z-index: 2;
   cursor: grab;
 }
-[dragnode][gesture=move] {
-  opacity: var(--_o-disabled);
-  pointer-events: none;
-}
-[dragnode][gesture=move] [handle] {
-  pointer-events: none;
-}
-._drag-tmp {
-  border: 1px solid var(--_c-text-bd);
-  border-radius: var(--_r-input);
-  background-color: var(--_c-stage);
-  box-sizing: border-box;
-  padding: var(--_rem-min) var(--_rem-space);
-  position: absolute;
-  top: -10000px;
-  z-index: 710;
-  opacity: 0.8;
+[dragbody] :where([dragnode]:not(:has([handle]))),
+[dragbody] :where([dragnode]) [handle] {
+  cursor: inherit;
 }
 /*BreadCrumb*/
 ._crumb {

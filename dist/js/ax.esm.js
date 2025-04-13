@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-3-29 21:6:38
+ * @since Last modified: 2025-4-14 1:29:46
  * @name AXUI front-end framework.
- * @version 3.0.35
+ * @version 3.0.36
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -13,6 +13,271 @@
  * @copyright This software supports the MIT License, allowing free learning and commercial use, but please retain the terms 'ax,' 'axui,' 'AX,' and 'AXUI' within the software.
  * @license MIT license
  */
+
+var tmp = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    get Accordion () { return Accordion; },
+    get AccordionElem () { return AccordionElem; },
+    get AlarmElem () { return AlarmElem; },
+    get AnchorsElem () { return AnchorsElem; },
+    get Autocomplete () { return Autocomplete; },
+    get AvatarElem () { return AvatarElem; },
+    get BadgeElem () { return BadgeElem; },
+    get BtnElem () { return BtnElem; },
+    get BuoyElem () { return BuoyElem; },
+    get CalloutElem () { return CalloutElem; },
+    get CheckboxElem () { return CheckboxElem; },
+    get CheckboxesElem () { return CheckboxesElem; },
+    get CompBase () { return CompBase; },
+    get CompBaseComm () { return CompBaseComm; },
+    get CompBaseCommField () { return CompBaseCommField; },
+    get CompBaseCommFieldMixin () { return CompBaseCommFieldMixin; },
+    get Datetime () { return Datetime; },
+    get DatetimeElem () { return DatetimeElem; },
+    get DeformElem () { return DeformElem; },
+    get Dialog () { return Dialog; },
+    get DividerElem () { return DividerElem; },
+    get Dodge () { return Dodge; },
+    get Drag () { return Drag; },
+    get Drawer () { return Drawer; },
+    get Dropdown () { return Dropdown; },
+    get Editor () { return Editor; },
+    get EditorElem () { return EditorElem; },
+    get FieldsElem () { return FieldsElem; },
+    get FileElem () { return FileElem; },
+    get FlagElem () { return FlagElem; },
+    get Flip () { return Flip; },
+    get FormatElem () { return FormatElem; },
+    get Gesture () { return Gesture; },
+    get GoodElem () { return GoodElem; },
+    get HeadingElem () { return HeadingElem; },
+    get Hover () { return Hover; },
+    get IconElem () { return IconElem; },
+    get Infinite () { return Infinite; },
+    get InputElem () { return InputElem; },
+    get Lazy () { return Lazy; },
+    get LineElem () { return LineElem; },
+    get Masonry () { return Masonry; },
+    get Menu () { return Menu; },
+    get MenuElem () { return MenuElem; },
+    get Message () { return Message; },
+    get ModBase () { return ModBase; },
+    get ModBaseListen () { return ModBaseListen; },
+    get ModBaseListenCache () { return ModBaseListenCache; },
+    get ModBaseListenCacheBubble () { return ModBaseListenCacheBubble; },
+    get ModBaseListenCacheNest () { return ModBaseListenCacheNest; },
+    get More () { return More; },
+    get MoreElem () { return MoreElem; },
+    get NumberElem () { return NumberElem; },
+    get Observe () { return Observe; },
+    get Pagination () { return Pagination; },
+    get PaginationElem () { return PaginationElem; },
+    get Panel () { return Panel; },
+    get Popup () { return Popup; },
+    get Position () { return Position; },
+    get Progress () { return Progress; },
+    get ProgressElem () { return ProgressElem; },
+    get RadioElem () { return RadioElem; },
+    get RadiosElem () { return RadiosElem; },
+    get Range () { return Range; },
+    get RangeElem () { return RangeElem; },
+    get Rate () { return Rate; },
+    get RateElem () { return RateElem; },
+    get ResultElem () { return ResultElem; },
+    get Retrieval () { return Retrieval; },
+    get Router () { return Router; },
+    get Scroll () { return Scroll; },
+    get SearchElem () { return SearchElem; },
+    get Select () { return Select; },
+    get SelectElem () { return SelectElem; },
+    get SkeletonElem () { return SkeletonElem; },
+    get Spy () { return Spy; },
+    get StatsElem () { return StatsElem; },
+    get StatusElem () { return StatusElem; },
+    get StepElem () { return StepElem; },
+    get Swipe () { return Swipe; },
+    get Tab () { return Tab; },
+    get Tags () { return Tags; },
+    get TextareaElem () { return TextareaElem; },
+    get Tooltip () { return Tooltip; },
+    get Tree () { return Tree; },
+    get TreeElem () { return TreeElem; },
+    get TwilightElem () { return TwilightElem; },
+    get Upload () { return Upload; },
+    get UploadElem () { return UploadElem; },
+    get Valid () { return Valid; },
+    get Virtualize () { return Virtualize; },
+    get addStyle () { return addStyle; },
+    get addStyles () { return addStyles; },
+    get ajax () { return ajax; },
+    get alert () { return alert; },
+    get alias () { return alias; },
+    get allToEls () { return allToEls; },
+    get appendEls () { return appendEls; },
+    get arrSearch () { return arrSearch; },
+    get arrSort () { return arrSort; },
+    get attrJoinVal () { return attrJoinVal; },
+    get attrToJson () { return attrToJson; },
+    get attrValBool () { return attrValBool; },
+    get augment () { return augment; },
+    get ax () { return ax; },
+    get breakpoints () { return breakpoints; },
+    get bulletTools () { return bulletTools; },
+    get capStart () { return capStart; },
+    get clampVal () { return clampVal; },
+    get classes () { return classes; },
+    get clearRegx () { return clearRegx; },
+    get combineArr () { return combineArr; },
+    get config () { return config; },
+    get confirm () { return confirm; },
+    get contains () { return contains; },
+    get convertByte () { return convertByte; },
+    get createBtns () { return createBtns; },
+    get createComp () { return createComp; },
+    get createEl () { return createEl; },
+    get createEvt () { return createEvt; },
+    get createFooter () { return createFooter; },
+    get createModule () { return createModule; },
+    get createTools () { return createTools; },
+    get curveFns () { return curveFns; },
+    get dateTools () { return dateTools; },
+    get debounce () { return debounce; },
+    get decompTask () { return decompTask; },
+    get deepClone () { return deepClone; },
+    get deepEqual () { return deepEqual; },
+    get deepMerge () { return deepMerge; },
+    get default () { return ax_comm; },
+    get delay () { return delay; },
+    get dl2Tree () { return dl2Tree; },
+    get ease () { return ease; },
+    get easeHeight () { return easeHeight; },
+    get elProps () { return elProps; },
+    get elState () { return elState; },
+    get elsSort () { return elsSort; },
+    get eventMap () { return eventMap; },
+    get events () { return events; },
+    get extend () { return extend; },
+    get fadeIn () { return fadeIn; },
+    get fadeOut () { return fadeOut; },
+    get fadeToggle () { return fadeToggle; },
+    get fieldTools () { return fieldTools; },
+    get fieldTypes () { return fieldTypes; },
+    get fileTools () { return fileTools; },
+    get filterPrims () { return filterPrims; },
+    get findItem () { return findItem; },
+    get findItems () { return findItems; },
+    get formTools () { return formTools; },
+    get getArrMap () { return getArrMap; },
+    get getAttrArr () { return getAttrArr; },
+    get getAttrBool () { return getAttrBool; },
+    get getAutoDur () { return getAutoDur; },
+    get getBetweenEls () { return getBetweenEls; },
+    get getClasses () { return getClasses; },
+    get getClientObj () { return getClientObj; },
+    get getComputedVar () { return getComputedVar; },
+    get getContent () { return getContent; },
+    get getDataType () { return getDataType; },
+    get getEl () { return getEl; },
+    get getElSpace () { return getElSpace; },
+    get getEls () { return getEls; },
+    get getEvtClient () { return getEvtClient; },
+    get getEvtTarget () { return getEvtTarget; },
+    get getExpiration () { return getExpiration; },
+    get getFullGap () { return getFullGap; },
+    get getHeights () { return getHeights; },
+    get getHypotenuse () { return getHypotenuse; },
+    get getImgAvatar () { return getImgAvatar; },
+    get getImgEmpty () { return getImgEmpty; },
+    get getImgNone () { return getImgNone; },
+    get getImgSpin () { return getImgSpin; },
+    get getImgSpinDk () { return getImgSpinDk; },
+    get getIntArr () { return getIntArr; },
+    get getLast () { return getLast; },
+    get getNestProp () { return getNestProp; },
+    get getPlaces () { return getPlaces; },
+    get getRectPoints () { return getRectPoints; },
+    get getScreenSize () { return getScreenSize; },
+    get getScrollObj () { return getScrollObj; },
+    get getSelectorType () { return getSelectorType; },
+    get getStrFromTpl () { return getStrFromTpl; },
+    get getUTCTimestamp () { return getUTCTimestamp; },
+    get getValsFromAttrs () { return getValsFromAttrs; },
+    get getWidths () { return getWidths; },
+    get hide () { return hide; },
+    get icons () { return icons; },
+    get includes () { return includes; },
+    get increaseId () { return increaseId; },
+    get init () { return init; },
+    get instance () { return instance; },
+    get isDateStr () { return isDateStr; },
+    get isEmpty () { return isEmpty; },
+    get isMobi () { return isMobi; },
+    get isNull () { return isNull; },
+    get isOutside () { return isOutside; },
+    get isProxy () { return isProxy; },
+    get isScrollUp () { return isScrollUp; },
+    get isSubset () { return isSubset; },
+    get keyCond () { return keyCond; },
+    get moveItem () { return moveItem; },
+    get notice () { return notice; },
+    get offset () { return offset; },
+    get paramToJson () { return paramToJson; },
+    get parseStr () { return parseStr; },
+    get parseUrlArr () { return parseUrlArr; },
+    get pipe () { return pipe; },
+    get plan () { return plan; },
+    get prefix () { return prefix; },
+    get preventDft () { return preventDft; },
+    get privacy () { return privacy; },
+    get prompt () { return prompt; },
+    get propsMap () { return propsMap; },
+    get purifyHtml () { return purifyHtml; },
+    get regElem () { return regElem; },
+    get regExps () { return regExps; },
+    get removeItem () { return removeItem; },
+    get removeStyle () { return removeStyle; },
+    get removeStyles () { return removeStyles; },
+    get renderTpl () { return renderTpl; },
+    get repeatStr () { return repeatStr; },
+    get replaceFrag () { return replaceFrag; },
+    get requireTypes () { return requireTypes; },
+    get scrollTo () { return scrollTo; },
+    get select2Tree () { return select2Tree; },
+    get setAttr () { return setAttr; },
+    get setAttrs () { return setAttrs; },
+    get setContent () { return setContent; },
+    get setSingleSel () { return setSingleSel; },
+    get show () { return show; },
+    get sliceFrags () { return sliceFrags; },
+    get sliceStrEnd () { return sliceStrEnd; },
+    get slideDown () { return slideDown; },
+    get slideToggle () { return slideToggle; },
+    get slideUp () { return slideUp; },
+    get splice () { return splice; },
+    get splitNum () { return splitNum; },
+    get spreadBool () { return spreadBool; },
+    get startUpper () { return startUpper; },
+    get stdParam () { return stdParam; },
+    get storage () { return storage; },
+    get strToJson () { return strToJson; },
+    get style () { return style; },
+    get support () { return support; },
+    get theme () { return theme; },
+    get throttle () { return throttle; },
+    get toLocalTime () { return toLocalTime; },
+    get toNumber () { return toNumber; },
+    get toPixel () { return toPixel; },
+    get toggle () { return toggle; },
+    get tplToEl () { return tplToEl; },
+    get tplToEls () { return tplToEls; },
+    get transformTools () { return transformTools; },
+    get treeTools () { return treeTools; },
+    get trim () { return trim; },
+    get ul2Tree () { return ul2Tree; },
+    get unique () { return unique; },
+    get valToArr () { return valToArr; },
+    get validTools () { return validTools; }
+});
 
 const getComputedVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -263,6 +528,7 @@ const lang = {
     drag: {
         holderDrag: '转移中...',
         holderDrop: '释放到这里...',
+        holderEmpty: '可拖入这里',
     },
     progress: {
         complete: '已完成!',
@@ -759,6 +1025,7 @@ const ax = {
     ajaxStorage: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     prefix,
     alias,
+    dragNode: null,
     compSign: 'comp',
     embedSign: 'embed',
     namePfx: 'TMP_',
@@ -2631,6 +2898,28 @@ const spreadBool = (host, params) => {
     return result;
 };
 
+const contains = (child, parent) => {
+    let childEl = getEl(child), result = false;
+    if (!childEl)
+        return result;
+    if (Array.isArray(parent)) {
+        for (let k of parent) {
+            let parentEl = getEl(k);
+            if (!parentEl)
+                continue;
+            if (parentEl.contains(childEl)) {
+                result = true;
+                break;
+            }
+        }
+    }
+    else {
+        let parentEl = getEl(parent);
+        result = parentEl && parentEl.contains(childEl) ? true : false;
+    }
+    return result;
+};
+
 class ModBase {
     targetEl;
     targetData;
@@ -2648,12 +2937,14 @@ class ModBase {
     tplStr;
     tplEng;
     initCount;
+    handleEls;
     constructor() {
         this.timestamp = Date.now();
         this.respSource = null;
         this.initialized = false;
         this.initCount = 0;
         this.renderCount = 0;
+        this.handleEls = [];
         
         this.targetEl = null;
         
@@ -2811,6 +3102,9 @@ class ModBase {
     }
     
     
+    useHandle(target) {
+        return this.handleEls.length && contains(target, this.handleEls);
+    }
     
     ready({ type = 'node', options = {}, maps = [], host, component = false, spread = [], }) {
         getDataType(host); let moreParams = {};
@@ -5451,28 +5745,6 @@ const offset = (elem) => {
     };
 };
 
-const contains = (child, parent) => {
-    let childEl = getEl(child), result = false;
-    if (!childEl)
-        return result;
-    if (Array.isArray(parent)) {
-        for (let k of parent) {
-            let parentEl = getEl(k);
-            if (!parentEl)
-                continue;
-            if (parentEl.contains(childEl)) {
-                result = true;
-                break;
-            }
-        }
-    }
-    else {
-        let parentEl = getEl(parent);
-        result = parentEl && parentEl.contains(childEl) ? true : false;
-    }
-    return result;
-};
-
 const tplToEls = (tpl) => {
     tpl = tpl.trim().replaceAll('&lt;', '<').replaceAll('&gt;', '>');
     if (!tpl)
@@ -6884,13 +7156,14 @@ const getScrollObj = () => navigator.userAgent.indexOf("Firefox") > 0 ? { event:
 
 const transformTools = {
     
-    get: (elem, props = ['translate', 'scale', 'rotate', 'skew'], instead = false) => {
+    get: (elem, props, instead = false) => {
         let dom = getEl(elem), styles = style(dom), value = dom?.style?.transform, result = {
             rotate: 0,
             scale: { x: 1, y: 1 },
             translate: { x: 0, y: 0 },
             skew: { x: 0, y: 0 }
         };
+        isEmpty(props) && (props = ['translate', 'scale', 'rotate', 'skew']);
         if (value) {
             let getReg = (type) => new RegExp(`${type}\\(([^\\)]+)\\)`), getText = (type) => value.match(getReg(type));
             if (props.includes('translate') && value.includes('translate') && getText('translate')) {
@@ -6931,10 +7204,9 @@ const transformTools = {
     },
     
     set: function ({ el, data, instead = false, cb }) {
-        let dom = getEl(el), now = this.get(dom), transformTxt = dom?.style.transform || '', getReg = (type) => { return new RegExp(`${type}\\(([^\\)]+)\\)`, 'gmi'); }, re = (val, label, prop) => isNull(val[prop]) ? now[label][prop] : val[prop];
-        if (!dom && isEmpty(data)) {
+        let dom = getEl(el), now = this.get(dom, ['translate', 'scale', 'rotate', 'skew'], instead), transformTxt = dom?.style.transform || '', getReg = (type) => { return new RegExp(`${type}\\(([^\\)]+)\\)`, 'gmi'); }, re = (val, label, prop) => isNull(val[prop]) ? now[label][prop] : val[prop];
+        if (!dom && isEmpty(data))
             return;
-        }
         for (let k in data) {
             if (data.hasOwnProperty(k)) {
                 let value = '';
@@ -7148,14 +7420,16 @@ const isOutside = (ev, elem) => {
     return (point.x < lt.x || point.x > rb.x || point.y < lt.y || point.y > rb.y) ? true : false;
 };
 
-const getRectPoints = (ev, elem) => {
+const getEvtClient = (evt, axis) => {
+    let data = evt.targetTouches && evt.targetTouches[0] ? evt.targetTouches[0] : evt.changedTouches ? evt.changedTouches[0] : evt, prop = axis === 'x' ? 'clientX' : axis === 'y' ? 'clientY' : '';
+    return prop ? data[prop] : { x: data.clientX, y: data.clientY };
+};
+
+const getRectPoints = (evt, elem) => {
     let el = getEl(elem), result = [];
-    if (!el || !ev)
+    if (!el || !evt)
         return result;
-    let getter = (data, axis) => {
-        let prop = `client${axis}`;
-        return data.targetTouches && data.targetTouches[0] ? data.targetTouches[0][prop] : data.changedTouches ? data.changedTouches[0][prop] : data[prop];
-    }, point = { x: getter(ev, 'X'), y: getter(ev, 'Y') }, x = point.x, y = point.y, size = { w: el.offsetWidth, h: el.offsetHeight }, lt = { x: el.getBoundingClientRect().left, y: el.getBoundingClientRect().top }, rb = { x: lt.x + size.w, y: lt.y + size.h }, range = { 'h1/3': lt.y + size.h / 3, 'h1/2': lt.y + size.h / 2, 'h2/3': lt.y + size.h * 2 / 3, 'w1/3': lt.x + size.w / 3, 'w1/2': lt.x + size.w / 2, 'w2/3': lt.x + size.w * 2 / 3 };
+    let point = getEvtClient(evt), x = point.x, y = point.y, size = { w: el.offsetWidth, h: el.offsetHeight }, lt = { x: el.getBoundingClientRect().left, y: el.getBoundingClientRect().top }, rb = { x: lt.x + size.w, y: lt.y + size.h }, range = { 'h1/3': lt.y + size.h / 3, 'h1/2': lt.y + size.h / 2, 'h2/3': lt.y + size.h * 2 / 3, 'w1/3': lt.x + size.w / 3, 'w1/2': lt.x + size.w / 2, 'w2/3': lt.x + size.w * 2 / 3 };
     if (x >= lt.x && x <= rb.x && y >= lt.y && y <= rb.y) {
         result.push('inside');
         if (y < range['h1/3']) {
@@ -7190,23 +7464,15 @@ const getRectPoints = (ev, elem) => {
 };
 
 const elsSort = (data, reverse = false) => {
-    let tmp = data.map((k) => getEl(k)).filter(Boolean), els = unique(tmp), result = [];
-    let topo = new Map();
-    for (let k of els) {
-        topo.set(k, []);
-    }
-    for (let k of els) {
-        for (let i of els) {
-            if (k !== i && k.contains(i)) {
-                topo.get(k).push(i);
-            }
-        }
-    }
-    for (let k of topo) {
-        k[1].length > 0 && result.push(...k[1]);
-        result.push(k[0]);
-    }
-    return reverse ? result.reverse() : result;
+    let tmp = data.map((k) => getEl(k)).filter(Boolean), els = unique(tmp);
+    els.sort((a, b) => {
+        if (a.contains(b))
+            return 1;
+        if (b.contains(a))
+            return -1;
+        return 0;
+    });
+    return reverse ? els.reverse() : els;
 };
 
 const getStrFromTpl = function (data, tplStr, tplEng) {
@@ -8122,6 +8388,11 @@ const optGesture = [
         
     },
     {
+        attr: 'b4-trigger',
+        prop: 'b4Trigger',
+        value: null,
+    },
+    {
         attr: 'on-start',
         prop: 'onStart',
         value: null,
@@ -8129,6 +8400,16 @@ const optGesture = [
     {
         attr: 'on-move',
         prop: 'onMove',
+        value: null,
+    },
+    {
+        attr: 'on-enter',
+        prop: 'onEnter',
+        value: null,
+    },
+    {
+        attr: 'on-leave',
+        prop: 'onLeave',
         value: null,
     },
     {
@@ -8214,6 +8495,16 @@ const optGesture = [
     {
         attr: 'on-canceled',
         prop: 'onCanceled',
+        value: null,
+    },
+    {
+        attr: 'on-trigger',
+        prop: 'onTrigger',
+        value: null,
+    },
+    {
+        attr: 'on-finished',
+        prop: 'onFinished',
         value: null,
     },
     ...optBase
@@ -8654,7 +8945,6 @@ class Gesture extends ModBaseListen {
     clickCount;
     preventEase;
     holdHandler;
-    dragEls;
     canTrans;
     transType;
     stepVal;
@@ -8689,6 +8979,8 @@ class Gesture extends ModBaseListen {
     triggerFn;
     transitionendFn;
     preventDft;
+    lastTarget;
+    finishFn;
     static hostType = 'node';
     static optMaps = optGesture;
     constructor(elem, options = {}, initial = true) {
@@ -8723,8 +9015,8 @@ class Gesture extends ModBaseListen {
         this.clickCount = 0;
         this.preventEase = false;
         this.holdHandler = null;
-        this.dragEls = getEls(this.options.translate.target);
-        for (let k of this.dragEls)
+        this.handleEls = getEls(this.options.translate.target);
+        for (let k of this.handleEls)
             k.setAttribute('handle', '');
         this.canTrans = true;
         this.transType = 'translate';
@@ -8794,12 +9086,13 @@ class Gesture extends ModBaseListen {
         this.startFn = function (e) {
             _this.evtTarget = getEvtTarget(e);
             _this.prevEvtDft(e);
-            _this.params = { ...deepClone(_this.paramsFormat), evtTarget: _this.evtTarget };
+            _this.params = { ...deepClone(_this.paramsFormat), evtTarget: _this.evtTarget, relatedTarget: null };
             _this.params.orgEvt = e;
             if ((_this.isMobi && e.targetTouches.length > 2 && e.changedTouches.length === 0) || !contains(_this.evtTarget, _this.targetEl)) {
                 _this.started = false;
                 return;
             }
+            _this.lastTarget = null;
             _this.getStartVals();
             _this.targetEl.setAttribute('gesture', 'start');
             let changedVals = _this.getTouchCoords(e, 'targetTouches'), targetVals = _this.getTouchCoords(e, 'targetTouches'), paramsHold = { ..._this.params }, paramsTranslate = { ..._this.params }, paramsScale = { ..._this.params }, paramsRotate = { ..._this.params }, paramsStart = { ..._this.params };
@@ -8835,7 +9128,7 @@ class Gesture extends ModBaseListen {
                 paramsTranslate.coord = { ..._this.startCoord };
                 paramsTranslate.translate.value = { ..._this.lastVals.translate };
                 paramsTranslate.name = 'translate';
-                if (_this.dragEls.length === 0 || _this.useHandle(_this.evtTarget)) {
+                if (_this.handleEls.length === 0 || _this.useHandle(_this.evtTarget)) {
                     _this.listen({ name: 'translate', params: [paramsTranslate] });
                 }
                 else {
@@ -8871,7 +9164,7 @@ class Gesture extends ModBaseListen {
             else {
                 _this.targetEl.style.transitionDuration = `0ms`;
             }
-            let paramsTouches = { ..._this.params, coord: _this.moveVals.c, moveStart, evtTarget: _this.evtTarget }, paramsTranslate = { ...paramsTouches }, paramsScale = { ...paramsTouches }, paramsRotate = { ...paramsTouches }, paramsMove = { ...paramsTouches };
+            let paramsTouches = { ..._this.params, coord: _this.moveVals.c, moveStart, evtTarget: _this.evtTarget, relatedTarget: null }, paramsTranslate = { ...paramsTouches }, paramsScale = { ...paramsTouches }, paramsRotate = { ...paramsTouches }, paramsMove = { ...paramsTouches };
             if (_this.options.translate.enable) {
                 _this.diffVals.translate = { x: ~~_this.moveVals.x, y: ~~_this.moveVals.y, h: ~~_this.moveVals.h };
                 _this.updateNowTrans();
@@ -8971,6 +9264,15 @@ class Gesture extends ModBaseListen {
             _this.listen({ name: 'move', params: [paramsMove] });
             _this.triangleVals.last = { ..._this.triangleVals.now };
             _this.eventState = 'move';
+            if (_this.lastTarget !== _this.evtTarget) {
+                if (_this.lastTarget) {
+                    _this.listen({ name: 'leave', params: [{ ...paramsMove, evtTarget: _this.lastTarget, relatedTarget: _this.evtTarget }] });
+                }
+                if (_this.evtTarget) {
+                    _this.listen({ name: 'enter', params: [paramsMove] });
+                }
+                _this.lastTarget = _this.evtTarget;
+            }
         };
         this.endFn = function (e) {
             if (!_this.started)
@@ -8979,6 +9281,7 @@ class Gesture extends ModBaseListen {
             _this.moveCount = _this.touchesMoveCount = 0;
             _this.params.orgEvt = e;
             _this.params.evtTarget = _this.evtTarget;
+            _this.params.relatedTarget = null;
             _this.params.moveTime = _this.diffTime = Date.now() - _this.startTime;
             _this.holdHandler && clearTimeout(_this.holdHandler);
             let paramsTranslate = {
@@ -9058,7 +9361,7 @@ class Gesture extends ModBaseListen {
             _this.listen({ name: 'end', params: [paramsEnd] });
             _this.lastVals.translate = { ..._this.nowVals.translate };
             _this.setCompleted();
-            _this.removeEvents();
+            _this.removeSecondEvents();
         };
         this.stepFn = (e, dirValue, type = 'wheel') => {
             if (!_this.options.scale.enable && !_this.options.rotate.enable && !_this.options.translate.enable)
@@ -9067,7 +9370,11 @@ class Gesture extends ModBaseListen {
             _this.getStartVals();
             _this.options.step.duration ? _this.targetEl.style.transitionDuration = `${_this.options.step.duration}ms` : null;
             _this.targetEl.style.transitionTimingFunction = curveVars[_this.options.step.curve];
-            _this.params = { ...deepClone(_this.paramsFormat), evtTarget: (type === 'keyboard' ? this.targetEl : getEvtTarget(e)) };
+            _this.params = {
+                ...deepClone(_this.paramsFormat),
+                relatedTarget: null,
+                evtTarget: (type === 'keyboard' ? this.targetEl : getEvtTarget(e))
+            };
             _this.params = extend({
                 target: _this.params,
                 source: {
@@ -9152,9 +9459,10 @@ class Gesture extends ModBaseListen {
         }, { intvl: _this.options.step.intvl, prevent: true });
         this.cancelFn = function (e) {
             _this.setCompleted();
-            _this.removeEvents();
+            _this.removeSecondEvents();
             let paramsCancel = Object.assign(deepClone(_this.paramsFormat), {
                 orgEvt: e,
+                relatedTarget: null,
                 evtTarget: getEvtTarget(e),
                 coord: { x: e.clientX, y: e.clientY },
                 ..._this.endParams,
@@ -9169,6 +9477,7 @@ class Gesture extends ModBaseListen {
             e.preventDefault();
             let paramsClick = Object.assign(deepClone(_this.paramsFormat), {
                 orgEvt: e,
+                relatedTarget: null,
                 evtTarget: getEvtTarget(e),
                 coord: { x: e.clientX, y: e.clientY },
                 ..._this.endParams,
@@ -9176,11 +9485,22 @@ class Gesture extends ModBaseListen {
             });
             _this.listen({ name: 'hold', params: [paramsClick] });
         };
-        this.triggerFn = (e) => {
+        this.triggerFn = async (e) => {
             if (this.isUnbound(getEvtTarget(e)))
                 return;
             e.stopPropagation();
-            this.addEvents();
+            try {
+                this.options.b4Trigger && await this.options.b4Trigger.call(this, e);
+            }
+            catch {
+                return;
+            }
+            this.addSecondEvents();
+            super.listen({ name: 'trigger', params: [e] });
+        };
+        this.finishFn = (e) => {
+            this.removeSecondEvents();
+            super.listen({ name: 'finished', params: [e] });
         };
         this.transitionendFn = (e) => {
             e.stopPropagation();
@@ -9225,11 +9545,10 @@ class Gesture extends ModBaseListen {
         this.initialVals = this.options.translate.instead ?
             transformTools.get(this.targetEl, ['translate', 'scale', 'rotate', 'skew'], this.options.translate.instead) :
             this.targetEl.style.transform;
-        this.targetEl.addEventListener('pointerdown', this.triggerFn, { passive: false });
-        this.targetEl.removeEventListener('pointerup', this.triggerFn);
+        this.addPrimEvents();
         if (this.isMobi) {
-            if (this.dragEls.length) {
-                for (let k of this.dragEls)
+            if (this.handleEls.length) {
+                for (let k of this.handleEls)
                     k.addEventListener('touchstart', this.preventDft, { passive: false });
             }
             else {
@@ -9254,13 +9573,10 @@ class Gesture extends ModBaseListen {
     }
     setEmpty() {
     }
-    useHandle(target) {
-        return this.dragEls.length && (this.dragEls.find((k) => contains(target, k)));
-    }
     prevEvtDft(evt, target = this.evtTarget) {
         if (this.isMobi) {
             if (!this.options.scale.enable && !this.options.rotate.enable) {
-                if (this.useHandle(target) || (!this.dragEls.length && contains(target, this.targetEl))) {
+                if (this.useHandle(target) || (!this.handleEls.length && contains(target, this.targetEl))) {
                     preventDft(evt, true);
                 }
             }
@@ -9269,7 +9585,7 @@ class Gesture extends ModBaseListen {
             }
         }
         else {
-            if (this.useHandle(target) || (!this.dragEls.length && contains(target, this.targetEl))) {
+            if (this.useHandle(target) || (!this.handleEls.length && contains(target, this.targetEl))) {
                 preventDft(evt, true);
             }
         }
@@ -9335,13 +9651,21 @@ class Gesture extends ModBaseListen {
         let c = this.getCenterCoord(vals), diff = this.getTriangleVals(c, startCoord), h = ~~diff.h, x = ~~diff.x, y = ~~diff.y, d = { x: x > 0 ? 1 : x < 0 ? -1 : 0, y: y > 0 ? 1 : y < 0 ? -1 : 0 };
         return { c, h, x, y, d };
     }
-    removeEvents() {
+    addPrimEvents() {
+        this.targetEl.addEventListener('pointerdown', this.triggerFn, { passive: false });
+        this.targetEl.removeEventListener('pointerup', this.triggerFn, { passive: false });
+    }
+    removePrimEvents() {
+        this.targetEl.removeEventListener('pointerdown', this.triggerFn);
+        this.targetEl.removeEventListener('pointerup', this.finishFn);
+    }
+    removeSecondEvents() {
         document.removeEventListener(eventMap[0], this.startFn);
         document.removeEventListener(eventMap[1], this.moveFn);
         document.removeEventListener(eventMap[2], this.endFn);
         document.removeEventListener(eventMap[3], this.cancelFn);
     }
-    addEvents() {
+    addSecondEvents() {
         document.addEventListener(eventMap[0], this.startFn, { passive: false });
         document.addEventListener(eventMap[1], this.moveFn, { passive: false });
         document.addEventListener(eventMap[2], this.endFn, { passive: false });
@@ -9610,15 +9934,15 @@ class Gesture extends ModBaseListen {
         this.targetEl.removeEventListener('pointerdown', this.triggerFn);
         this.targetEl.removeEventListener("transitionend", this.transitionendFn);
         if (this.isMobi) {
-            if (this.dragEls.length) {
-                for (let k of this.dragEls)
+            if (this.handleEls.length) {
+                for (let k of this.handleEls)
                     k.removeEventListener('touchstart', this.preventDft);
             }
             else {
                 this.targetEl.removeEventListener('touchstart', this.preventDft);
             }
         }
-        this.removeEvents();
+        this.removeSecondEvents();
         if (!this.isMobi) {
             this.options.wheel && this.targetEl.removeEventListener(this.scrollObj.event, this.wheelFn);
             this.options.keyboard.enable && window.removeEventListener('keydown', this.keyboardFn);
@@ -13361,6 +13685,21 @@ const optTree = [
 
 const optDrag$1 = [
     {
+        attr: 'original',
+        prop: 'original',
+        value: true,
+    },
+    {
+        attr: 'group',
+        prop: 'group',
+        value: '',
+    },
+    {
+        attr: 'drags',
+        prop: 'drags',
+        value: '',
+    },
+    {
         attr: 'drops',
         prop: 'drops',
         value: '',
@@ -13368,42 +13707,70 @@ const optDrag$1 = [
     {
         attr: 'parent',
         prop: 'parent',
-        value: null,
+        value: '',
+    },
+    {
+        attr: 'wraps',
+        prop: 'wraps',
+        value: '',
+    },
+    {
+        attr: 'showEmpty',
+        prop: 'showEmpty',
+        value: true,
     },
     {
         attr: 'handle',
         prop: 'handle',
         value: '',
     },
+    
+    
     {
-        attr: 'data',
-        prop: 'data',
-        value: {},
-    },
-    {
-        attr: 'mode',
-        prop: 'mode',
-        value: 'cut',
+        attr: 'method',
+        prop: 'method',
+        value: 'hover',
     },
     {
         attr: 'purpose',
         prop: 'purpose',
-        value: 'sort',
+        value: 'auto',
+    },
+    {
+        attr: 'embed',
+        prop: 'embed',
+        value: {
+            position: 'after',
+            selector: '',
+        }
+    },
+    {
+        attr: 'pushable',
+        prop: 'pushable',
+        value: {
+            enable: true,
+            intent: 'cut',
+        }
+    },
+    {
+        attr: 'pullable',
+        prop: 'pullable',
+        value: true,
     },
     {
         attr: 'point',
         prop: 'point',
         value: {
-            before: ['t/3'],
-            after: ['b/3'],
+            before: ['t/3', 't/2'],
+            after: ['b/3', 'b/2'],
         },
     },
     {
         attr: 'holder',
         prop: 'holder',
         value: {
-            from: false,
-            to: false,
+            enable: false,
+            style: [],
         },
     },
     {
@@ -13422,9 +13789,17 @@ const optDrag$1 = [
         value: {},
     },
     {
-        attr: 'delay',
-        prop: 'delay',
-        value: 50,
+        attr: 'flip',
+        prop: 'flip',
+        value: {
+            enable: true,
+            fluct: -100,
+        },
+    },
+    {
+        attr: 'throttle',
+        prop: 'throttle',
+        value: 100,
     },
     {
         attr: 'duration',
@@ -13432,18 +13807,18 @@ const optDrag$1 = [
         value: 200,
     },
     {
+        attr: 'ignore',
+        prop: 'ignore',
+        value: '',
+    },
+    {
         attr: 'b4-drop',
         prop: 'b4Drop',
         value: null,
     },
     {
-        attr: 'on-dropping',
-        prop: 'onDropping',
-        value: null,
-    },
-    {
-        attr: 'on-dropped',
-        prop: 'onDropped',
+        attr: 'b4-trigger',
+        prop: 'b4Trigger',
         value: null,
     },
     {
@@ -13452,8 +13827,23 @@ const optDrag$1 = [
         value: null,
     },
     {
+        attr: 'on-dragenter',
+        prop: 'onDragEnter',
+        value: null,
+    },
+    {
+        attr: 'on-dragleave',
+        prop: 'onDragLeave',
+        value: null,
+    },
+    {
         attr: 'on-dragmove',
         prop: 'onDragMove',
+        value: null,
+    },
+    {
+        attr: 'on-dropped',
+        prop: 'onDropped',
         value: null,
     },
     {
@@ -13464,6 +13854,51 @@ const optDrag$1 = [
     {
         attr: 'on-dragcancel',
         prop: 'onDragCancel',
+        value: null,
+    },
+    {
+        attr: 'on-transferred',
+        prop: 'onTransferred',
+        value: null,
+    },
+    {
+        attr: 'on-swapped',
+        prop: 'onSwapped',
+        value: null,
+    },
+    {
+        attr: 'on-embeded',
+        prop: 'onEmbeded',
+        value: null,
+    },
+    {
+        attr: 'on-sorted',
+        prop: 'onSorted',
+        value: null,
+    },
+    {
+        attr: 'on-cloned',
+        prop: 'onCloned',
+        value: null,
+    },
+    {
+        attr: 'on-trigger',
+        prop: 'onTrigger',
+        value: null,
+    },
+    {
+        attr: 'on-finished',
+        prop: 'onFinished',
+        value: null,
+    },
+    {
+        attr: 'on-dragout',
+        prop: 'onDragOut',
+        value: null,
+    },
+    {
+        attr: 'on-dropout',
+        prop: 'onDropOut',
         value: null,
     },
     ...optBase
@@ -13481,8 +13916,13 @@ const optFlip = [
         value: '',
     },
     {
-        attr: 'duration',
-        prop: 'duration',
+        attr: 'other',
+        prop: 'other',
+        value: '',
+    },
+    {
+        attr: 'fluct',
+        prop: 'fluct',
         value: 0,
     },
     {
@@ -13574,7 +14014,7 @@ class Flip extends ModBaseListen {
         return this;
     }
     async play(target) {
-        if (this.destroyed || !target?.flip)
+        if (this.destroyed || !target?.flip || elState(target).isUncalc)
             return;
         if (this.options.b4Play) {
             let resp = await this.options.b4Play.call(this, target);
@@ -13587,6 +14027,9 @@ class Flip extends ModBaseListen {
             y: target.flip.now.y - nowRect.y,
         };
         let isSamePos = target.flip.last.x === nowRect.x && target.flip.last.y === nowRect.y;
+        if (target.innerHTML === 'L-1.可拖拽' && target.hasAttribute('cloned')) {
+            (target.flip.now, nowRect.x, nowRect.y);
+        }
         if (!dist.x && !dist.y)
             return new Promise(resolve => { resolve(null); });
         target.flip.last = nowRect;
@@ -13615,7 +14058,7 @@ class Flip extends ModBaseListen {
         });
     }
     getDuration(dist) {
-        return Math.max(0, getAutoDur(getHypotenuse(dist.x, dist.y)) + this.options.duration);
+        return Math.max(0, getAutoDur(getHypotenuse(dist.x, dist.y)) + this.options.fluct);
     }
     getTranslate(target) {
         let m = new DOMMatrix(style(target).transform);
@@ -13644,6 +14087,10 @@ class Flip extends ModBaseListen {
         }
         else {
             this.flipEls = getEls(this.options.children, this.parentEl);
+        }
+        if (this.options.other) {
+            let tmp = getEls(this.options.other);
+            tmp.length && (this.flipEls = unique([...this.flipEls, ...tmp]));
         }
         for (let k of this.flipEls)
             this.setFirstRect(k);
@@ -13705,6 +14152,20 @@ class Flip extends ModBaseListen {
     }
 }
 
+const _tmp = { ...tmp };
+for (let k in _tmp) {
+    typeof _tmp[k] === 'function' && _tmp[k]?.name?.endsWith(`Elem`) && _tmp.regElem(_tmp[k]);
+}
+document.addEventListener("DOMContentLoaded", () => {
+    for (let k of ax.tasks)
+        k();
+    ax.tasks = [];
+});
+ax.config.support && _tmp.support(true);
+ax.config.privacy && _tmp.privacy({});
+Reflect.deleteProperty(_tmp, 'ax');
+Object.assign(ax, _tmp);
+
 class Drag extends ModBaseListen {
     targetEl;
     options = {};
@@ -13724,24 +14185,58 @@ class Drag extends ModBaseListen {
     leaveEvent;
     enterHold;
     leaveHold;
-    dragHolder;
-    dropHolder;
+    holderDrag;
+    holderDrop;
+    holderEmpty;
     dropArrow;
     orgHolder;
-    drops;
+    selfEls;
+    dragEls;
+    dropEls;
     lastDrop;
     lastPoint;
     dftParams;
     dropOver;
     dropEnd;
+    dragstartEvt;
+    dragendEvt;
+    dragenterEvt;
+    dragoverEvt;
+    dragdropEvt;
+    dragleaveEvt;
+    mousedownEvt;
+    mouseupEvt;
+    targetPoints;
     targetTag;
     holderAttr;
     orgVal;
     nowVal;
     orgStyle;
-    gestureIns;
-    tmpEl;
+    isMobi;
+    parentEl;
+    wrapEls;
+    ignoreEls;
+    sourceNode;
     flipIns;
+    gestureIns;
+    hoverCount;
+    cloned;
+    ghostEl;
+    otherGroupIns;
+    triggered;
+    lastTarget;
+    isTransferred;
+    childObs;
+    childObsOpts;
+    commTrigger;
+    commDragStart;
+    commDragEnter;
+    commDragLeave;
+    commDragOver;
+    commDragDrop;
+    commDragEnd;
+    commDragThrot;
+    commFinished;
     static hostType = 'node';
     constructor(elem, options = {}, initial = true) {
         super();
@@ -13750,88 +14245,263 @@ class Drag extends ModBaseListen {
             maps: optDrag$1,
             host: elem,
             component: false,
-            spread: ['arrow']
+            spread: ['arrow', 'pushable', 'holder', 'flip']
         });
         if (!this.targetEl)
             throw new Error('The target node for drag start is missing!');
-        this.dragHolder = createEl('div', { class: `${prefix}holder-drag` }, this.options.lang.holderDrag);
-        this.dropHolder = createEl('div', { class: `${prefix}holder-drop` }, this.options.lang.holderDrop);
+        this.holderEmpty = createEl('div', { class: `${prefix}holder-empty` }, this.options.lang.holderEmpty);
+        this.holderDrop = createEl('div', { class: `${prefix}holder-drop ${prefix}d-none` }, this.options.lang.holderDrop);
         this.dropArrow = createEl('i', { class: `${prefix}drop-arrow ${this.options.arrow.icon}`, placement: this.options.arrow.placement, point: 'inside' });
-        this.orgHolder = null;
-        this.drops = [this.dropHolder];
-        this.lastDrop = null;
         this.lastPoint = '';
-        this.dftParams = { data: this.options.data, from: this.targetEl, holder: this.dropHolder, to: this.lastDrop, mode: this.options.mode, purpose: this.options.purpose, drops: this.drops, point: this.lastPoint };
-        this.dropOver = debounce((evt, target) => {
-            let drop = this.drops.find((k) => contains(target, k));
-            if (drop) {
-                if (drop === this.dropHolder) {
-                    this.toggleDropHolderAttr('set', this.lastDrop);
-                    this.toggleDropAttr();
-                }
-                else {
-                    this.toggleDropHolderAttr('remove');
-                    this.toggleDropAttr(drop, 'ing');
-                    this.updateHolderSize(this.dropHolder, drop, this.holderAttr === 'width' ? 'height' : this.holderAttr === 'height' ? 'width' : '');
-                }
-                if (drop === this.dropHolder || drop === this.targetEl)
-                    return;
-                this.lastDrop = drop;
-                let arrowRefer = getEl(this.options.arrow.selector, drop) || drop;
-                this.options.arrow.enable && arrowRefer.appendChild(this.dropArrow);
-                let points = getRectPoints(evt, drop), isBefore = points.find((k) => this.options.point.before.includes(k)), isAfter = points.find((k) => this.options.point.after.includes(k)), params = { ...this.dftParams, orgEvt: evt, to: drop, points };
-                if (this.options.purpose === 'sort' || this.options.purpose === 'auto') {
-                    if (isBefore) {
-                        this.lastPoint = 'before';
-                        this.options.holder.to && drop.insertAdjacentElement('beforebegin', this.dropHolder);
-                    }
-                    else if (isAfter) {
-                        this.lastPoint = 'after';
-                        this.options.holder.to && drop.insertAdjacentElement('afterend', this.dropHolder);
-                    }
-                    else {
-                        if (this.options.purpose === 'auto') {
-                            this.lastPoint = 'inside';
-                            elState(this.dropHolder).isCalc && this.dropHolder.remove();
-                        }
-                    }
-                }
-                else {
-                    this.lastPoint = 'inside';
-                }
-                drop.setAttribute('point', this.lastPoint);
-                this.options.arrow.enable && this.dropArrow.setAttribute('point', this.lastPoint);
-                super.listen({ name: 'dropping', params: [{ ...params, point: this.lastPoint }] });
+        this.targetPoints = [];
+        this.dragstartEvt = (evt) => {
+            evt.dataTransfer.effectAllowed = 'copyMove';
+            this.commDragStart(evt);
+        };
+        this.dragenterEvt = (evt) => {
+            evt.preventDefault();
+            this.commDragEnter(evt.target, evt);
+        };
+        this.dragleaveEvt = (evt) => {
+            this.commDragLeave(evt.target, evt.relatedTarget, evt);
+        };
+        this.dragoverEvt = (evt) => {
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = evt.ctrlKey ? 'copy' : 'move';
+            let resp = this.commDragOver(evt.target, evt);
+            resp === false && super.listen({ name: 'dragOut', params: [evt] });
+        };
+        this.dragdropEvt = async (evt) => {
+            evt.preventDefault();
+            let resp = await this.commDragDrop(evt.target, evt);
+            resp === false && super.listen({ name: 'dropOut', params: [evt] });
+            return;
+        };
+        this.dragendEvt = (evt) => {
+            this.commDragEnd(evt.target, evt);
+        };
+        this.commTrigger = async (evt) => {
+            try {
+                this.options.b4Trigger && await this.options.b4Trigger.call(this, evt);
             }
-            else {
-                this.toggleDropAttr();
-                this.toggleDropHolderAttr('remove');
-                elState(this.dropHolder).isCalc && this.dropHolder.remove();
-            }
-        }, this.options.delay);
-        this.dropEnd = async (evt, target) => {
-            let drop = this.drops.find((k) => contains(target, k)), params = { ...this.dftParams, orgEvt: evt, to: this.lastDrop, point: this.lastPoint };
-            this.options.arrow.enable && this.dropArrow.remove();
-            if (drop) {
-                if (this.options.b4Drop) {
-                    let tmp = await this.options.b4Drop.call(this, params);
-                    if (tmp === false) {
-                        this.goback(this.options.mode, 'fail');
-                        return true;
-                    }
-                }
-                this.clearTransform();
-                this.toggleDropAttr(drop, 'ed');
-                drop.removeAttribute('point');
-                super.listen({ name: 'dropped', params: [params] });
+            catch {
                 return false;
             }
-            else {
-                this.goback(this.options.mode, 'fail');
-                return true;
+            this.updateDragsDrops();
+            this.removeDroppeds();
+            if (this.flipIns) {
+                this.flipIns.options.children = this.getFlipChldren();
+                this.flipIns.updateFlipEls();
+            }
+            let dragEl = this.dragEls.find((k) => k.contains(evt.target));
+            if (!dragEl)
+                return false;
+            if (this.handleEls.length === 0 || this.useHandle(evt.target)) {
+                evt.stopPropagation();
+                dragEl.setAttribute('draggable', 'true');
+                this.sourceNode = dragEl;
+                ax.dragNode = this.sourceNode;
+                this.addDestopEvents();
+                super.listen({ name: 'trigger', params: [{ target: dragEl, event: evt }] });
+                this.triggered = true;
             }
         };
-        this.targetTag = 'dragnode';
+        this.commDragStart = (evt) => {
+            document.body.toggleAttribute('dragbody', true);
+            this.isTransferred = false;
+            this.cloned = false;
+            if (this.otherGroupIns.length) {
+                for (let k of this.otherGroupIns) {
+                    k.isTransferred = false;
+                    k.cloned = false;
+                }
+            }
+            this.setHolderAttrs();
+            requestAnimationFrame(() => {
+                this.sourceNode.classList.add(`${prefix}drag-wait`);
+            });
+            super.listen({ name: 'dragStart', params: [{ target: null, source: this.sourceNode, point: 'outside', event: evt, type: '' }] });
+        };
+        this.commDragEnter = (evtTarget, evt) => {
+            let target = this.dropEls.find((k) => k === evtTarget) || this.wrapEls.find((k) => k === evtTarget);
+            if (!target)
+                return false;
+            this.toggleDropping(evtTarget, true);
+            this.hoverCount = 0;
+            super.listen({ name: 'dragEnter', params: [{ target, source: this.sourceNode, point: this.lastPoint, event: evt, type: this.getTransferType() }] });
+        };
+        this.commDragLeave = (evtTarget, relatedTarget, evt) => {
+            let target = this.dropEls.find((k) => k === evtTarget) || this.wrapEls.find((k) => k === evtTarget), related = this.dropEls.includes(relatedTarget);
+            if (!target || target === relatedTarget || (!related && target.contains(relatedTarget)))
+                return false;
+            this.toggleDropping(target, false);
+            
+            this.removeArrow();
+            super.listen({ name: 'dragLeave', params: [{ target, source: this.sourceNode, relatedTarget, point: this.lastPoint, event: evt, type: this.getTransferType() }] });
+            return true;
+        };
+        this.commDragOver = (evtTarget, evt) => {
+            if (!this.options.pushable.enable)
+                return false;
+            if (!this.options.pullable && !contains(this.sourceNode, this.selfEls))
+                return false;
+            if (evtTarget === this.sourceNode)
+                return false;
+            if (evtTarget === this.holderDrop) {
+                return false;
+            }
+            this.commDragThrot(evtTarget, evt);
+        };
+        this.commDragDrop = async (evtTarget, evt) => {
+            this.removeDroppings();
+            this.removeArrow();
+            if (!this.options.pushable.enable || this.options.method !== 'drop')
+                return false;
+            if (!this.options.pullable && !contains(this.sourceNode, this.selfEls))
+                return false;
+            let target = evtTarget, param = { target, source: this.sourceNode, point: this.lastPoint, event: evt, type: this.getTransferType() };
+            if (this.wrapEls.includes(evtTarget)) {
+                try {
+                    this.options.b4Drop && await this.options.b4Drop.call(this, param);
+                }
+                catch {
+                    console.info('The event of releasing the mouse or finger has been blocked!');
+                    return false;
+                }
+                this.flipIns && this.flipIns.setNowRects();
+                this.insertEl(target, this.sourceNode, evt, 'beforeend');
+                this.options.holder.enable && this.hideHolder();
+                this.flipIns && this.flipIns.playAll();
+                param.target = target;
+                super.listen({ name: 'transferred', params: [param] });
+                this.isTransferred = true;
+            }
+            else {
+                let toClone = this.canClone(evtTarget), drops = this.dropEls;
+                target = drops.find((k) => k.contains(evtTarget));
+                if (!target)
+                    return false;
+                if (!this.insertable(target, this.sourceNode))
+                    return false;
+                try {
+                    this.options.b4Drop && await this.options.b4Drop.call(this, param);
+                }
+                catch {
+                    console.info('The event of releasing the mouse or finger has been blocked!');
+                    return false;
+                }
+                if (this.flipIns) {
+                    if (target?.flip?.anim?.playState === 'running' || target === this.sourceNode)
+                        return false;
+                    let copyNode = this.cloneStart(toClone);
+                    this.flipIns.setNowRects();
+                    copyNode && this.cloneEnd({ target, source: this.sourceNode, relatedTarget: copyNode, event: evt });
+                    this.options.purpose === 'swap' ? this.swapNodes(target, this.sourceNode) : this.insertEl(target, this.sourceNode, evt);
+                    this.options.holder.enable && this.hideHolder();
+                    this.flipIns.playAll();
+                }
+                else {
+                    let copyNode = this.cloneStart(toClone);
+                    copyNode && this.cloneEnd({ target, source: this.sourceNode, relatedTarget: copyNode, event: evt });
+                    this.options.purpose === 'swap' ? this.swapNodes(target, this.sourceNode) : this.insertEl(target, this.sourceNode, evt);
+                    this.options.holder.enable && this.hideHolder();
+                }
+                param.target = target;
+                super.listen({ name: 'transferred', params: [param] });
+                this.isTransferred = true;
+            }
+            this.toggleDropped(this.sourceNode, true);
+            super.listen({ name: 'dropped', params: [param] });
+            return;
+        };
+        this.commDragEnd = (evtTarget, evt) => {
+            let param = { target: evtTarget, source: this.sourceNode, point: this.lastPoint, event: evt };
+            this.revert();
+            super.listen({ name: 'dragEnd', params: [param] });
+        };
+        this.commFinished = (evt) => {
+            this.revert();
+            super.listen({ name: 'finished', params: [evt] });
+        };
+        this.commDragThrot = throttle((evtTarget, evt) => {
+            this.hoverCount++;
+            let param = { source: this.sourceNode, event: evt }, target;
+            if (this.wrapEls.includes(evtTarget)) {
+                target = evtTarget;
+                let isEmpty = !target.children.length || getEl(`:scope > .${prefix}holder-empty`, target);
+                if (!isEmpty)
+                    return;
+                this.flipIns && this.flipIns.setNowRects();
+                if (this.options.method === 'hover') {
+                    this.insertEl(target, this.sourceNode, evt, 'beforeend');
+                }
+                else {
+                    this.options.holder.enable && this.insertEl(target, this.holderDrop, evt, 'beforeend');
+                    param.source = this.holderDrop;
+                }
+                this.flipIns && this.flipIns.playAll();
+                param.target = target;
+                param.point = 'inside';
+                param.type = 'embed';
+                super.listen({ name: 'transferred', params: [param] });
+                this.isTransferred = true;
+                super.listen({ name: 'dragMove', params: [param] });
+            }
+            else {
+                let toClone = this.options.method === 'hover' && this.canClone(evtTarget), drops = this.dropEls, copyNode, condition = this.options.method === 'hover' || (this.options.method === 'drop' && this.options.holder.enable), insertNode = this.options.method === 'drop' && this.options.holder.enable ? this.holderDrop : this.sourceNode;
+                target = drops.find((k) => k.contains(evtTarget));
+                if (!target)
+                    return;
+                param.target = target;
+                if (this.flipIns) {
+                    if (target?.flip?.anim?.playState === 'running')
+                        return;
+                    this.updatePoints(evt, target);
+                    this.insertUpdateArrow(target);
+                    super.listen({ name: 'dragMove', params: [param] });
+                    if (!condition || !this.insertable(target, this.sourceNode))
+                        return;
+                    copyNode = this.cloneStart(toClone);
+                    this.flipIns.setNowRects();
+                    copyNode && this.cloneEnd({ target, source: this.sourceNode, relatedTarget: copyNode, event: evt }, (node) => {
+                        insertNode = node;
+                        this.sourceNode = node;
+                    });
+                    this.options.purpose === 'swap' ? this.swapNodes(target, this.sourceNode) : this.insertEl(target, insertNode, evt);
+                    this.flipIns.playAll();
+                    param.point = this.lastPoint;
+                    param.type = this.getTransferType();
+                    super.listen({ name: 'transferred', params: [param] });
+                    this.isTransferred = true;
+                }
+                else {
+                    this.updatePoints(evt, target);
+                    this.insertUpdateArrow(target);
+                    super.listen({ name: 'dragMove', params: [param] });
+                    if (this.options.method === 'drop' || !this.insertable(target, this.sourceNode))
+                        return;
+                    copyNode = this.cloneStart(toClone);
+                    copyNode && this.cloneEnd({ target, source: this.sourceNode, relatedTarget: copyNode, event: evt }, (node) => {
+                        insertNode = node;
+                        this.sourceNode = node;
+                    });
+                    this.insertEl(target, insertNode, evt);
+                    param.point = this.lastPoint;
+                    param.type = this.getTransferType();
+                    super.listen({ name: 'transferred', params: [param] });
+                    this.isTransferred = true;
+                }
+            }
+        }, this.options.throttle);
+        this.mousedownEvt = async (evt) => {
+            let resp = await this.commTrigger(evt);
+            if (resp === false)
+                return;
+        };
+        this.mouseupEvt = (evt) => {
+            this.commFinished(evt);
+        };
+        this.setMutationObs();
         super.listen({ name: 'constructed' });
         initial && this.init();
     }
@@ -13844,20 +14514,33 @@ class Drag extends ModBaseListen {
             console.warn(config.warn.init);
             return this;
         }
+        this.triggered = false;
+        this.parentEl = getEl(this.options.parent);
+        this.selfEls = [];
+        this.dragEls = [];
+        this.dropEls = [];
+        this.hoverCount = 0;
+        this.cloned = false;
+        this.updateWrapEls();
+        this.updateHandleEls();
+        this.setWrapsObs();
+        this.updateIgnoreEls();
+        this.sourceNode = null;
         this.setAttrs();
         this.holderAttr = ['left', 'right'].includes(this.options.arrow.placement) ? 'height' :
             ['top', 'bottom'].includes(this.options.arrow.placement) ? 'width' : '';
-        this.orgVal = transformTools.get(this.targetEl, ['translate'])['translate'];
-        this.nowVal = { ...this.orgVal };
-        this.orgStyle = this.targetEl.style.cssText;
-        this.flipIns = new Flip({ children: this.options.drops, duration: 5000 }),
-            this.getGestureIns();
+        this.setFlip();
+        this.isMobi = isMobi;
+        if (this.options.original) {
+            this.isMobi ? this.setCommDrag() : this.setDestopDrag();
+        }
+        else {
+            this.setCommDrag();
+        }
+        this.handleEmpty();
         super.listen({ name: 'initiated', cb });
     }
-    setAttrs() {
-        this.targetEl.setAttribute([this.targetTag], '');
-    }
-    getGestureIns() {
+    setCommDrag() {
         this.gestureIns = new Gesture(this.targetEl, {
             rotate: false,
             scale: false,
@@ -13866,164 +14549,419 @@ class Drag extends ModBaseListen {
             translate: {
                 target: this.options.handle,
             },
-            onTranslate: (data) => {
-                if (data.target?.flip?.anim?.playState === 'running')
-                    return;
-                this.tmpEl = createEl('div', { class: `${prefix}drag-tmp` }, '正在拖拽');
-                document.body.appendChild(this.tmpEl);
-                this.orgHolder = this.targetEl.cloneNode(true);
-                this.orgHolder.classList.add(`${prefix}holder-origin`);
-                this.targetEl.setAttribute('drag', this.options.mode);
-                document.body.style.cursor = 'grabbing';
-                this.getDrops();
-                if (this.options.mode === 'cut' && this.options.holder.from) {
-                    this.updateHolderSize(this.dragHolder, this.targetEl);
-                    this.targetEl.insertAdjacentElement('afterend', this.dragHolder);
-                }
-                if (this.options.mode === 'copy' && this.options.holder.from) {
-                    this.targetEl.insertAdjacentElement('afterend', this.orgHolder);
-                }
-                super.listen({ name: 'dragStart', params: [{ ...data }] });
+            b4Trigger: (evt) => {
+                return new Promise(async (resolve, reject) => {
+                    let resp = await this.commTrigger(evt);
+                    resp === false ? reject() : resolve(null);
+                });
             },
-            onTranslating: (data) => {
-                if (data.target?.flip?.anim?.playState !== 'running')
-                    return;
-                this.tmpEl.style.left = `${data.coord.x + 8}px`;
-                this.tmpEl.style.top = `${data.coord.y + 8}px`;
-                this.getDrops();
-                let dropEl = this.drops.find((k) => k.contains(data.evtTarget));
-                if (dropEl && dropEl !== data.target && dropEl?.flip?.anim?.playState !== 'running') {
-                    let dropParent = dropEl.parentNode, children = [...dropParent.children], sourceIdx = children.indexOf(data.target), targetIdx = children.indexOf(dropEl);
-                    this.flipIns.setNowRects();
-                    if (sourceIdx < targetIdx) {
-                        dropParent.insertBefore(data.target, dropEl.nextElementSibling);
-                    }
-                    else {
-                        dropParent.insertBefore(data.target, dropEl);
-                    }
-                    this.flipIns.playAll();
-                }
-                this.dropOver(data.orgEvt, data.evtTarget);
-                
-                super.listen({ name: 'dragMove', params: [{ ...data, }] });
+            onStart: (evt) => {
+                this.commDragStart(evt);
+                this.ghostEl = this.getGhostNode(this.sourceNode);
+                this.sourceNode.parentNode.appendChild(this.ghostEl);
             },
-            onTranslated: (data) => {
-                let k = setInterval(() => {
-                    (data.target?.flip?.playing);
-                    if (!data.target?.flip?.playing) {
-                        clearInterval(k);
-                    }
-                }, 100);
-                this.tmpEl.remove();
-                
-                super.listen({ name: 'dragEnd', params: [{ ...data }] });
+            onEnter: (evt) => {
+                this.commDragEnter(evt.evtTarget, evt);
+            },
+            onLeave: (evt) => {
+                this.commDragLeave(evt.evtTarget, evt.relatedTarget, evt);
+            },
+            onMove: (evt) => {
+                this.setGhostPos(evt.translate.value);
+                let resp = this.commDragOver(evt.evtTarget, evt);
+                resp === false && super.listen({ name: 'dragOut', params: [evt] });
+            },
+            onEnd: async (evt) => {
+                let resp = await this.commDragDrop(evt.evtTarget, evt);
+                resp === false && super.listen({ name: 'dropOut', params: [evt] });
+                this.commDragEnd(evt.evtTarget, evt);
+                return;
+            },
+            onFinished: (evt) => {
+                this.revert();
+                super.listen({ name: 'finished', params: [evt] });
             },
             onCanceled: (data) => {
-                this.tmpEl.remove();
+                this.revert();
                 super.listen({ name: 'dragCancel', params: [{ ...data }] });
             }
         });
     }
-    updateHolderSize(target, relate, attr) {
-        if (!relate)
+    canClone(target) {
+        let tmp = this.options.original && !this.isMobi ? !this.selfEls.includes(ax.dragNode) : this.otherGroupIns.find((k) => k.targetEl.contains(target));
+        return this.options.pushable.intent === 'clone' && tmp;
+    }
+    cloneStart(bool = true) {
+        if (!bool || this.cloned)
             return;
-        let styleRelate = style(relate), styleTarget = style(target), width = styleRelate.width, height = styleRelate.height;
-        if (attr === 'width') {
-            target.style.width = width;
-            target.style.height = styleTarget.height;
-        }
-        else if (attr === 'height') {
-            target.style.height = height;
-            target.style.width = styleTarget.width;
+        let copyNode = this.getCopyNode(this.sourceNode);
+        this.flipIns && this.flipIns.add(copyNode);
+        this.sourceNode.style.position = 'absolute';
+        this.sourceNode.insertAdjacentElement('afterend', copyNode);
+        return copyNode;
+    }
+    cloneEnd(param, cb) {
+        if (!param.relatedTarget)
+            return;
+        super.listen({ name: 'cloned', params: [param] });
+        this.sourceNode.style.position = '';
+        this.cloned = true;
+        if (cb) {
+            cb(param.relatedTarget);
         }
         else {
-            target.style.width = width;
-            target.style.height = height;
+            this.sourceNode = param.relatedTarget;
         }
     }
-    toggleDropAttr(exclude, type) {
-        if (exclude === this.dropHolder)
+    getTransferType() {
+        return this.options.purpose === 'auto' ? (this.lastPoint === 'inside' ? 'embed' : 'sort') : this.options.purpose;
+    }
+    getFlipChldren() {
+        return this.options.drags ? [...this.dragEls, ...this.dropEls] : this.dropEls;
+    }
+    getCopyNode(node) {
+        let tmp = node.cloneNode(true);
+        tmp.removeAttribute('draggable');
+        tmp.classList.remove(`${prefix}drag-wait`);
+        tmp.toggleAttribute('cloned', true);
+        return tmp;
+    }
+    getGhostNode(node) {
+        let tmp = node.cloneNode(true), styles = style(node), rects = node.getBoundingClientRect(), left = rects.left - parseFloat(styles.marginLeft), top = rects.top - parseFloat(styles.marginTop);
+        tmp.removeAttribute('draggable');
+        tmp.classList.remove(`${prefix}drag-wait`);
+        tmp.classList.add(`${prefix}drag-ghost`);
+        tmp.style.width = `min(${styles.width},100%)`;
+        tmp.style.height = styles.height;
+        tmp.style.left = left + 'px';
+        tmp.style.top = top + 'px';
+        tmp.initVal = { left, top };
+        return tmp;
+    }
+    setGhostPos(value) {
+        this.ghostEl.style.left = this.ghostEl.initVal.left + value.x + 'px';
+        this.ghostEl.style.top = this.ghostEl.initVal.top + value.y + 'px';
+    }
+    hideGhost() {
+        if (!this.ghostEl || elState(this.ghostEl).isVirtual)
             return;
-        exclude && exclude !== this.dropHolder && exclude.setAttribute('drop', type);
-        for (let k of this.drops) {
-            if (exclude === k)
-                continue;
-            k.removeAttribute('drop');
+        if (this.isTransferred) {
+            this.ghostEl.remove();
+            return;
+        }
+        let rects = this.sourceNode.getBoundingClientRect(), styles = style(this.ghostEl), left = rects.left - parseFloat(styles.marginLeft), top = rects.top - parseFloat(styles.marginTop), anim = this.ghostEl.animate([
+            {
+                opacity: styles.opacity,
+                left: styles.left,
+                top: styles.top,
+            },
+            {
+                opacity: 0,
+                left: left + 'px',
+                top: top + 'px',
+            }
+        ], {
+            duration: this.options.duration,
+            easing: this.flipIns ? this.flipIns.options.easing : 'ease-out',
+            fill: 'forwards'
+        });
+        anim.addEventListener('finish', () => {
+            this.ghostEl.remove();
+        });
+    }
+    updateHandleEls() {
+        if (this.handleEls.length) {
+            for (let k of this.handleEls)
+                k.removeAttribute('handle');
+        }
+        this.handleEls = getEls(this.options.handle, this.parentEl);
+        for (let k of this.handleEls)
+            k.setAttribute('handle', '');
+    }
+    updateIgnoreEls() {
+        this.ignoreEls = getEls(this.options.ignore, this.targetEl);
+    }
+    updateWrapEls() {
+        this.wrapEls = this.options.wraps ? getEls(this.options.wraps, this.targetEl) : [this.targetEl];
+    }
+    setMutationObs() {
+        this.childObs = new MutationObserver(k => {
+            this.options.showEmpty && this.handleEmpty();
+        });
+        this.childObsOpts = { childList: true, subtree: false };
+    }
+    setWrapsObs() {
+        if (!this.options.showEmpty)
+            return;
+        for (let k of this.wrapEls)
+            this.childObs.observe(k, this.childObsOpts);
+    }
+    hideHolder() {
+        this.holderDrop.toggleAttribute('dropping', false);
+        if (elState(this.holderDrop).isVisible) {
+            this.holderDrop.classList.add(`${prefix}d-none`);
+            this.holderDrop.remove();
         }
     }
-    toggleDropHolderAttr(type = 'set', relate) {
-        if (type === 'remove') {
-            this.dropHolder.removeAttribute('moving');
+    replaceNodes(target, source) {
+        let pTarget = target.parentNode, pSource = source.parentNode, nTarget = target.nextElementSibling, nSource = source.nextElementSibling;
+        pTarget.insertBefore(source, nTarget);
+        pSource.insertBefore(target, nSource);
+    }
+    swapNodes(target, source) {
+        this.replaceNodes(target, source);
+        super.listen({ name: 'swapped', params: [{ target, source }] });
+    }
+    getEmbedEl(target) {
+        return getEl(this.options.embed.selector, target) || target;
+    }
+    insertable(target, source) {
+        let embedPoint = this.getEmbedPoint(), embedWrap = this.getEmbedEl(target), isAfter = target.nextElementSibling === source && this.lastPoint === 'after', isBefore = target.previousElementSibling === source && this.lastPoint === 'before', isSwap = this.options.purpose === 'swap', isInside = source.parentNode === embedWrap, isFirst = embedPoint === 'afterbegin' && target.firstChildElement === source, isLast = embedPoint === 'beforeend' && target.lastChildElement === source, condition = this.options.purpose === 'embed' ? isInside : (this.lastPoint === 'inside' && this.options.purpose === 'auto') ? isFirst || isLast : isAfter || isBefore;
+        return isSwap ? true : !condition;
+    }
+    getEmbedPoint() {
+        return this.options.embed.position === 'after' ? 'beforeend' :
+            this.options.embed.position === 'before' ? 'afterbegin' :
+                this.targetPoints.includes('t/2') || this.targetPoints.includes('l/2') ? 'afterbegin' : 'beforeend';
+    }
+    insertEl(target, source, event, position) {
+        if (position) {
+            target.insertAdjacentElement(position, source);
+            super.listen({ name: 'embeded', params: [{ target, source, position, event }] });
         }
         else {
-            this.dropHolder.setAttribute('moving', '');
-            relate && this.updateHolderSize(this.dropHolder, relate, this.holderAttr);
-        }
-    }
-    clearTransform() {
-        this.targetEl.style.cssText = this.targetEl.style.cssText.replace('transform', '');
-    }
-    getDrops(drops = this.options.drops) {
-        this.drops = [...document.body.querySelectorAll(this.options.drops)];
-    }
-    updateDrops(val) {
-        if (this.destroyed || isEmpty(val))
-            return;
-        this.options.drops = val;
-        return this;
-    }
-    goback(type, state) {
-        if (state === 'succ') {
-            if (type === 'copy') {
-                this.targetEl.style.transitionDuration = `0ms`;
-                transformTools.set({
-                    el: this.targetEl,
-                    data: {
-                        translate: this.orgVal,
-                    }
-                });
-                this.toggleDropAttr();
-                this.restore();
+            if (target === this.holderDrop) {
+                target.insertAdjacentElement('beforebegin', source);
+            }
+            else {
+                if (this.options.purpose === 'embed' || (this.lastPoint === 'inside' && this.options.purpose === 'auto')) {
+                    let embedWrap = this.getEmbedEl(target), position = this.getEmbedPoint();
+                    if (this.options.purpose === 'embed' && source.parentNode === embedWrap)
+                        return;
+                    embedWrap.insertAdjacentElement(position, source);
+                    super.listen({ name: 'embeded', params: [{ target: embedWrap, source, position, event }] });
+                }
+                else {
+                    if ((target.nextElementSibling === source && this.lastPoint === 'after')
+                        ||
+                            (target.previousElementSibling === source && this.lastPoint === 'before'))
+                        return;
+                    target.insertAdjacentElement(this.lastPoint === 'before' ? 'beforebegin' : 'afterend', source);
+                    super.listen({ name: 'sorted', params: [{ target, source, position: this.lastPoint, event }] });
+                }
             }
         }
-        else if (state === 'fail') {
-            ease({
-                from: this.nowVal,
-                to: this.orgVal,
-                doing: (data) => {
-                    transformTools.set({
-                        el: this.targetEl,
-                        data: {
-                            translate: data.value,
+    }
+    updatePoints(evt, target) {
+        this.targetPoints = getRectPoints(evt.orgEvt || evt, target);
+        let isBefore = this.targetPoints.find((k) => this.options.point.before.includes(k)), isAfter = this.targetPoints.find((k) => this.options.point.after.includes(k));
+        this.lastPoint = this.targetPoints.includes('outside') ? '' : isBefore ? 'before' : isAfter ? 'after' : 'inside';
+    }
+    insertUpdateArrow(target) {
+        if (!this.options.arrow.enable)
+            return;
+        if (!this.lastPoint) {
+            this.dropArrow.remove();
+        }
+        else {
+            this.dropArrow.setAttribute('point', this.lastPoint);
+            if (elState(this.dropArrow).isVirtual) {
+                let tmp = getEl(this.options.arrow.selector, target) || target;
+                tmp.appendChild(this.dropArrow);
+            }
+        }
+    }
+    removeArrow() {
+        this.options.arrow.enable && !elState(this.dropArrow).isVirtual && this.dropArrow.remove();
+    }
+    setHolderAttrs() {
+        if (!this.options.holder.enable)
+            return;
+        let tmp = style(this.sourceNode);
+        this.holderDrop.style.setProperty(`--${prefix}holder-w`, `min(${tmp.width},100%)`);
+        this.holderDrop.style.setProperty(`--${prefix}holder-h`, tmp.height);
+        this.holderDrop.style.setProperty(`--${prefix}holder-r`, tmp.borderRadius);
+        this.holderDrop.style.setProperty(`--${prefix}holder-m`, tmp.margin);
+        if (this.options.holder.style.length) {
+            for (let k of this.options.holder.style)
+                this.holderDrop.style.setProperty(k, tmp[k]);
+        }
+    }
+    toggleDropped(target, bool = true) {
+        target && target.toggleAttribute('dropped', bool);
+    }
+    removeDroppeds() {
+        for (let k of [...this.dragEls])
+            k.toggleAttribute('dropped', false);
+    }
+    toggleDropping(target, bool = true) {
+        (this.dropEls.includes(target) || this.wrapEls.includes(target)) && target.toggleAttribute('dropping', bool);
+    }
+    removeDroppings() {
+        for (let k of [...this.dropEls, ...this.wrapEls])
+            k.toggleAttribute('dropping', false);
+    }
+    removeDraggables() {
+        for (let k of [...this.dragEls])
+            k.removeAttribute('draggable');
+    }
+    setFlip() {
+        if (!this.options.flip.enable)
+            return;
+        let opts = extend({
+            target: {
+                children: this.getFlipChldren(),
+                b4Play: (data) => {
+                    return new Promise(resolve => {
+                        if (data !== this.holderDrop || (data === this.holderDrop && !this.holderDrop.classList.contains(`${prefix}d-none`))) {
+                            resolve(null);
+                        }
+                        else if (data === this.holderDrop && this.holderDrop.classList.contains(`${prefix}d-none`)) {
+                            data.classList.remove(`${prefix}d-none`);
                         }
                     });
                 },
-                done: () => {
-                    this.restore();
-                },
-                duration: this.options.duration,
-            });
-            this.toggleDropAttr();
+                onPlayedAll: () => {
+                    this.commDragThrot.cancel();
+                }
+            },
+            source: this.options.flip
+        });
+        this.flipIns = new Flip(opts);
+    }
+    setDestopDrag() {
+        if (isMobi || !this.options.original)
+            return;
+        this.removeMouseEvents();
+        this.addMouseEvents();
+    }
+    addMouseEvents() {
+        if (isMobi || !this.options.original)
+            return;
+        document.addEventListener('mousedown', this.mousedownEvt, { passive: false });
+        document.addEventListener('mouseup', this.mouseupEvt, { passive: false });
+    }
+    removeMouseEvents() {
+        if (isMobi || !this.options.original)
+            return;
+        document.removeEventListener('mousedown', this.mousedownEvt);
+        document.removeEventListener('mouseup', this.mouseupEvt);
+    }
+    addDestopEvents() {
+        if (isMobi || !this.options.original)
+            return;
+        this.targetEl.addEventListener('dragstart', this.dragstartEvt, { passive: false });
+        this.targetEl.addEventListener('dragenter', this.dragenterEvt, { passive: false });
+        this.targetEl.addEventListener('dragover', this.dragoverEvt, { passive: false });
+        this.targetEl.addEventListener('dragleave', this.dragleaveEvt, { passive: false });
+        this.targetEl.addEventListener('drop', this.dragdropEvt, { passive: false });
+        this.targetEl.addEventListener('dragend', this.dragendEvt, { passive: false });
+    }
+    removeDestopEvents() {
+        if (isMobi || !this.options.original)
+            return;
+        this.targetEl.removeEventListener('dragstart', this.dragstartEvt);
+        this.targetEl.removeEventListener('dragenter', this.dragenterEvt);
+        this.targetEl.removeEventListener('dragover', this.dragoverEvt);
+        this.targetEl.removeEventListener('dragleave', this.dragleaveEvt);
+        this.targetEl.removeEventListener('drop', this.dragdropEvt);
+        this.targetEl.removeEventListener('dragend', this.dragendEvt);
+    }
+    setAttrs() {
+    }
+    getGoupDrags() {
+        this.otherGroupIns = instance.findAll('drag').filter((k) => k !== this && this.options.group && k.options.group === this.options.group);
+        if (!this.otherGroupIns.length)
+            return [];
+        return this.otherGroupIns.map((k) => k.options.drags ? k.getSelfDragEls() : k.getSelfDropEls()).flat();
+    }
+    getSelfDropEls(drops = this.options.drops) {
+        let tmp1 = getEls(drops, this.parentEl), tmp2 = !tmp1.length ? getEls(`[dropnode]`, this.parentEl || this.targetEl) : tmp1, tmp3 = !tmp2.length ? [...this.targetEl.children] : elsSort(tmp2), tmp4 = [];
+        if (this.ignoreEls.length) {
+            tmp4 = tmp3.filter((k) => !this.ignoreEls.includes(k) && k.getAttribute('draggable') !== 'false');
+        }
+        else {
+            tmp4 = tmp3.filter((k) => k.getAttribute('draggable') !== 'false');
+        }
+        return tmp4;
+    }
+    getSelfDragEls(drags = this.options.drags) {
+        let tmp1 = getEls(drags, this.targetEl), tmp2 = !tmp1.length ? getEls(`[dragnode]`, this.targetEl) : tmp1, tmp3 = [];
+        if (this.ignoreEls.length) {
+            tmp3 = tmp2.filter((k) => !this.ignoreEls.includes(k) && k.getAttribute('draggable') !== 'false');
+        }
+        else {
+            tmp3 = tmp2.filter((k) => k.getAttribute('draggable') !== 'false');
+        }
+        return tmp3;
+    }
+    updateDragsDrops() {
+        if (this.options.drags) {
+            this.selfEls = this.getSelfDragEls(this.options.drags);
+            this.dragEls = [...this.selfEls, ...this.getGoupDrags()];
+            this.dropEls = [this.holderDrop, ...this.getSelfDropEls(this.options.drops).filter((k) => !this.dragEls.includes(k))];
+        }
+        else {
+            this.selfEls = this.getSelfDropEls(this.options.drops);
+            this.dragEls = [...this.selfEls, ...this.getGoupDrags()];
+            this.dropEls = [this.holderDrop, ...this.dragEls];
         }
     }
-    restore() {
-        this.targetEl.removeAttribute('drag');
-        this.dropHolder.removeAttribute('moving');
-        this.dropHolder.style.cssText = this.dropHolder.style.cssText.replace('width', '').replace('height', '');
-        elState(this.dragHolder).isCalc && this.dragHolder.remove();
-        elState(this.dropHolder).isCalc && this.dropHolder.remove();
-        elState(this.orgHolder).isCalc && this.orgHolder.remove();
-        elState(this.dropArrow).isCalc && this.dropArrow.remove();
-        this.lastDrop = null;
+    handleEmpty(target) {
+        if (!this.options.showEmpty)
+            return;
+        let fn = (el) => {
+            let len = el.children.length, tmp = getEl(`:scope > .${prefix}holder-empty`, el);
+            if (!len) {
+                el.appendChild(this.holderEmpty.cloneNode(true));
+            }
+            else if (len > 1 && tmp) {
+                tmp && tmp.remove();
+            }
+        };
+        if (target) {
+            fn(target);
+        }
+        else {
+            for (let k of this.wrapEls) {
+                fn(k);
+            }
+        }
+    }
+    updateList(data, cb) {
+        if (this.destroyed)
+            return this;
+        Object.assign(this.options, data);
+        super.listen({ name: 'updatedList', cb, params: [data] });
+        return this;
+    }
+    revert() {
+        if (!this.triggered)
+            return;
+        this.hideGhost();
+        this.targetPoints = [];
         this.lastPoint = '';
-        document.body.style.cssText = document.body.style.cssText.replace('cursor', '');
+        this.hideHolder();
+        this.sourceNode.classList.remove(`${prefix}drag-wait`);
+        this.removeDroppings();
+        this.removeDraggables();
+        this.removeArrow();
+        this.removeDestopEvents();
+        this.gestureIns && this.gestureIns.removeSecondEvents();
+        this.hoverCount = 0;
+        this.cloned = false;
+        document.body.toggleAttribute('dragbody', false);
+        this.isTransferred = false;
+        this.triggered = false;
     }
     destroy(cb) {
         if (this.destroyed)
             return;
-        this.restore();
-        this.toggleDropAttr();
-        this.gestureIns.destroy();
+        this.revert();
+        this.gestureIns && this.gestureIns.destroy();
+        this.removeMouseEvents();
+        this.removeDestopEvents();
+        this.options.showEmpty && this.childObs.disconnect();
         this.destroyed = true;
         super.listen({ name: 'destroyed', cb });
         return this;
@@ -36919,12 +37857,12 @@ const init = (type, parent) => {
     }, getUsableModules = () => {
         let result = [];
         for (let [key, value] of Object.entries(ax)) {
-            value.hostType === 'node' ? result.push(key) : null;
+            value?.hostType === 'node' ? result.push(key) : null;
         }
         return result;
     }, getNodeList = (types) => {
         let allModules = getUsableModules(), modules = !isEmpty(types) ? types.filter(k => allModules.includes(k)) : allModules, modulesNodes = modules.map(k => {
-            return { module: k, nodeList: [...parentEl.querySelectorAll(`[ax-${k}]`)].filter((i) => !i.ax || (i.ax && !i.ax[k])) };
+            return { module: k, nodeList: getEls(`[ax-${k}]`, parentEl).filter((i) => !i.ax || (i.ax && !i.ax[k])) };
         });
         return modulesNodes;
     }, activeFun = (obj) => {
@@ -37111,6 +38049,7 @@ var ax_comm = {
     getRectPoints,
     elsSort,
     getEvtTarget,
+    getEvtClient,
     getStrFromTpl,
     stdParam,
     setSingleSel,
@@ -37246,4 +38185,4 @@ var ax_comm = {
     init,
 };
 
-export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, HeadingElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, SkeletonElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax_comm as default, delay, dl2Tree, ease, easeHeight, elProps, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getAutoDur, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtTarget, getExpiration, getFullGap, getHeights, getHypotenuse, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, prefix, preventDft, privacy, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };
+export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, HeadingElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, SkeletonElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax_comm as default, delay, dl2Tree, ease, easeHeight, elProps, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getAutoDur, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtClient, getEvtTarget, getExpiration, getFullGap, getHeights, getHypotenuse, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, prefix, preventDft, privacy, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };
