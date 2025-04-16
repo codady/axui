@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-14 1:29:46
+ * @since Last modified: 2025-4-16 16:7:9
  * @name AXUI front-end framework.
- * @version 3.0.36
+ * @version 3.0.37
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -13768,9 +13768,6 @@
                 y: target.flip.now.y - nowRect.y,
             };
             let isSamePos = target.flip.last.x === nowRect.x && target.flip.last.y === nowRect.y;
-            if (target.innerHTML === 'L-1.可拖拽' && target.hasAttribute('cloned')) {
-                (target.flip.now, nowRect.x, nowRect.y);
-            }
             if (!dist.x && !dist.y)
                 return new Promise(resolve => { resolve(null); });
             target.flip.last = nowRect;
@@ -13884,7 +13881,7 @@
             if (this.destroyed)
                 return this;
             for (let k of this.flipEls) {
-                k.flip.anim.cancel();
+                k.flip?.anim?.cancel();
                 Reflect.deleteProperty(k, 'flip');
             }
             this.destroyed = true;
@@ -32894,6 +32891,7 @@
         zeroEvt;
         evtsArr;
         toolsEl;
+        mediaEl;
         constructor() {
             super();
             this.focus = () => {
@@ -32903,19 +32901,20 @@
                 this.inputEl.blur();
             };
             this.zeroEvt = new Event('input');
-            this.reset = () => {
+            this.reset = (cb) => {
                 for (let k in this.propsRaw) {
                     (this.propsRaw[k] !== null && this.propsRaw[k] !== false) ? this.setAttribute(k, this.propsRaw[k]) : this.removeAttribute(k);
                 }
                 this.inputEl && this.inputEl.dispatchEvent(this.zeroEvt);
-                this.listen({ name: 'reset' });
+                this.listen({ name: 'reset', cb });
             };
-            this.clear = () => {
+            this.clear = (cb) => {
                 if (this.inputEl) {
                     this.inputEl.value = '';
                     this.inputEl.dispatchEvent(this.zeroEvt);
                 }
-                this.listen({ name: 'cleared' });
+                this.mediaEl && (this.mediaEl.innerHTML = '');
+                this.listen({ name: 'cleared', cb });
             };
             this.on('connected', () => {
                 this.setAttribute(ax.compSign, '');
@@ -34326,7 +34325,7 @@
             };
             this.zeroEvt = new Event('change');
         }
-        static custAttrs = ['name', 'value', 'accept', 'size', 'label', 'tools', ...this.evtsArr];
+        static custAttrs = ['name', 'value', 'accept', 'size', 'label', 'show', 'tools', ...this.evtsArr];
         static boolAttrs = ['disabled', 'readonly', 'multiple', 'full'];
         static get observedAttributes() {
             return ['placeholder', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
@@ -34365,9 +34364,31 @@
                 this.value = this.propsProxy.multiple ? files : files[0] || '';
                 files.length > 0 && (this.propsProxy.value = names.join(','));
                 this.namesEl.innerHTML = (files.length === 0) ? '' : (files.length === 1) ? this.inputEl.value : renderTpl(this.propsProxy.lang?.multi || config.lang.form.fileMulti, { data: files.length }) + this.propsProxy.value;
+                if (this.mediaEl) {
+                    this.mediaEl.innerHTML = '';
+                    for (let k of Array.from(e.target.files))
+                        this.read2Append(k, this.mediaEl);
+                }
                 this.listen({ name: 'changed', params: [{ oldVal, newVal: this.value }] });
             }, false);
             this.wrapEl.addEventListener('click', this.clickEvt);
+        }
+        read2Append(file, box) {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (evt) => {
+                let src = evt.target.result, el;
+                if (file.type.startsWith('image/')) {
+                    el = ax.createEl('img', { src });
+                }
+                else if (file.type.startsWith('video/')) {
+                    el = ax.createEl('video', { src, controls: true });
+                }
+                else if (file.type.startsWith('audio/')) {
+                    el = ax.createEl('audio', { src, controls: true });
+                }
+                el && box.appendChild(el);
+            };
         }
         changedMaps = {
             disabled: this.changedBool,
@@ -34380,6 +34401,7 @@
             tools: this.changedTools,
             placeholder: this.changedHolder,
             label: this.changedLabel,
+            show: this.changedShow,
         };
         changedBool(opt) {
             this.inputEl[opt.name === 'readonly' ? 'readOnly' : opt.name] = this.propsProxy[opt.name];
@@ -34429,6 +34451,17 @@
             }
             else {
                 this.labelEl.remove();
+            }
+        }
+        changedShow(opt) {
+            this.mediaEl && (this.mediaEl.innerHTML = '');
+            if (opt.newVal) {
+                this.mediaEl = getEl(opt.newVal);
+                let arr = Array.from(this.inputEl.files);
+                if (!this.mediaEl || !arr.length)
+                    return;
+                for (let k of arr)
+                    this.read2Append(k, this.mediaEl);
             }
         }
     }
@@ -36987,6 +37020,11 @@
             if (opt.newVal === 'alert') {
                 this.setAttribute('icon', `${prefix}icon-warn-o-f`);
                 this.setAttribute('theme', 'warn');
+                this.toggleAttribute('notable', true);
+            }
+            else if (opt.newVal === 'note') {
+                this.setAttribute('icon', `${prefix}icon-info-o-f`);
+                this.setAttribute('theme', 'info');
                 this.toggleAttribute('notable', true);
             }
         }
