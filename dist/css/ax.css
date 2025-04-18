@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-16 16:7:44
+ * @since Last modified: 2025-4-18 22:44:2
  * @name AXUI front-end framework.
- * @version 3.0.37
+ * @version 3.0.38
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-04-16 11:33:03
+ * @since Last modified: 2025-04-18 22:38:38
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -1964,7 +1964,7 @@
   content: "\e62f";
 }
 /*
- *Last modified: 2025-04-16 08:37:42
+ *Last modified: 2025-04-18 22:08:30
  */
 html {
   font-size: var(--_fs-root);
@@ -1999,7 +1999,7 @@ body {
   flex-shrink: 0;
 }
 *:focus {
-  outline-color: transparent;
+  outline-color: var(--_btn-c-foc, var(--_field-c-foc, transparent));
 }
 h1,
 h2,
@@ -2309,7 +2309,7 @@ input,
 select {
   vertical-align: middle;
 }
-input:where([type=submit], [type=reset]) {
+input:where([type=submit], [type=reset], [type=button]) {
   vertical-align: top;
 }
 input,
@@ -2324,7 +2324,7 @@ select {
   font-size: var(--_field-fs);
   color: var(--_c-text);
 }
-input:where(:not([type="radio"], [type="checkbox"], [type=submit], [type=reset], [type="range"])),
+input:where(:not([type="radio"], [type="checkbox"], [type=submit], [type=reset], [type=button], [type="range"])),
 textarea,
 select {
   background-color: var(--_c-stage);
@@ -2375,7 +2375,7 @@ input:where([type="color"]) ::-webkit-color-swatch {
     padding: 2px !important;
   }
 }
-input:where(:not([type="radio"], [type="checkbox"], [type=submit], [type=reset], [type="range"])),
+input:where(:not([type="radio"], [type="checkbox"], [type=submit], [type=reset], [type=button], [type="range"])),
 select {
   height: var(--_field-h);
   line-height: var(--_field-h);
@@ -2397,9 +2397,11 @@ input:where([type="checkbox"], [type="radio"]) {
   appearance: checkbox;
   -webkit-appearance: checkbox;
 }
-select:where([multiple]) {
+select:where([multiple], [size]) {
+  --_field-count: 5;
   padding: 0;
-  min-height: calc((var(--_rem-input) + 1px)*5 - 1px);
+  min-height: calc((var(--_rem-input) + 1px)*var(--_field-count) + 1px);
+  overflow: auto;
 }
 select option {
   padding: 0 calc(var(--_g)*2);
@@ -2585,7 +2587,7 @@ progress::-moz-progress-bar {
   border-radius: var(--_h-progress);
 }
 input:where([type=submit]),
-input:where([type=reset]),
+input:where([type=reset], [type=button]),
 button {
   --_btn-fs: var(--_rem-body);
   --_btn-h: 2.71em;
@@ -2603,10 +2605,20 @@ button {
   transition: all var(--_dur-2) linear;
   position: relative;
   border-radius: var(--_btn-r);
+  --_btn-c-bg: var(--_c-stage);
+  --_btn-c-txt: var(--_c-text);
+  --_btn-c-bd: var(--_c-text-bd);
+  --_btn-bd: 1px;
+  --_btn-c-foc: transparent;
+  --_btn-c-sd: transparent;
   vertical-align: middle;
+  background-color: var(--_btn-c-bg);
+  color: var(--_btn-c-txt);
+  border: var(--_btn-bd) solid var(--_btn-c-bd);
+  box-shadow: 0.2rem 0.2rem 1rem 0 var(--_btn-c-sd);
 }
 input:where([type=submit])[size=xs],
-input:where([type=reset])[size=xs],
+input:where([type=reset], [type=button])[size=xs],
 button[size=xs] {
   --_btn-fs: var(--_rem-ignore);
   --_btn-p-lr: var(--_em-min-dec);
@@ -2614,14 +2626,14 @@ button[size=xs] {
   --_btn-r: var(--_r-input-sm);
 }
 input:where([type=submit])[size=sm],
-input:where([type=reset])[size=sm],
+input:where([type=reset], [type=button])[size=sm],
 button[size=sm] {
   --_btn-fs: var(--_rem-ignore);
   --_btn-h: var(--_em-title-dec);
   --_btn-r: var(--_r-input-sm);
 }
 input:where([type=submit])[size=lg],
-input:where([type=reset])[size=lg],
+input:where([type=reset], [type=button])[size=lg],
 button[size=lg] {
   --_btn-h: var(--_em-max);
   --_btn-p-lr: 2em;
@@ -2629,26 +2641,20 @@ button[size=lg] {
 }
 input:where([type=submit]),
 button:where([type=submit]) {
-  color: var(--_c-white);
-  background-color: var(--_c-prim);
-  border: none;
-}
-input:where([type=reset]),
-button:where(:not([type=submit])) {
-  color: var(--_c-text);
-  background-color: var(--_c-stage);
-  border: 1px solid var(--_c-text-bd);
+  --_btn-c-bg: var(--_c-prim);
+  --_btn-c-txt: var(--_c-white);
+  --_btn-bd: 0;
 }
 input:where([type=submit][disabled]),
 button:where([type=submit][disabled]) {
   opacity: var(--_o-active);
 }
-input:where([type=reset][disabled]),
+input:where([type=reset][disabled], [type=button][disabled]),
 button:where(:not([type=submit])[disabled]) {
-  color: var(--_c-ignore);
+  --_btn-c-txt: var(--_c-ignore);
 }
 input:where([type=submit][disabled]),
-input:where([type=reset][disabled]),
+input:where([type=reset][disabled], [type=button][disabled]),
 button:where([disabled]) {
   cursor: not-allowed;
   user-select: none;
@@ -2665,23 +2671,24 @@ input::placeholder {
   top: 50%;
   transform: translateY(-50%);
 }
-input:where(:not([type="checkbox"], [type="radio"], [type="range"]):not([disabled])):hover,
+input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type=submit], [type=reset], [type=button]):not([disabled])):hover,
 textarea:where(:not([disabled])):hover,
-button:where(:not([disabled][type=submit])):hover,
 select:where(:not([disabled])):hover {
   border-color: var(--_c-prim);
 }
-input:where([type=submit]:not([disabled], ._b, [class*="_b-"])):hover {
-  background-color: var(--_c-prim-lt);
-  box-shadow: 0.2rem 0.2rem 1rem 0 var(--_c-prim-sd);
+input:where([type=submit]:not([disabled])):hover,
+button:where([type=submit]:not([disabled])):hover {
+  --_btn-c-bg: var(--_c-prim-lt);
+  --_btn-c-sd: var(--_c-prim-sd);
 }
-input:where([type=reset]:not([disabled], ._b, [class*="_b-"])):hover,
-button:where(:not([type=submit]):not([disabled], ._b, [class*="_b-"])):hover {
-  color: var(--_c-prim);
-  box-shadow: 0.2rem 0.2rem 1rem 0 var(--_c-prim-sd);
+input:where([type=reset], [type=button]):where(:not([disabled])):hover,
+button:where(:not([type=submit])):where(:not([disabled])):hover {
+  --_btn-c-bd: var(--_c-prim);
+  --_btn-c-txt: var(--_c-prim);
+  --_btn-c-sd: var(--_c-prim-sd);
 }
 input:where(:not([type="range"], [type="checkbox"], [type="radio"])),
-input:where([type=reset]),
+input:where([type=reset], [type=button]),
 button:where(:not([type=submit])),
 select,
 textarea,
@@ -2689,18 +2696,24 @@ a {
   outline: var(--_w-outline) solid transparent;
   outline-offset: 0px;
 }
-input:where(:not([type="range"], [type="checkbox"], [type="radio"])):focus,
-input:where([type=reset]:not(._b, [class*="_b-"])):focus,
-button:where(:not([type=submit]):not(._b, [class*="_b-"])):focus,
+input:where(:not([type="range"], [type="checkbox"], [type="radio"], [type=reset], [type=button], [type=submit])):focus,
 select:focus,
 textarea:focus {
   color: var(--_c-prim);
   border-color: var(--_c-prim);
   outline-color: var(--_c-prim-sd);
 }
-input:where([type=submit]:not(._b, [class*="_b-"])):focus,
-button:where([type=submit]:not(._b, [class*="_b-"])):focus {
-  color: var(--_c-white);
+input:where([type=submit]):focus,
+button:where([type=submit]):focus {
+  --_btn-c-txt: var(--_c-white);
+  --_btn-c-sd: var(--_c-prim-sd);
+}
+input:where([type=reset], [type=button]):focus,
+button:where(:not([type=submit])):focus {
+  --_btn-c-txt: var(--_c-prim);
+  --_btn-c-bd: var(--_c-prim);
+  --_btn-c-sd: transparent;
+  --_btn-c-foc: var(--_c-prim-sd);
 }
 select:focus option:where(:not([disabled])) {
   color: var(--_c-text);
@@ -2712,14 +2725,16 @@ input:where([type="range"]):focus {
   outline: 0;
   background-color: var(--_c-prim-bd);
 }
-input:where([type=submit]:not([disabled], ._b, [class*="_b-"])):active,
-button:where([type=submit]:not([disabled], ._b, [class*="_b-"])):active {
-  color: rgba(255, 255, 255, var(--_o-active));
-  background-color: var(--_c-prim-dp);
+input:where([type=submit]:not([disabled])):active,
+button:where([type=submit]:not([disabled])):active {
+  --_btn-c-txt: rgba(255, 255, 255, var(--_o-active));
+  --_btn-c-bg: var(--_c-prim-dp);
 }
-input:where([type=reset]:not([disabled], ._b, [class*="_b-"])):active,
-button:where(:not([type=submit]):not([disabled], ._b, [class*="_b-"])):active {
-  color: var(--_c-prim-tl);
+input:where([type=reset], [type=button]):where(:not([disabled])):active,
+button:where(:not([type=submit]):not([disabled])):active {
+  --_btn-c-txt: var(--_c-prim-tl);
+  --_btn-c-sd: transparent;
+  --_btn-c-foc: var(--_c-prim-sd);
 }
 /*Hyperlink*/
 a:where(:not(._reset)) {
@@ -2766,35 +2781,58 @@ a:where([disabled]) {
 }
 /*Table*/
 table {
+  --_table-ell: 16rem;
+  --_table-w: auto;
   --_table-fs: var(--_rem-body);
+  --_table-bg: transparent;
+  --_table-c-stripe: var(--_c-ignore-bg);
+  --_table-c-hov: var(--_c-text-bg);
+  --_table-c-foc: var(--_c-prim);
+  --_table-c-sel: var(--_c-prim-bg);
+  --_table-c-bd: var(--_table-wrap-bd, var(--_c-text-bd));
+  --_xxs-w: var(--_table-w);
+  --_xs-w: var(--_table-w);
+  --_sm-w: var(--_table-w);
+  --_md-w: var(--_table-w);
+  --_lg-w: var(--_table-w);
+  --_xl-w: var(--_table-w);
   font-size: var(--_table-fs);
   min-width: 100%;
-  border-top: 1px solid var(--_c-text-bd);
-  border-bottom: 1px solid var(--_c-text-bd);
-  background-color: var(--_c-stage);
+  width: var(--_table-w);
+  border-top: 1px solid var(--_table-c-bd);
+  border-bottom: 1px solid var(--_table-c-bd);
+  background-color: var(--_table-bg);
   border-spacing: 0;
   table-layout: fixed;
   border-collapse: collapse;
 }
 table tr {
-  border-bottom: 1px solid var(--_c-text-bd);
+  border-bottom: 1px solid var(--_table-c-bd);
   padding: 0.5rem;
   transition: background-color var(--_dur-1) linear;
 }
 table tfoot tr {
-  border-top: 1px solid var(--_c-text-bd);
+  border-top: 1px solid var(--_table-c-bd);
 }
 table tbody tr:last-child {
   border: none;
 }
 table th,
 table td {
-  font-size: var(--_table-fs);
-  font-weight: normal;
-  line-height: var(--_rem-subject);
-  padding: 1rem;
   box-sizing: border-box;
   position: relative;
+}
+table td {
+  padding: 1rem;
+  font-size: var(--_table-fs);
+  line-height: var(--_rem-subject);
+}
+table th {
+  color: var(--_c-brief);
+  font-weight: normal;
+  padding: var(--_px-space) 1rem;
+  font-size: var(--_px-ignore);
+  line-height: var(--_px-subject);
 }
 table th label {
   font-weight: bold;
@@ -2805,8 +2843,102 @@ table th label {
 table td {
   transition: background-color var(--_dur-1) linear, box-shadow var(--_dur-1) linear;
 }
+table tr:where([selected]),
+table th:where([selected]),
+table td:where([selected]) {
+  background-color: var(--_table-c-sel);
+}
+table tr:where([disabled]),
+table th[disabled],
+table td[disabled] {
+  opacity: var(--_o-disabled);
+}
+table td[focused] {
+  color: var(--_table-c-foc);
+  box-shadow: inset 0 0 0 2px var(--_table-c-foc);
+}
+table:where([stripe='']) tbody tr:nth-child(odd),
+table:where([stripe=odd]) tbody tr:nth-child(odd) {
+  background-color: var(--_table-c-stripe);
+}
+table:where([stripe=even]) tbody tr:nth-child(even) {
+  background-color: var(--_table-c-stripe);
+}
+table:where([hoverable]) tbody tr:where(:not([selected], [disabled])):hover {
+  background-color: var(--_table-c-hov);
+}
+table td:where([focused]) {
+  color: var(--_table-c-foc);
+  box-shadow: inset 0 0 0 2px var(--_table-c-foc);
+}
+table:where([focusable]) td:where(:not([focused], [name='check'], [name='tools'])):hover {
+  box-shadow: inset 0 0 0 2px var(--_c-ignore);
+}
+table:where([nowrap]) td,
+table:where([nowrap]) th {
+  white-space: nowrap;
+}
+table:where([widest]) {
+  --_table-w: max-content;
+}
+table[lines=inner] {
+  border-top: none;
+  border-bottom: none;
+}
+table[lines=outer] {
+  border-left: 1px solid var(--_table-c-bd);
+  border-right: 1px solid var(--_table-c-bd);
+}
+table[lines=all] {
+  border-left: 1px solid var(--_table-c-bd);
+  box-shadow: inset -1px 0 0 0 var(--_table-c-bd);
+  position: relative;
+}
+table[lines=all] td,
+table[lines=all] th {
+  position: relative;
+  box-shadow: inset -1px 0 0 0 var(--_table-c-bd);
+}
+table[lines=all] td[selected] {
+  position: relative;
+  box-shadow: inset 0 0 0 2px var(--_table-c-foc);
+}
+table ._ell,
+table [class*="_ell-"] {
+  max-width: var(--_table-ell);
+}
+@media screen and (max-width: 500px) {
+  table {
+    width: var(--_xxs-w);
+  }
+}
+@media screen and (min-width: 500px) and (max-width: 900px) {
+  table {
+    width: var(--_xs-w);
+  }
+}
+@media screen and (min-width: 900px) and (max-width: 1200px) {
+  table {
+    width: var(--_sm-w);
+  }
+}
+@media screen and (min-width: 1200px) and (max-width: 1500px) {
+  table {
+    width: var(--_md-w);
+  }
+}
+@media screen and (min-width: 1500px) and (max-width: 4100px) {
+  table {
+    width: var(--_lg-w);
+  }
+}
+@media screen and (min-width: 4100px) {
+  table {
+    width: var(--_xl-w);
+  }
+}
 /*
-Last modified: 2025-03-05 21:35:26
+Last modified: 2025-04-18 12:54:29
 */
 /*Button*/
 AX-BTN {
@@ -3235,6 +3367,12 @@ AX-BTN[width=neat] {
 AX-BTN[width=full] {
   width: 100%;
 }
+AX-BTN[width=iso] {
+  --_btn-p-lr: 0;
+}
+AX-BTN[width=iso] > [rep=wrap] {
+  aspect-ratio: 1/1;
+}
 AX-BTN[theme=prim]:where([grad]:not([type=seal], [type=plain])) > [rep=wrap] {
   background: linear-gradient(45deg, var(--_c-prim), var(--_c-prim-aj));
 }
@@ -3406,7 +3544,7 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
   color: var(--_c-prim);
 }
 /*
- *Last modified: 2025-04-16 11:24:08
+ *Last modified: 2025-04-18 19:10:33
  */
 /*grid layout*/
 ._grid {
@@ -4735,6 +4873,9 @@ AX-DIVIDER[size=lg] {
 ._w-auto {
   width: auto;
 }
+._w-iso {
+  aspect-ratio: 1/1;
+}
 /*Height*/
 [class*="_h-"] {
   box-sizing: border-box;
@@ -4783,6 +4924,9 @@ AX-DIVIDER[size=lg] {
 }
 ._h-auto {
   height: auto;
+}
+._h-iso {
+  aspect-ratio: 1/1;
 }
 /*Align*/
 ._a-l {
@@ -5323,20 +5467,86 @@ img[rep=image] {
   font-size: var(--_px-ignore);
 }
 ._empty-hide:empty {
-  display: none!important;
+  display: none !important;
 }
 ._empty-detach:empty {
-  visibility: hidden!important;
-  position: absolute!important;
-  pointer-events: none!important;
+  visibility: hidden !important;
+  position: absolute !important;
+  pointer-events: none !important;
 }
 ._empty-collapse:empty {
-  width: 0!important;
-  height: 0!important;
-  padding: 0!important;
-  margin: 0!important;
-  border-width: 0!important;
-  overflow: hidden!important;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-width: 0 !important;
+  overflow: hidden !important;
+}
+._scroller {
+  --_scroller-w: auto;
+  --_scroller-h: fit-content;
+  --_scroller-x: auto;
+  --_scroller-y: auto;
+  --_xxs-h: var(--_scroller-h);
+  --_xs-h: var(--_scroller-h);
+  --_sm-h: var(--_scroller-h);
+  --_md-h: var(--_scroller-h);
+  --_lg-h: var(--_scroller-h);
+  --_xl-h: var(--_scroller-h);
+  --_xxs-w: var(--_scroller-w);
+  --_xs-w: var(--_scroller-w);
+  --_sm-w: var(--_scroller-w);
+  --_md-w: var(--_scroller-w);
+  --_lg-w: var(--_scroller-w);
+  --_xl-w: var(--_scroller-w);
+  width: var(--_scroller-w);
+  height: var(--_scroller-h);
+  -webkit-overflow-scrolling: touch;
+  overflow-x: var(--_scroller-x);
+  overflow-y: var(--_scroller-y);
+  box-sizing: border-box;
+}
+._scroller[axis=x] {
+  --_scroller-y: hidden;
+}
+._scroller[axis=y] {
+  --_scroller-x: hidden;
+}
+@media screen and (max-width: 500px) {
+  ._scroller {
+    height: var(--_xxs-h);
+    width: var(--_xxs-w);
+  }
+}
+@media screen and (min-width: 500px) and (max-width: 900px) {
+  ._scroller {
+    height: var(--_xs-h);
+    width: var(--_xs-w);
+  }
+}
+@media screen and (min-width: 900px) and (max-width: 1200px) {
+  ._scroller {
+    height: var(--_sm-h);
+    width: var(--_sm-w);
+  }
+}
+@media screen and (min-width: 1200px) and (max-width: 1500px) {
+  ._scroller {
+    height: var(--_md-h);
+    width: var(--_md-w);
+  }
+}
+@media screen and (min-width: 1500px) and (max-width: 4100px) {
+  ._scroller {
+    height: var(--_lg-h);
+    width: var(--_lg-w);
+  }
+}
+@media screen and (min-width: 4100px) {
+  ._scroller {
+    height: var(--_xl-h);
+    width: var(--_xl-w);
+  }
 }
 /*Group button*/
 /*Container btns*/
@@ -6895,6 +7105,15 @@ AX-CHECKBOX input {
   position: fixed;
   left: -100000px;
 }
+AX-RADIO:has(i:empty),
+AX-CHECKBOX:has(i:empty) {
+  height: var(--_rem-list);
+  line-height: var(--_rem-list);
+}
+AX-RADIO:has(i:empty) i,
+AX-CHECKBOX:has(i:empty) i {
+  display: none;
+}
 AX-RADIO:where(:not([type=chera], [type=switch])) i,
 AX-CHECKBOX:where(:not([type=chera], [type=switch])) i {
   transition: all var(--_dur-2) linear;
@@ -7014,6 +7233,15 @@ AX-RADIO:where(:not([type=chera], [type=switch])) input:where(:disabled:checked)
   transform: scale(1);
 }
 /*Checkbox*/
+AX-CHECKBOX:where(:not([type=chera], [type=switch])) {
+  /*   &:has(i:empty) {
+    height: var(--_rem-list);
+    line-height: var(--_rem-list);
+    i {
+      display: none;
+    }
+  } */
+}
 AX-CHECKBOX:where(:not([type=chera], [type=switch])) u {
   width: calc(var(--_rem-subject) - 0.2rem);
   aspect-ratio: 1/1;
@@ -7077,13 +7305,6 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch])) input:where(:disabled:check
   color: var(--_c-disable);
   transform: scale(0.8);
   cursor: not-allowed;
-}
-AX-CHECKBOX:where(:not([type=chera], [type=switch])):has(i:empty) {
-  height: var(--_rem-list);
-  line-height: var(--_rem-list);
-}
-AX-CHECKBOX:where(:not([type=chera], [type=switch])):has(i:empty) i {
-  display: none;
 }
 /*Chera of checkbox & radio*/
 AX-CHECKBOX[type=chera],
@@ -11031,62 +11252,28 @@ Last modified: 2025-03-04 23:45:00
 }
 /*table*/
 ._table-wrap {
-  border-top: 1px solid var(--_c-text-bd);
-  border-bottom: 1px solid var(--_c-text-bd);
+  --_table-wrap-bd: var(--_c-text-bd);
+  --_table-wrap-h: fit-content;
+  --_table-wrap-w: auto;
+  height: var(--_table-wrap-h);
+  width: var(--_table-wrap-w);
   overflow: auto;
   position: relative;
 }
-._table {
-  --_table-ell: 16rem;
+._table-wrap table {
+  border-top: none;
+  border-bottom: none;
 }
-._table th ._cell {
+._table-wrap th ._cell {
   display: flex;
 }
-._table tr:where([selected]) td {
-  background-color: var(--_c-prim-bg);
-}
-._table th:where([selected]),
-._table td:where([selected]) {
-  background-color: var(--_c-prim-bg);
-}
-._table tr td:where([focus]) {
-  color: var(--_c-prim);
-  box-shadow: inset 0 0 0 2px var(--_c-prim);
-}
-._table tr:where([disabled]) td:where([focus]) {
-  color: var(--_c-ignore);
-  box-shadow: inset 0 0 0 2px var(--_c-prim-bd);
-}
-._table tr:where([disabled]) {
-  opacity: var(--_o-disabled);
-}
-._table td[disabled] {
-  opacity: var(--_o-disabled);
-}
-._table:where([stripe='']) tbody tr:nth-child(odd),
-._table:where([stripe="odd"]) tbody tr:nth-child(odd) {
-  background-color: var(--_c-ignore-bg);
-}
-._table:where([stripe="even"]) tbody tr:nth-child(even) {
-  background-color: var(--_c-ignore-bg);
-}
-._table:where([hoverable]) tbody tr:where(:not([selected], [disabled])):hover {
-  background-color: var(--_c-text-bg);
-}
-._table:where([focus]) tbody tr td:where(:not([focus], [name='check'], [name='tools'])):hover {
-  box-shadow: inset 0 0 0 2px var(--_c-ignore);
-}
-._table:where([nowrap]) td,
-._table:where([nowrap]) th {
-  white-space: nowrap;
-}
-._table ._sort-arrow {
+._table-wrap ._sort-arrow {
   width: var(--_rem-subject);
   height: var(--_rem-subject);
   text-align: center;
   position: relative;
 }
-._table ._sort-arrow:before {
+._table-wrap ._sort-arrow:before {
   content: '';
   height: 0;
   width: 0;
@@ -11099,7 +11286,7 @@ Last modified: 2025-03-04 23:45:00
   top: calc(var(--_rem-subject) / 2 - 0.1rem - 0.4rem);
   left: calc(var(--_rem-subject) / 2 - 0.4rem);
 }
-._table ._sort-arrow:after {
+._table-wrap ._sort-arrow:after {
   content: '';
   height: 0;
   width: 0;
@@ -11112,7 +11299,7 @@ Last modified: 2025-03-04 23:45:00
   top: calc(var(--_rem-subject) / 2 + 0.1rem);
   left: calc(var(--_rem-subject) / 2 - 0.4rem);
 }
-._table label ~ * {
+._table-wrap label ~ * {
   font-size: var;
   color: var(--_c-text-bg);
   width: var(--_rem-subject);
@@ -11120,64 +11307,66 @@ Last modified: 2025-03-04 23:45:00
   cursor: pointer;
   transition: all var(--_dur-2) linear;
 }
-._table label ~ *:hover {
+._table-wrap label ~ *:hover {
   color: var(--_c-text);
 }
-._table [order="asc"] ._sort-arrow:before {
+._table-wrap [order="asc"] ._sort-arrow:before {
   border-color: transparent transparent var(--_c-text) transparent;
 }
-._table [order="desc"] ._sort-arrow:after {
+._table-wrap [order="desc"] ._sort-arrow:after {
   border-color: var(--_c-text) transparent transparent transparent;
 }
-._table ._avatar {
-  margin-top: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
-  margin-bottom: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
-}
-._table ._b-xs {
-  margin-top: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
-  margin-bottom: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
-}
-._table ._b-xs._b-seal {
-  position: relative;
-}
-._table ._operate {
-  margin-top: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
-  margin-bottom: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
-}
-._table ._operate [class*="icon-"] {
-  color: var(--_c-ignore);
-  font-size: 1.4rem;
-  height: var(--_rem-list);
-  line-height: var(--_rem-list);
-  width: var(--_rem-list);
-  text-align: center;
-  box-sizing: border-box;
-  position: relative;
-}
-._table ._operate [class*="icon-"]._c-ignore {
-  cursor: not-allowed;
-}
-._table ._operate [class*="icon-"] ._dot {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-._table tbody tr:hover ._operate [class*="icon-"] {
-  color: var(--_c-text-aj);
-}
-._table ._operate [class*="icon-"]:hover {
-  background-color: var(--_c-stage);
-  border: 1px solid var(--_c-text-bd);
-  line-height: calc(var(--_rem-list) - 0.2rem);
-  border-radius: var(--_r);
-}
-._table ._operate [class*="icon-"]:hover ._badge {
-  right: -0.1rem;
-  top: -0.1rem;
-}
-._table ._ell,
-._table [class*="_ell-"] {
-  max-width: var(--_table-ell);
+._table {
+  /*  ._avatar {
+    margin-top: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
+    margin-bottom: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
+  } */
+  /* ._b-xs {
+    margin-top: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
+    margin-bottom: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
+  } */
+  /*  ._b-xs._b-seal {
+    position: relative;
+  } */
+  /* 
+  ._operate {
+    margin-top: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
+    margin-bottom: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
+  }
+  ._operate [class*="icon-"] {
+    color: var(--_c-ignore);
+    font-size: 1.4rem;
+    height: var(--_rem-list);
+    line-height: var(--_rem-list);
+    width: var(--_rem-list);
+    text-align: center;
+    box-sizing: border-box;
+    position: relative;
+  }
+  ._operate [class*="icon-"]._c-ignore {
+    cursor: not-allowed;
+  }
+  ._operate [class*="icon-"] ._dot {
+    position: absolute;
+    right: 0;
+    top: 0
+  }
+  tbody tr:hover ._operate [class*="icon-"] {
+    color: var(--_c-text-aj);
+  }
+  tbody tr:hover ._operate [class*="icon-"]._c-ignore {
+  }
+  ._operate [class*="icon-"]:hover {
+    background-color: var(--_c-stage);
+    border: 1px solid var(--_c-text-bd);
+    line-height: calc(var(--_rem-list) - .2rem);
+    border-radius: var(--_r);
+  } 
+  ._operate [class*="icon-"]:hover ._badge {
+    right: -0.1rem;
+    top: -0.1rem
+  }
+*/
 }
 ._table ._form-input,
 ._table ._form-con {
@@ -11228,110 +11417,95 @@ Last modified: 2025-03-04 23:45:00
 ._table ._form-group ._col {
   width: auto;
 }
-._table[display="border"],
-._table-wrap[display="border"] {
-  border-left: 1px solid var(--_c-text-bd);
-  border-right: 1px solid var(--_c-text-bd);
+._table-wrap:where(:not(:has([lines="inner"]))) {
+  border-top: 1px solid var(--_table-wrap-bd);
+  border-bottom: 1px solid var(--_table-wrap-bd);
 }
-._table[display="grid"],
-._table-wrap[display="grid"] {
-  border-left: 1px solid var(--_c-text-bd);
-  box-shadow: inset -1px 0 0 0 var(--_c-text-bd);
-  position: relative;
+._table-wrap:where(:has([lines="all"])) {
+  border-left: 1px solid var(--_table-wrap-bd);
 }
-._table[display="grid"] td,
-._table-wrap[display="grid"] td,
-._table[display="grid"] th,
-._table-wrap[display="grid"] th {
-  position: relative;
-  box-shadow: inset -1px 0 0 0 var(--_c-text-bd);
+._table-wrap:where(:has([lines="all"])) table {
+  border-left: 0;
 }
-._table[display="grid"] td[selected],
-._table-wrap[display="grid"] td[selected] {
-  position: relative;
-  box-shadow: inset 0 0 0 2px var(--_c-prim);
+._table-wrap:where(:has([lines="outer"])) {
+  border-left: 1px solid var(--_table-wrap-bd);
+  border-right: 1px solid var(--_table-wrap-bd);
 }
-._table-wrap {
-  border-top: 1px solid var(--_c-text-bd);
-  border-bottom: 1px solid var(--_c-text-bd);
-  overflow: auto;
-  position: relative;
+._table-wrap:where(:has([lines="outer"])) table {
+  border-left: 0;
+  border-right: 0;
 }
-._table-wrap ._table {
-  border-top: none;
-  border-bottom: none;
-}
-._table-wrap[fixed*="head"] thead tr:last-child {
+._table-wrap:where([fixed*="head"]) thead tr:last-child {
   border: none;
 }
-._table-wrap[fixed*="head"] thead th {
+._table-wrap:where([fixed*="head"]) thead th {
   background-color: var(--_c-stage);
-  box-shadow: inset 0 -1px 0 0 var(--_c-text-bd);
+  box-shadow: inset 0 -1px 0 0 var(--_table-wrap-bd);
   position: sticky;
   top: 0;
   z-index: 3;
 }
-._table-wrap[fixed*="head"] tbody tr:last-child {
-  border-bottom: 1px solid var(--_c-text-bd);
+._table-wrap:where([fixed*="head"]) tbody tr:last-child {
+  border-bottom: 1px solid var(--_table-wrap-bd);
 }
-._table-wrap[display="grid"][fixed*="head"] thead th {
-  box-shadow: inset 0 -1px 0 0 var(--_c-text-bd), inset -1px 0 0 0 var(--_c-text-bd);
+._table-wrap:where(:has([lines="all"])[fixed*="head"]) thead th {
+  box-shadow: inset 0 -1px 0 0 var(--_table-wrap-bd), inset -1px 0 0 0 var(--_table-wrap-bd);
 }
-._table-wrap[fixed*="left"] th:first-child,
-._table-wrap[fixed*="left"] td:first-child {
+._table-wrap:where([fixed*="left"]) th:first-child,
+._table-wrap:where([fixed*="left"]) td:first-child {
   background-color: var(--_c-stage);
-  box-shadow: inset -1px 0 0 0 var(--_c-text-bd);
+  box-shadow: inset -1px 0 0 0 var(--_table-wrap-bd);
   position: sticky;
   left: 0;
   z-index: 3;
 }
-._table-wrap[stripe][fixed*="left"] tbody tr:nth-child(odd) td:first-child {
+._table-wrap:where(:has([stripe])[fixed*="left"]) tbody tr:nth-child(odd) td:first-child {
   background-color: var(--_c-ignore-bg);
 }
-._table-wrap[stripe][fixed*="left"] tbody tr[selected] td:first-child {
+._table-wrap:where(:has([stripe])[fixed*="left"]) tbody tr[selected] td:first-child {
   background-color: var(--_c-prim-bg);
 }
-._table-wrap[hoverable][fixed*="left"] tbody tr:not([selected]):hover td:first-child {
-  background-color: var(--_c-text-bg);
+._table-wrap:where(:has([hoverable])[fixed*="left"]) tbody tr:not([selected]):hover td:first-child {
+  background-color: var(--_table-wrap-bd);
 }
-._table-wrap[fixed*="right"] th:last-child,
-._table-wrap[fixed*="right"] td:last-child {
+._table-wrap:where([fixed*="right"]) th:last-child,
+._table-wrap:where([fixed*="right"]) td:last-child {
   background-color: var(--_c-stage);
   position: sticky;
   right: 0;
   z-index: 3;
 }
-._table-wrap[fixed*="right"] th:last-child:before,
-._table-wrap[fixed*="right"] td:last-child:before {
+._table-wrap:where([fixed*="right"]) th:last-child:before,
+._table-wrap:where([fixed*="right"]) td:last-child:before {
   content: '';
   width: 1px;
   height: 100%;
-  background-color: var(--_c-text-bd);
+  background-color: var(--_table-wrap-bd);
   position: absolute;
   left: -1px;
   top: 0;
 }
-._table-wrap[stripe][fixed*="right"] tbody tr:nth-child(odd) td:last-child {
+._table-wrap:where(:has([stripe])[fixed*="right"]) tbody tr:nth-child(odd) td:last-child {
   background-color: var(--_c-ignore-bg);
 }
-._table-wrap[stripe][fixed*="right"] tbody tr[selected] td:last-child {
+._table-wrap:where(:has([stripe])[fixed*="right"]) tbody tr[selected] td:last-child {
   background-color: var(--_c-prim-bg);
 }
-._table-wrap[hoverable][fixed*="right"] tbody tr:not([selected]):hover td:last-child {
-  background-color: var(--_c-text-bg);
+._table-wrap:where(:has([hoverable])[fixed*="right"]) tbody tr:not([selected]):hover td:last-child {
+  background-color: var(--_table-wrap-bd);
 }
-._table-wrap[fixed*="head"][fixed*="left"] tr th:first-child {
-  box-shadow: inset 0 -1px 0 0 var(--_c-text-bd), inset -1px 0 0 0 var(--_c-text-bd);
+._table-wrap:where([fixed*="head"][fixed*="left"]) tr th:first-child {
+  box-shadow: inset 0 -1px 0 0 var(--_table-wrap-bd), inset -1px 0 0 0 var(--_table-wrap-bd);
   z-index: 4;
 }
-._table-wrap[fixed*="head"][fixed*="right"] tr th:last-child {
+._table-wrap:where([fixed*="head"][fixed*="right"]) tr th:last-child {
   z-index: 4;
 }
-._table-wrap[fixed*="head"][fixed*="right"] tr th:last-child:before {
+._table-wrap:where([fixed*="head"][fixed*="right"]) tr th:last-child:before {
   content: '';
   width: 1px;
   height: 100%;
-  background-color: var(--_c-text-bd);
+  background-color: var(--_table-wrap-bd);
   position: absolute;
   left: -1px;
   top: 0;
@@ -20437,7 +20611,7 @@ AX-SKELETON[shape=square] {
 /*Phone+iPad rotate+iPad*/
 /*xxs->Phone*/
 /*
- *Last modified: 2025-03-04 23:45:43
+ *Last modified: 2025-04-16 23:07:17
  */
 @media screen and (max-width: 500px) {
   :root {
@@ -20465,8 +20639,11 @@ AX-SKELETON[shape=square] {
     width: auto;
     height: auto;
   }
-  [class*="_container"] {
+  [class*="_container"]:where(:not(._xxs-full)) {
     --_container-w-2: var(--_w-xxs);
+  }
+  [class*="_container"]:where(._xxs-full) {
+    --_container-w-2: 100%;
   }
   ._hide-xxs {
     display: none;
@@ -21162,8 +21339,11 @@ AX-SKELETON[shape=square] {
     width: auto;
     height: auto;
   }
-  [class*="_container"] {
+  [class*="_container"]:where(:not(._xs-full)) {
     --_container-w-2: var(--_w-xs);
+  }
+  [class*="_container"]:where(._xs-full) {
+    --_container-w-2: 100%;
   }
   ._hide-xs {
     display: none;
@@ -21823,6 +22003,9 @@ AX-SKELETON[shape=square] {
       --_container-w-1:var(--_w-xs);
     }
   } */
+  [class*="_container"]:where(._sm-full) {
+    width: 100%;
+  }
   ._hide-sm {
     display: none;
   }
@@ -22477,6 +22660,9 @@ AX-SKELETON[shape=square] {
     }
   }
  */
+  [class*="_container"]:where(._md-full) {
+    width: 100%;
+  }
   ._hide-md {
     display: none;
   }
@@ -23753,6 +23939,9 @@ AX-SKELETON[shape=square] {
 @media screen and (min-width: 4100px) {
   :root {
     --SCREEN: xl;
+  }
+  [class*="_container"]:where(._xl-full) {
+    width: 100%;
   }
   ._hide-xl {
     display: none;
