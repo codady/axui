@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-18 22:44:2
+ * @since Last modified: 2025-4-21 13:5:22
  * @name AXUI front-end framework.
- * @version 3.0.38
+ * @version 3.0.39
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-04-18 22:38:38
+ * @since Last modified: 2025-04-21 13:04:20
  */
 /*
  *Last modified: 2025-03-04 23:55:38
@@ -1964,7 +1964,7 @@
   content: "\e62f";
 }
 /*
- *Last modified: 2025-04-18 22:08:30
+ *Last modified: 2025-04-19 17:13:46
  */
 html {
   font-size: var(--_fs-root);
@@ -2827,6 +2827,7 @@ table td {
   font-size: var(--_table-fs);
   line-height: var(--_rem-subject);
 }
+table thead td,
 table th {
   color: var(--_c-brief);
   font-weight: normal;
@@ -3544,7 +3545,7 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
   color: var(--_c-prim);
 }
 /*
- *Last modified: 2025-04-18 19:10:33
+ *Last modified: 2025-04-20 15:25:57
  */
 /*grid layout*/
 ._grid {
@@ -5501,6 +5502,7 @@ img[rep=image] {
   --_xl-w: var(--_scroller-w);
   width: var(--_scroller-w);
   height: var(--_scroller-h);
+  max-width: 100%;
   -webkit-overflow-scrolling: touch;
   overflow-x: var(--_scroller-x);
   overflow-y: var(--_scroller-y);

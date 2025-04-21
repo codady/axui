@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-18 22:43:33
+ * @since Last modified: 2025-4-21 13:4:55
  * @name AXUI front-end framework.
- * @version 3.0.38
+ * @version 3.0.39
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15721,6 +15721,9 @@
                     else if (obj.key === 'target' && obj.proxy.labelEl.nodeName === 'A') {
                         obj.proxy.labelEl.target = obj.value;
                     }
+                    else if (['onclilck', 'onClick'].includes(obj.key)) {
+                        obj.proxy.labelEl.setAttribute(obj.key, obj.value);
+                    }
                     else if (obj.key === 'floor') {
                         obj.proxy.indentHeadEl.innerHTML = obj.proxy.indentBodyEl.innerHTML = obj.proxy.indentFootEl.innerHTML = this.getIndentHtml(obj.value);
                         this.updateChildrenFloor(obj.proxy);
@@ -16003,6 +16006,8 @@
             item.indentBodyEl = createEl('span', { [alias]: 'indent' });
             item.indentFootEl = createEl('span', { [alias]: 'indent' });
             item.indentHeadEl.innerHTML = item.indentBodyEl.innerHTML = item.indentFootEl.innerHTML = this.getIndentHtml(item.floor);
+            item.onclick && item.labelEl.setAttribute('onclick', item.onclick);
+            item.onClick && item.labelEl.setAttribute('onclick', item.onClick);
             this.options.arrow.enable && super.getArrowEl(item);
             let imgNone = getImgNone();
             if (!item.iconEl) {
@@ -16907,7 +16912,7 @@
                     if (k === 'action') {
                         source[k] = val.call({ ins: this, item: k }, source);
                     }
-                    else if (['icon', 'disk', 'cube', 'href', 'target', 'rel', 'label', 'brief', 'tips', 'badge'].includes(k)) {
+                    else if (['icon', 'disk', 'cube', 'onclick', 'onClick', 'href', 'target', 'rel', 'label', 'brief', 'tips', 'badge'].includes(k)) {
                         source[k] = val;
                     }
                 }
