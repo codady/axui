@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-22 18:38:31
+ * @since Last modified: 2025-4-24 16:56:28
  * @name AXUI front-end framework.
- * @version 3.0.40
+ * @version 3.0.41
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -233,6 +233,7 @@ var tmp = /*#__PURE__*/Object.freeze({
     get prefix () { return prefix; },
     get preventDft () { return preventDft; },
     get privacy () { return privacy; },
+    get promiseRaf () { return promiseRaf; },
     get prompt () { return prompt; },
     get propsMap () { return propsMap; },
     get purifyHtml () { return purifyHtml; },
@@ -2031,15 +2032,20 @@ const classes = (target) => {
 };
 
 const elState = (elem) => {
-    let dom = getEl(elem), isExist = dom ? true : false, result;
+    let dom = getEl(elem), isExist = dom ? true : false;
     if (!dom) {
-        result = { isExist, isCalc: false, isUncalc: true };
+        return { isExist, isCalc: false, isUncalc: true };
     }
     else {
+        if (!dom.isConnected) {
+            return { isExist, isVirtual: true, isHidden: true, isVisible: false, isCalc: false, isUncalc: true };
+        }
+        if (dom.style.display === 'none') {
+            return { isExist, isVirtual: false, isHidden: true, isVisible: false, isCalc: false, isUncalc: true };
+        }
         let style = getComputedStyle(dom), isVirtual = !style.display, isHidden = (style.display === 'none' || style.visibility === 'hidden'), isCalc = !!(style.display && style.display !== 'none'), isVisible = !!(isCalc && style.visibility === 'visible');
-        result = { isExist, isVirtual, isHidden, isVisible, isCalc, isUncalc: isVirtual || isHidden };
+        return { isExist, isVirtual, isHidden, isVisible, isCalc, isUncalc: isVirtual || isHidden };
     }
-    return result;
 };
 
 const optBase = [
@@ -4851,6 +4857,8 @@ const setContent = ({ content, target, position = 'override', engine, template, 
     }
 };
 
+const getAutoDur = (val) => isNull(val) ? 200 : ~~(parseFloat(val) / 3 + 250);
+
 class ModBaseListenCacheBubble extends ModBaseListenCache {
     bubbleType;
     positionIns;
@@ -4871,6 +4879,10 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
     contXhr;
     triggerShow;
     wings;
+    cssDur;
+    duration;
+    wrapHeight;
+    leaveTrigger;
     static hostType = 'node';
     
     formEl = null;
@@ -5246,6 +5258,10 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
         this.listen({ name: 'targetSet', params: [value] });
     }
     
+    getDuration() {
+        let tmp = parseFloat(style(this.bubbleType === 'popup' ? this.mainEl : this.wrapEl).animationDuration) * 1000 || 0;
+        this.duration = this.options.duration || (this.options.autoDur ? getAutoDur(this.wrapHeight) : tmp);
+    }
     
     async reset(cb) {
         this.options = deepClone(this.dftOpts);
@@ -5368,13 +5384,12 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
         this.canTrigger = false;
         this.contXhr && this.contXhr.abort();
         this.submitXhr && this.submitXhr.abort();
+        this.leaveTrigger && this.leaveTrigger.cancel();
         this.destroyed = true;
         this.listen({ name: 'destroyed', cb });
         return this;
     }
 }
-
-const getAutoDur = (val) => isNull(val) ? 200 : ~~(parseFloat(val) / 3 + 250);
 
 class Drawer extends ModBaseListenCacheBubble {
     options = {};
@@ -5390,8 +5405,6 @@ class Drawer extends ModBaseListenCacheBubble {
     closeEl;
     triggerShow;
     content;
-    duration;
-    wrapHeight;
     wrapSize;
     sequenceShow;
     sequenceHide;
@@ -5607,20 +5620,22 @@ class Drawer extends ModBaseListenCacheBubble {
         elState(this.mainEl).isVirtual && this.parentEl.appendChild(this.mainEl);
         super.listen({ name: 'show', cb });
         this.wrapSize = parseInt(style(this.wrapEl)[this.sizeProp]);
-        this.duration = this.options.duration || (this.options.autoDur ? getAutoDur(this.wrapHeight) : parseFloat(style(this.wrapEl).animationDuration) * 1000);
-        this.wrapEl.style.transitionDuration = `${this.duration}ms`;
-        this.targetEl && this.targetEl.classList.add(this.options.actClass);
-        this.lastShowTime = Date.now();
-        this.getBeforeItems().forEach((k) => {
-            this.sequenceShow(k.ins.wrapEl, this.options.placement);
-        });
-        this.mainEl.setAttribute('show', '');
-        await delay({
-            duration: this.duration,
-            done: () => {
-                this.state = 'shown';
-                super.listen({ name: 'shown', cb });
+        requestAnimationFrame(async () => {
+            super.getDuration();
+            this.wrapEl.style.transitionDuration = `${this.duration}ms`;
+            this.targetEl && this.targetEl.classList.add(this.options.actClass);
+            this.lastShowTime = Date.now();
+            for (let k of this.getBeforeItems()) {
+                this.sequenceShow(k.ins.wrapEl, this.options.placement);
             }
+            this.mainEl.setAttribute('show', '');
+            await delay({
+                duration: this.duration,
+                done: () => {
+                    this.state = 'shown';
+                    super.listen({ name: 'shown', cb });
+                }
+            });
         });
         return this;
     }
@@ -5958,17 +5973,18 @@ let slideToggle = ({ el, display = 'block', before, doing, done, duration, curve
     return target;
 };
 
-let easeHeight = ({ el, height, type = 'down', doing, done, duration, curve = 'easeOut', cut = true }) => {
+let easeHeight = ({ el, height, type = 'down', doing, done, duration, curve = 'easeOut', cut = true, unaware = true }) => {
     let target = getEl(el);
     if (!target) {
         throw new Error('The target node does not exist!');
     }
-    if (elState(target).isCalc) {
-        let size = getHeights(target).height, _height = ~~height && height !== 0 ? ~~height : size, time = ~~duration && duration !== 0 ? ~~duration : getAutoDur(_height), dftCss = `${target.style.cssText} ${cut ? 'overflow:hidden;' : ''};`, from = {}, to = {};
+    let canDo = !unaware || (unaware && elState(target).isCalc);
+    if (canDo) {
+        let origHeight = ~~height, styleHeight, _height = origHeight && height !== 0 ? origHeight : (styleHeight = getHeights(target).height), time = ~~duration && duration !== 0 ? ~~duration : getAutoDur(_height), dftCss = `${target.style.cssText} ${cut ? 'overflow:hidden;' : ''};`, from = {}, to = {};
         target.style.cssText = `${dftCss}`;
-        if (type === 'to' && ~~height) {
-            from = { height: size };
-            to = { height };
+        if (type === 'to' && origHeight) {
+            from = { height: isNull(styleHeight) ? styleHeight : getHeights(target).height };
+            to = { height: origHeight };
         }
         else if (type === 'up') {
             from = { height: _height };
@@ -6785,7 +6801,7 @@ const treeTools = {
                             tmp.remove();
                         }
                         else {
-                            let str = resp.trim(), type = (str.startsWith('{') && str.endsWith('}')) ? 'object' : (str.startsWith('[') && str.endsWith(']')) ? 'array' : 'other';
+                            let str = resp.trim(), type = (str.startsWith('{') && str.endsWith('}')) ? 'object' : (str.startsWith('[') && str.endsWith(']')) ? 'array' : '';
                             if (type) {
                                 treeData = this.toTree(strArr2ObjArr(parseStr({
                                     content: resp,
@@ -8111,7 +8127,7 @@ const appendEls = ({ parent, nodes, reverse = false, target, prepend = false }) 
     host.insertBefore(fragment, refer);
 };
 
-const decompTask = ({ tasks, run, count = 20, cb }) => {
+const decompTask = ({ tasks, run, count = 10, cb }) => {
     if (!Array.isArray(tasks) || !tasks.length)
         return;
     let idx = 0, handler = () => {
@@ -9974,8 +9990,6 @@ class Dialog extends ModBaseListenCacheBubble {
     closeEl;
     triggerShow;
     content;
-    duration;
-    wrapHeight;
     aniIn;
     aniOut;
     addPulseAnim;
@@ -10250,24 +10264,26 @@ class Dialog extends ModBaseListenCacheBubble {
         elState(this.mainEl).isVirtual && this.parentEl.appendChild(this.mainEl);
         super.listen({ name: 'show', cb });
         this.wrapHeight = parseInt(style(this.wrapEl).height);
-        this.duration = this.options.duration || (this.options.autoDur ? getAutoDur(this.wrapHeight) : parseFloat(style(this.wrapEl).animationDuration) * 1000);
-        this.wrapEl.style.transitionDuration = `${this.duration}ms`;
-        this.targetEl && this.targetEl.classList.add(this.options.actClass);
-        if (this.aniIn === 'slideDown') {
-            easeHeight({ el: this.wrapEl, height: this.wrapHeight, type: 'down', duration: this.duration });
-        }
-        else {
-            this.options.duration && (this.wrapEl.style.animationDuration = `${this.options.duration}ms`);
-            this.aniIn && (this.wrapEl.style.animationName = prefix + this.aniIn);
-        }
-        this.lastShowTime = Date.now();
-        this.mainEl.setAttribute('show', '');
-        await delay({
-            duration: this.duration,
-            done: () => {
-                this.state = 'shown';
-                super.listen({ name: 'shown', cb });
+        requestAnimationFrame(async () => {
+            super.getDuration();
+            this.wrapEl.style.transitionDuration = `${this.duration}ms`;
+            this.targetEl && this.targetEl.classList.add(this.options.actClass);
+            if (this.aniIn === 'slideDown') {
+                easeHeight({ el: this.wrapEl, height: this.wrapHeight, type: 'down', duration: this.duration, unaware: false });
             }
+            else {
+                this.options.duration && (this.wrapEl.style.animationDuration = `${this.options.duration}ms`);
+                this.aniIn && (this.wrapEl.style.animationName = prefix + this.aniIn);
+            }
+            this.lastShowTime = Date.now();
+            this.mainEl.setAttribute('show', '');
+            await delay({
+                duration: this.duration,
+                done: () => {
+                    this.state = 'shown';
+                    super.listen({ name: 'shown', cb });
+                }
+            });
         });
         return this;
     }
@@ -10284,7 +10300,7 @@ class Dialog extends ModBaseListenCacheBubble {
             this.options.wing.actClass && this.wings.map((k) => { k.classList.remove(this.options.wing.actClass); });
             this.maskEl && (this.maskEl.style.opacity = 0);
             if (this.aniOut === 'slideUp') {
-                easeHeight({ el: this.wrapEl, height: this.wrapHeight, type: 'up', duration: this.duration });
+                easeHeight({ el: this.wrapEl, height: this.wrapHeight, type: 'up', duration: this.duration, unaware: false });
             }
             else {
                 this.aniOut && (this.wrapEl.style.animationName = prefix + this.aniOut);
@@ -10449,6 +10465,17 @@ const getImgNone = () => getComputedVar(`--${prefix}none`).split('"')[1];
 const getImgEmpty = () => getComputedVar(`--${prefix}empty`).split('"')[1];
 
 const getImgAvatar = () => getComputedVar(`--${prefix}avatar`).split('"')[1];
+
+const promiseRaf = (cb) => {
+    if (isEmpty(cb))
+        return Promise.resolve();
+    return new Promise(resolve => {
+        requestAnimationFrame(() => {
+            cb();
+            resolve();
+        });
+    });
+};
 
 class ModBaseListenCacheNest extends ModBaseListenCache {
     flatData;
@@ -10887,7 +10914,7 @@ const optPosition = [
         prop: 'parentMutation',
         value: {
             enable: true,
-            selector: document.body,
+            selector: '',
             options: {
                 attributes: true,
                 characterData: true,
@@ -10975,7 +11002,8 @@ class Position extends ModBaseListen {
         
         this.gap = toPixel(this.options.arrow.gap);
         
-        this.parent = this.options.parentMutation.enable && getEl(this.options.parentMutation.selector) ? getEl(this.options.parentMutation.selector) : null;
+        let tmp = getEl(this.options.parentMutation.selector);
+        this.parent = this.options.parentMutation.enable && tmp ? tmp : null;
         this.regularPlaces = [
             'left-start', 'left-center', 'left-end',
             'right-start', 'right-center', 'right-end',
@@ -10984,15 +11012,12 @@ class Position extends ModBaseListen {
         ];
         this.specialPlaces = ['left-max', 'right-max', 'top-max', 'bottom-max', 'center', 'center-max',];
         this.places = [...this.regularPlaces, ...this.specialPlaces];
-        this.observerCount = 0;
-        this.completeCount = 0;
-        this.timer = 0;
-        this.trigger = () => {
-            if (elState(this.bubbleEl).isUncalc)
+        this.trigger = debounce(() => {
+            let targetState = elState(this.targetEl), bubbleState = elState(this.bubbleEl);
+            if (targetState.isVirtual || bubbleState.isVirtual || targetState.isUncalc || bubbleState.isUncalc)
                 return;
-            this.observerCount++;
-            this.complete(this.observerCount);
-        };
+            this.resetPlacement();
+        }, this.options.delay);
         this.targetAttrsObs = new MutationObserver((mutations) => {
             for (let mutation of mutations) {
                 if (this.options.targetObs.attrs.includes(mutation.attributeName)) {
@@ -11047,7 +11072,7 @@ class Position extends ModBaseListen {
         return this;
     }
     setObs() {
-        window.addEventListener("resize", this.trigger);
+        window.addEventListener('resize', this.trigger);
         window.addEventListener('scroll', this.trigger);
         if (this.options.targetObs.enable) {
             if (this.options.targetObs.attrs.length > 0) {
@@ -11088,17 +11113,6 @@ class Position extends ModBaseListen {
                 (value === 'top') ? 'top-center' :
                     (value === 'bottom') ? 'bottom-center' :
                         (value === 'max') ? 'center-max' : value;
-    }
-    complete(count) {
-        
-        clearInterval(this.timer);
-        this.timer = setInterval(() => {
-            if (this.observerCount === count) {
-                this.resetPlacement();
-                this.observerCount = 0;
-                clearInterval(this.timer);
-            }
-        }, this.options.delay);
     }
     
     setAttrs() {
@@ -11166,11 +11180,9 @@ class Position extends ModBaseListen {
             left = '-' + this.options.arrow.size;
             arrowRotate = '135';
         }
-        this.arrowEl.style.left = left;
-        this.arrowEl.style.right = right;
-        this.arrowEl.style.top = top;
-        this.arrowEl.style.bottom = bottom;
-        this.arrowEl.style.transform = `rotate(${arrowRotate}deg)`;
+        let tmp = `left:${left};right:${right};top:${top};bottom:${bottom};transform:rotate(${arrowRotate}deg);`;
+        this.arrowEl.style.cssText += tmp;
+        
     }
     getRectsData() {
         this.bodyData = {
@@ -11212,7 +11224,7 @@ class Position extends ModBaseListen {
     }
     
     setPlacement(placement) {
-        let [left, right, top, bottom] = ['auto', 'auto', 'auto', 'auto'];
+        let [left, right, top, bottom] = ['auto', 'auto', 'auto', 'auto'], cssText = '';
         if (placement.includes('bottom') || placement.includes('top')) {
             if (placement.includes('bottom')) {
                 left = placement === 'bottom' || placement === 'bottom-center' ? (this.targetData.left - (this.bubbleData.width - this.targetData.width) / 2) :
@@ -11256,38 +11268,32 @@ class Position extends ModBaseListen {
             }
         }
         if (this.placement === 'center-max') {
-            this.bubbleEl.style.width = `calc(100vw - ${this.fullGap}*2)`;
-            this.bubbleEl.style.height = `calc(100vh - ${this.fullGap}*2)`;
+            cssText = `width:calc(100vw - ${this.fullGap}*2);height:calc(100vh - ${this.fullGap}*2);`;
             left = this.fullGap;
             top = this.fullGap;
         }
         else if (this.placement === 'center') {
-            this.bubbleEl.style.marginLeft = `-${toNumber(this.bubbleEl.getBoundingClientRect().width / 2, { mode: 'ceil' })}px`;
-            this.bubbleEl.style.marginTop = `-${toNumber(this.bubbleEl.getBoundingClientRect().height / 2, { mode: 'ceil' })}px`;
+            cssText = `margin-left:-${toNumber(this.bubbleEl.getBoundingClientRect().width / 2, { mode: 'ceil' })}px;margin-top:-${toNumber(this.bubbleEl.getBoundingClientRect().height / 2, { mode: 'ceil' })}px;`;
             left = '50%';
             top = '50%';
         }
         else if (this.placement === 'top-max' || this.placement === 'bottom-max') {
             left = `${toNumber(this.browserData.scrollLeft + toPixel(this.fullGap), { mode: 'ceil' })}px`;
-            this.bubbleEl.style.width = `calc(100vw - ${this.fullGap}*2)`;
+            cssText = `width:calc(100vw - ${this.fullGap}*2);`;
         }
         else if (this.placement === 'left-max' || this.placement === 'right-max') {
             top = `${toNumber(this.browserData.scrollTop + toPixel(this.fullGap), { mode: 'ceil' })}px`;
-            this.bubbleEl.style.height = `calc(100vh - ${this.fullGap}*2)`;
+            cssText = `height:calc(100vh - ${this.fullGap}*2);`;
         }
-        this.bubbleEl.style.left = left;
-        this.bubbleEl.style.right = right;
-        this.bubbleEl.style.top = top;
-        this.bubbleEl.style.bottom = bottom;
+        this.bubbleEl.style.cssText += (cssText + `left:${left};right:${right};top:${top};bottom:${bottom};`);
+        
         this.getBubbleData();
         this.arrowEl ? this.setArrow(placement) : null;
     }
     resetBubbleAttrs() {
-        this.bubbleEl.style.cssText = this.bubbleEl.style.cssText.replace('margin-left:', '').replace('margin-top:', '').replace('width:', '').replace('height:', '');
-        this.bubbleEl.style.left = 'auto';
-        this.bubbleEl.style.right = 'auto';
-        this.bubbleEl.style.top = 'auto';
-        this.bubbleEl.style.bottom = 'auto';
+        let tmp = this.bubbleEl.style.cssText.replace('margin-left:', '').replace('margin-top:', '').replace('width:', '').replace('height:', '') + `;left:auto;right:auto;top:auto;bottom:auto;`;
+        this.bubbleEl.style.cssText = tmp;
+        
         this.getBubbleData();
     }
     getSurroundGap() {
@@ -11523,6 +11529,7 @@ class Position extends ModBaseListen {
         if (this.destroyed)
             return;
         this.removeObs();
+        this.trigger.cancel();
         this.destroyed = true;
         super.listen({ name: 'destroyed', cb, params: [this.placement] });
         return this;
@@ -11832,8 +11839,6 @@ class Popup extends ModBaseListenCacheBubble {
     triggerShow;
     toggleShow;
     content;
-    duration;
-    wrapHeight;
     bubbleType;
     aniIn;
     aniOut;
@@ -11900,14 +11905,17 @@ class Popup extends ModBaseListenCacheBubble {
         };
         this.toggleShow = (e) => {
             !contains(e.target, [this.mainEl, this.targetEl, ...this.wings]) &&
-                elState(e.target).isVisible &&
                 this.state === 'shown' &&
                 !this.options.keepShow &&
+                elState(e.target).isVisible &&
                 this.hide();
         };
         this.triggerClose = () => {
             !this.options.keepShow && this.hide();
         };
+        this.leaveTrigger = debounce(() => {
+            !this.options.keepShow && this.hide();
+        });
         super.listen({ name: 'constructed' });
         initial && this.targetEl && this.init();
     }
@@ -12100,13 +12108,12 @@ class Popup extends ModBaseListenCacheBubble {
                 onEnter: () => {
                     this.show();
                 },
-                onLeave: () => {
-                    !this.options.keepShow && this.hide();
-                },
+                onLeave: this.leaveTrigger,
                 hold: this.mainEl,
             });
         }
         else if (this.options.trigger === 'sticky') {
+            this.options.multiple = true;
             this.show();
         }
         if (this.options.pageClose && !this.options.multiple) {
@@ -12146,39 +12153,51 @@ class Popup extends ModBaseListenCacheBubble {
     }
     
     async show(cb) {
-        if (this.destroyed || this.state !== 'hidden' || this.options.asleep) {
+        if (this.destroyed || this.options.asleep) {
+            return this;
+        }
+        if (this.state !== 'hidden') {
+            if (this.state === 'shown')
+                this.leaveTrigger.cancel();
             return this;
         }
         this.state = 'ing';
         this.options.b4Show && await this.options.b4Show.call(this);
         elState(this.mainEl).isVirtual && document.body.appendChild(this.mainEl);
-        super.listen({ name: 'show', cb });
-        this.wrapHeight = parseInt(style(this.wrapEl).height);
-        this.duration = this.options.duration || (this.options.autoDur ? getAutoDur(this.wrapHeight) : parseFloat(style(this.mainEl).animationDuration) * 1000);
         this.positionIns.change();
-        this.mainEl.setAttribute('visibility', 'visible');
+        super.listen({ name: 'show', cb });
         this.targetEl && this.targetEl.classList.add(this.options.actClass);
-        if (this.aniIn === 'slideDown') {
-            easeHeight({ el: this.wrapEl, height: this.wrapHeight, type: 'down', duration: this.duration });
-        }
-        else {
-            this.options.duration && (this.mainEl.style.animationDuration = `${this.options.duration}ms`);
-            this.aniIn && (this.mainEl.style.animationName = prefix + this.aniIn);
-        }
         this.lastShowTime = Date.now();
         this.hoverIns && (this.hoverIns.isActive = true);
-        await delay({
-            duration: this.duration,
-            done: () => {
-                this.state = 'shown';
-                super.listen({ name: 'shown', cb });
+        this.wrapHeight = this.positionIns.bubbleData.height;
+        requestAnimationFrame(async () => {
+            super.getDuration();
+            this.mainEl.style.visibility = 'visible';
+            if (this.aniIn === 'slideDown') {
+                easeHeight({ el: this.wrapEl, height: this.wrapHeight, type: 'down', duration: this.duration, unaware: false });
             }
+            else {
+                this.options.duration && (this.mainEl.style.animationDuration = `${this.options.duration}ms`);
+                this.aniIn && (this.mainEl.style.animationName = prefix + this.aniIn);
+            }
+            await delay({
+                duration: this.duration,
+                done: () => {
+                    this.state = 'shown';
+                    super.listen({ name: 'shown', cb });
+                }
+            });
         });
         return this;
     }
     
     async hide(cb) {
-        if (this.destroyed || this.state !== 'shown') {
+        if (this.destroyed) {
+            return this;
+        }
+        if (this.state !== 'shown') {
+            if (this.state === 'ing')
+                this.mainEl.style.visibility = null;
             return this;
         }
         this.state = 'ing';
@@ -12188,7 +12207,7 @@ class Popup extends ModBaseListenCacheBubble {
             this.targetEl && this.targetEl.classList.remove(this.options.actClass);
             this.options.wing.actClass && this.wings.map((k) => { k.classList.remove(this.options.wing.actClass); });
             if (this.aniOut === 'slideUp') {
-                easeHeight({ el: this.wrapEl, height: this.wrapHeight, type: 'up', duration: this.duration });
+                easeHeight({ el: this.wrapEl, height: this.wrapHeight, type: 'up', duration: this.duration, unaware: false });
             }
             else {
                 this.aniOut && (this.mainEl.style.animationName = prefix + this.aniOut);
@@ -12201,7 +12220,7 @@ class Popup extends ModBaseListenCacheBubble {
                 duration: this.duration,
                 done: () => {
                     this.state = 'hidden';
-                    this.mainEl.setAttribute('visibility', 'hidden');
+                    this.mainEl.style.visibility = null;
                     this.mainEl.remove();
                     super.listen({ name: 'hidden', cb });
                     this.aniOut === 'slideUp' && (this.wrapEl.style.height = 'auto');
@@ -15998,7 +16017,7 @@ class Tree extends ModBaseListenCacheNest {
                 else if (obj.key === 'target' && obj.proxy.labelEl.nodeName === 'A') {
                     obj.proxy.labelEl.target = obj.value;
                 }
-                else if (['onclilck', 'onClick'].includes(obj.key)) {
+                else if (obj.key === 'onclilck') {
                     obj.proxy.labelEl.setAttribute(obj.key, obj.value);
                 }
                 else if (obj.key === 'floor') {
@@ -16284,7 +16303,6 @@ class Tree extends ModBaseListenCacheNest {
         item.indentFootEl = createEl('span', { [alias]: 'indent' });
         item.indentHeadEl.innerHTML = item.indentBodyEl.innerHTML = item.indentFootEl.innerHTML = this.getIndentHtml(item.floor);
         item.onclick && item.labelEl.setAttribute('onclick', item.onclick);
-        item.onClick && item.labelEl.setAttribute('onclick', item.onClick);
         this.options.arrow.enable && super.getArrowEl(item);
         let imgNone = getImgNone();
         if (!item.iconEl) {
@@ -17189,7 +17207,7 @@ class Tree extends ModBaseListenCacheNest {
                 if (k === 'action') {
                     source[k] = val.call({ ins: this, item: k }, source);
                 }
-                else if (['icon', 'disk', 'cube', 'onclick', 'onClick', 'href', 'target', 'rel', 'label', 'brief', 'tips', 'badge'].includes(k)) {
+                else if (['icon', 'disk', 'cube', 'onclick', 'href', 'target', 'rel', 'label', 'brief', 'tips', 'badge'].includes(k)) {
                     source[k] = val;
                 }
             }
@@ -38138,6 +38156,7 @@ var ax_comm = {
     parseStr,
     getAutoDur,
     getHypotenuse,
+    promiseRaf,
     ModBase,
     ModBaseListen,
     ModBaseListenCache,
@@ -38445,6 +38464,7 @@ exports.plan = plan;
 exports.prefix = prefix;
 exports.preventDft = preventDft;
 exports.privacy = privacy;
+exports.promiseRaf = promiseRaf;
 exports.prompt = prompt;
 exports.propsMap = propsMap;
 exports.purifyHtml = purifyHtml;

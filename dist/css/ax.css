@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-22 18:38:59
+ * @since Last modified: 2025-4-24 16:56:55
  * @name AXUI front-end framework.
- * @version 3.0.40
+ * @version 3.0.41
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,10 +15,10 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-04-21 13:04:20
+ * @since Last modified: 2025-04-24 14:32:44
  */
 /*
- *Last modified: 2025-03-04 23:55:38
+ *Last modified: 2025-04-24 11:33:40
  */
 :root {
   /*Stage colors*/
@@ -366,7 +366,7 @@
   --_m: var(--_rem-body);
   /*Gap*/
   --_g: var(--_rem-min);
-  --_g-full: var(--_rem-title);
+  --_g-full: 2.8rem;
   /*Width & Height*/
   --_h-input: var(--_rem-input);
   --_w-input: min(calc(var(--_rem-input)*10), 100%);
@@ -1964,7 +1964,7 @@
   content: "\e62f";
 }
 /*
- *Last modified: 2025-04-19 17:13:46
+ *Last modified: 2025-04-23 10:09:12
  */
 html {
   font-size: var(--_fs-root);
@@ -2400,8 +2400,13 @@ input:where([type="checkbox"], [type="radio"]) {
 select:where([multiple], [size]) {
   --_field-count: 5;
   padding: 0;
-  min-height: calc((var(--_rem-input) + 1px)*var(--_field-count) + 1px);
   overflow: auto;
+}
+select:where([multiple]:not([size])) {
+  min-height: calc((var(--_rem-input) + 1px)*var(--_field-count) + 1px);
+}
+select:where([size]) {
+  --_field-h: auto;
 }
 select option {
   padding: 0 calc(var(--_g)*2);
@@ -5715,7 +5720,7 @@ img[rep=image] {
 }
 /*Container iframe*/
 ._box-iframe {
-  width: inherit;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -14177,6 +14182,8 @@ AX-TREE {
 ._popup:where(:not(._plain)) {
   --_popup-r: var(--_r-bubble);
   --_popup-w: var(--_w-bubble);
+  will-change: transform, opacity, width,height;
+  contain: layout;
   background-color: var(--_c-stage);
   min-width: var(--_rem-input);
   border: 1px solid var(--_c-text-bd);
@@ -14185,6 +14192,7 @@ AX-TREE {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
   animation-duration: var(--_dur-1);
   animation-fill-mode: both;
+  visibility: hidden;
   position: absolute;
   z-index: 880;
 }
@@ -14863,6 +14871,8 @@ AX-MENU {
   --_drawer-sz-y-lg: min(60rem, 70%);
   --_drawer-sz-y-max: calc(100% - var(--_rem-input));
   --_drawer-w: var(--_w-drawer);
+  will-change: transform, opacity, width, height;
+  contain: layout;
   height: 100%;
   width: 100%;
   position: fixed;
@@ -15173,6 +15183,8 @@ AX-MENU {
   --_dialog-h: 100vh;
   --_dialog-sz: auto;
   --_dialog-g: var(--_g-full);
+  will-change: transform, opacity, width,height;
+  contain: layout;
   height: var(--_dialog-h);
   width: var(--_dialog-w);
   display: flex;
