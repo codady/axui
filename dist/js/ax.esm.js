@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-24 16:56:28
+ * @since Last modified: 2025-4-25 23:35:56
  * @name AXUI front-end framework.
- * @version 3.0.41
+ * @version 3.0.42
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -37505,7 +37505,6 @@ class StepElem extends CompBaseComm {
     fillWrap(data) {
         this.content = this.stdContent(this.getArrContent());
         let fragment = document.createDocumentFragment();
-        (this.content);
         for (let k of this.content) {
             let node = tplToEl(renderTpl(this.template, k));
             k.wrapEl = node;
@@ -37555,6 +37554,7 @@ class StepElem extends CompBaseComm {
         else {
             result = parseStr({
                 content,
+                type: 'array',
                 error: (err) => {
                     console.info(config.error.parse, err);
                 }
@@ -37563,6 +37563,10 @@ class StepElem extends CompBaseComm {
         return result;
     }
     stdContent(content) {
+        if (!Array.isArray(content)) {
+            console.warn(`The obtained data is not an array, an empty array has been returned!`);
+            return [];
+        }
         return content.map((k, i) => {
             if (typeof k === 'string' || typeof k === 'number') {
                 return { label: k, index: i + 1 };
