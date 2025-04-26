@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-25 23:36:17
+ * @since Last modified: 2025-4-26 20:7:14
  * @name AXUI front-end framework.
- * @version 3.0.42
+ * @version 3.0.43
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-04-24 18:31:40
+ * @since Last modified: 2025-04-26 00:58:05
  */
 /*
  *Last modified: 2025-04-24 11:33:40
@@ -12261,6 +12261,7 @@ AX-PAGINATION {
   margin-bottom: calc(-1*var(--_tags-m));
   display: flex;
   flex-wrap: wrap;
+  contain: content;
 }
 ._tags:empty {
   --_tags-m: 0;
@@ -16568,12 +16569,6 @@ AX-RANGE > ._range {
 ._range[axis=y] ._range-bubble [rep=merge] {
   transform: translate(calc(-100% - var(--_range-sz-handle)/2 - 0.6rem), calc(50% - var(--_range-sz-handle)/2));
 }
-._range[axis=y] ._range-bubble [rep=merge] i {
-  text-align: center;
-  display: block;
-  transform: rotate(90deg);
-  margin: -0.6rem auto;
-}
 ._range[axis=y] ._range-handle > * {
   left: calc((var(--_range-sz-handle) - var(--_range-sz-track))/-2);
   top: auto;
@@ -18624,6 +18619,7 @@ AX-SELECT > ._select:focus-within {
 }
 ._select-wrap {
   position: relative;
+  contain: content;
 }
 ._select-wrap > ._select-search {
   display: flex;

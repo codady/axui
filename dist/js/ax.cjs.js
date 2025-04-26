@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-25 23:35:56
+ * @since Last modified: 2025-4-26 20:6:52
  * @name AXUI front-end framework.
- * @version 3.0.42
+ * @version 3.0.43
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -8127,20 +8127,47 @@ const appendEls = ({ parent, nodes, reverse = false, target, prepend = false }) 
     host.insertBefore(fragment, refer);
 };
 
-const decompTask = ({ tasks, run, count = 10, cb }) => {
-    if (!Array.isArray(tasks) || !tasks.length)
+const decompTask = ({ tasks: initTasks, run, count = 4, doing, done, type = 'idle', delay = 0 }) => {
+    if (!Array.isArray(initTasks) || !initTasks.length)
         return;
-    let idx = 0, handler = () => {
-        let end = Math.min(idx + count, tasks.length);
-        for (let i = idx; i < end; i++) {
-            run && run(tasks[i]);
-            i === tasks.length - 1 && cb && cb();
-        }
-        idx = end;
-        if (idx < tasks.length)
+    if (typeof run !== 'function')
+        throw new Error('run must be a function!');
+    let tasks = [...initTasks], idx = 0, isAborted = false, next = () => {
+        if (isAborted)
+            return;
+        if (type === 'timeout')
+            setTimeout(handler, delay);
+        else if (type === 'idle')
+            requestIdleCallback(handler);
+        else
             requestAnimationFrame(handler);
+    }, handler = () => {
+        if (isAborted)
+            return;
+        let end = Math.min(idx + count, tasks.length);
+        for (; idx < end; idx++) {
+            let task = tasks[idx], progress = tasks.length <= 1 ? 1 : idx / (tasks.length - 1);
+            try {
+                run && run(task);
+            }
+            catch (err) {
+                console.error('Task error:', err);
+            }
+            doing?.(task, progress);
+        }
+        idx >= (tasks.length) ? done?.() : next();
     };
-    requestAnimationFrame(handler);
+    next();
+    return {
+        abort: () => { isAborted = true; },
+        add: (newTasks) => {
+            if (!newTasks)
+                return;
+            let tmp = Array.isArray(newTasks) ? newTasks : [newTasks];
+            tasks.push(...tmp);
+            (idx >= tasks.length - tmp.length && !isAborted) && next();
+        }
+    };
 };
 
 const filterPrims = (data) => {
@@ -10456,15 +10483,40 @@ const regElem = (comp) => {
     window.customElements.define(`ax-${comp.name.replace('Elem', '').toLowerCase()}`, comp);
 };
 
-const getImgSpin = () => getComputedVar(`--${prefix}spin`).split('"')[1];
+const getImgSpin = () => {
+    if (!ax.imgSpin) {
+        ax.imgSpin = getComputedVar(`--${prefix}spin`).split('"')[1];
+    }
+    return ax.imgSpin;
+};
 
-const getImgSpinDk = () => getComputedVar(`--${prefix}spin-dk`).split('"')[1];
+const getImgSpinDk = () => {
+    if (!ax.imgSpinDk) {
+        ax.imgSpinDk = getComputedVar(`--${prefix}spin-dk`).split('"')[1];
+    }
+    return ax.imgSpinDk;
+};
 
-const getImgNone = () => getComputedVar(`--${prefix}none`).split('"')[1];
+const getImgNone = () => {
+    if (!ax.imgNone) {
+        ax.imgNone = getComputedVar(`--${prefix}none`).split('"')[1];
+    }
+    return ax.imgNone;
+};
 
-const getImgEmpty = () => getComputedVar(`--${prefix}empty`).split('"')[1];
+const getImgEmpty = () => {
+    if (!ax.imgEmpty) {
+        ax.imgEmpty = getComputedVar(`--${prefix}empty`).split('"')[1];
+    }
+    return ax.imgEmpty;
+};
 
-const getImgAvatar = () => getComputedVar(`--${prefix}avatar`).split('"')[1];
+const getImgAvatar = () => {
+    if (!ax.imgAvatar) {
+        ax.imgAvatar = getComputedVar(`--${prefix}avatar`).split('"')[1];
+    }
+    return ax.imgAvatar;
+};
 
 const promiseRaf = (cb) => {
     if (isEmpty(cb))
@@ -11013,8 +11065,11 @@ class Position extends ModBaseListen {
         this.specialPlaces = ['left-max', 'right-max', 'top-max', 'bottom-max', 'center', 'center-max',];
         this.places = [...this.regularPlaces, ...this.specialPlaces];
         this.trigger = debounce(() => {
-            let targetState = elState(this.targetEl), bubbleState = elState(this.bubbleEl);
-            if (targetState.isVirtual || bubbleState.isVirtual || targetState.isUncalc || bubbleState.isUncalc)
+            let bubbleState = elState(this.bubbleEl);
+            if (bubbleState.isVirtual || !bubbleState.isVisible || bubbleState.isUncalc)
+                return;
+            let targetState = elState(this.targetEl);
+            if (targetState.isVirtual || !targetState.isVisible || targetState.isUncalc)
                 return;
             this.resetPlacement();
         }, this.options.delay);
@@ -12164,13 +12219,13 @@ class Popup extends ModBaseListenCacheBubble {
         this.state = 'ing';
         this.options.b4Show && await this.options.b4Show.call(this);
         elState(this.mainEl).isVirtual && document.body.appendChild(this.mainEl);
-        this.positionIns.change();
         super.listen({ name: 'show', cb });
         this.targetEl && this.targetEl.classList.add(this.options.actClass);
         this.lastShowTime = Date.now();
         this.hoverIns && (this.hoverIns.isActive = true);
-        this.wrapHeight = this.positionIns.bubbleData.height;
         requestAnimationFrame(async () => {
+            this.positionIns.change();
+            this.wrapHeight = this.positionIns.bubbleData.height;
             super.getDuration();
             this.mainEl.style.visibility = 'visible';
             if (this.aniIn === 'slideDown') {
@@ -15175,6 +15230,7 @@ class Tags extends ModBaseListenCache {
     editEl;
     last;
     labelEl;
+    imgNone;
     static hostType = 'node';
     static optMaps = optTags;
     constructor(elem, options = {}, initial = config.initial) {
@@ -15443,21 +15499,20 @@ class Tags extends ModBaseListenCache {
         this.targetEl.innerHTML = '';
     }
     useLegend(obj) {
-        let imgNone = getImgNone();
         if (obj.hasOwnProperty('icon')) {
             obj.iconEl = createEl('i', { [alias]: 'icon', class: `${obj.icon}` });
             obj.labelEl.insertAdjacentElement('beforebegin', obj.iconEl);
         }
         if (obj.hasOwnProperty('disk')) {
-            obj.diskEl = createEl('img', { [alias]: 'disk', src: `${obj.disk || imgNone}` });
+            obj.diskEl = createEl('img', { [alias]: 'disk', src: `${obj.disk || getImgNone()}` });
             obj.labelEl.insertAdjacentElement('beforebegin', obj.diskEl);
         }
         if (obj.hasOwnProperty('cube')) {
-            obj.cubeEl = createEl('img', { [alias]: 'cube', src: `${obj.cube || imgNone}` });
+            obj.cubeEl = createEl('img', { [alias]: 'cube', src: `${obj.cube || getImgNone()}` });
             obj.labelEl.insertAdjacentElement('beforebegin', obj.cubeEl);
         }
         if (obj.hasOwnProperty('image')) {
-            obj.imageEl = createEl('img', { [alias]: 'image', src: `${obj.image || imgNone}` });
+            obj.imageEl = createEl('img', { [alias]: 'image', src: `${obj.image || getImgNone()}` });
             obj.labelEl.insertAdjacentElement('beforebegin', obj.imageEl);
         }
     }
@@ -16304,18 +16359,17 @@ class Tree extends ModBaseListenCacheNest {
         item.indentHeadEl.innerHTML = item.indentBodyEl.innerHTML = item.indentFootEl.innerHTML = this.getIndentHtml(item.floor);
         item.onclick && item.labelEl.setAttribute('onclick', item.onclick);
         this.options.arrow.enable && super.getArrowEl(item);
-        let imgNone = getImgNone();
         if (!item.iconEl) {
             item.iconEl = item.hasOwnProperty('icon') ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
         }
         if (!item.diskEl) {
-            item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || imgNone }) : null;
+            item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || getImgNone() }) : null;
         }
         if (!item.cubeEl) {
-            item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || imgNone }) : null;
+            item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || getImgNone() }) : null;
         }
         if (!item.imageEl) {
-            item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || imgNone }) : null;
+            item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || getImgNone() }) : null;
         }
         if (!item.badgeEl) {
             item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge', label: item.badge.toString().trim() }) : null;
@@ -22733,7 +22787,12 @@ const optLazy = [
     ...optBase
 ];
 
-const getImgBlank = () => getComputedVar(`--${prefix}blank`).split('"')[1];
+const getImgBlank = () => {
+    if (!ax.imgBlank) {
+        ax.imgBlank = getComputedVar(`--${prefix}blanck`).split('"')[1];
+    }
+    return ax.imgBlank;
+};
 
 class Lazy extends ModBaseListenCache {
     nodeName;
@@ -28623,18 +28682,17 @@ class Accordion extends ModBaseListenCacheNest {
         item.target && (item.labelEl.target = item.target);
         item.groupEl = createEl('div', { [alias]: 'group' });
         super.getArrowEl(item);
-        let imgNone = getImgNone();
         if (!item.iconEl) {
             item.iconEl = item.hasOwnProperty('icon') ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
         }
         if (!item.diskEl) {
-            item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || imgNone }) : null;
+            item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || getImgNone() }) : null;
         }
         if (!item.cubeEl) {
-            item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || imgNone }) : null;
+            item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || getImgNone() }) : null;
         }
         if (!item.imageEl) {
-            item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || imgNone }) : null;
+            item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || getImgNone() }) : null;
         }
         if (!item.badgeEl) {
             item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge', label: item.badge.toString().trim() }) : null;
@@ -37921,7 +37979,7 @@ class SkeletonElem extends CompBaseComm {
 }
 
 const init = (type, parent) => {
-    let parentEl = getEl(parent) || document.body, evalFn = new Function('el', 'module', `"use strict";try {return new module(el)} catch {return null}`), moduleNodeList = [], setProp = (node, module) => {
+    let parentEl = getEl(parent) || document.body, evalFn = new Function('el', 'module', `"use strict";try {return new module(el)} catch {return null}`), moduleNodeMaps = [], setProp = (node, module) => {
         elProps(node)?.add(module);
     }, getUsableModules = () => {
         let result = [];
@@ -37931,43 +37989,54 @@ const init = (type, parent) => {
         return result;
     }, getNodeList = (types) => {
         let allModules = getUsableModules(), modules = !isEmpty(types) ? types.filter(k => allModules.includes(k)) : allModules, modulesNodes = modules.map(k => {
-            return { module: k, nodeList: getEls(`[ax-${k}]`, parentEl).filter((i) => !i.ax || (i.ax && !i.ax[k])) };
+            let nodes = getEls(`[ax-${k}]`, parentEl).filter((i) => !i.ax || (i.ax && !i.ax[k]));
+            return nodes.map((i) => { return { module: k, node: i }; });
         });
         return modulesNodes;
     }, activeFun = (obj) => {
         if (['Dialog', 'Drawer', 'Popup'].includes(obj.module)) {
-            higherParent(obj.module, obj.nodeList);
+            higherParent(obj.module, obj.node);
         }
         else {
-            obj.nodeList.forEach((k) => {
-                let ins = evalFn(k, ax[obj.module]);
-                ins ? setProp(k, obj.module) : null;
-            });
+            let ins = evalFn(obj.node, ax[obj.module]);
+            ins ? setProp(obj.node, obj.module) : null;
         }
-    }, higherParent = (module, nodes) => {
-        let eachInstance = (arr, parent) => {
-            arr.forEach((k) => {
-                let ins = evalFn(k, ax[module]), children;
-                if (ins) {
-                    k[module] = true;
-                    parent ? ins.targetEl.style.zIndex = parseInt(getComputedStyle(parent.targetEl).zIndex) + 1 : null;
-                    children = [...ins.contEl.querySelectorAll(`[ax-${module}]`)];
-                    children.length > 0 ? eachInstance(children, ins) : null;
+    }, higherParent = (module, node) => {
+        let eachInstance = (host, parent) => {
+            let ins = evalFn(host, ax[module]), children;
+            if (ins) {
+                host[module] = true;
+                parent ? ins.targetEl.style.zIndex = parseInt(getComputedStyle(parent.targetEl).zIndex) + 1 : null;
+                children = getEls(`[ax-${module}]`, ins.contEl);
+                if (children.length > 0) {
+                    for (let k of children)
+                        eachInstance(k, ins);
                 }
-            });
+            }
         };
-        eachInstance(nodes);
+        eachInstance(node);
     };
     if (!isEmpty(type)) {
         let moduleType = getDataType(type), types;
         types = (moduleType === 'String') ? [type] :
             (moduleType === 'Array') ? type : [];
-        moduleNodeList = types.length > 0 ? getNodeList(types) : [];
+        moduleNodeMaps = types.length > 0 ? getNodeList(types) : [];
     }
     else {
-        moduleNodeList = getNodeList();
+        moduleNodeMaps = getNodeList();
     }
-    moduleNodeList.length > 0 && decompTask({ tasks: moduleNodeList, run: (task) => { activeFun(task); } });
+    let flatArr = moduleNodeMaps.flat();
+    if (flatArr.length) {
+        decompTask({
+            tasks: flatArr,
+            count: 4,
+            type: 'idle',
+            done: () => {
+                console.info(`Initialization finished, all tasks are done!`);
+            },
+            run: (task) => activeFun(task),
+        });
+    }
     let lazySrcs = getEls('[lazy-src]', parentEl), lazyAsyncs = getEls('[lazy-async]', parentEl);
     for (let k of lazySrcs) {
         if (k?.ax?.lazy)
