@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-26 20:6:52
+ * @since Last modified: 2025-4-30 0:38:34
  * @name AXUI front-end framework.
- * @version 3.0.43
+ * @version 3.1.0
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -976,8 +976,8 @@
     const getFullGap = () => getComputedVar(`--${prefix}g-full`);
 
     const propsMap = {
-        x: { axis: 'x', position: 'left', overflow: 'overflowX', inner: 'clientWidth', outer: 'offsetWidth', scroll: 'scrollLeft', client: 'clientX', size: 'width', index: 4, offset: 'offsetLeft', gap: 'marginLeft' },
-        y: { axis: 'y', position: 'top', overflow: 'overflowY', inner: 'clientHeight', outer: 'offsetHeight', scroll: 'scrollTop', client: 'clientY', size: 'height', index: 5, offset: 'offsetTop', gap: 'marginTop' }
+        x: { axis: 'x', position: 'left', start: 'insetInlineStart', startAlt: 'inset-inline-start', overflow: 'overflowX', inner: 'clientWidth', outer: 'offsetWidth', scroll: 'scrollLeft', client: 'clientX', size: 'width', index: 4, offset: 'offsetLeft', gap: 'marginInlineStart' },
+        y: { axis: 'y', position: 'top', start: 'insetBlockStart', startAlt: 'inset-block-start', overflow: 'overflowY', inner: 'clientHeight', outer: 'offsetHeight', scroll: 'scrollTop', client: 'clientY', size: 'height', index: 5, offset: 'offsetTop', gap: 'marginBlockStart' }
     };
 
     const instance = {
@@ -2599,17 +2599,38 @@
         extend({ target: obj, source: assign });
     };
 
-    const elProps = (el) => {
+    const storeNode = (el) => {
         let target = getEl(el), result = null;
         if (target) {
-            !target.hasOwnProperty('ax') ? target.ax = {} : null;
+            !target.hasOwnProperty('ax') && (target.ax = {});
             result = {
-                add: (key, value = true) => {
-                    key && (target.ax[key] = value);
+                addModule: (key) => {
+                    if (!key)
+                        return;
+                    if (!target.ax.hasOwnProperty('modules')) {
+                        target.ax.modules = {};
+                    }
+                    if (target.ax.modules[key])
+                        return;
+                    target.ax.modules[key] = true;
                     return target;
                 },
-                remove: (key) => {
-                    key && (delete target.ax[key]);
+                removeModule: (key) => {
+                    if (!key)
+                        return;
+                    delete target.ax.modules[key];
+                    return target;
+                },
+                addData: (key, value) => {
+                    if (!key)
+                        return;
+                    target.ax[key] = value;
+                    return target;
+                },
+                removeData: (key) => {
+                    if (!key)
+                        return;
+                    delete target.ax[key];
                     return target;
                 }
             };
@@ -2666,6 +2687,14 @@
         return result;
     };
 
+    const getRtl = () => {
+        if (!ax.hasOwnProperty(ax.rtl)) {
+            let tmp = getComputedVar(`--${prefix}dir-coef`);
+            ax.rtl = tmp == '-1' ? true : false;
+        }
+        return ax.rtl;
+    };
+
     class ModBase {
         targetEl;
         targetData;
@@ -2684,6 +2713,7 @@
         tplEng;
         initCount;
         handleEls;
+        isRtl;
         constructor() {
             this.timestamp = Date.now();
             this.respSource = null;
@@ -2858,7 +2888,7 @@
             if (type === 'node') {
                 this.targetEl = getEl(host);
                 if (this.targetEl) {
-                    elProps(this.targetEl)?.add(this.moduleName);
+                    storeNode(this.targetEl)?.addModule(this.moduleName);
                     moreParams = {
                         el: this.targetEl,
                         component,
@@ -2956,6 +2986,21 @@
                     resolve(null);
                 }
             });
+        }
+        getDirRtl() {
+            if (this.options.rtl) {
+                this.isRtl = true;
+                return;
+            }
+            let rtlAttr = this.targetEl.getAttribute('dir');
+            if (rtlAttr === 'rtl') {
+                this.isRtl = true;
+                return;
+            }
+            this.isRtl = getRtl();
+        }
+        getRtlCoef() {
+            return (this.options.axis === 'x' && this.isRtl ? -1 : 1);
         }
         lock(cb) {
             if (this.destroyed || !this.targetEl)
@@ -8462,16 +8507,16 @@
             this.navEl = this.options.navSel ? getEl(this.options.navSel) : null;
             this.subEls = this.navEl && this.options.subSel ? this.navEl.querySelectorAll(this.options.subSel) : [];
             this.hide2Debounce = debounce((el) => {
-                if (el.spy.state === 'hidden') {
-                    if (el.spy?.out) {
-                        classes(el).add(el.spy?.out);
+                if (el.ax.spy.state === 'hidden') {
+                    if (el.ax.spy?.out) {
+                        classes(el).add(el.ax.spy?.out);
                     }
-                    if (el.spy?.in) {
-                        classes(el).remove(el.spy?.in);
+                    if (el.ax.spy?.in) {
+                        classes(el).remove(el.ax.spy?.in);
                         !this.options.visible && classes(el).add(`${prefix}o`);
                     }
                     if (this.active) {
-                        el.spy.wing.forEach((k) => {
+                        el.ax.spy.wing.forEach((k) => {
                             this.actIsAttr ? k.removeAttribute(this.active[0]) : classes(k).remove(this.active);
                         });
                     }
@@ -8500,38 +8545,38 @@
                     if (i.isIntersecting) {
                         args.intersecting = true;
                         if (i.intersectionRatio === 0) {
-                            i.target.spy.state = 'show';
+                            i.target.ax.spy.state = 'show';
                             super.listen({ name: 'shown', params: [args] });
                         }
                         else if (i.intersectionRatio === 1) {
-                            i.target.spy.state = 'shown';
+                            i.target.ax.spy.state = 'shown';
                             super.listen({ name: 'shown', params: [args] });
                             this.setActiveOnly(i.target);
                         }
                         else {
-                            i.target.spy.state = 'showing';
+                            i.target.ax.spy.state = 'showing';
                             super.listen({ name: 'showing', params: [args] });
                         }
-                        if (i.target.spy.ratio < i.intersectionRatio) {
+                        if (i.target.ax.spy.ratio < i.intersectionRatio) {
                             super.listen({ name: 'in', params: [args] });
                             !this.options.visible && classes(i.target).remove(`${prefix}o`);
-                            if (i.target.spy.state = 'showing') {
-                                if (i.target.spy?.in) {
-                                    classes(i.target).add(i.target.spy?.in, (name) => i.target.classList.contains(name) ? false : true);
+                            if (i.target.ax.spy.state = 'showing') {
+                                if (i.target.ax.spy?.in) {
+                                    classes(i.target).add(i.target.ax.spy?.in, (name) => i.target.classList.contains(name) ? false : true);
                                 }
                             }
                             !this.options.repeat && this.interactIns.unobserve(i.target);
                         }
-                        i.target.spy.ratio = i.intersectionRatio;
+                        i.target.ax.spy.ratio = i.intersectionRatio;
                     }
                     else {
                         args.intersecting = false;
-                        i.target.spy.state = 'hidden';
+                        i.target.ax.spy.state = 'hidden';
                         if (this.options.repeat) {
                             this.hide2Debounce.cancel()(i.target);
                         }
                         super.listen({ name: 'out', params: [args] });
-                        i.target.spy.ratio = 0;
+                        i.target.ax.spy.ratio = 0;
                     }
                 });
             }, {
@@ -8571,7 +8616,7 @@
         }
         setActiveOnly(el) {
             if (!isEmpty(this.active)) {
-                el.spy.wing.forEach((k) => {
+                el.ax.spy.wing.forEach((k) => {
                     if (this.actIsAttr) {
                         if (this.active.length > 0) {
                             k.setAttribute(this.active[0], this.active[1] || '');
@@ -8583,7 +8628,7 @@
                         });
                     }
                 });
-                let other = this.items.filter((k) => k !== el && k.spy), otherWings = other.map((k) => k.spy.wing).flat(Infinity);
+                let other = this.items.filter((k) => k !== el && k.ax.spy), otherWings = other.map((k) => k.ax.spy.wing).flat(Infinity);
                 otherWings.forEach((k) => {
                     this.actIsAttr ? k.removeAttribute(this.active[0]) : classes(k).remove(this.active);
                 });
@@ -8592,14 +8637,19 @@
         setSpyAttr(el) {
             if (!getDataType(el).includes('HTML'))
                 return;
-            let attrs = attrToJson(el, 'spy');
-            el.spy = {
+            let attrs = attrToJson(el, 'spy'), props = {
                 observed: true,
                 wing: this.getWings(el),
                 in: attrs.in || this.options.in,
                 out: attrs.out || this.options.out,
                 ratio: 0,
             };
+            if (!el.ax) {
+                el.ax = { spy: props };
+            }
+            else {
+                el.ax.spy = props;
+            }
             this.options.classes && classes(el).add(this.options.classes);
             !this.options.visible && classes(el).add(`${prefix}o`);
         }
@@ -8657,7 +8707,7 @@
                 resp && (els = resp);
             }
             els.forEach((i) => {
-                if (!i.spy) {
+                if (!i?.ax?.spy) {
                     this.setSpyAttr(i);
                     this.interactIns.observe(i);
                     !this.items.includes(i) && this.items.push(i);
@@ -8680,7 +8730,7 @@
             this.options.b4Remove && await this.options.b4Remove.call(this, els);
             els.forEach((i) => {
                 if (this.items.includes(i)) {
-                    if (i.spy) {
+                    if (i.ax.spy) {
                         Reflect.deleteProperty(i, 'spy');
                         this.interactIns.unobserve(i);
                     }
@@ -8702,7 +8752,7 @@
                 return;
             this.interactIns.disconnect();
             this.items.forEach((k) => {
-                k.spy.wing.forEach((i) => {
+                k.ax.spy.wing.forEach((i) => {
                     i.onclick = null;
                 });
             });
@@ -10263,6 +10313,18 @@
                 resolve();
             });
         });
+    };
+
+    const setRtl = (value = true) => {
+        let dom = document.documentElement;
+        if (value) {
+            dom.setAttribute('dir', 'rtl');
+            ax.rtl = true;
+        }
+        else {
+            dom.removeAttribute('dir');
+            Reflect.deleteProperty(ax, 'rtl');
+        }
     };
 
     class ModBaseListenCacheNest extends ModBaseListenCache {
@@ -13828,22 +13890,22 @@
             return this;
         }
         async play(target) {
-            if (this.destroyed || !target?.flip || elState(target).isUncalc)
+            if (this.destroyed || !target?.ax?.flip || elState(target).isUncalc)
                 return;
             if (this.options.b4Play) {
                 let resp = await this.options.b4Play.call(this, target);
                 resp && (target = resp);
             }
-            let restDur = target.flip.anim ? (target.flip.anim.effect.getTiming().duration - target.flip.anim.currentTime) : 0;
-            target.flip.anim?.cancel();
+            let restDur = target.ax.flip.anim ? (target.ax.flip.anim.effect.getTiming().duration - target.ax.flip.anim.currentTime) : 0;
+            target.ax.flip.anim?.cancel();
             let nowTranslate = this.getTranslate(target), nowRect = this.getRect(target), dist = {
-                x: target.flip.now.x - nowRect.x,
-                y: target.flip.now.y - nowRect.y,
+                x: target.ax.flip.now.x - nowRect.x,
+                y: target.ax.flip.now.y - nowRect.y,
             };
-            let isSamePos = target.flip.last.x === nowRect.x && target.flip.last.y === nowRect.y;
+            let isSamePos = target.ax.flip.last.x === nowRect.x && target.ax.flip.last.y === nowRect.y;
             if (!dist.x && !dist.y)
                 return new Promise(resolve => { resolve(null); });
-            target.flip.last = nowRect;
+            target.ax.flip.last = nowRect;
             let anim = target.animate([
                 {
                     transform: `translate(${dist.x + nowTranslate.x}px,${dist.y + nowTranslate.y}px)`,
@@ -13856,7 +13918,7 @@
                 easing: this.options.easing,
                 fill: 'forwards'
             });
-            target.flip.anim = anim;
+            target.ax.flip.anim = anim;
             await new Promise(resolve => requestAnimationFrame(resolve));
             return new Promise(resolve => {
                 anim.onfinish = () => {
@@ -13883,13 +13945,18 @@
             };
         }
         setFirstRect(target) {
-            !target.flip && (target.flip = {});
-            target.flip.last = this.getRect(target);
-            target.flip.now = { ...target.flip.last };
+            if (!target.ax) {
+                target.ax = { flip: {} };
+            }
+            else {
+                target.ax.flip = {};
+            }
+            target.ax.flip.last = this.getRect(target);
+            target.ax.flip.now = { ...target.ax.flip.last };
         }
         setNowRects() {
             for (let k of this.flipEls) {
-                k.flip.now = this.getRect(k);
+                k.ax.flip.now = this.getRect(k);
             }
         }
         updateFlipEls() {
@@ -13954,8 +14021,8 @@
             if (this.destroyed)
                 return this;
             for (let k of this.flipEls) {
-                k.flip?.anim?.cancel();
-                Reflect.deleteProperty(k, 'flip');
+                k.ax.flip?.anim?.cancel();
+                Reflect.deleteProperty(k.ax, 'flip');
             }
             this.destroyed = true;
             super.listen({ name: 'destroyed', cb });
@@ -19122,6 +19189,7 @@
             this.setEmpty();
             if (!this.targetEl)
                 return this;
+            super.getDirRtl();
             this.createPopup();
             this.createRetrieval();
             this.setAttrs();
@@ -19148,7 +19216,7 @@
         createPopup() {
             this.popupIns = new Popup(this.targetEl, extend({
                 target: {
-                    placement: 'bottom-start',
+                    placement: this.isRtl ? 'bottom-end' : 'bottom-start',
                     tools: { enable: true, placement: 'outside' },
                     pageClose: false,
                     footer: false,
@@ -19337,7 +19405,7 @@
             attr: 'initial',
             prop: 'initial',
             value: {
-                value: 0,
+                value: null,
                 mode: 'scroll',
             },
         },
@@ -19366,6 +19434,11 @@
             value: 1,
         },
         {
+            attr: 'rtl',
+            prop: 'rtl',
+            value: false,
+        },
+        {
             attr: 'wheel',
             prop: 'wheel',
             value: {
@@ -19385,7 +19458,7 @@
             value: 50,
         },
         {
-            attr: 'paddingStart',
+            attr: 'padding-start',
             prop: 'paddingStart',
             value: 0,
         },
@@ -19529,6 +19602,8 @@
         gestureIns;
         wrapStyleObs;
         sizeObs;
+        lastSnapped;
+        respThrot;
         static hostType = 'node';
         static optMaps = optScroll;
         constructor(elem, options = {}, initial = config.initial) {
@@ -19558,9 +19633,8 @@
             this.canResize = true;
             this.canMutate = true;
             this.initialResize = false;
-            this.key2Trans = throttle((e) => {
-                (e.code === 'ArrowLeft') ? this.toPrev() : (e.code === 'ArrowRight') ? this.toNext() : null;
-            }, { intvl: this.options.keyboard.intvl, prevent: true });
+            
+            
             this.resizeListener = debounce((data) => {
                 this.resizeCount++;
                 for (let k of data) {
@@ -19604,14 +19678,16 @@
             }
             this.setEmpty();
             this.setAttrs();
-            this.transNow = this.transLast = this.options.paddingStart;
+            this.transNow = this.transLast = 0;
             this.gap = toPixel(this.options.child.gap);
             this.createBar();
             this.updateDiff();
             this.initSnapArgs();
             this.getSnappeds();
-            this.getGestureIns();
-            this.setObserver();
+            await promiseRaf(() => {
+                this.getGestureIns();
+                this.setObserver();
+            });
             super.listen({ name: 'initiated', cb });
             return this;
         }
@@ -19633,6 +19709,7 @@
             this.wrapEl.classList.add(`${prefix}scroll-wrap`);
             this.targetEl.setAttribute('axis', this.options.axis);
             this.targetEl.toggleAttribute('gridded', this.options.gridded);
+            this.options.rtl ? this.targetEl.setAttribute('dir', 'rtl') : this.targetEl.removeAttribute('dir');
         }
         getGestureIns() {
             this.gestureIns = new Gesture(this.wrapEl, extend({
@@ -19640,8 +19717,8 @@
                     wheel: true,
                     keyboard: {
                         enable: this.options.keyboard,
-                        prev: this.options.axis === 'x' ? 'ArrowLeft' : 'ArrowUp',
-                        next: this.options.axis === 'x' ? 'ArrowRight' : 'ArrowDown',
+                        prev: this.options.axis === 'x' ? (this.isRtl ? 'ArrowRight' : 'ArrowLeft') : 'ArrowUp',
+                        next: this.options.axis === 'x' ? (this.isRtl ? 'ArrowLeft' : 'ArrowRight') : 'ArrowDown',
                         target: this.targetEl,
                     },
                     spy: this.options.keyboard,
@@ -19722,13 +19799,13 @@
                                 el: this.wrapEl,
                                 data: { translate: { [this.options.axis]: this.transNow } }
                             });
-                            this.exceedHandle({ linkage: this.cross });
+                            this.handleExceedLimit({ linkage: this.cross });
                             super.listen({ name: 'move', params: [data.translate] });
                         }
                     },
                     onTranslated: (data) => {
                         this.transLast = this.transNow;
-                        this.exceedHandle({
+                        this.handleExceedLimit({
                             start: async (ratio) => {
                                 this.options.b4ToStart && await this.options.b4ToStart.call(this, ratio);
                                 this.toStart();
@@ -19755,8 +19832,24 @@
                 source: this.options.gesture,
             }));
         }
+        getRtlRange() {
+            let rtlHandler = () => {
+                let tmp = this.rangeStart;
+                this.rangeStart = this.rangeEnd * -1;
+                this.rangeEnd = tmp * -1;
+            }, dirAttr = this.targetEl.getAttribute('dir');
+            if (dirAttr === 'rtl') {
+                rtlHandler();
+                this.isRtl = true;
+                return;
+            }
+            if (getRtl()) {
+                this.isRtl = true;
+                rtlHandler();
+            }
+        }
         setTransInit() {
-            let target = this.options.initial.value || this.rangeEnd, params = { target, snap: true };
+            let target = isNull(this.options.initial.value) ? (this.isRtl ? this.rangeStart : this.rangeEnd) : this.options.initial.value, params = { target, snap: true };
             this.options.initial.mode === 'localte' ? this.locateTo(params) : this.scrollTo(params);
         }
         createBar() {
@@ -19802,15 +19895,7 @@
             this.sizeObs.observe(this.targetEl);
             this.sizeObs.observe(this.wrapEl);
         }
-        updatePadding(start, end) {
-            if (isNull(start) && isNull(end))
-                return;
-            !isNull(start) && typeof start === 'number' && (this.options.paddingStart = start);
-            !isNull(end) && typeof end === 'number' && (this.options.paddingEnd = end);
-            this.updateDiff();
-            this.transNow < this.rangeStart && this.toEnd(undefined, false);
-            this.transNow > this.rangeEnd && this.toStart();
-        }
+        
         response() {
             this.updateDiff();
             if (this.isBaby) {
@@ -19824,19 +19909,19 @@
             }
             else {
                 this.options.snap.enable && this.setSnapped();
-                
             }
         }
         getDmpVals(placement) {
             let val = 0, dmp = this.options.dmpRatio ** 2;
             if (placement === 'start+') {
-                val = this.options.bounce ? this.paddingStart + (this.transNow - this.paddingStart) * dmp : this.paddingStart;
+                val = this.options.bounce ? this.paddingStart * super.getRtlCoef() + (this.transNow - this.paddingStart * super.getRtlCoef()) * dmp : this.paddingStart;
             }
             else if (placement === 'end+') {
-                val = this.options.bounce ? this.rangeStart + (this.transNow - this.rangeStart) * dmp : this.rangeStart;
+                let tmp = this.isRtl ? this.rangeEnd : this.rangeStart;
+                val = this.options.bounce ? tmp + (this.transNow - tmp) * dmp : tmp;
             }
             else if (placement === 'start-') {
-                val = this.options.bounce ? (this.transNow - this.paddingStart) * dmp : this.paddingStart;
+                val = this.options.bounce ? this.paddingStart * super.getRtlCoef() - (this.paddingStart * super.getRtlCoef() - this.transNow) * dmp : this.paddingStart;
             }
             return val;
         }
@@ -19856,6 +19941,9 @@
                 else {
                     result = val;
                 }
+            }
+            else if (typeof val === 'string') {
+                result = toPixel(val);
             }
             return result;
         }
@@ -19923,18 +20011,32 @@
             }
             this.rangeEnd = this.paddingStart;
             this.rangeStart = outerSize - innerSize - this.paddingEnd;
-            this.activeSize = this.rangeEnd - this.rangeStart;
+            this.isBaby = outerSize - innerSize - this.paddingEnd - this.paddingStart > 0;
+            this.getRtlRange();
+            this.activeSize = this.isBaby ? 0 : this.rangeEnd - this.rangeStart;
             this.baseSize = this.targetSize - this.paddingStart - this.paddingEnd;
             this.updateProg();
             this.getBarSize();
             this.updateBarProg();
-            this.isBaby = this.rangeStart - this.paddingStart > 0;
         }
         getNowTargetDist(target) {
             if (!target)
                 return 0;
             let targetType = getDataType(target);
-            return targetType === 'Number' ? Math.abs(target - this.transNow) : targetType.includes('HTML') ? Math.abs(this.getChildParentOffset(target) - this.rangeEnd + this.transNow) : 0;
+            if (targetType === 'Number') {
+                return Math.abs(target - this.transNow);
+            }
+            else if (targetType.includes('HTML')) {
+                if (this.isRtl) {
+                    return Math.abs(this.getChildParentOffset(target) + this.transNow + this.rangeStart);
+                }
+                else {
+                    return Math.abs(this.getChildParentOffset(target) + this.transNow - this.rangeEnd);
+                }
+            }
+            else {
+                return 0;
+            }
         }
         setEaseTo(data, type = 'drift') {
             data[type].value[this.options.axis] = this.getEaseDist(data.translate.direction[this.options.axis], this.getEdgeValue(data[type].value[this.options.axis]), type);
@@ -19985,6 +20087,7 @@
             else if (this.options.wheel.mode === 'slide') {
                 this.getWheelNextTrans(dir, 'slide');
             }
+            this.gestureIns.stepVal = this.gestureIns.stepVal * super.getRtlCoef();
         }
         getWheelNextTrans(dir, mode = 'snap') {
             let chidlren = mode === 'slide' ? [...this.wrapEl.children] : this.snappeds, nearest = mode === 'slide' ? this.getNearestSlide() : this.snapped, idx = chidlren.findIndex((k) => k === nearest);
@@ -19994,10 +20097,13 @@
             }
         }
         getEdgeValue(data, isRatio = false) {
-            let value = this.rangeEnd, dataType = getDataType(data);
+            let value = this.isRtl ? this.rangeStart : this.rangeEnd;
+            if (this.isBaby)
+                return value;
+            let dataType = getDataType(data);
             if (dataType.includes('HTML') || dataType === 'String') {
                 let el = getEl(data);
-                el && (value = -this.getChildParentOffset(el) + this.rangeEnd);
+                el && (value -= this.getChildParentOffset(el));
             }
             else {
                 if (isRatio) {
@@ -20009,7 +20115,7 @@
                 }
             }
             if (value || value === 0) {
-                if (value >= this.rangeEnd || this.isBaby) {
+                if (value >= this.rangeEnd) {
                     value = this.rangeEnd;
                 }
                 else if (value <= this.rangeStart) {
@@ -20023,7 +20129,7 @@
                 this.progress = 1;
             }
             else {
-                this.progress = (this.rangeEnd - value) / this.activeSize;
+                this.progress = (this.isRtl ? (value - this.rangeStart) : (this.rangeEnd - value)) / this.activeSize;
             }
         }
         getBarSize() {
@@ -20036,14 +20142,14 @@
             if (this.options.bar.enable) {
                 let exceedRatio = this.progress < 0 ? Math.abs(this.progress) : this.progress > 1 ? this.progress - 1 : 0, progress = (this.progress >= 0 || this.progress <= 1) ? this.progress : 1, exceedSize = this.barSize.thumb * (1 - exceedRatio ** 2), thumbPos = (this.barSize.track - exceedSize) * progress;
                 this.thumbEl.style[this.forwardMap.size] = exceedSize + 'px';
-                this.thumbEl.style[this.forwardMap.position] = thumbPos + 'px';
+                this.thumbEl.style[this.forwardMap.start] = thumbPos + 'px';
             }
         }
         exceedListen(ratio, placement) {
             this.listen({ name: 'exceeded', params: [ratio, placement] });
             ratio >= 1 && this.listen({ name: 'completed', params: [ratio, placement] });
         }
-        exceedHandle({ start, end, normal, linkage }) {
+        handleExceedLimit({ start, end, normal, linkage }) {
             let ratio = 0, cross = linkage || this.crossLinkage();
             if (cross.includes('start')) {
                 ratio = Math.abs(this.transNow / this.options.completedThr);
@@ -20051,7 +20157,7 @@
                 linkage && this.exceedListen(toNumber(ratio, { places: 2 }), 'start');
             }
             else if (cross.includes('end')) {
-                ratio = Math.abs(this.transNow - this.rangeStart) / this.options.completedThr;
+                ratio = Math.abs(this.transNow * super.getRtlCoef() - this.rangeStart) / this.options.completedThr;
                 end && end(ratio.toFixed(2));
                 linkage && this.exceedListen(toNumber(ratio, { places: 2 }), 'end');
             }
@@ -20061,7 +20167,8 @@
         }
         crossLinkage(value = this.transNow) {
             let result = 'regular';
-            if (this.rangeStart > 0) {
+            value = value * super.getRtlCoef();
+            if ((this.isRtl ? -this.rangeEnd : this.rangeStart) > 0) {
                 if (this.isBaby) {
                     if (value > this.paddingStart) {
                         result = 'baby-start';
@@ -20074,7 +20181,7 @@
                     if (value > this.paddingStart) {
                         result = 'teen-start';
                     }
-                    else if (value < this.rangeStart) {
+                    else if (value < this.isRtl ? -this.rangeEnd : this.rangeStart) {
                         result = 'teen-end';
                     }
                 }
@@ -20083,26 +20190,17 @@
                 if (value > this.paddingStart) {
                     result = 'adult-start';
                 }
-                else if (value < this.rangeStart) {
+                else if (value < (this.isRtl ? -this.rangeEnd : this.rangeStart)) {
                     result = 'adult-end';
                 }
             }
             return result;
         }
-        rollback(dist, duration = this.options.duration) {
-            setTimeout(() => {
-                duration && (this.wrapEl.style.transitionDuration = duration + 'ms');
-                transformTools.set({
-                    el: this.wrapEl,
-                    data: { translate: { [this.options.axis]: dist } }
-                });
-            }, 0);
-        }
         toStart(duration, snap = true) {
             if (this.destroyed || this.transNow === this.rangeEnd)
                 return this;
-            this.transNow = this.transLast = this.paddingStart;
             this.scrollTo({
+                target: this.paddingStart * super.getRtlCoef(),
                 snap,
                 duration: duration || this.options.duration,
                 after: () => {
@@ -20113,8 +20211,8 @@
         toEnd(duration, snap = true) {
             if (this.destroyed || this.transNow === this.rangeStart)
                 return this;
-            this.transNow = this.transLast = this.rangeStart;
             this.scrollTo({
+                target: this.isRtl ? this.rangeEnd : this.rangeStart,
                 snap,
                 duration: duration || this.options.duration,
                 after: () => {
@@ -20143,11 +20241,13 @@
             }
         }
         getChildParentOffset(child, parent = this.wrapEl) {
-            return child.getBoundingClientRect()[this.forwardMap.position] - parent.getBoundingClientRect()[this.forwardMap.position];
+            let tmp = this.isRtl && this.forwardMap.position === 'left' ? 'right' : this.forwardMap.position;
+            return child.getBoundingClientRect()[tmp] - parent.getBoundingClientRect()[tmp];
         }
         sortEls(arr, val = this.transNow) {
             let tmp = arr.map((k) => {
-                return { el: k, offset: Math.abs(val - this.paddingStart + this.getChildParentOffset(k)) };
+                let offset = Math.abs(val - this.paddingStart * super.getRtlCoef() + this.getChildParentOffset(k));
+                return { el: k, offset };
             });
             tmp.sort((a, b) => a.offset - b.offset);
             return tmp;
@@ -20206,7 +20306,10 @@
             if (this.destroyed)
                 return this;
             this.scrolled = false;
-            let now = this.transNow, trans = this.getEdgeValue(target, isRatio), compare = Math.abs(this.transNow - trans) / this.targetSize, dur = duration || duration == 0 ? duration : Math.trunc(this.options.duration * compare);
+            let trans = this.getEdgeValue(target, isRatio);
+            if (this.transNow === trans)
+                return;
+            let now = this.transNow, compare = Math.abs(this.transNow - trans) / this.targetSize, dur = duration || duration == 0 ? duration : Math.trunc(this.options.duration * compare);
             this.wrapEl.style.transitionDuration = clampVal({ val: dur, min: 200, max: 2000 }) + 'ms';
             transformTools.set({ el: this.wrapEl, data: { translate: { [this.options.axis]: trans } } });
             super.listen({ name: 'scroll', cb: before, params: [trans, now] });
@@ -20225,7 +20328,10 @@
         locateTo({ target = this.transNow, before, after, snap = false, isRatio = false }) {
             if (this.destroyed)
                 return this;
-            let now = this.transNow, trans = this.getEdgeValue(target, isRatio);
+            let trans = this.getEdgeValue(target, isRatio);
+            if (this.transNow === trans)
+                return;
+            let now = this.transNow;
             this.wrapEl.style.transitionDuration = '0ms';
             transformTools.set({ el: this.wrapEl, data: { translate: { [this.options.axis]: trans } } });
             super.listen({ name: 'locate', cb: before, params: [trans, now] });
@@ -22006,8 +22112,8 @@
             if (!this.options.nav.enable)
                 return false;
             let addNav = (type) => {
-                let result = null, text = (type === 'prev') ? (this.options.axis === 'x' ? 'left' : 'up') :
-                    (type === 'next') ? (this.options.axis === 'x' ? 'right' : 'down') : '', className = `${prefix}swipe-${type}`, el = this.targetEl.querySelector(`.${className}`);
+                let result = null, text = (type === 'prev') ? (this.options.axis === 'x' ? `${prefix}icon-left` : `${prefix}icon-up`) :
+                    (type === 'next') ? (this.options.axis === 'x' ? `${prefix}icon-right` : `${prefix}icon-down`) : '', className = `${prefix}swipe-${type}`, el = getEl(`.${className}`, this.targetEl);
                 if (el) {
                     result = el;
                 }
@@ -22015,12 +22121,12 @@
                     result = getEl(this.options.nav[type].selector);
                 }
                 else {
-                    result = createEl('i', { class: className }, text);
+                    result = createEl('i', { class: `${className} ${text}` });
                     this.navEl ? this.navEl.appendChild(result) : this.targetEl.appendChild(result);
                 }
                 if (result) {
+                    result.classList.add(`${text}`);
                     this.options.nav[type].classes && classes(result).add(this.options.nav[type].classes);
-                    this.options.nav[type].text && (result.innerHTML = this.options.nav[type].text);
                     this.options.nav.classes && classes(result).add(this.options.nav.classes);
                     this.options.nav.fill && result.setAttribute('filled', '');
                 }
@@ -23163,6 +23269,7 @@
                 return this;
             }
             this.setAttrs();
+            this.getDirRtl();
             this.targetSize = this.targetEl[this.propsMap.inner];
             this.useTpl();
             this.getNodesTree();
@@ -23283,6 +23390,23 @@
             this.setNodeMutation(result);
             return result;
         }
+        getDirScrollVal() {
+            if (this.options.axis !== 'x') {
+                return this.targetEl[this.propsMap.scroll];
+            }
+            else {
+                let scrollLeft = this.targetEl[this.propsMap.scroll]; this.targetEl.getAttribute('dir');
+                return scrollLeft * super.getRtlCoef();
+            }
+        }
+        setDirScrollVal(val = 0) {
+            if (this.options.axis !== 'x') {
+                this.targetEl[this.propsMap.scroll] = val;
+            }
+            else {
+                this.targetEl[this.propsMap.scroll] = val * super.getRtlCoef();
+            }
+        }
         renderFromStart(start) {
             if (this.destroyed)
                 return;
@@ -23292,7 +23416,7 @@
             this.startIdx = 0;
             this.endIdx = this.itemSizes.length - 1;
             this.offsetVal = 0;
-            this.scrollVal = this.targetEl[this.propsMap.scroll];
+            this.scrollVal = this.getDirScrollVal();
             this.nodes = [];
             if (start) {
                 this.startIdx = start - 1;
@@ -23415,7 +23539,7 @@
         }
         setScrollVal(val = this.paddingStart) {
             this.targetEl.removeEventListener('scroll', this.autoRenderEvt);
-            this.targetEl[this.propsMap.scroll] = val;
+            this.setDirScrollVal(val);
             this.scrollVal = val;
             setTimeout(() => {
                 this.targetEl.addEventListener('scroll', this.autoRenderEvt, false);
@@ -23446,17 +23570,20 @@
             }
             this.setContOffset();
         }
+        getContOffset(val) {
+            return this.isRtl && this.options.axis === 'x' ? { x: Math.min(0, val * -1) } : { [this.options.axis]: Math.max(0, val) };
+        }
         setContOffset(val = this.offsetVal) {
             transformTools.set({
                 el: this.contEl,
                 data: {
-                    translate: { [this.options.axis]: Math.max(0, val) }
+                    translate: this.getContOffset(val),
                 }
             });
         }
         scrollTo(index = 0, cb) {
             if (!index) {
-                this.targetEl[this.propsMap.scroll] = 0;
+                this.setDirScrollVal();
             }
             else {
                 this.renderFromStart(index);
@@ -24240,6 +24367,11 @@
             value: false,
         },
         {
+            attr: 'rtl',
+            prop: 'rtl',
+            value: false,
+        },
+        {
             attr: 'locked',
             prop: 'locked',
             value: false,
@@ -24428,6 +24560,8 @@
             else {
                 this.propsMap = propsMap[this.options.axis];
                 this.propsMap.position = 'bottom';
+                this.propsMap.start = 'insetBlockEnd';
+                this.propsMap.startAlt = 'inset-block-end';
             }
             this.axisCoef = this.options.axis === 'y' ? -1 : 1;
             this.resizeObs = new ResizeObserver(debounce(() => {
@@ -24452,7 +24586,7 @@
                     return;
                 preventDft(e, true);
                 _this.focusHandle = this;
-                if (['ArrowLeft', 'ArrowDown'].includes(e.code)) {
+                if ([_this.isRtl ? 'ArrowRight' : 'ArrowLeft', 'ArrowDown'].includes(e.code)) {
                     _this.decrease();
                 }
                 else {
@@ -24484,6 +24618,7 @@
             this.getPlaces();
             this.output = { multiple: this.options.multiple, raw: '', value: '', range: [0, 0], ratio: [0, 0] };
             this.initRender();
+            this.getDirRtl();
             this.setAttrs();
             this.resizeObs.observe(this.trackEl);
             this.updateSizes();
@@ -24594,10 +24729,11 @@
         setHandleIns(type) {
             this.gestures[type] = new Gesture(this.handles[type], {
                 onTranslate: () => {
-                    this.offset = style(this.handles[type])[this.propsMap.position];
+                    this.offset = style(this.handles[type])[this.propsMap.start];
                 },
                 onTranslating: (e) => {
-                    this.slideSet(this.handles[type], parseFloat(this.offset) + e.translate.diff[this.options.axis] * this.axisCoef);
+                    let diff = e.translate.diff[this.options.axis] * this.axisCoef * super.getRtlCoef(), value = parseFloat(this.offset) + diff;
+                    this.slideSet(this.handles[type], value);
                 },
                 onTranslated: () => {
                     type !== 'single' && (this.tmpRatios = [...this.output.ratio]);
@@ -24655,6 +24791,7 @@
             this.targetEl.toggleAttribute('full', this.options.full);
             this.targetEl.toggleAttribute('inert', this.options.disabled);
             this.targetEl.setAttribute('size', this.options.size);
+            this.options.rtl ? this.targetEl.setAttribute('dir', 'rtl') : this.targetEl.removeAttribute('dir');
         }
         getInitVal() {
             if (this.inputEl.value) {
@@ -24782,18 +24919,18 @@
             if (this.options.multiple) {
                 this.output.ratio = [this.getRatioFromVal(this.output.range[0]), this.getRatioFromVal(this.output.range[1])];
                 let fromPercent = this.output.ratio[0] * 100, toPercent = this.output.ratio[1] * 100;
-                this.handles.from.style[this.propsMap.position] = `${fromPercent}%`;
-                this.handles.to.style[this.propsMap.position] = `${toPercent}%`;
+                this.handles.from.style[this.propsMap.start] = `${fromPercent}%`;
+                this.handles.to.style[this.propsMap.start] = `${toPercent}%`;
                 this.sizes.ratio.center = this.output.ratio[1];
                 this.thumbEl.style[this.propsMap.size] = `${toPercent - fromPercent}%`;
-                this.thumbEl.style[this.propsMap.position] = `${fromPercent + radiusPercent}%`;
+                this.thumbEl.style[this.propsMap.start] = `${fromPercent + radiusPercent}%`;
                 this.sizes.thumb = this.thumbEl.getBoundingClientRect()[this.propsMap.size];
                 if (this.options.tipShow) {
-                    this.bubbles.from.style[this.propsMap.position] = `${fromPercent}%`;
+                    this.bubbles.from.style[this.propsMap.start] = `${fromPercent}%`;
                     this.bubbles.from.innerHTML = getTipHTML(this.output.range[0]);
-                    this.bubbles.to.style[this.propsMap.position] = `${toPercent}%`;
+                    this.bubbles.to.style[this.propsMap.start] = `${toPercent}%`;
                     this.bubbles.to.innerHTML = getTipHTML(this.output.range[1]);
-                    this.bubbles.merge.style[this.propsMap.position] = `${fromPercent + (toPercent - fromPercent) / 2}%`;
+                    this.bubbles.merge.style[this.propsMap.start] = `${fromPercent + (toPercent - fromPercent) / 2}%`;
                     this.bubbles.merge.innerHTML = `${getTipHTML(this.output.range[0])}<i>${this.options.hyphen}</i>${getTipHTML(this.output.range[1])}`;
                     this.sizes.bubble.from = this.bubbles.from.getBoundingClientRect()[this.propsMap.size];
                     this.sizes.bubble.to = this.bubbles.to.getBoundingClientRect()[this.propsMap.size];
@@ -24803,11 +24940,11 @@
             else {
                 this.output.ratio[0] = this.getRatioFromVal(this.output.range[0]);
                 let singlePercent = this.output.ratio[0] * 100;
-                this.handles.single.style[this.propsMap.position] = `${singlePercent}%`;
+                this.handles.single.style[this.propsMap.start] = `${singlePercent}%`;
                 this.thumbEl.style[this.propsMap.size] = `${singlePercent + radiusPercent}%`;
                 this.sizes.thumb = this.thumbEl.getBoundingClientRect()[this.propsMap.size];
                 if (this.options.tipShow) {
-                    this.bubbles.single.style[this.propsMap.position] = `${singlePercent}%`;
+                    this.bubbles.single.style[this.propsMap.start] = `${singlePercent}%`;
                     this.bubbles.single.innerHTML = getTipHTML(this.output.range[0]);
                     this.sizes.bubble.single = this.bubbles.single.getBoundingClientRect()[this.propsMap.size];
                 }
@@ -24986,7 +25123,7 @@
             this.ceilValue = (this.options.max - this.options.min) / this.options.ruler.majorEqual;
             this.sizes.ruler = this.rulerEl.getBoundingClientRect()[this.propsMap.size];
             for (let k = 0; k <= this.options.ruler.majorEqual; k++) {
-                let value = toNumber((this.options.min + this.ceilValue * k), { places: this.places }), content = this.options.ruler.labels.length > 0 ? this.options.ruler.labels[k] : value, offsetRatio = k / this.options.ruler.majorEqual, majorEl = createEl('li', { style: `${this.propsMap.position}:${offsetRatio * 100}%`, 'data-content': content });
+                let value = toNumber((this.options.min + this.ceilValue * k), { places: this.places }), content = this.options.ruler.labels.length > 0 ? this.options.ruler.labels[k] : value, offsetRatio = k / this.options.ruler.majorEqual, majorEl = createEl('li', { style: `${this.propsMap.startAlt}:${offsetRatio * 100}%`, 'data-content': content });
                 this.tickEl.appendChild(majorEl);
                 majorEl.onclick = () => {
                     this.setVals(value);
@@ -25007,7 +25144,7 @@
             if (!this.options.fence.enable)
                 return;
             let fullSize = (this.options.max - this.options.min), sizeRatio = (this.fence.max - this.fence.min) / fullSize, offsetRatio = (this.fence.min - this.options.min) / fullSize;
-            this.fenceEl = createEl('div', { [alias]: 'fence', style: `${this.propsMap.size}:${sizeRatio * 100}%;${this.propsMap.position}:${offsetRatio * 100}%` });
+            this.fenceEl = createEl('div', { [alias]: 'fence', style: `${this.propsMap.size}:${sizeRatio * 100}%;${this.propsMap.startAlt}:${offsetRatio * 100}%` });
             this.rulerEl.appendChild(this.fenceEl);
         }
         setMinorTicks(offsetRatio) {
@@ -25024,7 +25161,7 @@
             }
             unitRatio = 1 / (count * this.options.ruler.majorEqual);
             for (let k = 0; k < count; k++) {
-                this.tickEl.insertAdjacentHTML('beforeend', `<li style="${this.propsMap.position}:${(offsetRatio + unitRatio * k) * 100}%"></li>`);
+                this.tickEl.insertAdjacentHTML('beforeend', `<li style="${this.propsMap.startAlt}:${(offsetRatio + unitRatio * k) * 100}%"></li>`);
             }
         }
         disable(cb) {
@@ -25501,6 +25638,7 @@
                 console.warn(config.warn.init);
                 return this;
             }
+            super.getDirRtl();
             this.output = { value: '', raw: '', items: [] };
             this.data = {
                 startDate: '',
@@ -25613,7 +25751,7 @@
                             tools: { enable: true, placement: 'outside' },
                             size: '',
                             padding: false,
-                            placement: 'bottom-start',
+                            placement: this.isRtl ? 'bottom-end' : 'bottom-start',
                             footer: { enable: false },
                             wing: { selector: this.options.btnSel },
                             canClick: this.canClick,
@@ -27356,6 +27494,11 @@
             value: 1,
         },
         {
+            attr: 'rtl',
+            prop: 'rtl',
+            value: false,
+        },
+        {
             attr: 'tooltip',
             prop: 'tooltip',
             value: {
@@ -27515,6 +27658,7 @@
             this.legends = [];
             this.renderMain();
             this.renderFormat();
+            this.getDirRtl();
             this.setAttrs();
             this.options.value = parseFloat(this.options.value || this.rawHtml || this.inputEl.value);
             this.rawVal = this.options.value;
@@ -27588,8 +27732,8 @@
         getStarPoint(e, node) {
             if (!this.options.half)
                 return 'full';
-            let tmp = getRectPoints(e, node);
-            return tmp.length <= 1 ? '' : tmp.includes('l/3') || tmp.includes('l/2') ? 'half' : 'full';
+            let tmp = getRectPoints(e, node), dir = this.isRtl ? 'r' : 'l';
+            return tmp.length <= 1 ? '' : tmp.includes(`${dir}/3`) || tmp.includes(`${dir}/2`) ? 'half' : 'full';
         }
         createTooltip() {
             if (!this.options.tooltip.enable)
@@ -27659,6 +27803,7 @@
             this.inputEl.disabled = true;
             this.inputEl.name = this.options.name;
             !this.inputEl.hasAttribute('value') && (this.inputEl.value = 0);
+            this.options.rtl ? this.targetEl.setAttribute('dir', 'rtl') : this.targetEl.removeAttribute('dir');
         }
         getVals() {
             return { ...this.output };
@@ -27695,28 +27840,28 @@
             li.toggleAttribute('selected', true);
         }
         updateStarsState(val = 0) {
-            let value = this.correctVal(val), stars = value / this.options.increment, b4Stars = Math.floor(stars), curStar = stars - b4Stars, item;
+            let value = this.correctVal(val), stars = value / this.options.increment, b4Stars = Math.floor(stars), curStar = stars - b4Stars, item, map = [`${prefix}half`, `${prefix}full`];
             curStar = this.getFloatStar(curStar);
             for (let i = 0; i < this.legends.length; i++) {
                 let el = this.legends[i].firstElementChild, li = el.closest('li');
                 if (!value) {
-                    classes(el).remove(`${prefix}half,${prefix}full`);
+                    classes(el).remove(map.join());
                 }
                 else {
                     if (i < b4Stars) {
                         if (this.options.highlight) {
                             
                             if (!curStar && i === b4Stars - 1) {
-                                classes(el).replace(`${prefix}half`, `${prefix}full`);
+                                classes(el).replace(...map);
                                 this.toggleSelected(li);
                                 item = li;
                             }
                             else {
-                                classes(el).remove(`${prefix}half,${prefix}full`);
+                                classes(el).remove(map.join());
                             }
                         }
                         else {
-                            classes(el).replace(`${prefix}half`, `${prefix}full`);
+                            classes(el).replace(...map);
                             if (!curStar && i === b4Stars - 1) {
                                 this.toggleSelected(li);
                                 item = li;
@@ -27725,21 +27870,21 @@
                     }
                     else if (i === b4Stars) {
                         if (curStar === 0) {
-                            classes(el).remove(`${prefix}half,${prefix}full`);
+                            classes(el).remove(map.join());
                         }
                         else {
                             if (curStar === 0.5) {
-                                classes(el).replace(`${prefix}full`, `${prefix}half`);
+                                classes(el).replace(...[...map].reverse());
                             }
                             else {
-                                classes(el).replace(`${prefix}half`, `${prefix}full`);
+                                classes(el).replace(...map);
                             }
                             this.toggleSelected(li);
                             item = li;
                         }
                     }
                     else {
-                        classes(el).remove(`${prefix}half,${prefix}full`);
+                        classes(el).remove(map.join());
                     }
                 }
             }
@@ -30736,8 +30881,8 @@
                 onOutput: (data) => {
                     if (!this.options.manual) {
                         let vals = filterPrims(data.items);
-                        this.tagsIns.updateCont(vals);
                         this.popupIns && this.popupIns.state === 'shown' && !this.options.multiple && this.popupIns.hide();
+                        this.tagsIns.updateCont(vals);
                         this.updateStatus();
                     }
                     fieldTools.setVals({
@@ -36283,7 +36428,7 @@
             super.createPropsObs();
         }
         static get observedAttributes() {
-            return [...optRate.map((k) => k.attr), 'options'];
+            return [...optRate.map((k) => k.attr), 'options', 'dir'];
         }
         attributeChangedCallback(name, oldVal, newVal) {
             if (name === 'value') {
@@ -37702,7 +37847,7 @@
 
     const init = (type, parent) => {
         let parentEl = getEl(parent) || document.body, evalFn = new Function('el', 'module', `"use strict";try {return new module(el)} catch {return null}`), moduleNodeMaps = [], setProp = (node, module) => {
-            elProps(node)?.add(module);
+            storeNode(node)?.addModule(module);
         }, getUsableModules = () => {
             let result = [];
             for (let [key, value] of Object.entries(ax)) {
@@ -37869,7 +38014,7 @@
         isSubset,
         debounce,
         throttle,
-        elProps,
+        storeNode,
         convertByte,
         clampVal,
         formTools,
@@ -37952,6 +38097,8 @@
         getAutoDur,
         getHypotenuse,
         promiseRaf,
+        getRtl,
+        setRtl,
         ModBase,
         ModBaseListen,
         ModBaseListenCache,
@@ -38183,7 +38330,6 @@
         dl2Tree: dl2Tree,
         ease: ease,
         easeHeight: easeHeight,
-        elProps: elProps,
         elState: elState,
         elsSort: elsSort,
         eventMap: eventMap,
@@ -38228,6 +38374,7 @@
         getNestProp: getNestProp,
         getPlaces: getPlaces,
         getRectPoints: getRectPoints,
+        getRtl: getRtl,
         getScreenSize: getScreenSize,
         getScrollObj: getScrollObj,
         getSelectorType: getSelectorType,
@@ -38279,6 +38426,7 @@
         setAttr: setAttr,
         setAttrs: setAttrs,
         setContent: setContent,
+        setRtl: setRtl,
         setSingleSel: setSingleSel,
         show: show,
         sliceFrags: sliceFrags,
@@ -38292,6 +38440,7 @@
         startUpper: startUpper,
         stdParam: stdParam,
         storage: storage,
+        storeNode: storeNode,
         strToJson: strToJson,
         style: style,
         support: support,
