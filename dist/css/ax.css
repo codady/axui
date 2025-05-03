@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-30 0:39:4
+ * @since Last modified: 2025-5-3 20:40:3
  * @name AXUI front-end framework.
- * @version 3.1.0
+ * @version 3.1.1
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,10 +15,10 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-04-30 00:29:53
+ * @since Last modified: 2025-05-03 20:33:48
  */
 /*
- *Last modified: 2025-04-28 11:15:55
+ *Last modified: 2025-05-02 12:33:06
  */
 :root {
   /*Stage colors*/
@@ -108,7 +108,7 @@
   /*Text colors*/
   --_h-text: 0;
   --_s-text: 0%;
-  --_l-text: 20%;
+  --_l-text: 0%;
   --_a-text: 1;
   --_c-text: hsla(var(--_h-text), var(--_s-text), var(--_l-text), var(--_a-text));
   --_c-text-bg: hsla(var(--_h-text), var(--_s-text), var(--_l-text), 0.04);
@@ -234,7 +234,7 @@
   --_empty: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M118.827 138.41a7.968 7.968 0 0 0 7.92-7.921V111.35a7.92 7.92 0 1 0-15.84 0v19.173a7.968 7.968 0 0 0 7.92 7.92zm14.596 14.595h19.185a7.92 7.92 0 1 0 0-15.84h-19.173a7.92 7.92 0 1 0 0 15.84zm-29.192-15.782H85.058a7.92 7.92 0 0 0 0 15.842h19.173a7.92 7.92 0 0 0 0-15.842zm14.596 14.585a7.968 7.968 0 0 0-7.92 7.92v19.173a7.92 7.92 0 0 0 15.84 0v-19.149a7.968 7.968 0 0 0-7.92-7.92zm788.504 118.275a38.726 38.726 0 1 0 38.726 38.726 38.678 38.678 0 0 0-38.762-38.785zm0 61.492a22.884 22.884 0 1 1 22.884-22.885 22.92 22.92 0 0 1-22.884 22.885zM692.526 47.879a23.501 23.501 0 1 0-23.501-23.5 23.501 23.501 0 0 0 23.5 23.5zm0-31.303a7.672 7.672 0 1 1-7.672 7.672 7.707 7.707 0 0 1 7.672-7.672zm0 0' fill='%23e6e6e6'/%3E%3Cpath d='M275.769 992.816c0 11.145 38.156 21.343 99.85 26.963a1197.186 1197.186 0 0 0 199.912 0c61.906-5.573 99.85-15.818 99.85-26.963s-38.157-21.343-99.85-26.964a1197.02 1197.02 0 0 0-199.913 0c-61.657 5.573-99.85 15.818-99.85 26.964zm0 0' fill='%23f0f0f0'/%3E%3Cpath d='M571.025 482.896a7.766 7.766 0 0 0-11.134 0l-12 12-11.999-12a7.873 7.873 0 1 0-11.134 11.134l12 12-12 12a7.956 7.956 0 1 0 11.253 11.252l12-12 11.999 12a7.778 7.778 0 0 0 5.573 2.371 7.577 7.577 0 0 0 5.573-2.371 7.766 7.766 0 0 0 0-11.134l-12-12 12-11.999a8.11 8.11 0 0 0-.119-11.253zm-154.902 46.398a7.873 7.873 0 0 0 5.573 2.371 7.873 7.873 0 0 0 5.572-13.481l-12-12 12-12a7.766 7.766 0 0 0 0-11.133 7.992 7.992 0 0 0-11.264 0l-12 12-11.999-12a7.992 7.992 0 0 0-11.264 0 7.766 7.766 0 0 0 0 11.134l12 11.999-12 12a7.766 7.766 0 0 0 0 11.133 7.778 7.778 0 0 0 5.573 2.372 7.577 7.577 0 0 0 5.573-2.372l11.999-11.999zm59.879 83.391a107.39 107.39 0 0 0-77.452 32.655 7.956 7.956 0 0 0 .119 11.134 7.838 7.838 0 0 0 11.134-.118 92.617 92.617 0 0 1 132.385 0 8.158 8.158 0 0 0 5.692 2.371 7.826 7.826 0 0 0 7.304-4.826 8.015 8.015 0 0 0-1.613-8.656 107.758 107.758 0 0 0-77.57-32.536zm0 0' fill='%23dbdbdb'/%3E%3Cpath d='M768.602 313.872l-82.147-91.68a94.23 94.23 0 0 0-70.147-31.303H246.505a85.905 85.905 0 0 0-85.858 85.858V841.4a85.905 85.905 0 0 0 85.858 85.858h459.49a85.905 85.905 0 0 0 85.859-85.858V374.617a91.063 91.063 0 0 0-23.264-60.745zm-94.028-81.163l82.147 91.68a77.428 77.428 0 0 1 14.228 23.264h-85.49a38.963 38.963 0 0 1-38.975-38.974V212.8a77.285 77.285 0 0 1 28.09 19.92zm101.45 608.702a70.124 70.124 0 0 1-70.028 70.029h-459.49a70.124 70.124 0 0 1-70.03-70.03V276.748a70.124 70.124 0 0 1 70.03-70.029h369.802a79.443 79.443 0 0 1 14.347 1.364v100.585a54.91 54.91 0 0 0 54.804 54.804h89.7a84.352 84.352 0 0 1 .865 11.134v466.794zm0 0' fill='%23dbdbdb'/%3E%3C/svg%3E");
   --_none: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIiB2aWV3Qm94PSIwIDAgMTYwIDE2MCI+PHBhdGggZmlsbD0iI0ZGRiIgZD0iTTAgMGgxNjB2MTYwSDB6Ii8+PHBhdGggZmlsbD0iI0M5Q0FDQSIgZD0iTTc5LjA4NyA4Ny44Nkg2MS45ODNjLTEuNzE3IDAtMy4xMDgtMS4yMjMtMy4xMDktMi43M3YtMi4xMTFsOS4xNjMtNi45NTggMy4yODQgMi44NDFjMS43MDggMS40ODYgNC40MjIgMS41ODUgNi4yNjIuMjI4TDkzLjA3IDY3LjYyNWw2LjIyNiA1LjQ3OWMuNjI4LjU5MS44OTIuODU4IDEuNTguODU4LjQ5MyAwIC45MDQtLjI0NCAxLjIxOS0uNTg3LjMzMy0uMzYzLjMxMS0xLjIzOC4zMTEtMS42NzJWNTcuODFjMC0zLjAxOC0yLjc4My01LjQ2NS02LjIxOC01LjQ2NUg2MS45ODNjLTMuNDM1IDAtNi4yMTggMi40NDctNi4yMTggNS40NjV2MjcuMzJjMCAxLjQ0OC42NTUgMi44MzkgMS44MjEgMy44NjMgMS4xNjcgMS4wMjMgMi43NDkgMS42MDEgNC4zOTcgMS42MDFoMTcuMDcxYy43OTUgMCAxLjUyNS0uNTY3IDEuNTgyLTEuMjY1LjA2NS0uOC0uNjUzLTEuNDY3LTEuNTQ3LTEuNDY3bC0uMDAyLS4wMDJ6TTU4Ljg3NSA1Ny44MWMwLTEuNTA5IDEuMzkyLTIuNzMyIDMuMTA5LTIuNzMyaDM0LjIwM2MxLjcxOCAwIDMuMTA5IDEuMjIzIDMuMTA5IDIuNzMydjExLjQzNGwtNC4xMjMtMy42MjljLTEuMTUyLS44NTctMi44NC0uODYtMy45OTYtLjAwOGwtMTUuNTkgMTEuNDIyYy0uNjEzLjQ0OS0xLjUxMy40MTctMi4wODItLjA3NWwtMy4yODctMi44NGMtMS4xNTktLjk5My0yLjk4OS0xLjA0NC00LjIxNi0uMTIxbC03LjEyNyA1LjQyVjU3Ljgxem04LjEyOSA2LjQwNWE0LjEgNC4xIDAgMSAwIDguMTk4IDAgNC4xIDQuMSAwIDAgMC04LjE5OCAwem0zNS4zMzQgMTUuNTIyYTkuNTU0IDkuNTU0IDAgMCAxIDAgMTMuNTJjLTMuNzM1IDMuNzM1LTkuNzg5IDMuNzM2LTEzLjUyMyAwLTMuNjgyLTMuNzQ0LTMuNjU1LTkuNzU0LjA1Ny0xMy40NjNhOS41NjIgOS41NjIgMCAwIDEgMTMuNDY2LS4wNTd6TTkwLjc0NSA5MS4zMjVhNi44MyA2LjgzIDAgMCAwIDguNTkzLjg2OWwtOS40NjItOS40NjRhNi44MzEgNi44MzEgMCAwIDAgLjg2OSA4LjU5MnYuMDAzem0xMC41MjctMS4wNjZhNi44MyA2LjgzIDAgMCAwLTkuNDYyLTkuNDZsOS40NjIgOS40NnptMCAwIi8+PHRleHQgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNTQuODI0IDExMC41NSkiIGZpbGw9IiNDOUNBQ0EiIGZvbnQtZmFtaWx5PSInTWljcm9zb2Z0WWFIZWknIiBmb250LXNpemU9IjEyLjU4OCI+5pqC5peg5Zu+54mHPC90ZXh0Pjwvc3ZnPg==");
   /*Screen size*/
-  --SCREEN: lg;
+  --SCREEN: xxs;
   /*Namespace*/
   --PREFIX: _;
   --ALIAS: rep;
@@ -275,8 +275,7 @@
   --_num-hitbox: 44;
   --_num-max: 48;
   /*Font size*/
-  --_fs-root: calc(var(--_num-root)*1px);
-  --_fs-mobi: calc(1px*var(--_num-root)*16/14);
+  --_fs-root: calc(1px*var(--_num-root)*16/14);
   /*Rem of size*/
   --_rem-min: calc((var(--_num-min)/var(--_num-root))*1rem);
   --_rem-space: calc((var(--_num-space)/var(--_num-root))*1rem);
@@ -357,7 +356,7 @@
   --_fs-h6: var(--_rem-body);
   /*Font family*/
   --_ff-icon: '_iconfont';
-  --_ff-body: "microsoft yahei", "Microsoft JhengHei", "Arial", "Helvetica Neue", "sans-serif", "Yu Mincho", "simsun";
+  --_ff-body: "Arial", "Helvetica Neue", "sans-serif", "pingfang SC", "Hiragino Sans GB", "microsoft yahei", "simsun";
   --_ff-alt: "PT Sans", "Segoe UI", "Arial Narrow", "microsoft yahei", "Yu Mincho", "simsun";
   --_ff-code: "Consolas", "Monaco", "Andale Mono", "Ubuntu Mono", "monospace", "microsoft yahei", "Microsoft JhengHei", "Yu Mincho", "simsun";
   /*Padding , Margin & Gap*/
@@ -366,7 +365,7 @@
   --_m: var(--_rem-body);
   /*Gap*/
   --_g: var(--_rem-min);
-  --_g-full: 2.8rem;
+  --_g-full: 1.4rem;
   /*Width & Height*/
   --_h-input: var(--_rem-input);
   --_w-input: min(calc(var(--_rem-input)*10), 100%);
@@ -375,11 +374,11 @@
   --_w-outline: 3px;
   --_w-xxs: calc(100vw - var(--_m)*2);
   --_w-xs: calc(100vw - var(--_m)*4);
-  --_w-sm: calc(100vw - var(--_m)*8);
-  --_w-md: 120rem;
-  --_w-lg: 140rem;
-  --_w-xl: 160rem;
-  --_w-xxl: 180rem;
+  --_w-sm: calc(100vw - var(--_m)*6);
+  --_w-md: calc(100vw - var(--_m)*8);
+  --_w-lg: calc(100vw - var(--_m)*12);
+  --_w-xl: calc(100vw - var(--_m)*16);
+  --_w-xxl: calc(100vw - var(--_m)*20);
   --_w-list: 16rem;
   --_w-menu: 22rem;
   --_w-aside: 25rem;
@@ -2096,7 +2095,7 @@
   scale: -1 1;
 }
 /*
- *Last modified: 2025-04-29 17:55:39
+ *Last modified: 2025-05-02 11:17:19
  */
 html {
   font-size: var(--_fs-root);
@@ -2938,6 +2937,7 @@ table {
   --_md-w: var(--_table-w);
   --_lg-w: var(--_table-w);
   --_xl-w: var(--_table-w);
+  --_xxl-w: var(--_table-w);
   font-size: var(--_table-fs);
   min-width: 100%;
   width: var(--_table-w);
@@ -3050,34 +3050,39 @@ table ._ell,
 table [class*="_ell-"] {
   max-width: var(--_table-ell);
 }
-@media screen and (max-width: 500px) {
+@media (max-width: 599px) {
   table {
     width: var(--_xxs-w);
   }
 }
-@media screen and (min-width: 500px) and (max-width: 900px) {
+@media (min-width: 600px) and (max-width: 899px) {
   table {
     width: var(--_xs-w);
   }
 }
-@media screen and (min-width: 900px) and (max-width: 1200px) {
+@media (min-width: 900px) and (max-width: 1199px) {
   table {
     width: var(--_sm-w);
   }
 }
-@media screen and (min-width: 1200px) and (max-width: 1500px) {
+@media (min-width: 1200px) and (max-width: 1535px) {
   table {
     width: var(--_md-w);
   }
 }
-@media screen and (min-width: 1500px) and (max-width: 4100px) {
+@media (min-width: 1536px) {
   table {
     width: var(--_lg-w);
   }
 }
-@media screen and (min-width: 4100px) {
+@media (min-width: 2500px) {
   table {
     width: var(--_xl-w);
+  }
+}
+@media (min-width: 3800px) {
+  table {
+    width: var(--_xxl-w);
   }
 }
 /*
@@ -3690,7 +3695,7 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
   content: 'left';
 }
 /*
- *Last modified: 2025-04-29 23:30:43
+ *Last modified: 2025-05-02 20:47:23
  */
 /*grid layout*/
 ._grid {
@@ -4250,8 +4255,14 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
 ._c-stage {
   --_v-c: var(--_c-stage);
 }
+._c-white {
+  --_v-c: var(--_c-white);
+}
 ._c-mask {
   --_v-c: var(--_c-mask);
+}
+._c-black {
+  --_v-c: var(--_c-black);
 }
 /*Background*/
 ._bg,
@@ -4324,6 +4335,12 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
 }
 ._bg-mask {
   --_bg-c: var(--_c-mask);
+}
+._bg-white {
+  --_bg-c: var(--_c-white);
+}
+._bg-black {
+  --_bg-c: var(--_c-black);
 }
 /*Gradient*/
 ._gd,
@@ -4438,7 +4455,7 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
   padding-inline-start: var(--_padding-s);
   padding-inline-end: var(--_padding-e);
   padding-block-start: var(--_padding-t);
-  padding-block-start: var(--_padding-b);
+  padding-block-end: var(--_padding-b);
 }
 ._p,
 ._p-s,
@@ -4542,7 +4559,7 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
   margin-inline-start: var(--_margin-s);
   margin-inline-end: var(--_margin-e);
   margin-block-start: var(--_margin-t);
-  margin-block-start: var(--_margin-b);
+  margin-block-end: var(--_margin-b);
 }
 ._m,
 ._m-s,
@@ -5714,6 +5731,67 @@ img[rep=image] {
   border-width: 0 !important;
   overflow: hidden !important;
 }
+._inset-fixed {
+  position: fixed;
+}
+._inset-abs {
+  position: absolute;
+}
+._inset-sticky {
+  position: sticky;
+}
+._inset-rel {
+  position: relative;
+}
+._inset-static {
+  position: static;
+}
+._inset-t-0 {
+  inset-block-start: 0;
+}
+._inset-s-0 {
+  inset-inline-start: 0;
+}
+._inset-b-0 {
+  inset-block-end: 0;
+}
+._inset-e-0 {
+  inset-inline-end: 0;
+}
+._inset-t-auto {
+  inset-block-start: auto;
+}
+._inset-s-auto {
+  inset-inline-start: auto;
+}
+._inset-b-auto {
+  inset-block-end: auto;
+}
+._inset-e-auto {
+  inset-inline-end: auto;
+}
+._inset-st {
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+._inset-et {
+  inset-block-start: 0;
+  inset-inline-end: 0;
+}
+._inset-sb {
+  inset-block-end: 0;
+  inset-inline-start: 0;
+}
+._inset-eb {
+  inset-block-end: 0;
+  inset-inline-end: 0;
+}
+._inset-0 {
+  inset: 0;
+}
+._inset-auto {
+  inset: auto;
+}
 ._scroller {
   --_scroller-w: auto;
   --_scroller-h: fit-content;
@@ -5725,12 +5803,14 @@ img[rep=image] {
   --_md-h: var(--_scroller-h);
   --_lg-h: var(--_scroller-h);
   --_xl-h: var(--_scroller-h);
+  --_xxl-h: var(--_scroller-h);
   --_xxs-w: var(--_scroller-w);
   --_xs-w: var(--_scroller-w);
   --_sm-w: var(--_scroller-w);
   --_md-w: var(--_scroller-w);
   --_lg-w: var(--_scroller-w);
   --_xl-w: var(--_scroller-w);
+  --_xxl-w: var(--_scroller-w);
   width: var(--_scroller-w);
   height: var(--_scroller-h);
   max-width: 100%;
@@ -5745,40 +5825,46 @@ img[rep=image] {
 ._scroller[axis=y] {
   --_scroller-x: hidden;
 }
-@media screen and (max-width: 500px) {
+@media (max-width: 599px) {
   ._scroller {
     height: var(--_xxs-h);
     width: var(--_xxs-w);
   }
 }
-@media screen and (min-width: 500px) and (max-width: 900px) {
+@media (min-width: 600px) and (max-width: 899px) {
   ._scroller {
     height: var(--_xs-h);
     width: var(--_xs-w);
   }
 }
-@media screen and (min-width: 900px) and (max-width: 1200px) {
+@media (min-width: 900px) and (max-width: 1199px) {
   ._scroller {
     height: var(--_sm-h);
     width: var(--_sm-w);
   }
 }
-@media screen and (min-width: 1200px) and (max-width: 1500px) {
+@media (min-width: 1200px) and (max-width: 1535px) {
   ._scroller {
     height: var(--_md-h);
     width: var(--_md-w);
   }
 }
-@media screen and (min-width: 1500px) and (max-width: 4100px) {
+@media (min-width: 1536px) {
   ._scroller {
     height: var(--_lg-h);
     width: var(--_lg-w);
   }
 }
-@media screen and (min-width: 4100px) {
+@media (min-width: 2500px) {
   ._scroller {
     height: var(--_xl-h);
     width: var(--_xl-w);
+  }
+}
+@media (min-width: 3800px) {
+  ._scroller {
+    height: var(--_xxl-h);
+    width: var(--_xxl-w);
   }
 }
 /*Group button*/
@@ -6506,7 +6592,7 @@ img[rep=image] {
     min-height: auto;
   }
 }
-@media screen and (max-width: 900px) {
+@media (max-width: 899px) {
   ._field > ._field-help,
   ._field > ._field-help > * {
     font-size: var(--_rem-ignore);
@@ -6567,41 +6653,21 @@ img[rep=image] {
     height: calc(var(--_form-h) - 1rem);
   }
 }
-/*Wrap*/
-[class*="_container"]:where(:not(._container-full)) {
-  --_container-w-1: var(--_w-lg);
-  --_container-w-2: var(--_w-sm);
-  --_container-w-3: 100%;
-  width: min(var(--_container-w-1),var(--_container-w-2),var(--_container-w-3));
-  margin: 0 auto;
-  display: block;
+/*Container*/
+[class*="_container"] {
+  --_container-d: block;
   box-sizing: border-box;
+  display: var(--_container-d);
 }
-._container-xxs {
-  --_container-w-1: 60rem;
-}
-._container-xs {
-  --_container-w-1: 80rem;
-}
-._container-sm {
-  --_container-w-1: 100rem;
-}
-._container-md {
-  --_container-w-1: var(--_w-md);
-}
-/* ._container-lg,
-._container {
-  --_container-w:var(--_w-lg);
-} */
-._container-xl {
-  --_container-w-1: var(--_w-xl);
-}
-._container-xxl {
-  --_container-w-1: var(--_w-xxl);
+[class*="_container"]:where(:not(._container-full)) {
+  --_container-resp: var(--_w-xxs);
+  --_container-w: var(--_container-resp);
+  --_container-full: 100%;
+  width: min(var(--_container-w),var(--_container-resp),var(--_container-full));
+  margin: 0 auto;
 }
 ._container-full {
   width: 100%;
-  box-sizing: border-box;
 }
 /*animation*/
 @keyframes _rotate-360 {
@@ -8056,7 +8122,7 @@ AX-HEADER[justify] ._header-head {
 ._header:where([inherit]) + ._header-holder {
   display: none;
 }
-@media screen and (max-width: 1200px) {
+@media (max-width: 1535px) {
   AX-HEADER ._header-l,
   AX-HEADER ._header-r {
     display: flex;
@@ -8226,7 +8292,7 @@ AX-HEADER[justify] ._header-head {
 ._footer [rep=ignore] a {
   color: var(--_c-ignore);
 }
-@media screen and (max-width: 500px) {
+@media (max-width: 599px) {
   ._footer [rep=qrcode],
   ._footer [rep=subnav],
   ._footer [rep=nav],
@@ -10364,7 +10430,7 @@ AX-FLAG[theme=ignore] {
   margin-inline-start: 0;
   margin-block-start: var(--_rem-space);
 }
-@media screen and (max-width: 500px) {
+@media (max-width: 599px) {
   ._bullet:where(:has(._bullet-body > [rep=tips])) {
     --_blt-h: auto;
     --_blt-align-v: flex-start;
@@ -12936,7 +13002,7 @@ AX-FILTER[bordered] section {
   padding-inline-start: var(--_rem-body);
   padding-inline-end: var(--_rem-body);
 }
-@media screen and (max-width: 500px) {
+@media (max-width: 599px) {
   AX-FILTER section [rep=level1],
   AX-FILTER section [rep=level2] {
     white-space: nowrap;
@@ -13116,7 +13182,7 @@ AX-FILTER[bordered] section {
   text-align: center;
   padding: var(--_rem-title) 0;
 }
-@media screen and (max-width: 500px) {
+@media (max-width: 599px) {
   ._comment ._comment-body {
     --_cmt-left-w: var(--_px-title);
     --_cmt-left-n: var(--_px-space);
@@ -15480,7 +15546,7 @@ AX-MENU {
 ._drawer:not(:has(._drawer-mask)) ._drawer-wrap {
   box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.12);
 }
-@media screen and (max-width: 900px) {
+@media (max-width: 899px) {
   ._drawer {
     --_drawer-sz-x-sm: 70%;
     --_drawer-sz-x-md: 70%;
@@ -20890,22 +20956,1322 @@ AX-SKELETON[shape=square] {
 ._splitnum s {
   font-size: 1.5em;
 }
-/*Mobild device*/
+/* Handheld device(xxs+xs+sm+md) */
 @media (any-hover: none) {
   :root {
-    --_ff-body: "Arial", "Helvetica Neue", "sans-serif", "pingfang SC", "Hiragino Sans GB", "microsoft yahei", "simsun";
-    --_fs-root: clamp(var(--_fs-mobi), 1.5vw, calc(200px/14));
-    --_l-text: 0%;
-  }
-  ._hide-mb {
-    display: none;
+    --SCREEN: hh;
   }
   select:where([multiple]) {
     min-height: auto;
   }
+  *._split-hh,
+  ._row:where(._split-hh),
+  ._col:where(._split-hh),
+  ._grid:where(._split-hh) {
+    display: block;
+  }
+  *._split-hh > *,
+  ._row:where(._split-hh) > *,
+  ._col:where(._split-hh) > *,
+  ._grid:where(._split-hh) > * {
+    width: auto;
+    height: auto;
+  }
+  [class*="_container"]:where(:not(._container-full)):where(:not(._hh-full)) {
+    --_container-w: var(--_hh-w, var(--_container-resp));
+    --_container-resp: var(--_w-hh);
+  }
+  [class*="_container"]:where(:not(._container-full)):where(._hh-full) {
+    width: 100%;
+  }
+  ._hide-hh {
+    display: none;
+  }
+  ._grid[class*="_hh"] {
+    --_layout-avg: var(--_layout-group);
+  }
+  ._xs-1 {
+    --_layout-group: 1;
+  }
+  ._xs-1:where(._row[class*="_avg-"]) > *:nth-of-type(1n),
+  ._xs-1:where(._row) > *:where([class*="_own-"]):nth-of-type(1n) {
+    margin-inline-end: 0;
+  }
+  ._xs-1:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 1))),
+  ._xs-1:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 1))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-1:where(._col[class*="_avg-"]) > *:nth-of-type(1n),
+  ._xs-1:where(._col) > *:where([class*="_own-"]):nth-of-type(1n) {
+    margin-block-end: 0;
+  }
+  ._xs-1:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 1))),
+  ._xs-1:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 1))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-1._clip > :nth-child(1) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-1._clip > :nth-child(1) ~ * {
+    display: none;
+  }
+  ._xs-2 {
+    --_layout-group: 2;
+  }
+  ._xs-2:where(._row[class*="_avg-"]) > *:nth-of-type(2n),
+  ._xs-2:where(._row) > *:where([class*="_own-"]):nth-of-type(2n) {
+    margin-inline-end: 0;
+  }
+  ._xs-2:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 2))),
+  ._xs-2:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 2))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-2:where(._col[class*="_avg-"]) > *:nth-of-type(2n),
+  ._xs-2:where(._col) > *:where([class*="_own-"]):nth-of-type(2n) {
+    margin-block-end: 0;
+  }
+  ._xs-2:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 2))),
+  ._xs-2:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 2))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-2._clip > :nth-child(2) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-2._clip > :nth-child(2) ~ * {
+    display: none;
+  }
+  ._xs-3 {
+    --_layout-group: 3;
+  }
+  ._xs-3:where(._row[class*="_avg-"]) > *:nth-of-type(3n),
+  ._xs-3:where(._row) > *:where([class*="_own-"]):nth-of-type(3n) {
+    margin-inline-end: 0;
+  }
+  ._xs-3:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 3))),
+  ._xs-3:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 3))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-3:where(._col[class*="_avg-"]) > *:nth-of-type(3n),
+  ._xs-3:where(._col) > *:where([class*="_own-"]):nth-of-type(3n) {
+    margin-block-end: 0;
+  }
+  ._xs-3:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 3))),
+  ._xs-3:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 3))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-3._clip > :nth-child(3) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-3._clip > :nth-child(3) ~ * {
+    display: none;
+  }
+  ._xs-4 {
+    --_layout-group: 4;
+  }
+  ._xs-4:where(._row[class*="_avg-"]) > *:nth-of-type(4n),
+  ._xs-4:where(._row) > *:where([class*="_own-"]):nth-of-type(4n) {
+    margin-inline-end: 0;
+  }
+  ._xs-4:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 4))),
+  ._xs-4:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 4))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-4:where(._col[class*="_avg-"]) > *:nth-of-type(4n),
+  ._xs-4:where(._col) > *:where([class*="_own-"]):nth-of-type(4n) {
+    margin-block-end: 0;
+  }
+  ._xs-4:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 4))),
+  ._xs-4:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 4))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-4._clip > :nth-child(4) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-4._clip > :nth-child(4) ~ * {
+    display: none;
+  }
+  ._xs-5 {
+    --_layout-group: 5;
+  }
+  ._xs-5:where(._row[class*="_avg-"]) > *:nth-of-type(5n),
+  ._xs-5:where(._row) > *:where([class*="_own-"]):nth-of-type(5n) {
+    margin-inline-end: 0;
+  }
+  ._xs-5:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 5))),
+  ._xs-5:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 5))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-5:where(._col[class*="_avg-"]) > *:nth-of-type(5n),
+  ._xs-5:where(._col) > *:where([class*="_own-"]):nth-of-type(5n) {
+    margin-block-end: 0;
+  }
+  ._xs-5:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 5))),
+  ._xs-5:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 5))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-5._clip > :nth-child(5) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-5._clip > :nth-child(5) ~ * {
+    display: none;
+  }
+  ._xs-6 {
+    --_layout-group: 6;
+  }
+  ._xs-6:where(._row[class*="_avg-"]) > *:nth-of-type(6n),
+  ._xs-6:where(._row) > *:where([class*="_own-"]):nth-of-type(6n) {
+    margin-inline-end: 0;
+  }
+  ._xs-6:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 6))),
+  ._xs-6:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 6))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-6:where(._col[class*="_avg-"]) > *:nth-of-type(6n),
+  ._xs-6:where(._col) > *:where([class*="_own-"]):nth-of-type(6n) {
+    margin-block-end: 0;
+  }
+  ._xs-6:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 6))),
+  ._xs-6:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 6))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-6._clip > :nth-child(6) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-6._clip > :nth-child(6) ~ * {
+    display: none;
+  }
+  ._xs-7 {
+    --_layout-group: 7;
+  }
+  ._xs-7:where(._row[class*="_avg-"]) > *:nth-of-type(7n),
+  ._xs-7:where(._row) > *:where([class*="_own-"]):nth-of-type(7n) {
+    margin-inline-end: 0;
+  }
+  ._xs-7:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 7))),
+  ._xs-7:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 7))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-7:where(._col[class*="_avg-"]) > *:nth-of-type(7n),
+  ._xs-7:where(._col) > *:where([class*="_own-"]):nth-of-type(7n) {
+    margin-block-end: 0;
+  }
+  ._xs-7:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 7))),
+  ._xs-7:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 7))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-7._clip > :nth-child(7) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-7._clip > :nth-child(7) ~ * {
+    display: none;
+  }
+  ._xs-8 {
+    --_layout-group: 8;
+  }
+  ._xs-8:where(._row[class*="_avg-"]) > *:nth-of-type(8n),
+  ._xs-8:where(._row) > *:where([class*="_own-"]):nth-of-type(8n) {
+    margin-inline-end: 0;
+  }
+  ._xs-8:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 8))),
+  ._xs-8:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 8))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-8:where(._col[class*="_avg-"]) > *:nth-of-type(8n),
+  ._xs-8:where(._col) > *:where([class*="_own-"]):nth-of-type(8n) {
+    margin-block-end: 0;
+  }
+  ._xs-8:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 8))),
+  ._xs-8:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 8))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-8._clip > :nth-child(8) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-8._clip > :nth-child(8) ~ * {
+    display: none;
+  }
+  ._xs-9 {
+    --_layout-group: 9;
+  }
+  ._xs-9:where(._row[class*="_avg-"]) > *:nth-of-type(9n),
+  ._xs-9:where(._row) > *:where([class*="_own-"]):nth-of-type(9n) {
+    margin-inline-end: 0;
+  }
+  ._xs-9:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 9))),
+  ._xs-9:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 9))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-9:where(._col[class*="_avg-"]) > *:nth-of-type(9n),
+  ._xs-9:where(._col) > *:where([class*="_own-"]):nth-of-type(9n) {
+    margin-block-end: 0;
+  }
+  ._xs-9:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 9))),
+  ._xs-9:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 9))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-9._clip > :nth-child(9) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-9._clip > :nth-child(9) ~ * {
+    display: none;
+  }
+  ._xs-10 {
+    --_layout-group: 10;
+  }
+  ._xs-10:where(._row[class*="_avg-"]) > *:nth-of-type(10n),
+  ._xs-10:where(._row) > *:where([class*="_own-"]):nth-of-type(10n) {
+    margin-inline-end: 0;
+  }
+  ._xs-10:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 10))),
+  ._xs-10:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 10))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-10:where(._col[class*="_avg-"]) > *:nth-of-type(10n),
+  ._xs-10:where(._col) > *:where([class*="_own-"]):nth-of-type(10n) {
+    margin-block-end: 0;
+  }
+  ._xs-10:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 10))),
+  ._xs-10:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 10))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-10._clip > :nth-child(10) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-10._clip > :nth-child(10) ~ * {
+    display: none;
+  }
+  ._xs-11 {
+    --_layout-group: 11;
+  }
+  ._xs-11:where(._row[class*="_avg-"]) > *:nth-of-type(11n),
+  ._xs-11:where(._row) > *:where([class*="_own-"]):nth-of-type(11n) {
+    margin-inline-end: 0;
+  }
+  ._xs-11:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 11))),
+  ._xs-11:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 11))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-11:where(._col[class*="_avg-"]) > *:nth-of-type(11n),
+  ._xs-11:where(._col) > *:where([class*="_own-"]):nth-of-type(11n) {
+    margin-block-end: 0;
+  }
+  ._xs-11:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 11))),
+  ._xs-11:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 11))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-11._clip > :nth-child(11) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-11._clip > :nth-child(11) ~ * {
+    display: none;
+  }
+  ._xs-12 {
+    --_layout-group: 12;
+  }
+  ._xs-12:where(._row[class*="_avg-"]) > *:nth-of-type(12n),
+  ._xs-12:where(._row) > *:where([class*="_own-"]):nth-of-type(12n) {
+    margin-inline-end: 0;
+  }
+  ._xs-12:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 12))),
+  ._xs-12:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 12))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-12:where(._col[class*="_avg-"]) > *:nth-of-type(12n),
+  ._xs-12:where(._col) > *:where([class*="_own-"]):nth-of-type(12n) {
+    margin-block-end: 0;
+  }
+  ._xs-12:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 12))),
+  ._xs-12:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 12))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-12._clip > :nth-child(12) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-12._clip > :nth-child(12) ~ * {
+    display: none;
+  }
+  ._xs-13 {
+    --_layout-group: 13;
+  }
+  ._xs-13:where(._row[class*="_avg-"]) > *:nth-of-type(13n),
+  ._xs-13:where(._row) > *:where([class*="_own-"]):nth-of-type(13n) {
+    margin-inline-end: 0;
+  }
+  ._xs-13:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 13))),
+  ._xs-13:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 13))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-13:where(._col[class*="_avg-"]) > *:nth-of-type(13n),
+  ._xs-13:where(._col) > *:where([class*="_own-"]):nth-of-type(13n) {
+    margin-block-end: 0;
+  }
+  ._xs-13:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 13))),
+  ._xs-13:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 13))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-13._clip > :nth-child(13) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-13._clip > :nth-child(13) ~ * {
+    display: none;
+  }
+  ._xs-14 {
+    --_layout-group: 14;
+  }
+  ._xs-14:where(._row[class*="_avg-"]) > *:nth-of-type(14n),
+  ._xs-14:where(._row) > *:where([class*="_own-"]):nth-of-type(14n) {
+    margin-inline-end: 0;
+  }
+  ._xs-14:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 14))),
+  ._xs-14:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 14))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-14:where(._col[class*="_avg-"]) > *:nth-of-type(14n),
+  ._xs-14:where(._col) > *:where([class*="_own-"]):nth-of-type(14n) {
+    margin-block-end: 0;
+  }
+  ._xs-14:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 14))),
+  ._xs-14:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 14))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-14._clip > :nth-child(14) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-14._clip > :nth-child(14) ~ * {
+    display: none;
+  }
+  ._xs-15 {
+    --_layout-group: 15;
+  }
+  ._xs-15:where(._row[class*="_avg-"]) > *:nth-of-type(15n),
+  ._xs-15:where(._row) > *:where([class*="_own-"]):nth-of-type(15n) {
+    margin-inline-end: 0;
+  }
+  ._xs-15:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 15))),
+  ._xs-15:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 15))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-15:where(._col[class*="_avg-"]) > *:nth-of-type(15n),
+  ._xs-15:where(._col) > *:where([class*="_own-"]):nth-of-type(15n) {
+    margin-block-end: 0;
+  }
+  ._xs-15:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 15))),
+  ._xs-15:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 15))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-15._clip > :nth-child(15) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-15._clip > :nth-child(15) ~ * {
+    display: none;
+  }
+  ._xs-16 {
+    --_layout-group: 16;
+  }
+  ._xs-16:where(._row[class*="_avg-"]) > *:nth-of-type(16n),
+  ._xs-16:where(._row) > *:where([class*="_own-"]):nth-of-type(16n) {
+    margin-inline-end: 0;
+  }
+  ._xs-16:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 16))),
+  ._xs-16:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 16))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-16:where(._col[class*="_avg-"]) > *:nth-of-type(16n),
+  ._xs-16:where(._col) > *:where([class*="_own-"]):nth-of-type(16n) {
+    margin-block-end: 0;
+  }
+  ._xs-16:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 16))),
+  ._xs-16:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 16))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-16._clip > :nth-child(16) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-16._clip > :nth-child(16) ~ * {
+    display: none;
+  }
+  ._xs-17 {
+    --_layout-group: 17;
+  }
+  ._xs-17:where(._row[class*="_avg-"]) > *:nth-of-type(17n),
+  ._xs-17:where(._row) > *:where([class*="_own-"]):nth-of-type(17n) {
+    margin-inline-end: 0;
+  }
+  ._xs-17:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 17))),
+  ._xs-17:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 17))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-17:where(._col[class*="_avg-"]) > *:nth-of-type(17n),
+  ._xs-17:where(._col) > *:where([class*="_own-"]):nth-of-type(17n) {
+    margin-block-end: 0;
+  }
+  ._xs-17:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 17))),
+  ._xs-17:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 17))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-17._clip > :nth-child(17) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-17._clip > :nth-child(17) ~ * {
+    display: none;
+  }
+  ._xs-18 {
+    --_layout-group: 18;
+  }
+  ._xs-18:where(._row[class*="_avg-"]) > *:nth-of-type(18n),
+  ._xs-18:where(._row) > *:where([class*="_own-"]):nth-of-type(18n) {
+    margin-inline-end: 0;
+  }
+  ._xs-18:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 18))),
+  ._xs-18:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 18))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-18:where(._col[class*="_avg-"]) > *:nth-of-type(18n),
+  ._xs-18:where(._col) > *:where([class*="_own-"]):nth-of-type(18n) {
+    margin-block-end: 0;
+  }
+  ._xs-18:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 18))),
+  ._xs-18:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 18))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-18._clip > :nth-child(18) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-18._clip > :nth-child(18) ~ * {
+    display: none;
+  }
+  ._xs-19 {
+    --_layout-group: 19;
+  }
+  ._xs-19:where(._row[class*="_avg-"]) > *:nth-of-type(19n),
+  ._xs-19:where(._row) > *:where([class*="_own-"]):nth-of-type(19n) {
+    margin-inline-end: 0;
+  }
+  ._xs-19:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 19))),
+  ._xs-19:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 19))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-19:where(._col[class*="_avg-"]) > *:nth-of-type(19n),
+  ._xs-19:where(._col) > *:where([class*="_own-"]):nth-of-type(19n) {
+    margin-block-end: 0;
+  }
+  ._xs-19:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 19))),
+  ._xs-19:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 19))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-19._clip > :nth-child(19) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-19._clip > :nth-child(19) ~ * {
+    display: none;
+  }
+  ._xs-20 {
+    --_layout-group: 20;
+  }
+  ._xs-20:where(._row[class*="_avg-"]) > *:nth-of-type(20n),
+  ._xs-20:where(._row) > *:where([class*="_own-"]):nth-of-type(20n) {
+    margin-inline-end: 0;
+  }
+  ._xs-20:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 20))),
+  ._xs-20:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 20))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-20:where(._col[class*="_avg-"]) > *:nth-of-type(20n),
+  ._xs-20:where(._col) > *:where([class*="_own-"]):nth-of-type(20n) {
+    margin-block-end: 0;
+  }
+  ._xs-20:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 20))),
+  ._xs-20:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 20))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-20._clip > :nth-child(20) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-20._clip > :nth-child(20) ~ * {
+    display: none;
+  }
+  ._xs-21 {
+    --_layout-group: 21;
+  }
+  ._xs-21:where(._row[class*="_avg-"]) > *:nth-of-type(21n),
+  ._xs-21:where(._row) > *:where([class*="_own-"]):nth-of-type(21n) {
+    margin-inline-end: 0;
+  }
+  ._xs-21:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 21))),
+  ._xs-21:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 21))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-21:where(._col[class*="_avg-"]) > *:nth-of-type(21n),
+  ._xs-21:where(._col) > *:where([class*="_own-"]):nth-of-type(21n) {
+    margin-block-end: 0;
+  }
+  ._xs-21:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 21))),
+  ._xs-21:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 21))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-21._clip > :nth-child(21) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-21._clip > :nth-child(21) ~ * {
+    display: none;
+  }
+  ._xs-22 {
+    --_layout-group: 22;
+  }
+  ._xs-22:where(._row[class*="_avg-"]) > *:nth-of-type(22n),
+  ._xs-22:where(._row) > *:where([class*="_own-"]):nth-of-type(22n) {
+    margin-inline-end: 0;
+  }
+  ._xs-22:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 22))),
+  ._xs-22:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 22))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-22:where(._col[class*="_avg-"]) > *:nth-of-type(22n),
+  ._xs-22:where(._col) > *:where([class*="_own-"]):nth-of-type(22n) {
+    margin-block-end: 0;
+  }
+  ._xs-22:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 22))),
+  ._xs-22:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 22))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-22._clip > :nth-child(22) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-22._clip > :nth-child(22) ~ * {
+    display: none;
+  }
+  ._xs-23 {
+    --_layout-group: 23;
+  }
+  ._xs-23:where(._row[class*="_avg-"]) > *:nth-of-type(23n),
+  ._xs-23:where(._row) > *:where([class*="_own-"]):nth-of-type(23n) {
+    margin-inline-end: 0;
+  }
+  ._xs-23:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 23))),
+  ._xs-23:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 23))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-23:where(._col[class*="_avg-"]) > *:nth-of-type(23n),
+  ._xs-23:where(._col) > *:where([class*="_own-"]):nth-of-type(23n) {
+    margin-block-end: 0;
+  }
+  ._xs-23:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 23))),
+  ._xs-23:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 23))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-23._clip > :nth-child(23) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-23._clip > :nth-child(23) ~ * {
+    display: none;
+  }
+  ._xs-24 {
+    --_layout-group: 24;
+  }
+  ._xs-24:where(._row[class*="_avg-"]) > *:nth-of-type(24n),
+  ._xs-24:where(._row) > *:where([class*="_own-"]):nth-of-type(24n) {
+    margin-inline-end: 0;
+  }
+  ._xs-24:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 24))),
+  ._xs-24:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 24))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-24:where(._col[class*="_avg-"]) > *:nth-of-type(24n),
+  ._xs-24:where(._col) > *:where([class*="_own-"]):nth-of-type(24n) {
+    margin-block-end: 0;
+  }
+  ._xs-24:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 24))),
+  ._xs-24:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 24))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-24._clip > :nth-child(24) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-24._clip > :nth-child(24) ~ * {
+    display: none;
+  }
+  :where([class*="_hh-"]) > [class*="_flex"] {
+    --_flex-grow: 0;
+    --_flex-shrink: 0;
+  }
+  ._row:where([class*="_hh-"]),
+  ._col:where([class*="_hh-"]) {
+    flex-wrap: wrap;
+  }
+  ._row:where([class*="_hh-"]) > *:is([class*="_flex"]),
+  ._col:where([class*="_hh-"]) > *:is([class*="_flex"]) {
+    --_flex-basis: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._row:where([class*="_hh-"]):is([class*="_avg-"]) > *,
+  ._row:where([class*="_hh-"]) > *:is([class*="_own"]) {
+    width: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._col:where([class*="_hh-"]):is([class*="_avg-"]) > *,
+  ._col:where([class*="_hh-"]) > *:is([class*="_own-"]) {
+    height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
 }
-/*Destop device*/
+/* Tablet device (xs+sm+md) */
+@media (min-width: 900px) and (max-width: 1535px), (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
+  :root {
+    --_fs-root: clamp(var(--_fs-root), 1.5vw, calc(200px/14));
+    --SCREEN: tb;
+  }
+  *._split-tb,
+  ._row:where(._split-tb),
+  ._col:where(._split-tb),
+  ._grid:where(._split-tb) {
+    display: block;
+  }
+  *._split-tb > *,
+  ._row:where(._split-tb) > *,
+  ._col:where(._split-tb) > *,
+  ._grid:where(._split-tb) > * {
+    width: auto;
+    height: auto;
+  }
+  [class*="_container"]:where(:not(._container-full)):where(:not(._tb-full)) {
+    --_container-w: var(--_tb-w, var(--_container-resp));
+    --_container-resp: var(--_w-tb);
+  }
+  [class*="_container"]:where(:not(._container-full)):where(._tb-full) {
+    width: 100%;
+  }
+  ._hide-tb {
+    display: none;
+  }
+  ._grid[class*="_tb"] {
+    --_layout-avg: var(--_layout-group);
+  }
+  ._xs-1 {
+    --_layout-group: 1;
+  }
+  ._xs-1:where(._row[class*="_avg-"]) > *:nth-of-type(1n),
+  ._xs-1:where(._row) > *:where([class*="_own-"]):nth-of-type(1n) {
+    margin-inline-end: 0;
+  }
+  ._xs-1:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 1))),
+  ._xs-1:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 1))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-1:where(._col[class*="_avg-"]) > *:nth-of-type(1n),
+  ._xs-1:where(._col) > *:where([class*="_own-"]):nth-of-type(1n) {
+    margin-block-end: 0;
+  }
+  ._xs-1:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 1))),
+  ._xs-1:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 1))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-1._clip > :nth-child(1) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-1._clip > :nth-child(1) ~ * {
+    display: none;
+  }
+  ._xs-2 {
+    --_layout-group: 2;
+  }
+  ._xs-2:where(._row[class*="_avg-"]) > *:nth-of-type(2n),
+  ._xs-2:where(._row) > *:where([class*="_own-"]):nth-of-type(2n) {
+    margin-inline-end: 0;
+  }
+  ._xs-2:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 2))),
+  ._xs-2:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 2))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-2:where(._col[class*="_avg-"]) > *:nth-of-type(2n),
+  ._xs-2:where(._col) > *:where([class*="_own-"]):nth-of-type(2n) {
+    margin-block-end: 0;
+  }
+  ._xs-2:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 2))),
+  ._xs-2:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 2))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-2._clip > :nth-child(2) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-2._clip > :nth-child(2) ~ * {
+    display: none;
+  }
+  ._xs-3 {
+    --_layout-group: 3;
+  }
+  ._xs-3:where(._row[class*="_avg-"]) > *:nth-of-type(3n),
+  ._xs-3:where(._row) > *:where([class*="_own-"]):nth-of-type(3n) {
+    margin-inline-end: 0;
+  }
+  ._xs-3:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 3))),
+  ._xs-3:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 3))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-3:where(._col[class*="_avg-"]) > *:nth-of-type(3n),
+  ._xs-3:where(._col) > *:where([class*="_own-"]):nth-of-type(3n) {
+    margin-block-end: 0;
+  }
+  ._xs-3:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 3))),
+  ._xs-3:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 3))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-3._clip > :nth-child(3) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-3._clip > :nth-child(3) ~ * {
+    display: none;
+  }
+  ._xs-4 {
+    --_layout-group: 4;
+  }
+  ._xs-4:where(._row[class*="_avg-"]) > *:nth-of-type(4n),
+  ._xs-4:where(._row) > *:where([class*="_own-"]):nth-of-type(4n) {
+    margin-inline-end: 0;
+  }
+  ._xs-4:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 4))),
+  ._xs-4:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 4))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-4:where(._col[class*="_avg-"]) > *:nth-of-type(4n),
+  ._xs-4:where(._col) > *:where([class*="_own-"]):nth-of-type(4n) {
+    margin-block-end: 0;
+  }
+  ._xs-4:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 4))),
+  ._xs-4:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 4))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-4._clip > :nth-child(4) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-4._clip > :nth-child(4) ~ * {
+    display: none;
+  }
+  ._xs-5 {
+    --_layout-group: 5;
+  }
+  ._xs-5:where(._row[class*="_avg-"]) > *:nth-of-type(5n),
+  ._xs-5:where(._row) > *:where([class*="_own-"]):nth-of-type(5n) {
+    margin-inline-end: 0;
+  }
+  ._xs-5:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 5))),
+  ._xs-5:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 5))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-5:where(._col[class*="_avg-"]) > *:nth-of-type(5n),
+  ._xs-5:where(._col) > *:where([class*="_own-"]):nth-of-type(5n) {
+    margin-block-end: 0;
+  }
+  ._xs-5:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 5))),
+  ._xs-5:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 5))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-5._clip > :nth-child(5) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-5._clip > :nth-child(5) ~ * {
+    display: none;
+  }
+  ._xs-6 {
+    --_layout-group: 6;
+  }
+  ._xs-6:where(._row[class*="_avg-"]) > *:nth-of-type(6n),
+  ._xs-6:where(._row) > *:where([class*="_own-"]):nth-of-type(6n) {
+    margin-inline-end: 0;
+  }
+  ._xs-6:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 6))),
+  ._xs-6:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 6))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-6:where(._col[class*="_avg-"]) > *:nth-of-type(6n),
+  ._xs-6:where(._col) > *:where([class*="_own-"]):nth-of-type(6n) {
+    margin-block-end: 0;
+  }
+  ._xs-6:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 6))),
+  ._xs-6:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 6))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-6._clip > :nth-child(6) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-6._clip > :nth-child(6) ~ * {
+    display: none;
+  }
+  ._xs-7 {
+    --_layout-group: 7;
+  }
+  ._xs-7:where(._row[class*="_avg-"]) > *:nth-of-type(7n),
+  ._xs-7:where(._row) > *:where([class*="_own-"]):nth-of-type(7n) {
+    margin-inline-end: 0;
+  }
+  ._xs-7:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 7))),
+  ._xs-7:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 7))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-7:where(._col[class*="_avg-"]) > *:nth-of-type(7n),
+  ._xs-7:where(._col) > *:where([class*="_own-"]):nth-of-type(7n) {
+    margin-block-end: 0;
+  }
+  ._xs-7:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 7))),
+  ._xs-7:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 7))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-7._clip > :nth-child(7) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-7._clip > :nth-child(7) ~ * {
+    display: none;
+  }
+  ._xs-8 {
+    --_layout-group: 8;
+  }
+  ._xs-8:where(._row[class*="_avg-"]) > *:nth-of-type(8n),
+  ._xs-8:where(._row) > *:where([class*="_own-"]):nth-of-type(8n) {
+    margin-inline-end: 0;
+  }
+  ._xs-8:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 8))),
+  ._xs-8:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 8))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-8:where(._col[class*="_avg-"]) > *:nth-of-type(8n),
+  ._xs-8:where(._col) > *:where([class*="_own-"]):nth-of-type(8n) {
+    margin-block-end: 0;
+  }
+  ._xs-8:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 8))),
+  ._xs-8:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 8))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-8._clip > :nth-child(8) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-8._clip > :nth-child(8) ~ * {
+    display: none;
+  }
+  ._xs-9 {
+    --_layout-group: 9;
+  }
+  ._xs-9:where(._row[class*="_avg-"]) > *:nth-of-type(9n),
+  ._xs-9:where(._row) > *:where([class*="_own-"]):nth-of-type(9n) {
+    margin-inline-end: 0;
+  }
+  ._xs-9:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 9))),
+  ._xs-9:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 9))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-9:where(._col[class*="_avg-"]) > *:nth-of-type(9n),
+  ._xs-9:where(._col) > *:where([class*="_own-"]):nth-of-type(9n) {
+    margin-block-end: 0;
+  }
+  ._xs-9:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 9))),
+  ._xs-9:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 9))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-9._clip > :nth-child(9) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-9._clip > :nth-child(9) ~ * {
+    display: none;
+  }
+  ._xs-10 {
+    --_layout-group: 10;
+  }
+  ._xs-10:where(._row[class*="_avg-"]) > *:nth-of-type(10n),
+  ._xs-10:where(._row) > *:where([class*="_own-"]):nth-of-type(10n) {
+    margin-inline-end: 0;
+  }
+  ._xs-10:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 10))),
+  ._xs-10:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 10))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-10:where(._col[class*="_avg-"]) > *:nth-of-type(10n),
+  ._xs-10:where(._col) > *:where([class*="_own-"]):nth-of-type(10n) {
+    margin-block-end: 0;
+  }
+  ._xs-10:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 10))),
+  ._xs-10:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 10))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-10._clip > :nth-child(10) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-10._clip > :nth-child(10) ~ * {
+    display: none;
+  }
+  ._xs-11 {
+    --_layout-group: 11;
+  }
+  ._xs-11:where(._row[class*="_avg-"]) > *:nth-of-type(11n),
+  ._xs-11:where(._row) > *:where([class*="_own-"]):nth-of-type(11n) {
+    margin-inline-end: 0;
+  }
+  ._xs-11:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 11))),
+  ._xs-11:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 11))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-11:where(._col[class*="_avg-"]) > *:nth-of-type(11n),
+  ._xs-11:where(._col) > *:where([class*="_own-"]):nth-of-type(11n) {
+    margin-block-end: 0;
+  }
+  ._xs-11:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 11))),
+  ._xs-11:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 11))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-11._clip > :nth-child(11) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-11._clip > :nth-child(11) ~ * {
+    display: none;
+  }
+  ._xs-12 {
+    --_layout-group: 12;
+  }
+  ._xs-12:where(._row[class*="_avg-"]) > *:nth-of-type(12n),
+  ._xs-12:where(._row) > *:where([class*="_own-"]):nth-of-type(12n) {
+    margin-inline-end: 0;
+  }
+  ._xs-12:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 12))),
+  ._xs-12:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 12))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-12:where(._col[class*="_avg-"]) > *:nth-of-type(12n),
+  ._xs-12:where(._col) > *:where([class*="_own-"]):nth-of-type(12n) {
+    margin-block-end: 0;
+  }
+  ._xs-12:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 12))),
+  ._xs-12:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 12))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-12._clip > :nth-child(12) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-12._clip > :nth-child(12) ~ * {
+    display: none;
+  }
+  ._xs-13 {
+    --_layout-group: 13;
+  }
+  ._xs-13:where(._row[class*="_avg-"]) > *:nth-of-type(13n),
+  ._xs-13:where(._row) > *:where([class*="_own-"]):nth-of-type(13n) {
+    margin-inline-end: 0;
+  }
+  ._xs-13:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 13))),
+  ._xs-13:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 13))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-13:where(._col[class*="_avg-"]) > *:nth-of-type(13n),
+  ._xs-13:where(._col) > *:where([class*="_own-"]):nth-of-type(13n) {
+    margin-block-end: 0;
+  }
+  ._xs-13:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 13))),
+  ._xs-13:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 13))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-13._clip > :nth-child(13) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-13._clip > :nth-child(13) ~ * {
+    display: none;
+  }
+  ._xs-14 {
+    --_layout-group: 14;
+  }
+  ._xs-14:where(._row[class*="_avg-"]) > *:nth-of-type(14n),
+  ._xs-14:where(._row) > *:where([class*="_own-"]):nth-of-type(14n) {
+    margin-inline-end: 0;
+  }
+  ._xs-14:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 14))),
+  ._xs-14:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 14))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-14:where(._col[class*="_avg-"]) > *:nth-of-type(14n),
+  ._xs-14:where(._col) > *:where([class*="_own-"]):nth-of-type(14n) {
+    margin-block-end: 0;
+  }
+  ._xs-14:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 14))),
+  ._xs-14:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 14))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-14._clip > :nth-child(14) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-14._clip > :nth-child(14) ~ * {
+    display: none;
+  }
+  ._xs-15 {
+    --_layout-group: 15;
+  }
+  ._xs-15:where(._row[class*="_avg-"]) > *:nth-of-type(15n),
+  ._xs-15:where(._row) > *:where([class*="_own-"]):nth-of-type(15n) {
+    margin-inline-end: 0;
+  }
+  ._xs-15:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 15))),
+  ._xs-15:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 15))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-15:where(._col[class*="_avg-"]) > *:nth-of-type(15n),
+  ._xs-15:where(._col) > *:where([class*="_own-"]):nth-of-type(15n) {
+    margin-block-end: 0;
+  }
+  ._xs-15:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 15))),
+  ._xs-15:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 15))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-15._clip > :nth-child(15) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-15._clip > :nth-child(15) ~ * {
+    display: none;
+  }
+  ._xs-16 {
+    --_layout-group: 16;
+  }
+  ._xs-16:where(._row[class*="_avg-"]) > *:nth-of-type(16n),
+  ._xs-16:where(._row) > *:where([class*="_own-"]):nth-of-type(16n) {
+    margin-inline-end: 0;
+  }
+  ._xs-16:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 16))),
+  ._xs-16:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 16))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-16:where(._col[class*="_avg-"]) > *:nth-of-type(16n),
+  ._xs-16:where(._col) > *:where([class*="_own-"]):nth-of-type(16n) {
+    margin-block-end: 0;
+  }
+  ._xs-16:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 16))),
+  ._xs-16:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 16))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-16._clip > :nth-child(16) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-16._clip > :nth-child(16) ~ * {
+    display: none;
+  }
+  ._xs-17 {
+    --_layout-group: 17;
+  }
+  ._xs-17:where(._row[class*="_avg-"]) > *:nth-of-type(17n),
+  ._xs-17:where(._row) > *:where([class*="_own-"]):nth-of-type(17n) {
+    margin-inline-end: 0;
+  }
+  ._xs-17:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 17))),
+  ._xs-17:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 17))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-17:where(._col[class*="_avg-"]) > *:nth-of-type(17n),
+  ._xs-17:where(._col) > *:where([class*="_own-"]):nth-of-type(17n) {
+    margin-block-end: 0;
+  }
+  ._xs-17:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 17))),
+  ._xs-17:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 17))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-17._clip > :nth-child(17) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-17._clip > :nth-child(17) ~ * {
+    display: none;
+  }
+  ._xs-18 {
+    --_layout-group: 18;
+  }
+  ._xs-18:where(._row[class*="_avg-"]) > *:nth-of-type(18n),
+  ._xs-18:where(._row) > *:where([class*="_own-"]):nth-of-type(18n) {
+    margin-inline-end: 0;
+  }
+  ._xs-18:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 18))),
+  ._xs-18:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 18))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-18:where(._col[class*="_avg-"]) > *:nth-of-type(18n),
+  ._xs-18:where(._col) > *:where([class*="_own-"]):nth-of-type(18n) {
+    margin-block-end: 0;
+  }
+  ._xs-18:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 18))),
+  ._xs-18:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 18))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-18._clip > :nth-child(18) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-18._clip > :nth-child(18) ~ * {
+    display: none;
+  }
+  ._xs-19 {
+    --_layout-group: 19;
+  }
+  ._xs-19:where(._row[class*="_avg-"]) > *:nth-of-type(19n),
+  ._xs-19:where(._row) > *:where([class*="_own-"]):nth-of-type(19n) {
+    margin-inline-end: 0;
+  }
+  ._xs-19:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 19))),
+  ._xs-19:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 19))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-19:where(._col[class*="_avg-"]) > *:nth-of-type(19n),
+  ._xs-19:where(._col) > *:where([class*="_own-"]):nth-of-type(19n) {
+    margin-block-end: 0;
+  }
+  ._xs-19:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 19))),
+  ._xs-19:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 19))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-19._clip > :nth-child(19) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-19._clip > :nth-child(19) ~ * {
+    display: none;
+  }
+  ._xs-20 {
+    --_layout-group: 20;
+  }
+  ._xs-20:where(._row[class*="_avg-"]) > *:nth-of-type(20n),
+  ._xs-20:where(._row) > *:where([class*="_own-"]):nth-of-type(20n) {
+    margin-inline-end: 0;
+  }
+  ._xs-20:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 20))),
+  ._xs-20:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 20))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-20:where(._col[class*="_avg-"]) > *:nth-of-type(20n),
+  ._xs-20:where(._col) > *:where([class*="_own-"]):nth-of-type(20n) {
+    margin-block-end: 0;
+  }
+  ._xs-20:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 20))),
+  ._xs-20:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 20))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-20._clip > :nth-child(20) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-20._clip > :nth-child(20) ~ * {
+    display: none;
+  }
+  ._xs-21 {
+    --_layout-group: 21;
+  }
+  ._xs-21:where(._row[class*="_avg-"]) > *:nth-of-type(21n),
+  ._xs-21:where(._row) > *:where([class*="_own-"]):nth-of-type(21n) {
+    margin-inline-end: 0;
+  }
+  ._xs-21:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 21))),
+  ._xs-21:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 21))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-21:where(._col[class*="_avg-"]) > *:nth-of-type(21n),
+  ._xs-21:where(._col) > *:where([class*="_own-"]):nth-of-type(21n) {
+    margin-block-end: 0;
+  }
+  ._xs-21:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 21))),
+  ._xs-21:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 21))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-21._clip > :nth-child(21) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-21._clip > :nth-child(21) ~ * {
+    display: none;
+  }
+  ._xs-22 {
+    --_layout-group: 22;
+  }
+  ._xs-22:where(._row[class*="_avg-"]) > *:nth-of-type(22n),
+  ._xs-22:where(._row) > *:where([class*="_own-"]):nth-of-type(22n) {
+    margin-inline-end: 0;
+  }
+  ._xs-22:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 22))),
+  ._xs-22:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 22))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-22:where(._col[class*="_avg-"]) > *:nth-of-type(22n),
+  ._xs-22:where(._col) > *:where([class*="_own-"]):nth-of-type(22n) {
+    margin-block-end: 0;
+  }
+  ._xs-22:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 22))),
+  ._xs-22:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 22))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-22._clip > :nth-child(22) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-22._clip > :nth-child(22) ~ * {
+    display: none;
+  }
+  ._xs-23 {
+    --_layout-group: 23;
+  }
+  ._xs-23:where(._row[class*="_avg-"]) > *:nth-of-type(23n),
+  ._xs-23:where(._row) > *:where([class*="_own-"]):nth-of-type(23n) {
+    margin-inline-end: 0;
+  }
+  ._xs-23:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 23))),
+  ._xs-23:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 23))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-23:where(._col[class*="_avg-"]) > *:nth-of-type(23n),
+  ._xs-23:where(._col) > *:where([class*="_own-"]):nth-of-type(23n) {
+    margin-block-end: 0;
+  }
+  ._xs-23:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 23))),
+  ._xs-23:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 23))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-23._clip > :nth-child(23) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-23._clip > :nth-child(23) ~ * {
+    display: none;
+  }
+  ._xs-24 {
+    --_layout-group: 24;
+  }
+  ._xs-24:where(._row[class*="_avg-"]) > *:nth-of-type(24n),
+  ._xs-24:where(._row) > *:where([class*="_own-"]):nth-of-type(24n) {
+    margin-inline-end: 0;
+  }
+  ._xs-24:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 24))),
+  ._xs-24:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 24))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xs-24:where(._col[class*="_avg-"]) > *:nth-of-type(24n),
+  ._xs-24:where(._col) > *:where([class*="_own-"]):nth-of-type(24n) {
+    margin-block-end: 0;
+  }
+  ._xs-24:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 24))),
+  ._xs-24:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 24))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xs-24._clip > :nth-child(24) > ._hide-clip {
+    display: flex;
+  }
+  ._xs-24._clip > :nth-child(24) ~ * {
+    display: none;
+  }
+  :where([class*="_tb-"]) > [class*="_flex"] {
+    --_flex-grow: 0;
+    --_flex-shrink: 0;
+  }
+  ._row:where([class*="_tb-"]),
+  ._col:where([class*="_tb-"]) {
+    flex-wrap: wrap;
+  }
+  ._row:where([class*="_tb-"]) > *:is([class*="_flex"]),
+  ._col:where([class*="_tb-"]) > *:is([class*="_flex"]) {
+    --_flex-basis: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._row:where([class*="_tb-"]):is([class*="_avg-"]) > *,
+  ._row:where([class*="_tb-"]) > *:is([class*="_own"]) {
+    width: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._col:where([class*="_tb-"]):is([class*="_avg-"]) > *,
+  ._col:where([class*="_tb-"]) > *:is([class*="_own-"]) {
+    height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+}
+/*Destop device(lg+xl+xxl) */
 @media (any-hover: hover) {
+  :root {
+    --_ff-body: "microsoft yahei", "Microsoft JhengHei", "Arial", "Helvetica Neue", "sans-serif", "Yu Mincho", "simsun";
+    --_fs-root: calc(1px*var(--_num-root));
+    --_l-text: 20%;
+    --SCREEN: dt;
+  }
   /*Beautify rolling bar (only pc)*/
   ::-webkit-scrollbar {
     width: 8px;
@@ -20933,28 +22299,660 @@ AX-SKELETON[shape=square] {
       scrollbar-width: thin;
     }
   }
-  ._hide-pc {
+  ._hide-dt {
     display: none;
   }
-}
-/*Desktop device*/
-/*Mobile device*/
-@media screen and (max-width: 900px) {
-  hr {
-    scale: 1 0.5;
+  *._split-dt,
+  ._row:where(._split-dt),
+  ._col:where(._split-dt),
+  ._grid:where(._split-dt) {
+    display: block;
+  }
+  *._split-dt > *,
+  ._row:where(._split-dt) > *,
+  ._col:where(._split-dt) > *,
+  ._grid:where(._split-dt) > * {
+    width: auto;
+    height: auto;
+  }
+  [class*="_container"]:where(:not(._container-full)):where(:not(._dt-full)) {
+    --_container-w: var(--_dt-w, var(--_container-resp));
+    --_container-resp: var(--_w-dt);
+  }
+  [class*="_container"]:where(:not(._container-full)):where(._dt-full) {
+    width: 100%;
+  }
+  ._grid[class*="_dt-"] {
+    --_layout-avg: var(--_layout-group);
+  }
+  ._dt-1 {
+    --_layout-group: 1;
+  }
+  ._dt-1:where(._row[class*="_avg-"]) > *:nth-of-type(1n),
+  ._dt-1:where(._row) > *:where([class*="_own-"]):nth-of-type(1n) {
+    margin-inline-end: 0;
+  }
+  ._dt-1:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 1))),
+  ._dt-1:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 1))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-1:where(._col[class*="_avg-"]) > *:nth-of-type(1n),
+  ._dt-1:where(._col) > *:where([class*="_own-"]):nth-of-type(1n) {
+    margin-block-end: 0;
+  }
+  ._dt-1:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 1))),
+  ._dt-1:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 1))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-1._clip > :nth-child(1) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-1._clip > :nth-child(1) ~ * {
+    display: none;
+  }
+  ._dt-2 {
+    --_layout-group: 2;
+  }
+  ._dt-2:where(._row[class*="_avg-"]) > *:nth-of-type(2n),
+  ._dt-2:where(._row) > *:where([class*="_own-"]):nth-of-type(2n) {
+    margin-inline-end: 0;
+  }
+  ._dt-2:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 2))),
+  ._dt-2:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 2))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-2:where(._col[class*="_avg-"]) > *:nth-of-type(2n),
+  ._dt-2:where(._col) > *:where([class*="_own-"]):nth-of-type(2n) {
+    margin-block-end: 0;
+  }
+  ._dt-2:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 2))),
+  ._dt-2:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 2))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-2._clip > :nth-child(2) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-2._clip > :nth-child(2) ~ * {
+    display: none;
+  }
+  ._dt-3 {
+    --_layout-group: 3;
+  }
+  ._dt-3:where(._row[class*="_avg-"]) > *:nth-of-type(3n),
+  ._dt-3:where(._row) > *:where([class*="_own-"]):nth-of-type(3n) {
+    margin-inline-end: 0;
+  }
+  ._dt-3:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 3))),
+  ._dt-3:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 3))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-3:where(._col[class*="_avg-"]) > *:nth-of-type(3n),
+  ._dt-3:where(._col) > *:where([class*="_own-"]):nth-of-type(3n) {
+    margin-block-end: 0;
+  }
+  ._dt-3:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 3))),
+  ._dt-3:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 3))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-3._clip > :nth-child(3) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-3._clip > :nth-child(3) ~ * {
+    display: none;
+  }
+  ._dt-4 {
+    --_layout-group: 4;
+  }
+  ._dt-4:where(._row[class*="_avg-"]) > *:nth-of-type(4n),
+  ._dt-4:where(._row) > *:where([class*="_own-"]):nth-of-type(4n) {
+    margin-inline-end: 0;
+  }
+  ._dt-4:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 4))),
+  ._dt-4:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 4))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-4:where(._col[class*="_avg-"]) > *:nth-of-type(4n),
+  ._dt-4:where(._col) > *:where([class*="_own-"]):nth-of-type(4n) {
+    margin-block-end: 0;
+  }
+  ._dt-4:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 4))),
+  ._dt-4:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 4))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-4._clip > :nth-child(4) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-4._clip > :nth-child(4) ~ * {
+    display: none;
+  }
+  ._dt-5 {
+    --_layout-group: 5;
+  }
+  ._dt-5:where(._row[class*="_avg-"]) > *:nth-of-type(5n),
+  ._dt-5:where(._row) > *:where([class*="_own-"]):nth-of-type(5n) {
+    margin-inline-end: 0;
+  }
+  ._dt-5:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 5))),
+  ._dt-5:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 5))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-5:where(._col[class*="_avg-"]) > *:nth-of-type(5n),
+  ._dt-5:where(._col) > *:where([class*="_own-"]):nth-of-type(5n) {
+    margin-block-end: 0;
+  }
+  ._dt-5:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 5))),
+  ._dt-5:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 5))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-5._clip > :nth-child(5) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-5._clip > :nth-child(5) ~ * {
+    display: none;
+  }
+  ._dt-6 {
+    --_layout-group: 6;
+  }
+  ._dt-6:where(._row[class*="_avg-"]) > *:nth-of-type(6n),
+  ._dt-6:where(._row) > *:where([class*="_own-"]):nth-of-type(6n) {
+    margin-inline-end: 0;
+  }
+  ._dt-6:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 6))),
+  ._dt-6:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 6))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-6:where(._col[class*="_avg-"]) > *:nth-of-type(6n),
+  ._dt-6:where(._col) > *:where([class*="_own-"]):nth-of-type(6n) {
+    margin-block-end: 0;
+  }
+  ._dt-6:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 6))),
+  ._dt-6:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 6))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-6._clip > :nth-child(6) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-6._clip > :nth-child(6) ~ * {
+    display: none;
+  }
+  ._dt-7 {
+    --_layout-group: 7;
+  }
+  ._dt-7:where(._row[class*="_avg-"]) > *:nth-of-type(7n),
+  ._dt-7:where(._row) > *:where([class*="_own-"]):nth-of-type(7n) {
+    margin-inline-end: 0;
+  }
+  ._dt-7:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 7))),
+  ._dt-7:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 7))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-7:where(._col[class*="_avg-"]) > *:nth-of-type(7n),
+  ._dt-7:where(._col) > *:where([class*="_own-"]):nth-of-type(7n) {
+    margin-block-end: 0;
+  }
+  ._dt-7:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 7))),
+  ._dt-7:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 7))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-7._clip > :nth-child(7) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-7._clip > :nth-child(7) ~ * {
+    display: none;
+  }
+  ._dt-8 {
+    --_layout-group: 8;
+  }
+  ._dt-8:where(._row[class*="_avg-"]) > *:nth-of-type(8n),
+  ._dt-8:where(._row) > *:where([class*="_own-"]):nth-of-type(8n) {
+    margin-inline-end: 0;
+  }
+  ._dt-8:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 8))),
+  ._dt-8:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 8))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-8:where(._col[class*="_avg-"]) > *:nth-of-type(8n),
+  ._dt-8:where(._col) > *:where([class*="_own-"]):nth-of-type(8n) {
+    margin-block-end: 0;
+  }
+  ._dt-8:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 8))),
+  ._dt-8:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 8))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-8._clip > :nth-child(8) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-8._clip > :nth-child(8) ~ * {
+    display: none;
+  }
+  ._dt-9 {
+    --_layout-group: 9;
+  }
+  ._dt-9:where(._row[class*="_avg-"]) > *:nth-of-type(9n),
+  ._dt-9:where(._row) > *:where([class*="_own-"]):nth-of-type(9n) {
+    margin-inline-end: 0;
+  }
+  ._dt-9:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 9))),
+  ._dt-9:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 9))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-9:where(._col[class*="_avg-"]) > *:nth-of-type(9n),
+  ._dt-9:where(._col) > *:where([class*="_own-"]):nth-of-type(9n) {
+    margin-block-end: 0;
+  }
+  ._dt-9:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 9))),
+  ._dt-9:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 9))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-9._clip > :nth-child(9) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-9._clip > :nth-child(9) ~ * {
+    display: none;
+  }
+  ._dt-10 {
+    --_layout-group: 10;
+  }
+  ._dt-10:where(._row[class*="_avg-"]) > *:nth-of-type(10n),
+  ._dt-10:where(._row) > *:where([class*="_own-"]):nth-of-type(10n) {
+    margin-inline-end: 0;
+  }
+  ._dt-10:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 10))),
+  ._dt-10:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 10))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-10:where(._col[class*="_avg-"]) > *:nth-of-type(10n),
+  ._dt-10:where(._col) > *:where([class*="_own-"]):nth-of-type(10n) {
+    margin-block-end: 0;
+  }
+  ._dt-10:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 10))),
+  ._dt-10:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 10))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-10._clip > :nth-child(10) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-10._clip > :nth-child(10) ~ * {
+    display: none;
+  }
+  ._dt-11 {
+    --_layout-group: 11;
+  }
+  ._dt-11:where(._row[class*="_avg-"]) > *:nth-of-type(11n),
+  ._dt-11:where(._row) > *:where([class*="_own-"]):nth-of-type(11n) {
+    margin-inline-end: 0;
+  }
+  ._dt-11:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 11))),
+  ._dt-11:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 11))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-11:where(._col[class*="_avg-"]) > *:nth-of-type(11n),
+  ._dt-11:where(._col) > *:where([class*="_own-"]):nth-of-type(11n) {
+    margin-block-end: 0;
+  }
+  ._dt-11:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 11))),
+  ._dt-11:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 11))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-11._clip > :nth-child(11) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-11._clip > :nth-child(11) ~ * {
+    display: none;
+  }
+  ._dt-12 {
+    --_layout-group: 12;
+  }
+  ._dt-12:where(._row[class*="_avg-"]) > *:nth-of-type(12n),
+  ._dt-12:where(._row) > *:where([class*="_own-"]):nth-of-type(12n) {
+    margin-inline-end: 0;
+  }
+  ._dt-12:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 12))),
+  ._dt-12:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 12))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-12:where(._col[class*="_avg-"]) > *:nth-of-type(12n),
+  ._dt-12:where(._col) > *:where([class*="_own-"]):nth-of-type(12n) {
+    margin-block-end: 0;
+  }
+  ._dt-12:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 12))),
+  ._dt-12:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 12))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-12._clip > :nth-child(12) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-12._clip > :nth-child(12) ~ * {
+    display: none;
+  }
+  ._dt-13 {
+    --_layout-group: 13;
+  }
+  ._dt-13:where(._row[class*="_avg-"]) > *:nth-of-type(13n),
+  ._dt-13:where(._row) > *:where([class*="_own-"]):nth-of-type(13n) {
+    margin-inline-end: 0;
+  }
+  ._dt-13:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 13))),
+  ._dt-13:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 13))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-13:where(._col[class*="_avg-"]) > *:nth-of-type(13n),
+  ._dt-13:where(._col) > *:where([class*="_own-"]):nth-of-type(13n) {
+    margin-block-end: 0;
+  }
+  ._dt-13:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 13))),
+  ._dt-13:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 13))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-13._clip > :nth-child(13) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-13._clip > :nth-child(13) ~ * {
+    display: none;
+  }
+  ._dt-14 {
+    --_layout-group: 14;
+  }
+  ._dt-14:where(._row[class*="_avg-"]) > *:nth-of-type(14n),
+  ._dt-14:where(._row) > *:where([class*="_own-"]):nth-of-type(14n) {
+    margin-inline-end: 0;
+  }
+  ._dt-14:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 14))),
+  ._dt-14:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 14))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-14:where(._col[class*="_avg-"]) > *:nth-of-type(14n),
+  ._dt-14:where(._col) > *:where([class*="_own-"]):nth-of-type(14n) {
+    margin-block-end: 0;
+  }
+  ._dt-14:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 14))),
+  ._dt-14:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 14))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-14._clip > :nth-child(14) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-14._clip > :nth-child(14) ~ * {
+    display: none;
+  }
+  ._dt-15 {
+    --_layout-group: 15;
+  }
+  ._dt-15:where(._row[class*="_avg-"]) > *:nth-of-type(15n),
+  ._dt-15:where(._row) > *:where([class*="_own-"]):nth-of-type(15n) {
+    margin-inline-end: 0;
+  }
+  ._dt-15:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 15))),
+  ._dt-15:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 15))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-15:where(._col[class*="_avg-"]) > *:nth-of-type(15n),
+  ._dt-15:where(._col) > *:where([class*="_own-"]):nth-of-type(15n) {
+    margin-block-end: 0;
+  }
+  ._dt-15:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 15))),
+  ._dt-15:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 15))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-15._clip > :nth-child(15) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-15._clip > :nth-child(15) ~ * {
+    display: none;
+  }
+  ._dt-16 {
+    --_layout-group: 16;
+  }
+  ._dt-16:where(._row[class*="_avg-"]) > *:nth-of-type(16n),
+  ._dt-16:where(._row) > *:where([class*="_own-"]):nth-of-type(16n) {
+    margin-inline-end: 0;
+  }
+  ._dt-16:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 16))),
+  ._dt-16:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 16))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-16:where(._col[class*="_avg-"]) > *:nth-of-type(16n),
+  ._dt-16:where(._col) > *:where([class*="_own-"]):nth-of-type(16n) {
+    margin-block-end: 0;
+  }
+  ._dt-16:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 16))),
+  ._dt-16:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 16))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-16._clip > :nth-child(16) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-16._clip > :nth-child(16) ~ * {
+    display: none;
+  }
+  ._dt-17 {
+    --_layout-group: 17;
+  }
+  ._dt-17:where(._row[class*="_avg-"]) > *:nth-of-type(17n),
+  ._dt-17:where(._row) > *:where([class*="_own-"]):nth-of-type(17n) {
+    margin-inline-end: 0;
+  }
+  ._dt-17:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 17))),
+  ._dt-17:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 17))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-17:where(._col[class*="_avg-"]) > *:nth-of-type(17n),
+  ._dt-17:where(._col) > *:where([class*="_own-"]):nth-of-type(17n) {
+    margin-block-end: 0;
+  }
+  ._dt-17:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 17))),
+  ._dt-17:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 17))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-17._clip > :nth-child(17) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-17._clip > :nth-child(17) ~ * {
+    display: none;
+  }
+  ._dt-18 {
+    --_layout-group: 18;
+  }
+  ._dt-18:where(._row[class*="_avg-"]) > *:nth-of-type(18n),
+  ._dt-18:where(._row) > *:where([class*="_own-"]):nth-of-type(18n) {
+    margin-inline-end: 0;
+  }
+  ._dt-18:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 18))),
+  ._dt-18:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 18))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-18:where(._col[class*="_avg-"]) > *:nth-of-type(18n),
+  ._dt-18:where(._col) > *:where([class*="_own-"]):nth-of-type(18n) {
+    margin-block-end: 0;
+  }
+  ._dt-18:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 18))),
+  ._dt-18:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 18))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-18._clip > :nth-child(18) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-18._clip > :nth-child(18) ~ * {
+    display: none;
+  }
+  ._dt-19 {
+    --_layout-group: 19;
+  }
+  ._dt-19:where(._row[class*="_avg-"]) > *:nth-of-type(19n),
+  ._dt-19:where(._row) > *:where([class*="_own-"]):nth-of-type(19n) {
+    margin-inline-end: 0;
+  }
+  ._dt-19:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 19))),
+  ._dt-19:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 19))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-19:where(._col[class*="_avg-"]) > *:nth-of-type(19n),
+  ._dt-19:where(._col) > *:where([class*="_own-"]):nth-of-type(19n) {
+    margin-block-end: 0;
+  }
+  ._dt-19:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 19))),
+  ._dt-19:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 19))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-19._clip > :nth-child(19) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-19._clip > :nth-child(19) ~ * {
+    display: none;
+  }
+  ._dt-20 {
+    --_layout-group: 20;
+  }
+  ._dt-20:where(._row[class*="_avg-"]) > *:nth-of-type(20n),
+  ._dt-20:where(._row) > *:where([class*="_own-"]):nth-of-type(20n) {
+    margin-inline-end: 0;
+  }
+  ._dt-20:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 20))),
+  ._dt-20:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 20))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-20:where(._col[class*="_avg-"]) > *:nth-of-type(20n),
+  ._dt-20:where(._col) > *:where([class*="_own-"]):nth-of-type(20n) {
+    margin-block-end: 0;
+  }
+  ._dt-20:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 20))),
+  ._dt-20:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 20))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-20._clip > :nth-child(20) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-20._clip > :nth-child(20) ~ * {
+    display: none;
+  }
+  ._dt-21 {
+    --_layout-group: 21;
+  }
+  ._dt-21:where(._row[class*="_avg-"]) > *:nth-of-type(21n),
+  ._dt-21:where(._row) > *:where([class*="_own-"]):nth-of-type(21n) {
+    margin-inline-end: 0;
+  }
+  ._dt-21:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 21))),
+  ._dt-21:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 21))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-21:where(._col[class*="_avg-"]) > *:nth-of-type(21n),
+  ._dt-21:where(._col) > *:where([class*="_own-"]):nth-of-type(21n) {
+    margin-block-end: 0;
+  }
+  ._dt-21:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 21))),
+  ._dt-21:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 21))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-21._clip > :nth-child(21) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-21._clip > :nth-child(21) ~ * {
+    display: none;
+  }
+  ._dt-22 {
+    --_layout-group: 22;
+  }
+  ._dt-22:where(._row[class*="_avg-"]) > *:nth-of-type(22n),
+  ._dt-22:where(._row) > *:where([class*="_own-"]):nth-of-type(22n) {
+    margin-inline-end: 0;
+  }
+  ._dt-22:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 22))),
+  ._dt-22:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 22))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-22:where(._col[class*="_avg-"]) > *:nth-of-type(22n),
+  ._dt-22:where(._col) > *:where([class*="_own-"]):nth-of-type(22n) {
+    margin-block-end: 0;
+  }
+  ._dt-22:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 22))),
+  ._dt-22:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 22))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-22._clip > :nth-child(22) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-22._clip > :nth-child(22) ~ * {
+    display: none;
+  }
+  ._dt-23 {
+    --_layout-group: 23;
+  }
+  ._dt-23:where(._row[class*="_avg-"]) > *:nth-of-type(23n),
+  ._dt-23:where(._row) > *:where([class*="_own-"]):nth-of-type(23n) {
+    margin-inline-end: 0;
+  }
+  ._dt-23:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 23))),
+  ._dt-23:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 23))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-23:where(._col[class*="_avg-"]) > *:nth-of-type(23n),
+  ._dt-23:where(._col) > *:where([class*="_own-"]):nth-of-type(23n) {
+    margin-block-end: 0;
+  }
+  ._dt-23:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 23))),
+  ._dt-23:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 23))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-23._clip > :nth-child(23) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-23._clip > :nth-child(23) ~ * {
+    display: none;
+  }
+  ._dt-24 {
+    --_layout-group: 24;
+  }
+  ._dt-24:where(._row[class*="_avg-"]) > *:nth-of-type(24n),
+  ._dt-24:where(._row) > *:where([class*="_own-"]):nth-of-type(24n) {
+    margin-inline-end: 0;
+  }
+  ._dt-24:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 24))),
+  ._dt-24:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 24))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._dt-24:where(._col[class*="_avg-"]) > *:nth-of-type(24n),
+  ._dt-24:where(._col) > *:where([class*="_own-"]):nth-of-type(24n) {
+    margin-block-end: 0;
+  }
+  ._dt-24:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 24))),
+  ._dt-24:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 24))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._dt-24._clip > :nth-child(24) > ._hide-clip {
+    display: flex;
+  }
+  ._dt-24._clip > :nth-child(24) ~ * {
+    display: none;
+  }
+  :where([class*="_dt-"]) > [class*="_flex"] {
+    --_flex-grow: 0;
+    --_flex-shrink: 0;
+  }
+  ._row:where([class*="_dt-"]),
+  ._col:where([class*="_dt-"]) {
+    flex-wrap: wrap;
+  }
+  ._row:where([class*="_dt-"]) > *:is([class*="_flex"]),
+  ._col:where([class*="_dt-"]) > *:is([class*="_flex"]) {
+    --_flex-basis: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._row:where([class*="_dt-"]):is([class*="_avg-"]) > *,
+  ._row:where([class*="_dt-"]) > *:is([class*="_own"]) {
+    width: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._col:where([class*="_dt-"]):is([class*="_avg-"]) > *,
+  ._col:where([class*="_dt-"]) > *:is([class*="_own-"]) {
+    height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
 }
-/*Destop device*/
-/*Mobile device*/
-/*Phone device*/
-/*Phone+iPad rotate+iPad*/
-/*xxs->Phone*/
+/* Phone+iPad rotate+iPad*/
+/* xxs->Phone (<600 | <900) */
 /*
- *Last modified: 2025-04-27 09:40:23
+ *Last modified: 2025-05-03 05:30:22
  */
-@media screen and (max-width: 500px) {
+@media (max-width: 599px) {
   :root {
-    --_g-full: 1.4rem;
     --SCREEN: xxs;
   }
   *._split,
@@ -20978,11 +22976,8 @@ AX-SKELETON[shape=square] {
     width: auto;
     height: auto;
   }
-  [class*="_container"]:where(:not(._xxs-full)) {
-    --_container-w-2: var(--_w-xxs);
-  }
-  [class*="_container"]:where(._xxs-full) {
-    --_container-w-2: 100%;
+  [class*="_container"]:where(:not(._container-full)):where(._xxs-full) {
+    width: 100%;
   }
   ._hide-xxs {
     display: none;
@@ -21660,8 +23655,8 @@ AX-SKELETON[shape=square] {
     margin-block-start: var(--_rem-space);
   }
 }
-/*xs->tablet*/
-@media screen and (min-width: 500px) and (max-width: 900px) {
+/* xs->Tablet */
+@media (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
   :root {
     --SCREEN: xs;
   }
@@ -21678,11 +23673,12 @@ AX-SKELETON[shape=square] {
     width: auto;
     height: auto;
   }
-  [class*="_container"]:where(:not(._xs-full)) {
-    --_container-w-2: var(--_w-xs);
+  [class*="_container"]:where(:not(._container-full)):where(:not(._xs-full)) {
+    --_container-w: var(--_xs-w, var(--_container-resp));
+    --_container-resp: var(--_w-xs);
   }
-  [class*="_container"]:where(._xs-full) {
-    --_container-w-2: 100%;
+  [class*="_container"]:where(:not(._container-full)):where(._xs-full) {
+    width: 100%;
   }
   ._hide-xs {
     display: none;
@@ -22311,13 +24307,8 @@ AX-SKELETON[shape=square] {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
 }
-@media screen and (min-width: 500px) and (max-width: 900px) and (orientation: landscape) {
-  :root {
-    --_fs-root: var(--_fs-mobi);
-  }
-}
-/*sm->tablet & flip*/
-@media screen and (min-width: 900px) and (max-width: 1200px) {
+/* sm->Tablet & flip */
+@media (min-width: 900px) and (max-width: 1199px) {
   :root {
     --SCREEN: sm;
   }
@@ -22334,15 +24325,11 @@ AX-SKELETON[shape=square] {
     width: auto;
     height: auto;
   }
-  /*  [class*="_container"] {
-    --_container-w-1:var(--_w-sm);
-  } */
-  /*   @media (orientation: landscape) {
-    [class*="_container"] {
-      --_container-w-1:var(--_w-xs);
-    }
-  } */
-  [class*="_container"]:where(._sm-full) {
+  [class*="_container"]:where(:not(._container-full)):where(:not(._sm-full)) {
+    --_container-w: var(--_sm-w, var(--_container-resp));
+    --_container-resp: var(--_w-sm);
+  }
+  [class*="_container"]:where(:not(._container-full)):where(._sm-full) {
     width: 100%;
   }
   ._hide-sm {
@@ -22972,8 +24959,8 @@ AX-SKELETON[shape=square] {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
 }
-/*md->Laptop & tablet flip*/
-@media screen and (min-width: 1200px) and (max-width: 1500px) {
+/* md->Tablet flip */
+@media (min-width: 1200px) and (max-width: 1535px) {
   :root {
     --SCREEN: md;
   }
@@ -22990,16 +24977,11 @@ AX-SKELETON[shape=square] {
     width: auto;
     height: auto;
   }
-  /*   [class*="_container"] {
-    --_container-w-1:var(--_w-md);
-  } */
-  /*   @media (orientation: landscape) {
-    [class*="_container"] {
-      --_container-w-1:var(--_w-sm);
-    }
+  [class*="_container"]:where(:not(._container-full)):where(:not(._md-full)) {
+    --_container-w: var(--_md-w, var(--_container-resp));
+    --_container-resp: var(--_w-md);
   }
- */
-  [class*="_container"]:where(._md-full) {
+  [class*="_container"]:where(:not(._container-full)):where(._md-full) {
     width: 100%;
   }
   ._hide-md {
@@ -23629,8 +25611,8 @@ AX-SKELETON[shape=square] {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
 }
-/*lg->Desktop*/
-@media screen and (min-width: 1500px) and (max-width: 4100px) {
+/* lg->Desktop >=1560 (1920*1080) */
+@media (min-width: 1536px) and (max-width: 2499px) {
   :root {
     --SCREEN: lg;
   }
@@ -23646,6 +25628,13 @@ AX-SKELETON[shape=square] {
   ._grid:where(._split-lg) > * {
     width: auto;
     height: auto;
+  }
+  [class*="_container"]:where(:not(._container-full)):where(:not(._lg-full)) {
+    --_container-w: var(--_lg-w, var(--_container-resp));
+    --_container-resp: var(--_w-lg);
+  }
+  [class*="_container"]:where(:not(._container-full)):where(._lg-full) {
+    width: 100%;
   }
   ._hide-lg {
     display: none;
@@ -24274,12 +26263,16 @@ AX-SKELETON[shape=square] {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
 }
-/*xl->UHD*/
-@media screen and (min-width: 4100px) {
+/* xl->2k screen (2560*1440) */
+@media (min-width: 2500px) and (max-width: 3799px) {
   :root {
     --SCREEN: xl;
   }
-  [class*="_container"]:where(._xl-full) {
+  [class*="_container"]:where(:not(._container-full)):where(:not(._xl-full)) {
+    --_container-w: var(--_xl-w, var(--_container-resp));
+    --_container-resp: var(--_w-xl);
+  }
+  [class*="_container"]:where(:not(._container-full)):where(._xl-full) {
     width: 100%;
   }
   ._hide-xl {
@@ -24909,7 +26902,673 @@ AX-SKELETON[shape=square] {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
 }
-/*Dark mode*/
+/* xxl->4k screen (3840*2160) */
+@media (min-width: 3800px) {
+  :root {
+    --SCREEN: xxl;
+  }
+  [class*="_container"]:where(:not(._container-full)):where(:not(._xxl-full)) {
+    --_container-w: var(--_xxl-w, var(--_container-resp));
+    --_container-resp: var(--_w-xxl);
+  }
+  [class*="_container"]:where(:not(._container-full)):where(._xxl-full) {
+    width: 100%;
+  }
+  ._hide-xxl {
+    display: none;
+  }
+  ._grid[class*="_xxl"] {
+    --_layout-avg: var(--_layout-group);
+  }
+  ._xxl-1 {
+    --_layout-group: 1;
+  }
+  ._xxl-1:where(._row[class*="_avg-"]) > *:nth-of-type(1n),
+  ._xxl-1:where(._row) > *:where([class*="_own-"]):nth-of-type(1n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-1:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 1))),
+  ._xxl-1:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 1))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-1:where(._col[class*="_avg-"]) > *:nth-of-type(1n),
+  ._xxl-1:where(._col) > *:where([class*="_own-"]):nth-of-type(1n) {
+    margin-block-end: 0;
+  }
+  ._xxl-1:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 1))),
+  ._xxl-1:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 1))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-1._clip > :nth-child(1) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-1._clip > :nth-child(1) ~ * {
+    display: none;
+  }
+  ._xxl-2 {
+    --_layout-group: 2;
+  }
+  ._xxl-2:where(._row[class*="_avg-"]) > *:nth-of-type(2n),
+  ._xxl-2:where(._row) > *:where([class*="_own-"]):nth-of-type(2n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-2:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 2))),
+  ._xxl-2:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 2))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-2:where(._col[class*="_avg-"]) > *:nth-of-type(2n),
+  ._xxl-2:where(._col) > *:where([class*="_own-"]):nth-of-type(2n) {
+    margin-block-end: 0;
+  }
+  ._xxl-2:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 2))),
+  ._xxl-2:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 2))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-2._clip > :nth-child(2) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-2._clip > :nth-child(2) ~ * {
+    display: none;
+  }
+  ._xxl-3 {
+    --_layout-group: 3;
+  }
+  ._xxl-3:where(._row[class*="_avg-"]) > *:nth-of-type(3n),
+  ._xxl-3:where(._row) > *:where([class*="_own-"]):nth-of-type(3n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-3:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 3))),
+  ._xxl-3:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 3))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-3:where(._col[class*="_avg-"]) > *:nth-of-type(3n),
+  ._xxl-3:where(._col) > *:where([class*="_own-"]):nth-of-type(3n) {
+    margin-block-end: 0;
+  }
+  ._xxl-3:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 3))),
+  ._xxl-3:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 3))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-3._clip > :nth-child(3) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-3._clip > :nth-child(3) ~ * {
+    display: none;
+  }
+  ._xxl-4 {
+    --_layout-group: 4;
+  }
+  ._xxl-4:where(._row[class*="_avg-"]) > *:nth-of-type(4n),
+  ._xxl-4:where(._row) > *:where([class*="_own-"]):nth-of-type(4n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-4:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 4))),
+  ._xxl-4:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 4))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-4:where(._col[class*="_avg-"]) > *:nth-of-type(4n),
+  ._xxl-4:where(._col) > *:where([class*="_own-"]):nth-of-type(4n) {
+    margin-block-end: 0;
+  }
+  ._xxl-4:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 4))),
+  ._xxl-4:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 4))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-4._clip > :nth-child(4) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-4._clip > :nth-child(4) ~ * {
+    display: none;
+  }
+  ._xxl-5 {
+    --_layout-group: 5;
+  }
+  ._xxl-5:where(._row[class*="_avg-"]) > *:nth-of-type(5n),
+  ._xxl-5:where(._row) > *:where([class*="_own-"]):nth-of-type(5n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-5:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 5))),
+  ._xxl-5:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 5))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-5:where(._col[class*="_avg-"]) > *:nth-of-type(5n),
+  ._xxl-5:where(._col) > *:where([class*="_own-"]):nth-of-type(5n) {
+    margin-block-end: 0;
+  }
+  ._xxl-5:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 5))),
+  ._xxl-5:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 5))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-5._clip > :nth-child(5) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-5._clip > :nth-child(5) ~ * {
+    display: none;
+  }
+  ._xxl-6 {
+    --_layout-group: 6;
+  }
+  ._xxl-6:where(._row[class*="_avg-"]) > *:nth-of-type(6n),
+  ._xxl-6:where(._row) > *:where([class*="_own-"]):nth-of-type(6n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-6:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 6))),
+  ._xxl-6:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 6))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-6:where(._col[class*="_avg-"]) > *:nth-of-type(6n),
+  ._xxl-6:where(._col) > *:where([class*="_own-"]):nth-of-type(6n) {
+    margin-block-end: 0;
+  }
+  ._xxl-6:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 6))),
+  ._xxl-6:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 6))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-6._clip > :nth-child(6) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-6._clip > :nth-child(6) ~ * {
+    display: none;
+  }
+  ._xxl-7 {
+    --_layout-group: 7;
+  }
+  ._xxl-7:where(._row[class*="_avg-"]) > *:nth-of-type(7n),
+  ._xxl-7:where(._row) > *:where([class*="_own-"]):nth-of-type(7n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-7:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 7))),
+  ._xxl-7:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 7))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-7:where(._col[class*="_avg-"]) > *:nth-of-type(7n),
+  ._xxl-7:where(._col) > *:where([class*="_own-"]):nth-of-type(7n) {
+    margin-block-end: 0;
+  }
+  ._xxl-7:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 7))),
+  ._xxl-7:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 7))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-7._clip > :nth-child(7) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-7._clip > :nth-child(7) ~ * {
+    display: none;
+  }
+  ._xxl-8 {
+    --_layout-group: 8;
+  }
+  ._xxl-8:where(._row[class*="_avg-"]) > *:nth-of-type(8n),
+  ._xxl-8:where(._row) > *:where([class*="_own-"]):nth-of-type(8n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-8:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 8))),
+  ._xxl-8:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 8))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-8:where(._col[class*="_avg-"]) > *:nth-of-type(8n),
+  ._xxl-8:where(._col) > *:where([class*="_own-"]):nth-of-type(8n) {
+    margin-block-end: 0;
+  }
+  ._xxl-8:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 8))),
+  ._xxl-8:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 8))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-8._clip > :nth-child(8) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-8._clip > :nth-child(8) ~ * {
+    display: none;
+  }
+  ._xxl-9 {
+    --_layout-group: 9;
+  }
+  ._xxl-9:where(._row[class*="_avg-"]) > *:nth-of-type(9n),
+  ._xxl-9:where(._row) > *:where([class*="_own-"]):nth-of-type(9n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-9:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 9))),
+  ._xxl-9:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 9))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-9:where(._col[class*="_avg-"]) > *:nth-of-type(9n),
+  ._xxl-9:where(._col) > *:where([class*="_own-"]):nth-of-type(9n) {
+    margin-block-end: 0;
+  }
+  ._xxl-9:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 9))),
+  ._xxl-9:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 9))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-9._clip > :nth-child(9) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-9._clip > :nth-child(9) ~ * {
+    display: none;
+  }
+  ._xxl-10 {
+    --_layout-group: 10;
+  }
+  ._xxl-10:where(._row[class*="_avg-"]) > *:nth-of-type(10n),
+  ._xxl-10:where(._row) > *:where([class*="_own-"]):nth-of-type(10n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-10:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 10))),
+  ._xxl-10:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 10))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-10:where(._col[class*="_avg-"]) > *:nth-of-type(10n),
+  ._xxl-10:where(._col) > *:where([class*="_own-"]):nth-of-type(10n) {
+    margin-block-end: 0;
+  }
+  ._xxl-10:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 10))),
+  ._xxl-10:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 10))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-10._clip > :nth-child(10) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-10._clip > :nth-child(10) ~ * {
+    display: none;
+  }
+  ._xxl-11 {
+    --_layout-group: 11;
+  }
+  ._xxl-11:where(._row[class*="_avg-"]) > *:nth-of-type(11n),
+  ._xxl-11:where(._row) > *:where([class*="_own-"]):nth-of-type(11n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-11:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 11))),
+  ._xxl-11:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 11))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-11:where(._col[class*="_avg-"]) > *:nth-of-type(11n),
+  ._xxl-11:where(._col) > *:where([class*="_own-"]):nth-of-type(11n) {
+    margin-block-end: 0;
+  }
+  ._xxl-11:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 11))),
+  ._xxl-11:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 11))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-11._clip > :nth-child(11) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-11._clip > :nth-child(11) ~ * {
+    display: none;
+  }
+  ._xxl-12 {
+    --_layout-group: 12;
+  }
+  ._xxl-12:where(._row[class*="_avg-"]) > *:nth-of-type(12n),
+  ._xxl-12:where(._row) > *:where([class*="_own-"]):nth-of-type(12n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-12:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 12))),
+  ._xxl-12:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 12))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-12:where(._col[class*="_avg-"]) > *:nth-of-type(12n),
+  ._xxl-12:where(._col) > *:where([class*="_own-"]):nth-of-type(12n) {
+    margin-block-end: 0;
+  }
+  ._xxl-12:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 12))),
+  ._xxl-12:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 12))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-12._clip > :nth-child(12) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-12._clip > :nth-child(12) ~ * {
+    display: none;
+  }
+  ._xxl-13 {
+    --_layout-group: 13;
+  }
+  ._xxl-13:where(._row[class*="_avg-"]) > *:nth-of-type(13n),
+  ._xxl-13:where(._row) > *:where([class*="_own-"]):nth-of-type(13n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-13:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 13))),
+  ._xxl-13:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 13))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-13:where(._col[class*="_avg-"]) > *:nth-of-type(13n),
+  ._xxl-13:where(._col) > *:where([class*="_own-"]):nth-of-type(13n) {
+    margin-block-end: 0;
+  }
+  ._xxl-13:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 13))),
+  ._xxl-13:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 13))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-13._clip > :nth-child(13) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-13._clip > :nth-child(13) ~ * {
+    display: none;
+  }
+  ._xxl-14 {
+    --_layout-group: 14;
+  }
+  ._xxl-14:where(._row[class*="_avg-"]) > *:nth-of-type(14n),
+  ._xxl-14:where(._row) > *:where([class*="_own-"]):nth-of-type(14n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-14:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 14))),
+  ._xxl-14:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 14))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-14:where(._col[class*="_avg-"]) > *:nth-of-type(14n),
+  ._xxl-14:where(._col) > *:where([class*="_own-"]):nth-of-type(14n) {
+    margin-block-end: 0;
+  }
+  ._xxl-14:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 14))),
+  ._xxl-14:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 14))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-14._clip > :nth-child(14) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-14._clip > :nth-child(14) ~ * {
+    display: none;
+  }
+  ._xxl-15 {
+    --_layout-group: 15;
+  }
+  ._xxl-15:where(._row[class*="_avg-"]) > *:nth-of-type(15n),
+  ._xxl-15:where(._row) > *:where([class*="_own-"]):nth-of-type(15n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-15:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 15))),
+  ._xxl-15:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 15))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-15:where(._col[class*="_avg-"]) > *:nth-of-type(15n),
+  ._xxl-15:where(._col) > *:where([class*="_own-"]):nth-of-type(15n) {
+    margin-block-end: 0;
+  }
+  ._xxl-15:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 15))),
+  ._xxl-15:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 15))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-15._clip > :nth-child(15) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-15._clip > :nth-child(15) ~ * {
+    display: none;
+  }
+  ._xxl-16 {
+    --_layout-group: 16;
+  }
+  ._xxl-16:where(._row[class*="_avg-"]) > *:nth-of-type(16n),
+  ._xxl-16:where(._row) > *:where([class*="_own-"]):nth-of-type(16n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-16:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 16))),
+  ._xxl-16:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 16))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-16:where(._col[class*="_avg-"]) > *:nth-of-type(16n),
+  ._xxl-16:where(._col) > *:where([class*="_own-"]):nth-of-type(16n) {
+    margin-block-end: 0;
+  }
+  ._xxl-16:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 16))),
+  ._xxl-16:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 16))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-16._clip > :nth-child(16) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-16._clip > :nth-child(16) ~ * {
+    display: none;
+  }
+  ._xxl-17 {
+    --_layout-group: 17;
+  }
+  ._xxl-17:where(._row[class*="_avg-"]) > *:nth-of-type(17n),
+  ._xxl-17:where(._row) > *:where([class*="_own-"]):nth-of-type(17n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-17:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 17))),
+  ._xxl-17:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 17))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-17:where(._col[class*="_avg-"]) > *:nth-of-type(17n),
+  ._xxl-17:where(._col) > *:where([class*="_own-"]):nth-of-type(17n) {
+    margin-block-end: 0;
+  }
+  ._xxl-17:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 17))),
+  ._xxl-17:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 17))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-17._clip > :nth-child(17) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-17._clip > :nth-child(17) ~ * {
+    display: none;
+  }
+  ._xxl-18 {
+    --_layout-group: 18;
+  }
+  ._xxl-18:where(._row[class*="_avg-"]) > *:nth-of-type(18n),
+  ._xxl-18:where(._row) > *:where([class*="_own-"]):nth-of-type(18n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-18:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 18))),
+  ._xxl-18:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 18))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-18:where(._col[class*="_avg-"]) > *:nth-of-type(18n),
+  ._xxl-18:where(._col) > *:where([class*="_own-"]):nth-of-type(18n) {
+    margin-block-end: 0;
+  }
+  ._xxl-18:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 18))),
+  ._xxl-18:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 18))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-18._clip > :nth-child(18) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-18._clip > :nth-child(18) ~ * {
+    display: none;
+  }
+  ._xxl-19 {
+    --_layout-group: 19;
+  }
+  ._xxl-19:where(._row[class*="_avg-"]) > *:nth-of-type(19n),
+  ._xxl-19:where(._row) > *:where([class*="_own-"]):nth-of-type(19n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-19:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 19))),
+  ._xxl-19:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 19))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-19:where(._col[class*="_avg-"]) > *:nth-of-type(19n),
+  ._xxl-19:where(._col) > *:where([class*="_own-"]):nth-of-type(19n) {
+    margin-block-end: 0;
+  }
+  ._xxl-19:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 19))),
+  ._xxl-19:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 19))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-19._clip > :nth-child(19) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-19._clip > :nth-child(19) ~ * {
+    display: none;
+  }
+  ._xxl-20 {
+    --_layout-group: 20;
+  }
+  ._xxl-20:where(._row[class*="_avg-"]) > *:nth-of-type(20n),
+  ._xxl-20:where(._row) > *:where([class*="_own-"]):nth-of-type(20n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-20:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 20))),
+  ._xxl-20:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 20))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-20:where(._col[class*="_avg-"]) > *:nth-of-type(20n),
+  ._xxl-20:where(._col) > *:where([class*="_own-"]):nth-of-type(20n) {
+    margin-block-end: 0;
+  }
+  ._xxl-20:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 20))),
+  ._xxl-20:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 20))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-20._clip > :nth-child(20) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-20._clip > :nth-child(20) ~ * {
+    display: none;
+  }
+  ._xxl-21 {
+    --_layout-group: 21;
+  }
+  ._xxl-21:where(._row[class*="_avg-"]) > *:nth-of-type(21n),
+  ._xxl-21:where(._row) > *:where([class*="_own-"]):nth-of-type(21n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-21:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 21))),
+  ._xxl-21:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 21))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-21:where(._col[class*="_avg-"]) > *:nth-of-type(21n),
+  ._xxl-21:where(._col) > *:where([class*="_own-"]):nth-of-type(21n) {
+    margin-block-end: 0;
+  }
+  ._xxl-21:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 21))),
+  ._xxl-21:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 21))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-21._clip > :nth-child(21) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-21._clip > :nth-child(21) ~ * {
+    display: none;
+  }
+  ._xxl-22 {
+    --_layout-group: 22;
+  }
+  ._xxl-22:where(._row[class*="_avg-"]) > *:nth-of-type(22n),
+  ._xxl-22:where(._row) > *:where([class*="_own-"]):nth-of-type(22n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-22:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 22))),
+  ._xxl-22:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 22))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-22:where(._col[class*="_avg-"]) > *:nth-of-type(22n),
+  ._xxl-22:where(._col) > *:where([class*="_own-"]):nth-of-type(22n) {
+    margin-block-end: 0;
+  }
+  ._xxl-22:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 22))),
+  ._xxl-22:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 22))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-22._clip > :nth-child(22) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-22._clip > :nth-child(22) ~ * {
+    display: none;
+  }
+  ._xxl-23 {
+    --_layout-group: 23;
+  }
+  ._xxl-23:where(._row[class*="_avg-"]) > *:nth-of-type(23n),
+  ._xxl-23:where(._row) > *:where([class*="_own-"]):nth-of-type(23n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-23:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 23))),
+  ._xxl-23:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 23))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-23:where(._col[class*="_avg-"]) > *:nth-of-type(23n),
+  ._xxl-23:where(._col) > *:where([class*="_own-"]):nth-of-type(23n) {
+    margin-block-end: 0;
+  }
+  ._xxl-23:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 23))),
+  ._xxl-23:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 23))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-23._clip > :nth-child(23) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-23._clip > :nth-child(23) ~ * {
+    display: none;
+  }
+  ._xxl-24 {
+    --_layout-group: 24;
+  }
+  ._xxl-24:where(._row[class*="_avg-"]) > *:nth-of-type(24n),
+  ._xxl-24:where(._row) > *:where([class*="_own-"]):nth-of-type(24n) {
+    margin-inline-end: 0;
+  }
+  ._xxl-24:where(._row[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 24))),
+  ._xxl-24:where(._row) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 24))) {
+    margin-block-start: var(--_layout-gap);
+  }
+  ._xxl-24:where(._col[class*="_avg-"]) > *:nth-of-type(24n),
+  ._xxl-24:where(._col) > *:where([class*="_own-"]):nth-of-type(24n) {
+    margin-block-end: 0;
+  }
+  ._xxl-24:where(._col[class*="_avg-"]) > *:where(:not(:nth-of-type(-n + 24))),
+  ._xxl-24:where(._col) > *:where([class*="_own-"]):where(:not(:nth-of-type(-n + 24))) {
+    margin-inline-start: var(--_layout-gap);
+  }
+  ._xxl-24._clip > :nth-child(24) > ._hide-clip {
+    display: flex;
+  }
+  ._xxl-24._clip > :nth-child(24) ~ * {
+    display: none;
+  }
+  :where([class*="_xxl-"]) > [class*="_flex"] {
+    --_flex-grow: 0;
+    --_flex-shrink: 0;
+  }
+  ._row:where([class*="_xxl-"]),
+  ._col:where([class*="_xxl-"]) {
+    flex-wrap: wrap;
+  }
+  ._row:where([class*="_xxl-"]) > *:is([class*="_flex"]),
+  ._col:where([class*="_xxl-"]) > *:is([class*="_flex"]) {
+    --_flex-basis: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._row:where([class*="_xxl-"]):is([class*="_avg-"]) > *,
+  ._row:where([class*="_xxl-"]) > *:is([class*="_own"]) {
+    width: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._col:where([class*="_xxl-"]):is([class*="_avg-"]) > *,
+  ._col:where([class*="_xxl-"]) > *:is([class*="_own-"]) {
+    height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+}
+/* Other device except phone */
+@media (min-width: 900px), (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
+  :root {
+    --_g-full: 2.8rem;
+  }
+  ._container-xxs {
+    --_container-w: 60rem;
+  }
+  ._container-xs {
+    --_container-w: 80rem;
+  }
+  ._container-sm {
+    --_container-w: 100rem;
+  }
+  ._container-md {
+    --_container-w: 120rem;
+  }
+  ._container-lg {
+    --_container-w: 140rem;
+  }
+  ._container-xl {
+    --_container-w: 160rem;
+  }
+  ._container-xxl {
+    --_container-w: 180rem;
+  }
+}
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --_h-stage: var(--_h-prim);
@@ -24926,9 +27585,6 @@ AX-SKELETON[shape=square] {
   blockquote {
     background-color: var(--_c-text-bg);
     border-inline-start-color: var(--_c-prim);
-  }
-  code {
-    background-color: var(--_c-text-bd);
   }
   pre {
     background-color: var(--_c-text-bg);
@@ -25032,7 +27688,7 @@ AX-SKELETON[shape=square] {
   /*Text colors*/
   --_h-text: 0;
   --_s-text: 0%;
-  --_l-text: 20%;
+  --_l-text: 0%;
   --_a-text: 1;
   --_c-text: hsla(var(--_h-text), var(--_s-text), var(--_l-text), var(--_a-text));
   --_c-text-bg: hsla(var(--_h-text), var(--_s-text), var(--_l-text), 0.04);
@@ -25160,9 +27816,6 @@ AX-SKELETON[shape=square] {
 [scheme="dark"] blockquote {
   background-color: var(--_c-text-bg);
   border-inline-start-color: var(--_c-prim);
-}
-[scheme="dark"] code {
-  background-color: var(--_c-text-bd);
 }
 [scheme="dark"] pre {
   background-color: var(--_c-text-bg);

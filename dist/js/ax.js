@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-4-30 0:38:34
+ * @since Last modified: 2025-5-3 20:39:37
  * @name AXUI front-end framework.
- * @version 3.1.0
+ * @version 3.1.1
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -2566,24 +2566,28 @@
     };
 
     const breakpoints = (obj, points) => {
-        if (isEmpty(obj)) {
-            return false;
-        }
-        let valids = [], assign = {}, width = document.body.clientWidth, screenSize = getScreenSize(), validFun = (key, value) => {
+        if (isEmpty(obj) || isEmpty(points))
+            return;
+        let valids = [], assign = {}, width = document.body.clientWidth, validFun = (key, value) => {
             let _key = ~~key;
             if (_key === 0) {
+                let tmp = key.split('-')[1];
                 if (key.startsWith('screen')) {
-                    screenSize === key.split('-')[1] ? valids.push(value) : null;
+                    let screenSize = getScreenSize(), cond = (screenSize === tmp) ||
+                        (tmp === 'dt' && ['lg', 'xl', 'xxl', 'dt'].includes(screenSize)) ||
+                        (tmp === 'hh' && ['xxs', 'xs', 'sm', 'md', 'hh'].includes(screenSize)) ||
+                        (tmp === 'tb' && ['xs', 'sm', 'md', 'tb'].includes(screenSize)) ? true : false;
+                    cond && valids.push(value);
                 }
                 else if (key.startsWith('width')) {
-                    ~~key.split('-')[1] > width ? valids.push(value) : null;
+                    ~~tmp <= width && valids.push(value);
                 }
-                else if (key.startsWith('mobile')) {
-                    JSON.parse(key.split('-')[1]) === isMobi ? valids.push(value) : null;
+                else if (key.startsWith('destop')) {
+                    JSON.parse(tmp) !== isMobi && valids.push(value);
                 }
             }
             else {
-                _key > width ? valids.push(value) : null;
+                _key <= width && valids.push(value);
             }
         };
         for (let k in points) {
@@ -2592,9 +2596,8 @@
                 validFun(k, points[k]);
             }
         }
-        if (valids.length === 0) {
-            return false;
-        }
+        if (!valids.length)
+            return;
         assign = Object.assign({}, ...valids);
         extend({ target: obj, source: assign });
     };
