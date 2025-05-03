@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-3 20:40:3
+ * @since Last modified: 2025-5-3 21:3:40
  * @name AXUI front-end framework.
- * @version 3.1.1
+ * @version 3.1.2
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-05-03 20:33:48
+ * @since Last modified: 2025-05-03 21:02:51
  */
 /*
  *Last modified: 2025-05-02 12:33:06
@@ -8727,11 +8727,11 @@ AX-LINE:where([align=end]:not([dir=v]):has([rep=label])) [rep=end] {
 }
 AX-LINE[type=dashed] [rep=start] {
   background: linear-gradient(to var(--_line-dir-s), var(--_line-c-bg) 0%, var(--_line-c-bg) 50%, transparent 50%, transparent 100%);
-  background-position: start center;
+  background-position: left center;
 }
 AX-LINE[type=dashed] [rep=end] {
   background: linear-gradient(to var(--_line-dir-e), var(--_line-c-bg) 0%, var(--_line-c-bg) 50%, transparent 50%, transparent 100%);
-  background-position: end center;
+  background-position: right center;
 }
 AX-LINE[type=dashed] [rep=start],
 AX-LINE[type=dashed] [rep=end] {
@@ -20856,10 +20856,10 @@ AX-SKELETON:has([rep=wrap]:empty) [rep=wrap] {
 }
 @keyframes _skel-stream {
   0% {
-    background-position: end 50%;
+    background-position: right 50%;
   }
   100% {
-    background-position: start 50%;
+    background-position: left 50%;
   }
 }
 AX-SKELETON[anim=stream] {
