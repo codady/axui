@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-3 21:3:40
+ * @since Last modified: 2025-5-4 22:46:27
  * @name AXUI front-end framework.
- * @version 3.1.2
+ * @version 3.1.3
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,10 +15,10 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-05-03 21:02:51
+ * @since Last modified: 2025-05-04 13:13:24
  */
 /*
- *Last modified: 2025-05-02 12:33:06
+ *Last modified: 2025-05-04 13:02:10
  */
 :root {
   /*Stage colors*/
@@ -386,11 +386,12 @@
   /*Radius*/
   --_r: 0.3rem;
   --_r-input-sm: 0.3rem;
-  --_r-input: 0.5rem;
-  --_r-input-lg: 0.9rem;
-  --_r-bubble: 0.9rem;
+  --_r-input: calc(var(--_r)*2);
+  --_r-input-lg: calc(var(--_r)*3);
+  --_r-bubble: calc(var(--_r)*3);
   /*Other*/
   --_dir-coef: 1;
+  --_device-coef: 0;
 }
 [dir=rtl] {
   --_dir-coef: -1;
@@ -3695,7 +3696,7 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
   content: 'left';
 }
 /*
- *Last modified: 2025-05-02 20:47:23
+ *Last modified: 2025-05-04 13:06:35
  */
 /*grid layout*/
 ._grid {
@@ -4452,6 +4453,7 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
   --_padding-e: var(--_padding-sz);
   --_padding-t: var(--_padding-sz);
   --_padding-b: var(--_padding-sz);
+  --_padding-coef: 0;
   padding-inline-start: var(--_padding-s);
   padding-inline-end: var(--_padding-e);
   padding-block-start: var(--_padding-t);
@@ -4536,17 +4538,23 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
 ._p-sm {
   --_padding-sz: var(--_rem-body);
 }
+._p-md,
+._p-lg,
+._p-xl,
+._p-xxl {
+  --_padding-sz: calc(var(--_rem-list) + var(--_rem-min)*var(--_padding-coef));
+}
 ._p-md {
-  --_padding-sz: var(--_rem-list);
+  --_padding-coef: 1;
 }
 ._p-lg {
-  --_padding-sz: var(--_rem-title);
+  --_padding-coef: 2;
 }
 ._p-xl {
-  --_padding-sz: var(--_rem-input);
+  --_padding-coef: 3;
 }
 ._p-xxl {
-  --_padding-sz: var(--_rem-max);
+  --_padding-coef: 4;
 }
 /*Margin*/
 ._m,
@@ -4556,6 +4564,7 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
   --_margin-e: var(--_margin-sz);
   --_margin-t: var(--_margin-sz);
   --_margin-b: var(--_margin-sz);
+  --_marging-coef: 0;
   margin-inline-start: var(--_margin-s);
   margin-inline-end: var(--_margin-e);
   margin-block-start: var(--_margin-t);
@@ -4640,17 +4649,23 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
 ._m-sm {
   --_margin-sz: var(--_rem-body);
 }
+._m-md,
+._m-lg,
+._m-xl,
+._m-xxl {
+  --_margin-sz: calc(var(--_rem-list) + var(--_rem-min)*var(--_margin-coef));
+}
 ._m-md {
-  --_margin-sz: var(--_rem-list);
+  --_margin-coef: 1;
 }
 ._m-lg {
-  --_margin-sz: var(--_rem-title);
+  --_margin-coef: 2;
 }
 ._m-xl {
-  --_margin-sz: var(--_rem-input);
+  --_margin-coef: 3;
 }
 ._m-xxl {
-  --_margin-sz: var(--_rem-max);
+  --_margin-coef: 4;
 }
 /*Radius*/
 ._r,
@@ -4727,6 +4742,18 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
 ._r-b {
   border-start-start-radius: 0;
   border-start-end-radius: 0;
+}
+._r-input {
+  --_radius-sz: var(--_r-input);
+}
+._r-input-sm {
+  --_radius-sz: var(--_r-input-sm);
+}
+._r-input-lg {
+  --_radius-sz: var(--_r-input-lg);
+}
+._r-bubble {
+  --_radius-sz: var(--_r-bubble);
 }
 /*Border*/
 ._bd,
@@ -4861,6 +4888,7 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
 /*Break row*/
 AX-BR {
   --_br-h: var(--_m);
+  --_br-coef: 0;
   width: 100%;
   height: var(--_br-h);
   display: block;
@@ -4878,21 +4906,28 @@ AX-BR[size=xs] {
 AX-BR[size=sm] {
   --_br-h: var(--_rem-body);
 }
+AX-BR[size=md],
+AX-BR[size=lg],
+AX-BR[size=xl],
+AX-BR[size=xxl] {
+  --_br-h: calc(var(--_rem-body) + var(--_rem-min)*var(--_br-coef));
+}
 AX-BR[size=md] {
-  --_br-h: var(--_rem-list);
+  --_br-coef: 1;
 }
 AX-BR[size=lg] {
-  --_br-h: var(--_rem-title);
+  --_br-coef: 2;
 }
 AX-BR[size=xl] {
-  --_br-h: var(--_rem-input);
+  --_br-coef: 3;
 }
 AX-BR[size=xxl] {
-  --_br-h: var(--_rem-max);
+  --_br-coef: 4;
 }
 /*Break column*/
 AX-BC {
   --_bc-w: var(--_m);
+  --_bc-coef: 0;
   width: var(--_bc-w);
   display: inline-block;
   vertical-align: top;
@@ -4910,17 +4945,23 @@ AX-BC[size=xs] {
 AX-BC[size=sm] {
   --_bc-w: var(--_rem-body);
 }
+AX-BC[size=md],
+AX-BC[size=lg],
+AX-BC[size=xl],
+AX-BC[size=xxl] {
+  --_br-w: calc(var(--_rem-body) + var(--_rem-min)*var(--_bc-coef));
+}
 AX-BC[size=md] {
-  --_bc-w: var(--_rem-list);
+  --_bc-coef: 1;
 }
 AX-BC[size=lg] {
-  --_bc-w: var(--_rem-title);
+  --_bc-coef: 2;
 }
 AX-BC[size=xl] {
-  --_bc-w: var(--_rem-input);
+  --_bc-coef: 3;
 }
 AX-BC[size=xxl] {
-  --_bc-w: var(--_rem-max);
+  --_bc-coef: 4;
 }
 /*Divider*/
 AX-DIVIDER {
@@ -20957,7 +20998,7 @@ AX-SKELETON[shape=square] {
   font-size: 1.5em;
 }
 /* Handheld device(xxs+xs+sm+md) */
-@media (any-hover: none) {
+@media (max-width: 1535px) {
   :root {
     --SCREEN: hh;
   }
@@ -20976,13 +21017,6 @@ AX-SKELETON[shape=square] {
   ._grid:where(._split-hh) > * {
     width: auto;
     height: auto;
-  }
-  [class*="_container"]:where(:not(._container-full)):where(:not(._hh-full)) {
-    --_container-w: var(--_hh-w, var(--_container-resp));
-    --_container-resp: var(--_w-hh);
-  }
-  [class*="_container"]:where(:not(._container-full)):where(._hh-full) {
-    width: 100%;
   }
   ._hide-hh {
     display: none;
@@ -21614,7 +21648,7 @@ AX-SKELETON[shape=square] {
 /* Tablet device (xs+sm+md) */
 @media (min-width: 900px) and (max-width: 1535px), (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
   :root {
-    --_fs-root: clamp(var(--_fs-root), 1.5vw, calc(200px/14));
+    --_fs-root: clamp(calc(1px*var(--_num-root)*16/14), 1vw, calc(180px/14));
     --SCREEN: tb;
   }
   *._split-tb,
@@ -21629,13 +21663,6 @@ AX-SKELETON[shape=square] {
   ._grid:where(._split-tb) > * {
     width: auto;
     height: auto;
-  }
-  [class*="_container"]:where(:not(._container-full)):where(:not(._tb-full)) {
-    --_container-w: var(--_tb-w, var(--_container-resp));
-    --_container-resp: var(--_w-tb);
-  }
-  [class*="_container"]:where(:not(._container-full)):where(._tb-full) {
-    width: 100%;
   }
   ._hide-tb {
     display: none;
@@ -22265,12 +22292,13 @@ AX-SKELETON[shape=square] {
   }
 }
 /*Destop device(lg+xl+xxl) */
-@media (any-hover: hover) {
+@media (min-width: 1200px) and (max-width: 1535px) and (hover: hover), (min-width: 1536px) {
   :root {
     --_ff-body: "microsoft yahei", "Microsoft JhengHei", "Arial", "Helvetica Neue", "sans-serif", "Yu Mincho", "simsun";
     --_fs-root: calc(1px*var(--_num-root));
     --_l-text: 20%;
     --SCREEN: dt;
+    --_device-coef: -1;
   }
   /*Beautify rolling bar (only pc)*/
   ::-webkit-scrollbar {
@@ -22302,6 +22330,72 @@ AX-SKELETON[shape=square] {
   ._hide-dt {
     display: none;
   }
+  AX-BR[size=md] {
+    --_br-h: var(--_rem-list);
+  }
+  AX-BR[size=lg] {
+    --_br-h: var(--_rem-title);
+  }
+  AX-BR[size=xl] {
+    --_br-h: var(--_rem-input);
+  }
+  AX-BR[size=xxl] {
+    --_br-h: var(--_rem-max);
+  }
+  AX-BC[size=md] {
+    --_bc-w: var(--_rem-list);
+  }
+  AX-BC[size=lg] {
+    --_bc-w: var(--_rem-title);
+  }
+  AX-BC[size=xl] {
+    --_bc-w: var(--_rem-input);
+  }
+  AX-BC[size=xxl] {
+    --_bc-w: var(--_rem-max);
+  }
+  ._p-xxs {
+    --_padding-sz: var(--_rem-min);
+  }
+  ._p-xs {
+    --_padding-sz: var(--_rem-space);
+  }
+  ._p-sm {
+    --_padding-sz: var(--_rem-body);
+  }
+  ._p-md {
+    --_padding-sz: var(--_rem-list);
+  }
+  ._p-lg {
+    --_padding-sz: var(--_rem-title);
+  }
+  ._p-xl {
+    --_padding-sz: var(--_rem-input);
+  }
+  ._p-xxl {
+    --_padding-sz: var(--_rem-max);
+  }
+  ._m-xxs {
+    --_margin-sz: var(--_rem-min);
+  }
+  ._m-xs {
+    --_margin-sz: var(--_rem-space);
+  }
+  ._m-sm {
+    --_margin-sz: var(--_rem-body);
+  }
+  ._m-md {
+    --_madding-sz: var(--_rem-list);
+  }
+  ._m-lg {
+    --_madding-sz: var(--_rem-title);
+  }
+  ._m-xl {
+    --_madding-sz: var(--_rem-input);
+  }
+  ._m-xxl {
+    --_madding-sz: var(--_rem-max);
+  }
   *._split-dt,
   ._row:where(._split-dt),
   ._col:where(._split-dt),
@@ -22314,13 +22408,6 @@ AX-SKELETON[shape=square] {
   ._grid:where(._split-dt) > * {
     width: auto;
     height: auto;
-  }
-  [class*="_container"]:where(:not(._container-full)):where(:not(._dt-full)) {
-    --_container-w: var(--_dt-w, var(--_container-resp));
-    --_container-resp: var(--_w-dt);
-  }
-  [class*="_container"]:where(:not(._container-full)):where(._dt-full) {
-    width: 100%;
   }
   ._grid[class*="_dt-"] {
     --_layout-avg: var(--_layout-group);
@@ -22949,9 +23036,9 @@ AX-SKELETON[shape=square] {
 /* Phone+iPad rotate+iPad*/
 /* xxs->Phone (<600 | <900) */
 /*
- *Last modified: 2025-05-03 05:30:22
+ *Last modified: 2025-05-03 22:48:36
  */
-@media (max-width: 599px) {
+@media (max-width: 599px), (min-width: 600px) and (max-width: 899px) and (orientation: landscape) {
   :root {
     --SCREEN: xxs;
   }
@@ -24960,7 +25047,7 @@ AX-SKELETON[shape=square] {
   }
 }
 /* md->Tablet flip */
-@media (min-width: 1200px) and (max-width: 1535px) {
+@media (min-width: 1200px) and (max-width: 1535px) and (hover: none) {
   :root {
     --SCREEN: md;
   }
@@ -25612,7 +25699,7 @@ AX-SKELETON[shape=square] {
   }
 }
 /* lg->Desktop >=1560 (1920*1080) */
-@media (min-width: 1536px) and (max-width: 2499px) {
+@media (min-width: 1200px) and (max-width: 1535px) and (hover: hover), (min-width: 1536px) and (max-width: 2499px) {
   :root {
     --SCREEN: lg;
   }
@@ -27542,7 +27629,7 @@ AX-SKELETON[shape=square] {
   }
 }
 /* Other device except phone */
-@media (min-width: 900px), (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
+@media (min-width: 600px) and (max-width: 899px) and (orientation: portrait), (min-width: 900px) {
   :root {
     --_g-full: 2.8rem;
   }
