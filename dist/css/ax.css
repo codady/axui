@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-4 22:59:56
+ * @since Last modified: 2025-5-4 23:6:25
  * @name AXUI front-end framework.
- * @version 3.1.4
+ * @version 3.1.5
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-05-04 22:59:18
+ * @since Last modified: 2025-05-04 23:05:28
  */
 /*
  *Last modified: 2025-05-04 13:02:10
@@ -8162,23 +8162,6 @@ AX-HEADER[justify] ._header-head {
 }
 ._header:where([inherit]) + ._header-holder {
   display: none;
-}
-@media (max-width: 1535px) {
-  AX-HEADER ._header-l,
-  AX-HEADER ._header-r {
-    display: flex;
-  }
-  AX-HEADER:where(:not([justify])) ._header-l > *,
-  AX-HEADER:where(:not([justify])) ._header-r > * {
-    aspect-ratio: 1 / 1;
-  }
-  AX-HEADER:where(:not([justify])) ._header-head {
-    text-align: center;
-    margin-inline-start: 0;
-  }
-  AX-HEADER ._header-body {
-    display: none;
-  }
 }
 /*Footer*/
 ._footer a {
@@ -21004,6 +20987,21 @@ AX-SKELETON[shape=square] {
   }
   select:where([multiple]) {
     min-height: auto;
+  }
+  AX-HEADER ._header-l,
+  AX-HEADER ._header-r {
+    display: flex;
+  }
+  AX-HEADER:where(:not([justify])) ._header-l > *,
+  AX-HEADER:where(:not([justify])) ._header-r > * {
+    aspect-ratio: 1 / 1;
+  }
+  AX-HEADER:where(:not([justify])) ._header-head {
+    text-align: center;
+    margin-inline-start: 0;
+  }
+  AX-HEADER ._header-body {
+    display: none;
   }
   *._split-hh,
   ._row:where(._split-hh),
