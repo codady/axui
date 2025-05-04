@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-4 22:46:27
+ * @since Last modified: 2025-5-4 22:59:56
  * @name AXUI front-end framework.
- * @version 3.1.3
+ * @version 3.1.4
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-05-04 13:13:24
+ * @since Last modified: 2025-05-04 22:59:18
  */
 /*
  *Last modified: 2025-05-04 13:02:10
@@ -20998,7 +20998,7 @@ AX-SKELETON[shape=square] {
   font-size: 1.5em;
 }
 /* Handheld device(xxs+xs+sm+md) */
-@media (max-width: 1535px) {
+@media (max-width: 1199px), (min-width: 1200px) and (max-width: 1535px) and (hover: none) {
   :root {
     --SCREEN: hh;
   }
@@ -21646,7 +21646,7 @@ AX-SKELETON[shape=square] {
   }
 }
 /* Tablet device (xs+sm+md) */
-@media (min-width: 900px) and (max-width: 1535px), (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
+@media (min-width: 600px) and (max-width: 899px) and (orientation: portrait), (min-width: 900px) and (max-width: 1199px), (min-width: 1200px) and (max-width: 1535px) and (hover: none) {
   :root {
     --_fs-root: clamp(calc(1px*var(--_num-root)*16/14), 1vw, calc(180px/14));
     --SCREEN: tb;
