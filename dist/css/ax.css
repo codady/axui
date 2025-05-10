@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-4 23:6:25
+ * @since Last modified: 2025-5-11 0:37:54
  * @name AXUI front-end framework.
- * @version 3.1.5
+ * @version 3.1.6
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-05-04 23:05:28
+ * @since Last modified: 2025-05-11 00:37:05
  */
 /*
  *Last modified: 2025-05-04 13:02:10
@@ -232,12 +232,13 @@
   --_blank: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='150'%3E%3C/svg%3E");
   --_avatar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cpath fill='%23FAFAFA' d='M0 0h80v160H0z'/%3E%3Cpath fill='%23F2F2F2' d='M80 0h80v160H80z'/%3E%3Cpath fill='%23B2B2B2' d='M98.916 97.252c10.393-6.382 17.34-17.851 17.34-30.916 0-19.992-16.266-36.255-36.257-36.255-19.992 0-36.255 16.263-36.255 36.255 0 13.064 6.946 24.534 17.338 30.916-26.968 8.119-46.615 33.135-46.615 62.748h131.066c0-29.613-19.648-54.629-46.617-62.748z'/%3E%3C/svg%3E");
   --_empty: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M118.827 138.41a7.968 7.968 0 0 0 7.92-7.921V111.35a7.92 7.92 0 1 0-15.84 0v19.173a7.968 7.968 0 0 0 7.92 7.92zm14.596 14.595h19.185a7.92 7.92 0 1 0 0-15.84h-19.173a7.92 7.92 0 1 0 0 15.84zm-29.192-15.782H85.058a7.92 7.92 0 0 0 0 15.842h19.173a7.92 7.92 0 0 0 0-15.842zm14.596 14.585a7.968 7.968 0 0 0-7.92 7.92v19.173a7.92 7.92 0 0 0 15.84 0v-19.149a7.968 7.968 0 0 0-7.92-7.92zm788.504 118.275a38.726 38.726 0 1 0 38.726 38.726 38.678 38.678 0 0 0-38.762-38.785zm0 61.492a22.884 22.884 0 1 1 22.884-22.885 22.92 22.92 0 0 1-22.884 22.885zM692.526 47.879a23.501 23.501 0 1 0-23.501-23.5 23.501 23.501 0 0 0 23.5 23.5zm0-31.303a7.672 7.672 0 1 1-7.672 7.672 7.707 7.707 0 0 1 7.672-7.672zm0 0' fill='%23e6e6e6'/%3E%3Cpath d='M275.769 992.816c0 11.145 38.156 21.343 99.85 26.963a1197.186 1197.186 0 0 0 199.912 0c61.906-5.573 99.85-15.818 99.85-26.963s-38.157-21.343-99.85-26.964a1197.02 1197.02 0 0 0-199.913 0c-61.657 5.573-99.85 15.818-99.85 26.964zm0 0' fill='%23f0f0f0'/%3E%3Cpath d='M571.025 482.896a7.766 7.766 0 0 0-11.134 0l-12 12-11.999-12a7.873 7.873 0 1 0-11.134 11.134l12 12-12 12a7.956 7.956 0 1 0 11.253 11.252l12-12 11.999 12a7.778 7.778 0 0 0 5.573 2.371 7.577 7.577 0 0 0 5.573-2.371 7.766 7.766 0 0 0 0-11.134l-12-12 12-11.999a8.11 8.11 0 0 0-.119-11.253zm-154.902 46.398a7.873 7.873 0 0 0 5.573 2.371 7.873 7.873 0 0 0 5.572-13.481l-12-12 12-12a7.766 7.766 0 0 0 0-11.133 7.992 7.992 0 0 0-11.264 0l-12 12-11.999-12a7.992 7.992 0 0 0-11.264 0 7.766 7.766 0 0 0 0 11.134l12 11.999-12 12a7.766 7.766 0 0 0 0 11.133 7.778 7.778 0 0 0 5.573 2.372 7.577 7.577 0 0 0 5.573-2.372l11.999-11.999zm59.879 83.391a107.39 107.39 0 0 0-77.452 32.655 7.956 7.956 0 0 0 .119 11.134 7.838 7.838 0 0 0 11.134-.118 92.617 92.617 0 0 1 132.385 0 8.158 8.158 0 0 0 5.692 2.371 7.826 7.826 0 0 0 7.304-4.826 8.015 8.015 0 0 0-1.613-8.656 107.758 107.758 0 0 0-77.57-32.536zm0 0' fill='%23dbdbdb'/%3E%3Cpath d='M768.602 313.872l-82.147-91.68a94.23 94.23 0 0 0-70.147-31.303H246.505a85.905 85.905 0 0 0-85.858 85.858V841.4a85.905 85.905 0 0 0 85.858 85.858h459.49a85.905 85.905 0 0 0 85.859-85.858V374.617a91.063 91.063 0 0 0-23.264-60.745zm-94.028-81.163l82.147 91.68a77.428 77.428 0 0 1 14.228 23.264h-85.49a38.963 38.963 0 0 1-38.975-38.974V212.8a77.285 77.285 0 0 1 28.09 19.92zm101.45 608.702a70.124 70.124 0 0 1-70.028 70.029h-459.49a70.124 70.124 0 0 1-70.03-70.03V276.748a70.124 70.124 0 0 1 70.03-70.029h369.802a79.443 79.443 0 0 1 14.347 1.364v100.585a54.91 54.91 0 0 0 54.804 54.804h89.7a84.352 84.352 0 0 1 .865 11.134v466.794zm0 0' fill='%23dbdbdb'/%3E%3C/svg%3E");
-  --_none: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIiB2aWV3Qm94PSIwIDAgMTYwIDE2MCI+PHBhdGggZmlsbD0iI0ZGRiIgZD0iTTAgMGgxNjB2MTYwSDB6Ii8+PHBhdGggZmlsbD0iI0M5Q0FDQSIgZD0iTTc5LjA4NyA4Ny44Nkg2MS45ODNjLTEuNzE3IDAtMy4xMDgtMS4yMjMtMy4xMDktMi43M3YtMi4xMTFsOS4xNjMtNi45NTggMy4yODQgMi44NDFjMS43MDggMS40ODYgNC40MjIgMS41ODUgNi4yNjIuMjI4TDkzLjA3IDY3LjYyNWw2LjIyNiA1LjQ3OWMuNjI4LjU5MS44OTIuODU4IDEuNTguODU4LjQ5MyAwIC45MDQtLjI0NCAxLjIxOS0uNTg3LjMzMy0uMzYzLjMxMS0xLjIzOC4zMTEtMS42NzJWNTcuODFjMC0zLjAxOC0yLjc4My01LjQ2NS02LjIxOC01LjQ2NUg2MS45ODNjLTMuNDM1IDAtNi4yMTggMi40NDctNi4yMTggNS40NjV2MjcuMzJjMCAxLjQ0OC42NTUgMi44MzkgMS44MjEgMy44NjMgMS4xNjcgMS4wMjMgMi43NDkgMS42MDEgNC4zOTcgMS42MDFoMTcuMDcxYy43OTUgMCAxLjUyNS0uNTY3IDEuNTgyLTEuMjY1LjA2NS0uOC0uNjUzLTEuNDY3LTEuNTQ3LTEuNDY3bC0uMDAyLS4wMDJ6TTU4Ljg3NSA1Ny44MWMwLTEuNTA5IDEuMzkyLTIuNzMyIDMuMTA5LTIuNzMyaDM0LjIwM2MxLjcxOCAwIDMuMTA5IDEuMjIzIDMuMTA5IDIuNzMydjExLjQzNGwtNC4xMjMtMy42MjljLTEuMTUyLS44NTctMi44NC0uODYtMy45OTYtLjAwOGwtMTUuNTkgMTEuNDIyYy0uNjEzLjQ0OS0xLjUxMy40MTctMi4wODItLjA3NWwtMy4yODctMi44NGMtMS4xNTktLjk5My0yLjk4OS0xLjA0NC00LjIxNi0uMTIxbC03LjEyNyA1LjQyVjU3Ljgxem04LjEyOSA2LjQwNWE0LjEgNC4xIDAgMSAwIDguMTk4IDAgNC4xIDQuMSAwIDAgMC04LjE5OCAwem0zNS4zMzQgMTUuNTIyYTkuNTU0IDkuNTU0IDAgMCAxIDAgMTMuNTJjLTMuNzM1IDMuNzM1LTkuNzg5IDMuNzM2LTEzLjUyMyAwLTMuNjgyLTMuNzQ0LTMuNjU1LTkuNzU0LjA1Ny0xMy40NjNhOS41NjIgOS41NjIgMCAwIDEgMTMuNDY2LS4wNTd6TTkwLjc0NSA5MS4zMjVhNi44MyA2LjgzIDAgMCAwIDguNTkzLjg2OWwtOS40NjItOS40NjRhNi44MzEgNi44MzEgMCAwIDAgLjg2OSA4LjU5MnYuMDAzem0xMC41MjctMS4wNjZhNi44MyA2LjgzIDAgMCAwLTkuNDYyLTkuNDZsOS40NjIgOS40NnptMCAwIi8+PHRleHQgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNTQuODI0IDExMC41NSkiIGZpbGw9IiNDOUNBQ0EiIGZvbnQtZmFtaWx5PSInTWljcm9zb2Z0WWFIZWknIiBmb250LXNpemU9IjEyLjU4OCI+5pqC5peg5Zu+54mHPC90ZXh0Pjwvc3ZnPg==");
+  --_none: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjBweCIgaGVpZ2h0PSIxNjBweCIgdmlld0JveD0iMCAwIDE2MCAxNjAiID4NCjxwYXRoIGZpbGw9IiNDOUNBQ0EiIGQ9Ik03OC42MzQsOTMuNjU3SDYxLjUzYy0xLjcxNywwLTMuMTA4LTEuMjIzLTMuMTA5LTIuNzI5di0yLjExbDkuMTYzLTYuOTU4bDMuMjg0LDIuODQxDQoJCQljMS43MDgsMS40ODYsNC40MjIsMS41ODUsNi4yNjIsMC4yMjhsMTUuNDg3LTExLjUwNWw2LjIyNiw1LjQ3OWMwLjYyOCwwLjU5MSwwLjg5MiwwLjg1OCwxLjU4LDAuODU4DQoJCQljMC40OTMsMCwwLjkwMy0wLjI0NCwxLjIyLTAuNTg3YzAuMzMyLTAuMzYzLDAuMzExLTEuMjM4LDAuMzExLTEuNjcyVjYzLjYwOGMwLTMuMDE4LTIuNzgzLTUuNDY1LTYuMjE5LTUuNDY1SDYxLjUzDQoJCQljLTMuNDM1LDAtNi4yMTgsMi40NDctNi4yMTgsNS40NjV2MjcuMzJjMCwxLjQ0OCwwLjY1NSwyLjgzOSwxLjgyMSwzLjg2M2MxLjE2NywxLjAyMiwyLjc0OSwxLjYwMSw0LjM5NywxLjYwMWgxNy4wNzENCgkJCWMwLjc5NSwwLDEuNTI1LTAuNTY2LDEuNTgzLTEuMjY1YzAuMDY0LTAuOC0wLjY1NC0xLjQ2OC0xLjU0OC0xLjQ2OEw3OC42MzQsOTMuNjU3eiBNNTguNDIyLDYzLjYwOA0KCQkJYzAtMS41MDksMS4zOTItMi43MzIsMy4xMDktMi43MzJoMzQuMjA0YzEuNzE3LDAsMy4xMDgsMS4yMjMsMy4xMDgsMi43MzJ2MTEuNDM0bC00LjEyMy0zLjYyOQ0KCQkJYy0xLjE1MS0wLjg1Ny0yLjg0LTAuODYtMy45OTYtMC4wMDhsLTE1LjU5LDExLjQyMmMtMC42MTMsMC40NDktMS41MTMsMC40MTctMi4wODItMC4wNzVsLTMuMjg3LTIuODQNCgkJCWMtMS4xNTktMC45OTMtMi45ODktMS4wNDQtNC4yMTYtMC4xMjFsLTcuMTI3LDUuNDJWNjMuNjA4TDU4LjQyMiw2My42MDh6IE02Ni41NTEsNzAuMDEzYzAsMS42NTgsMC45OTksMy4xNTMsMi41MywzLjc4Nw0KCQkJYzEuNTMyLDAuNjM1LDMuMjk1LDAuMjg1LDQuNDY3LTAuODg4YzEuMTczLTEuMTcyLDEuNTIyLTIuOTM1LDAuODg5LTQuNDY2Yy0wLjYzNS0xLjUzMS0yLjEyOS0yLjUzMS0zLjc4Ny0yLjUzMQ0KCQkJYy0xLjA4NywwLTIuMTMsMC40MzItMi44OTgsMS4yQzY2Ljk4Myw2Ny44ODQsNjYuNTUxLDY4LjkyNSw2Ni41NTEsNzAuMDEzTDY2LjU1MSw3MC4wMTN6IE0xMDEuODg1LDg1LjUzNQ0KCQkJYzMuNzM3LDMuNzMzLDMuNzM3LDkuNzg2LDAsMTMuNTJjLTMuNzM0LDMuNzM1LTkuNzg5LDMuNzM2LTEzLjUyMywwYy0zLjY4Mi0zLjc0My0zLjY1NC05Ljc1NCwwLjA1OC0xMy40NjMNCgkJCUM5Mi4xMyw4MS44OCw5OC4xNDMsODEuODU0LDEwMS44ODUsODUuNTM1TDEwMS44ODUsODUuNTM1eiBNOTAuMjkyLDk3LjEyM2MyLjI5NSwyLjI5NCw1Ljg4NiwyLjY1Nyw4LjU5MywwLjg2OGwtOS40NjItOS40NjMNCgkJCWMtMS43ODcsMi43MDUtMS40MjQsNi4yOTcsMC44NjksOC41OTJWOTcuMTIzeiBNMTAwLjgxOCw5Ni4wNThjMS43ODMtMi43MDksMS40MTYtNi4yOTYtMC44NzUtOC41ODYNCgkJCWMtMi4yOTMtMi4yODktNS44NzktMi42NTYtOC41ODYtMC44NzVMMTAwLjgxOCw5Ni4wNTh6Ii8+DQo8L3N2Zz4NCg==");
   /*Screen size*/
-  --SCREEN: xxs;
+  --_screen: xxs;
   /*Namespace*/
   --PREFIX: _;
-  --ALIAS: rep;
+  --_alias: rep;
+  --_isnarrow: 1;
   /*Opacity*/
   --_o-active: 0.6;
   --_o-disabled: 0.48;
@@ -6097,7 +6098,7 @@ img[rep=image] {
 }
 /*Bubble footer*/
 ._bubble-footer {
-  --_bubble-foot-p: var(--_p);
+  --_bubble-foot-p: 0;
   overflow-y: hidden;
 }
 ._bubble-footer._bubble-footer-wrap {
@@ -6290,6 +6291,9 @@ img[rep=image] {
 ._field > ._field-cont > ._field-input > AX-DATETIME {
   --_date-w: 100%;
 }
+._field > ._field-cont > ._field-input > AX-DATETIME ._datetime:where([display="inline"]) {
+  --_panel-w: 100%;
+}
 ._field > ._field-cont > ._field-input > AX-NUMBER {
   --_number-w: 100%;
 }
@@ -6372,7 +6376,7 @@ img[rep=image] {
 }
 ._field > ._field-help [rep=image],
 ._field > ._field-help [rep=cube] {
-  border-radius: var(--_r);
+  border-radius: var(--_r-input);
 }
 ._field > ._field-help [rep=disk] {
   border-radius: 100%;
@@ -6404,7 +6408,7 @@ img[rep=image] {
 }
 ._field:where(._field-full) > ._field-cont,
 ._field:where(._field-apart) > ._field-cont {
-  width: auto;
+  width: 0;
   flex: auto;
   text-align: start;
 }
@@ -6412,18 +6416,20 @@ img[rep=image] {
   max-width: var(--_w-label);
 }
 :where(._field-apart)._field {
+  --_form-m-tb: 0;
   position: relative;
-}
-:where(._field-apart)._field:where(:not(:has(._field-label)):not(:has(._field-help))) {
-  margin-block-start: var(--_form-m-tb);
+  padding-block-end: var(--_p);
 }
 :where(._field-apart)._field:where(:has(._field-label, ._field-help)) {
-  margin-block-start: calc(var(--_form-h) + var(--_form-m-tb));
+  padding-block-start: var(--_form-h);
 }
 :where(._field-apart)._field > ._field-label,
 :where(._field-apart)._field > ._field-help {
   position: absolute;
-  inset-block-start: calc(-1*var(--_form-h));
+  inset-block-start: 0;
+}
+:where(._field-apart)._field:where(:not(:has(._field-label)):not(:has(._field-help))) {
+  padding-block-end: 0;
 }
 :where(._field-apart)._field > ._field-label {
   inset-inline-start: 0;
@@ -6434,10 +6440,18 @@ img[rep=image] {
 :where(._field-apart)._field > ._field-help AX-BTN:where(:not([size])) {
   --_btn-h: min(calc(var(--_form-h) - 1rem), var(--_rem-title));
 }
+:where(._field-apart)._field > ._field-help AX-BTN {
+  --_btn-r: var(--_r-input-sm);
+  --_btn-fs: var(--_rem-ignore);
+}
 :where(._field-apart)._field > ._field-help [rep=disk],
 :where(._field-apart)._field > ._field-help [rep=image],
 :where(._field-apart)._field > ._field-help [rep=cube] {
   height: min(calc(var(--_form-h) - 1rem), var(--_rem-title));
+}
+:where(._field-apart)._field > ._field-help [rep=image],
+:where(._field-apart)._field > ._field-help [rep=cube] {
+  border-radius: var(--_r-input-sm);
 }
 :where(._field-compact)._field {
   --_form-g-input: 0;
@@ -6558,6 +6572,9 @@ img[rep=image] {
 }
 :where(._field-compact)._field > ._field-cont > ._field-input > AX-SEARCH AX-FIELDS > [rep=wrap] > AX-BTN {
   --_btn-c-sd: transparent;
+  --_btn-r: var(--_r-input-sm);
+  --_btn-h: var(--_rem-title);
+  --_btn-fs: var(--_rem-ignore);
   border-start-start-radius: var(--_btn-r);
   border-end-start-radius: var(--_btn-r);
 }
@@ -6587,12 +6604,20 @@ img[rep=image] {
   background-color: var(--_c-prim);
 }
 :where(._field-compact)._field > ._field-help AX-BTN:where(:not([size])) {
-  --_btn-h: min(var(--_form-h), var(--_rem-input));
+  --_btn-h: min(var(--_form-h), var(--_rem-title));
+}
+:where(._field-compact)._field > ._field-help AX-BTN {
+  --_btn-r: var(--_r-input-sm);
+  --_btn-fs: var(--_rem-ignore);
 }
 :where(._field-compact)._field > ._field-help [rep=disk],
 :where(._field-compact)._field > ._field-help [rep=image],
 :where(._field-compact)._field > ._field-help [rep=cube] {
-  height: min(var(--_form-h), var(--_rem-input));
+  height: min(var(--_form-h), var(--_rem-title));
+}
+:where(._field-compact)._field > ._field-help [rep=image],
+:where(._field-compact)._field > ._field-help [rep=cube] {
+  border-radius: var(--_r);
 }
 ._field:where(._field-sm, ._field-lg) > ._field-cont > ._field-input input:where([type="reset"], [type="submit"]),
 ._field:where(._field-sm, ._field-lg) > ._field-cont > ._field-input button,
@@ -7508,8 +7533,7 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch])) input:where(:disabled:check
 }
 AX-RADIO:where(:not([type=chera], [type=switch]))[size=xs],
 AX-CHECKBOX:where(:not([type=chera], [type=switch]))[size=xs] {
-  height: var(--_rem-list);
-  line-height: var(--_rem-list);
+  --_chk-h: var(--_rem-list);
 }
 AX-RADIO:where(:not([type=chera], [type=switch]))[size=xs]:where(:not([type=text])),
 AX-CHECKBOX:where(:not([type=chera], [type=switch]))[size=xs]:where(:not([type=text])) {
@@ -7517,8 +7541,7 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch]))[size=xs]:where(:not([type=t
 }
 AX-RADIO:where(:not([type=chera], [type=switch]))[size=sm],
 AX-CHECKBOX:where(:not([type=chera], [type=switch]))[size=sm] {
-  height: calc(var(--_rem-title));
-  line-height: calc(var(--_rem-title));
+  --_chk-h: var(--_rem-title);
 }
 AX-RADIO:where(:not([type=chera], [type=switch]))[size=sm]:where(:not([type=text])),
 AX-CHECKBOX:where(:not([type=chera], [type=switch]))[size=sm]:where(:not([type=text])) {
@@ -7526,8 +7549,7 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch]))[size=sm]:where(:not([type=t
 }
 AX-RADIO:where(:not([type=chera], [type=switch]))[size=lg],
 AX-CHECKBOX:where(:not([type=chera], [type=switch]))[size=lg] {
-  height: var(--_rem-max);
-  line-height: var(--_rem-max);
+  --_chk-h: var(--_rem-max);
 }
 /*Radio*/
 AX-RADIO:where(:not([type=chera], [type=switch])) u {
@@ -7664,10 +7686,6 @@ AX-CHECKBOX[type=chera],
 AX-RADIO[type=chera] {
   --_chk-d: block;
   --_chera-h: calc(var(--_chk-h) - 0.6rem);
-  /*   ._chera._b-lg i {
-    height: var(--_rem-input);
-    line-height: calc(var(--_rem-input) - .2rem);
-  } */
 }
 AX-CHECKBOX[type=chera] label,
 AX-RADIO[type=chera] label {
@@ -7745,14 +7763,13 @@ AX-RADIO[type=chera] input:where(:disabled:checked) ~ u {
 }
 AX-CHECKBOX[type=chera][size=xs],
 AX-RADIO[type=chera][size=xs] {
-  height: var(--_rem-list);
-  line-height: var(--_rem-list);
-  font-size: var(--_rem-ingore);
+  --_chk-h: var(--_rem-list);
+  font-size: var(--_rem-ignore);
 }
 AX-CHECKBOX[type=chera][size=xs] i,
 AX-RADIO[type=chera][size=xs] i {
-  height: calc(var(--_rem-list) - 0.2rem);
-  line-height: calc(var(--_rem-list) - 0.2rem - 0.2rem);
+  height: calc(var(--_chk-h) - 0.2rem);
+  line-height: calc(var(--_chk-h) - 0.2rem - 0.2rem);
   padding-inline-start: 0.4rem;
 }
 AX-CHECKBOX[type=chera][size=xs] u,
@@ -7761,18 +7778,17 @@ AX-RADIO[type=chera][size=xs] u {
 }
 AX-CHECKBOX[type=chera][size=sm],
 AX-RADIO[type=chera][size=sm] {
-  height: var(--_rem-title);
-  line-height: var(--_rem-title);
+  --_chk-h: var(--_rem-title);
+  font-size: var(--_rem-ignore);
 }
 AX-CHECKBOX[type=chera][size=sm] i,
 AX-RADIO[type=chera][size=sm] i {
-  height: calc(var(--_rem-title) - 0.2rem);
-  line-height: calc(var(--_rem-title) - 0.2rem - 0.2rem);
+  height: calc(var(--_chk-h) - 0.2rem);
+  line-height: calc(var(--_chk-h) - 0.2rem - 0.2rem);
 }
 AX-CHECKBOX[type=chera][size=lg],
 AX-RADIO[type=chera][size=lg] {
-  height: calc(var(--_rem-input) + 1rem);
-  line-height: calc(var(--_rem-input) + 1rem);
+  --_chk-h: calc(var(--_rem-input) + 1rem);
 }
 AX-CHECKBOX[type=chera][size=lg] i,
 AX-RADIO[type=chera][size=lg] i {
@@ -7807,12 +7823,18 @@ AX-RADIO[type=text] u {
 /*Btn of checkbox & radio*/
 AX-CHECKBOX[type=btn],
 AX-RADIO[type=btn] {
+  --_chk-lh: calc(var(--_chk-h) - 2px);
   border: 1px solid var(--_c-text-bd);
   border-radius: var(--_r-input);
   background-color: var(--_c-stage);
-  padding-inline: var(--_em-space);
-  paddding-block: 0;
+  padding-inline: 1em;
+  padding-block: 0;
+  box-sizing: border-box;
   transition: all var(--_dur-2) linear;
+}
+AX-CHECKBOX[type=btn] label,
+AX-RADIO[type=btn] label {
+  height: calc(var(--_chk-h) - 2px);
 }
 AX-CHECKBOX[type=btn]:hover,
 AX-RADIO[type=btn]:hover {
@@ -7830,7 +7852,27 @@ AX-RADIO[type=btn]:focus-within {
   outline-offset: 0px;
   outline-color: var(--_c-prim-sd);
 }
+AX-CHECKBOX[type=btn][size=xs],
+AX-RADIO[type=btn][size=xs] {
+  font-size: var(--_rem-ignore);
+  padding-inline: var(--_em-min);
+  border-radius: var(--_r-input-sm);
+}
+AX-CHECKBOX[type=btn][size=sm],
+AX-RADIO[type=btn][size=sm] {
+  font-size: var(--_rem-ignore);
+  border-radius: var(--_r-input-sm);
+}
+AX-CHECKBOX[type=btn][size=lg],
+AX-RADIO[type=btn][size=lg] {
+  padding-inline: 2em;
+  border-radius: var(--_r-input-lg);
+}
 /*Switch of checkbox*/
+AX-CHECKBOX[type=switch] {
+  --_switch-w: calc(var(--_rem-subject)*2);
+  --_switch-h: var(--_rem-subject);
+}
 AX-CHECKBOX[type=switch] label {
   display: inline-flex;
 }
@@ -7841,13 +7883,13 @@ AX-CHECKBOX[type=switch] u ~ i {
   margin-inline-start: var(--_g);
 }
 AX-CHECKBOX[type=switch] u {
-  width: 4rem;
-  height: var(--_rem-list);
+  width: var(--_switch-w);
+  height: var(--_switch-h);
   box-sizing: border-box;
   border: 1px solid var(--_c-text-bd);
-  border-radius: var(--_rem-list);
-  margin: calc((var(--_rem-input) - var(--_rem-list))/2) 0;
-  background-color: var(--_c-stage);
+  border-radius: var(--_switch-h);
+  margin: calc((var(--_chk-h) - var(--_switch-h))/2) 0;
+  background-color: var(--_c-text-bg);
   transition: all var(--_dur-2) linear;
   position: relative;
 }
@@ -7856,17 +7898,31 @@ AX-CHECKBOX[type=switch] u:before {
   font-size: var(--_rem-ignore);
   font-family: var(--_ff-icon);
   color: var(--_c-brief);
-  width: 2rem;
-  height: 2rem;
+  height: calc(var(--_switch-h) - 2px);
+  aspect-ratio: 1/1;
   border-radius: 100%;
   background-color: var(--_c-white);
   box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.4);
-  transition: all var(--_dur-2) linear;
+  transition: all var(--_dur-2) var(--_bez-eo);
   display: inline-flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  inset-inline-start: 0;
+  inset-inline-end: calc(var(--_switch-w) - var(--_switch-h));
+}
+AX-CHECKBOX[type=switch] u:after {
+  content: attr(off);
+  color: var(--_c-ignore);
+  font-size: var(--_rem-space);
+  height: calc(var(--_switch-h) - 2px);
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  pointer-events: none;
 }
 AX-CHECKBOX[type=switch]:where(:hover) u {
   border-color: var(--_c-prim);
@@ -7876,10 +7932,17 @@ AX-CHECKBOX[type=switch] input:where(:checked) ~ u {
   background-color: var(--_c-prim);
 }
 AX-CHECKBOX[type=switch] input:where(:checked) ~ u:before {
-  inset-inline-start: 1.8rem;
+  inset-inline-end: 0;
+}
+AX-CHECKBOX[type=switch] input:where(:checked) ~ u:after {
+  content: attr(on);
+  color: var(--_c-white);
+  inset-inline-end: auto;
+  inset-inline-start: 0;
 }
 AX-CHECKBOX[type=switch]:where([check=ing]:not(:has(input:checked))) input ~ u {
   background-color: var(--_c-prim-bg);
+  border-color: var(--_c-prim);
 }
 AX-CHECKBOX[type=switch] input:where(:checked) + i {
   color: var(--_c-prim);
@@ -14588,6 +14651,7 @@ AX-TREE {
   contain: layout;
   background-color: var(--_c-stage);
   min-width: var(--_rem-input);
+  max-width: calc(100vw - var(--_g-full)*2);
   border: 1px solid var(--_c-text-bd);
   border-radius: var(--_popup-r);
   box-sizing: border-box;
@@ -14651,7 +14715,7 @@ AX-TREE {
   border-end-end-radius: inherit;
 }
 ._popup:where(:not(._plain)):where(:not([placement="center-max"], [placement="left-max"], [placement="right-max"])) ._popup-body {
-  max-height: calc(100vh - var(--_g-full)*2);
+  max-height: calc(100vh - var(--_g-full)*10);
 }
 ._popup:where(:not(._plain)) ._popup-body ._popup-cont {
   border-radius: inherit;
@@ -15621,6 +15685,7 @@ AX-MENU {
 }
 ._dialog ._dialog-wrap {
   width: var(--_dialog-sz);
+  max-width: calc(100vw - var(--_g-full)*2);
   background-color: var(--_c-stage);
   opacity: 1;
   border-radius: var(--_dialog-r);
@@ -15672,7 +15737,7 @@ AX-MENU {
   border-end-end-radius: inherit;
 }
 ._dialog:where(:not([placement="center-max"])) ._dialog-body {
-  max-height: calc(100vh - var(--_g-full)*2);
+  max-height: calc(100vh - var(--_g-full)*10);
 }
 ._dialog:where([show]) {
   inset-inline-start: 0;
@@ -16276,6 +16341,34 @@ AX-INPUT[feature=plain] {
   --_input-bd-label: 0px;
   --_input-bd-unit: 0px;
 }
+AX-INPUT[feature=sign] {
+  --_input-bg-label: transparent;
+  --_input-bg-unit: transparent;
+  --_input-bd-label: 0px;
+  --_input-bd-unit: 0px;
+  --_input-h: calc(var(--_em-input) + var(--_px-subject));
+}
+AX-INPUT[feature=sign] > [rep=wrap] {
+  padding-block-start: var(--_px-subject);
+}
+AX-INPUT[feature=sign] > [rep=wrap] > [rep=label] {
+  font-size: var(--_px-ignore);
+  line-height: var(--_px-title);
+  height: var(--_px-title);
+  padding: 0 var(--_em-space-dec);
+  color: var(--_c-brief);
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+AX-INPUT[feature=sign][size=sm] {
+  --_input-h: calc(var(--_em-title) + var(--_px-subject));
+}
+AX-INPUT[feature=sign][size=lg] {
+  --_input-h: calc(var(--_em-max) + var(--_px-subject));
+}
 /*Textarea input*/
 AX-TEXTAREA {
   --_area-p-se: var(--_em-space);
@@ -16461,6 +16554,15 @@ AX-TEXTAREA[size=lg]:where([single]) {
 }
 AX-TEXTAREA:hover {
   border-color: var(--_c-prim);
+}
+AX-TEXTAREA[feature=plain] [rep=wrap] > [rep=head] {
+  background-color: transparent;
+}
+AX-TEXTAREA[feature=plain]:where([single]) [rep=wrap] > [rep=head] {
+  border-inline-end: 0;
+}
+AX-TEXTAREA[feature=plain]:where(:not([single])) [rep=wrap] > [rep=head] {
+  border-block-end: 0;
 }
 /*Number input*/
 AX-NUMBER {
@@ -17845,12 +17947,12 @@ AX-PROGRESS {
   scale: -1 1;
 }
 /*
-Last modified: 2025-04-30 00:28:07
+Last modified: 2025-05-11 00:26:46
 */
 /*Date and datetime picker*/
 ._datetime {
   --_label-h: calc(var(--_rem-input) - var(--_rem-min));
-  --_panel-w: calc(var(--_rem-input)*10 - 2px);
+  --_panel-w: min(calc(var(--_rem-input)*10 - 2px),100vw);
   height: auto;
   position: relative;
   display: inline-flex;
@@ -17870,7 +17972,6 @@ Last modified: 2025-04-30 00:28:07
 ._datetime[display=dialog],
 ._datetime[display=drawer] {
   border-radius: inherit;
-  --_panel-w: min(calc(var(--_rem-input) * 10),100wv);
 }
 ._datetime > [rep=wrap] {
   border-start-start-radius: inherit;
@@ -18264,8 +18365,8 @@ Last modified: 2025-04-30 00:28:07
   margin: 2.7rem 0;
 }
 ._datetime [panel=daytime] [rep=content] {
-  width: var(--_rem-title);
   height: var(--_rem-title);
+  aspect-ratio: 1/1;
   line-height: var(--_rem-title);
   margin: 0;
 }
@@ -19429,7 +19530,7 @@ AX-UPLOAD {
   border: 1px solid var(--_c-text-bd);
   width: calc(var(--_rem-title)*5);
   height: calc(var(--_rem-title)*5);
-  border-radius: var(--_r);
+  border-radius: var(--_r-input);
   background-color: var(--_c-stage);
   box-sizing: border-box;
   overflow: hidden;
@@ -19605,7 +19706,7 @@ AX-UPLOAD {
 ._upload[feature=gallery] {
   background-color: var(--_c-stage);
   border: 1px solid var(--_c-text-bd);
-  border-radius: var(--_r);
+  border-radius: var(--_r-input);
   box-sizing: border-box;
   transition: all var(--_dur-2) linear;
 }
@@ -20983,7 +21084,7 @@ AX-SKELETON[shape=square] {
 /* Handheld device(xxs+xs+sm+md) */
 @media (max-width: 1199px), (min-width: 1200px) and (max-width: 1535px) and (hover: none) {
   :root {
-    --SCREEN: hh;
+    --_screen: hh;
   }
   select:where([multiple]) {
     min-height: auto;
@@ -21647,7 +21748,7 @@ AX-SKELETON[shape=square] {
 @media (min-width: 600px) and (max-width: 899px) and (orientation: portrait), (min-width: 900px) and (max-width: 1199px), (min-width: 1200px) and (max-width: 1535px) and (hover: none) {
   :root {
     --_fs-root: clamp(calc(1px*var(--_num-root)*16/14), 1vw, calc(180px/14));
-    --SCREEN: tb;
+    --_screen: tb;
   }
   *._split-tb,
   ._row:where(._split-tb),
@@ -22295,7 +22396,8 @@ AX-SKELETON[shape=square] {
     --_ff-body: "microsoft yahei", "Microsoft JhengHei", "Arial", "Helvetica Neue", "sans-serif", "Yu Mincho", "simsun";
     --_fs-root: calc(1px*var(--_num-root));
     --_l-text: 20%;
-    --SCREEN: dt;
+    --_screen: dt;
+    --_isnarrow: 0;
     --_device-coef: -1;
   }
   /*Beautify rolling bar (only pc)*/
@@ -23034,11 +23136,11 @@ AX-SKELETON[shape=square] {
 /* Phone+iPad rotate+iPad*/
 /* xxs->Phone (<600 | <900) */
 /*
- *Last modified: 2025-05-03 22:48:36
+ *Last modified: 2025-05-11 00:30:54
  */
 @media (max-width: 599px), (min-width: 600px) and (max-width: 899px) and (orientation: landscape) {
   :root {
-    --SCREEN: xxs;
+    --_screen: xxs;
   }
   *._split,
   ._row:where(._split),
@@ -23063,6 +23165,24 @@ AX-SKELETON[shape=square] {
   }
   [class*="_container"]:where(:not(._container-full)):where(._xxs-full) {
     width: 100%;
+  }
+  ._datetime {
+    --_label-h: calc(var(--_rem-title) - var(--_rem-min));
+  }
+  ._datetime [rep=main] [rep=body] {
+    min-height: 22rem;
+  }
+  ._datetime [panel=year] [rep=content] {
+    margin: calc((3.3rem - var(--_label-h)) / 2) 0;
+  }
+  ._datetime [panel=month] [rep=content] {
+    margin: calc((5.3rem - var(--_label-h)) / 2) 0;
+  }
+  ._datetime [panel=daytime] [rep=list] {
+    margin: 0;
+  }
+  ._datetime [panel=daytime] [rep=list] > * {
+    height: calc(var(--_rem-title) * 8 - 5.7rem);
   }
   ._hide-xxs {
     display: none;
@@ -23743,7 +23863,7 @@ AX-SKELETON[shape=square] {
 /* xs->Tablet */
 @media (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
   :root {
-    --SCREEN: xs;
+    --_screen: xs;
   }
   *._split-xs,
   ._row:where(._split-xs),
@@ -24395,7 +24515,7 @@ AX-SKELETON[shape=square] {
 /* sm->Tablet & flip */
 @media (min-width: 900px) and (max-width: 1199px) {
   :root {
-    --SCREEN: sm;
+    --_screen: sm;
   }
   *._split-sm,
   ._row:where(._split-sm),
@@ -25047,7 +25167,7 @@ AX-SKELETON[shape=square] {
 /* md->Tablet flip */
 @media (min-width: 1200px) and (max-width: 1535px) and (hover: none) {
   :root {
-    --SCREEN: md;
+    --_screen: md;
   }
   *._split-md,
   ._row:where(._split-md),
@@ -25699,7 +25819,8 @@ AX-SKELETON[shape=square] {
 /* lg->Desktop >=1560 (1920*1080) */
 @media (min-width: 1200px) and (max-width: 1535px) and (hover: hover), (min-width: 1536px) and (max-width: 2499px) {
   :root {
-    --SCREEN: lg;
+    --_screen: lg;
+    --_isnarrow: 0;
   }
   *._split-lg,
   ._row:where(._split-lg),
@@ -26351,7 +26472,8 @@ AX-SKELETON[shape=square] {
 /* xl->2k screen (2560*1440) */
 @media (min-width: 2500px) and (max-width: 3799px) {
   :root {
-    --SCREEN: xl;
+    --_screen: xl;
+    --_isnarrow: 0;
   }
   [class*="_container"]:where(:not(._container-full)):where(:not(._xl-full)) {
     --_container-w: var(--_xl-w, var(--_container-resp));
@@ -26990,7 +27112,8 @@ AX-SKELETON[shape=square] {
 /* xxl->4k screen (3840*2160) */
 @media (min-width: 3800px) {
   :root {
-    --SCREEN: xxl;
+    --_screen: xxl;
+    --_isnarrow: 0;
   }
   [class*="_container"]:where(:not(._container-full)):where(:not(._xxl-full)) {
     --_container-w: var(--_xxl-w, var(--_container-resp));

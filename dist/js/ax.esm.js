@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-4 23:6:0
+ * @since Last modified: 2025-5-11 0:37:22
  * @name AXUI front-end framework.
- * @version 3.1.5
+ * @version 3.1.6
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -14,279 +14,73 @@
  * @license MIT license
  */
 
-var tmp = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    get Accordion () { return Accordion; },
-    get AccordionElem () { return AccordionElem; },
-    get AlarmElem () { return AlarmElem; },
-    get AnchorsElem () { return AnchorsElem; },
-    get Autocomplete () { return Autocomplete; },
-    get AvatarElem () { return AvatarElem; },
-    get BadgeElem () { return BadgeElem; },
-    get BtnElem () { return BtnElem; },
-    get BuoyElem () { return BuoyElem; },
-    get CalloutElem () { return CalloutElem; },
-    get CheckboxElem () { return CheckboxElem; },
-    get CheckboxesElem () { return CheckboxesElem; },
-    get CompBase () { return CompBase; },
-    get CompBaseComm () { return CompBaseComm; },
-    get CompBaseCommField () { return CompBaseCommField; },
-    get CompBaseCommFieldMixin () { return CompBaseCommFieldMixin; },
-    get Datetime () { return Datetime; },
-    get DatetimeElem () { return DatetimeElem; },
-    get DeformElem () { return DeformElem; },
-    get Dialog () { return Dialog; },
-    get DividerElem () { return DividerElem; },
-    get Dodge () { return Dodge; },
-    get Drag () { return Drag; },
-    get Drawer () { return Drawer; },
-    get Dropdown () { return Dropdown; },
-    get Editor () { return Editor; },
-    get EditorElem () { return EditorElem; },
-    get FieldsElem () { return FieldsElem; },
-    get FileElem () { return FileElem; },
-    get FlagElem () { return FlagElem; },
-    get Flip () { return Flip; },
-    get FormatElem () { return FormatElem; },
-    get Gesture () { return Gesture; },
-    get GoodElem () { return GoodElem; },
-    get HeadingElem () { return HeadingElem; },
-    get Hover () { return Hover; },
-    get IconElem () { return IconElem; },
-    get Infinite () { return Infinite; },
-    get InputElem () { return InputElem; },
-    get Lazy () { return Lazy; },
-    get LineElem () { return LineElem; },
-    get Masonry () { return Masonry; },
-    get Menu () { return Menu; },
-    get MenuElem () { return MenuElem; },
-    get Message () { return Message; },
-    get ModBase () { return ModBase; },
-    get ModBaseListen () { return ModBaseListen; },
-    get ModBaseListenCache () { return ModBaseListenCache; },
-    get ModBaseListenCacheBubble () { return ModBaseListenCacheBubble; },
-    get ModBaseListenCacheNest () { return ModBaseListenCacheNest; },
-    get More () { return More; },
-    get MoreElem () { return MoreElem; },
-    get NumberElem () { return NumberElem; },
-    get Observe () { return Observe; },
-    get Pagination () { return Pagination; },
-    get PaginationElem () { return PaginationElem; },
-    get Panel () { return Panel; },
-    get Popup () { return Popup; },
-    get Position () { return Position; },
-    get Progress () { return Progress; },
-    get ProgressElem () { return ProgressElem; },
-    get RadioElem () { return RadioElem; },
-    get RadiosElem () { return RadiosElem; },
-    get Range () { return Range; },
-    get RangeElem () { return RangeElem; },
-    get Rate () { return Rate; },
-    get RateElem () { return RateElem; },
-    get ResultElem () { return ResultElem; },
-    get Retrieval () { return Retrieval; },
-    get Router () { return Router; },
-    get Scroll () { return Scroll; },
-    get SearchElem () { return SearchElem; },
-    get Select () { return Select; },
-    get SelectElem () { return SelectElem; },
-    get SkeletonElem () { return SkeletonElem; },
-    get Spy () { return Spy; },
-    get StatsElem () { return StatsElem; },
-    get StatusElem () { return StatusElem; },
-    get StepElem () { return StepElem; },
-    get Swipe () { return Swipe; },
-    get Tab () { return Tab; },
-    get Tags () { return Tags; },
-    get TextareaElem () { return TextareaElem; },
-    get Tooltip () { return Tooltip; },
-    get Tree () { return Tree; },
-    get TreeElem () { return TreeElem; },
-    get TwilightElem () { return TwilightElem; },
-    get Upload () { return Upload; },
-    get UploadElem () { return UploadElem; },
-    get Valid () { return Valid; },
-    get Virtualize () { return Virtualize; },
-    get addStyle () { return addStyle; },
-    get addStyles () { return addStyles; },
-    get ajax () { return ajax; },
-    get alert () { return alert; },
-    get alias () { return alias; },
-    get allToEls () { return allToEls; },
-    get appendEls () { return appendEls; },
-    get arrSearch () { return arrSearch; },
-    get arrSort () { return arrSort; },
-    get attrJoinVal () { return attrJoinVal; },
-    get attrToJson () { return attrToJson; },
-    get attrValBool () { return attrValBool; },
-    get augment () { return augment; },
-    get ax () { return ax; },
-    get breakpoints () { return breakpoints; },
-    get bulletTools () { return bulletTools; },
-    get capStart () { return capStart; },
-    get clampVal () { return clampVal; },
-    get classes () { return classes; },
-    get clearRegx () { return clearRegx; },
-    get combineArr () { return combineArr; },
-    get config () { return config; },
-    get confirm () { return confirm; },
-    get contains () { return contains; },
-    get convertByte () { return convertByte; },
-    get createBtns () { return createBtns; },
-    get createComp () { return createComp; },
-    get createEl () { return createEl; },
-    get createEvt () { return createEvt; },
-    get createFooter () { return createFooter; },
-    get createModule () { return createModule; },
-    get createTools () { return createTools; },
-    get curveFns () { return curveFns; },
-    get dateTools () { return dateTools; },
-    get debounce () { return debounce; },
-    get decompTask () { return decompTask; },
-    get deepClone () { return deepClone; },
-    get deepEqual () { return deepEqual; },
-    get deepMerge () { return deepMerge; },
-    get default () { return ax_comm; },
-    get delay () { return delay; },
-    get dl2Tree () { return dl2Tree; },
-    get ease () { return ease; },
-    get easeHeight () { return easeHeight; },
-    get elState () { return elState; },
-    get elsSort () { return elsSort; },
-    get eventMap () { return eventMap; },
-    get events () { return events; },
-    get extend () { return extend; },
-    get fadeIn () { return fadeIn; },
-    get fadeOut () { return fadeOut; },
-    get fadeToggle () { return fadeToggle; },
-    get fieldTools () { return fieldTools; },
-    get fieldTypes () { return fieldTypes; },
-    get fileTools () { return fileTools; },
-    get filterPrims () { return filterPrims; },
-    get findItem () { return findItem; },
-    get findItems () { return findItems; },
-    get formTools () { return formTools; },
-    get getArrMap () { return getArrMap; },
-    get getAttrArr () { return getAttrArr; },
-    get getAttrBool () { return getAttrBool; },
-    get getAutoDur () { return getAutoDur; },
-    get getBetweenEls () { return getBetweenEls; },
-    get getClasses () { return getClasses; },
-    get getClientObj () { return getClientObj; },
-    get getComputedVar () { return getComputedVar; },
-    get getContent () { return getContent; },
-    get getDataType () { return getDataType; },
-    get getEl () { return getEl; },
-    get getElSpace () { return getElSpace; },
-    get getEls () { return getEls; },
-    get getEvtClient () { return getEvtClient; },
-    get getEvtTarget () { return getEvtTarget; },
-    get getExpiration () { return getExpiration; },
-    get getFullGap () { return getFullGap; },
-    get getHeights () { return getHeights; },
-    get getHypotenuse () { return getHypotenuse; },
-    get getImgAvatar () { return getImgAvatar; },
-    get getImgEmpty () { return getImgEmpty; },
-    get getImgNone () { return getImgNone; },
-    get getImgSpin () { return getImgSpin; },
-    get getImgSpinDk () { return getImgSpinDk; },
-    get getIntArr () { return getIntArr; },
-    get getLast () { return getLast; },
-    get getNestProp () { return getNestProp; },
-    get getPlaces () { return getPlaces; },
-    get getRectPoints () { return getRectPoints; },
-    get getRtl () { return getRtl; },
-    get getScreenSize () { return getScreenSize; },
-    get getScrollObj () { return getScrollObj; },
-    get getSelectorType () { return getSelectorType; },
-    get getStrFromTpl () { return getStrFromTpl; },
-    get getUTCTimestamp () { return getUTCTimestamp; },
-    get getValsFromAttrs () { return getValsFromAttrs; },
-    get getWidths () { return getWidths; },
-    get hide () { return hide; },
-    get icons () { return icons; },
-    get includes () { return includes; },
-    get increaseId () { return increaseId; },
-    get init () { return init; },
-    get instance () { return instance; },
-    get isDateStr () { return isDateStr; },
-    get isEmpty () { return isEmpty; },
-    get isMobi () { return isMobi; },
-    get isNull () { return isNull; },
-    get isOutside () { return isOutside; },
-    get isProxy () { return isProxy; },
-    get isScrollUp () { return isScrollUp; },
-    get isSubset () { return isSubset; },
-    get keyCond () { return keyCond; },
-    get moveItem () { return moveItem; },
-    get notice () { return notice; },
-    get offset () { return offset; },
-    get paramToJson () { return paramToJson; },
-    get parseStr () { return parseStr; },
-    get parseUrlArr () { return parseUrlArr; },
-    get pipe () { return pipe; },
-    get plan () { return plan; },
-    get prefix () { return prefix; },
-    get preventDft () { return preventDft; },
-    get privacy () { return privacy; },
-    get promiseRaf () { return promiseRaf; },
-    get prompt () { return prompt; },
-    get propsMap () { return propsMap; },
-    get purifyHtml () { return purifyHtml; },
-    get regElem () { return regElem; },
-    get regExps () { return regExps; },
-    get removeItem () { return removeItem; },
-    get removeStyle () { return removeStyle; },
-    get removeStyles () { return removeStyles; },
-    get renderTpl () { return renderTpl; },
-    get repeatStr () { return repeatStr; },
-    get replaceFrag () { return replaceFrag; },
-    get requireTypes () { return requireTypes; },
-    get scrollTo () { return scrollTo; },
-    get select2Tree () { return select2Tree; },
-    get setAttr () { return setAttr; },
-    get setAttrs () { return setAttrs; },
-    get setContent () { return setContent; },
-    get setRtl () { return setRtl; },
-    get setSingleSel () { return setSingleSel; },
-    get show () { return show; },
-    get sliceFrags () { return sliceFrags; },
-    get sliceStrEnd () { return sliceStrEnd; },
-    get slideDown () { return slideDown; },
-    get slideToggle () { return slideToggle; },
-    get slideUp () { return slideUp; },
-    get splice () { return splice; },
-    get splitNum () { return splitNum; },
-    get spreadBool () { return spreadBool; },
-    get startUpper () { return startUpper; },
-    get stdParam () { return stdParam; },
-    get storage () { return storage; },
-    get storeNode () { return storeNode; },
-    get strToJson () { return strToJson; },
-    get style () { return style; },
-    get support () { return support; },
-    get theme () { return theme; },
-    get throttle () { return throttle; },
-    get toLocalTime () { return toLocalTime; },
-    get toNumber () { return toNumber; },
-    get toPixel () { return toPixel; },
-    get toggle () { return toggle; },
-    get tplToEl () { return tplToEl; },
-    get tplToEls () { return tplToEls; },
-    get transformTools () { return transformTools; },
-    get treeTools () { return treeTools; },
-    get trim () { return trim; },
-    get ul2Tree () { return ul2Tree; },
-    get unique () { return unique; },
-    get valToArr () { return valToArr; },
-    get validTools () { return validTools; }
-});
+const isNull = (data) => [undefined, null, 'undefined', 'null'].includes(data);
 
-const getComputedVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const augment = function (arg) {
+    if (isNull(arg) || !arg.name)
+        return;
+    let target;
+    if (!arg.target || arg.target === 'ax') {
+        target = this;
+    }
+    else {
+        for (let k in this) {
+            if (this[k].name === arg.target) {
+                target = this[k];
+                break;
+            }
+        }
+        if (!target)
+            throw new Error(`Cannot find the ${arg.target} property in the ax object!`);
+    }
+    if (arg.type === 'method') {
+        target[target.prototype ? 'prototype' : '__proto__'][arg.name] = arg.data;
+    }
+    else {
+        Reflect.set(target, arg.name, arg.data);
+    }
+};
 
-const prefix = getComputedVar(`--PREFIX`);
+const axStyles = getComputedStyle(document.documentElement), axCssVar = (prop) => axStyles.getPropertyValue(prop).trim(), axPrefix = axCssVar(`--PREFIX`).trim();
+const ax = {
+    frame: 0,
+    ajaxStor: [],
+    styles: axStyles,
+    cssVar: axCssVar,
+    prefix: axPrefix,
+    alias: axCssVar(`--${axPrefix}alias`),
+    screen: axCssVar(`--${axPrefix}screen`),
+    fullGap: axCssVar(`--${axPrefix}g-full`),
+    fsRoot: axCssVar(`--${axPrefix}fs-root`),
+    images: {
+        spin: axCssVar(`--${axPrefix}spin`),
+        spinDk: axCssVar(`--${axPrefix}spin-dk`),
+        blank: axCssVar(`--${axPrefix}blank`),
+        avatar: axCssVar(`--${axPrefix}avatar`),
+        empty: axCssVar(`--${axPrefix}empty`),
+        none: axCssVar(`--${axPrefix}none`),
+    },
+    curves: {
+        linear: axCssVar(`--${axPrefix}bez-linear`),
+        ease: axCssVar(`--${axPrefix}bez-ease`),
+        easeOut: axCssVar(`--${axPrefix}bez-eo`),
+        easeIn: axCssVar(`--${axPrefix}bez-ei`),
+        easeInOut: axCssVar(`--${axPrefix}bez-eio`),
+        easeOutIn: axCssVar(`--${axPrefix}bez-eoi`)
+    },
+    isNarrowScr: ~~(axCssVar(`--${axPrefix}isnarrow`)),
+    isTouchScr: ('ontouchstart' in document.documentElement),
+    dragNode: null,
+    compSign: 'comp',
+    embedSign: 'embed',
+    namePfx: 'TMP_',
+    messages: [],
+    valids: [],
+    augment,
+    tasks: [],
+};
 
-const alias = getComputedVar(`--ALIAS`);
+const fieldTypes = ['input', 'file', 'textarea', 'range', 'number', 'datetime', 'upload', 'select', 'radio', 'checkbox', 'radios', 'checkboxes'];
 
 const lang = {
     name: 'zh-CN',
@@ -301,9 +95,9 @@ const lang = {
         confirm: '接受'
     },
     ajax: {
-        abort: `<i class="${prefix}c-warn">中止了请求！</i>`,
-        timeout: `<i class="${prefix}c-error">请求超时了！</i>`,
-        error: `<i class="${prefix}c-error">错误状态：{{this.status}}</i>`,
+        abort: `<i class="${ax.prefix}c-warn">中止了请求！</i>`,
+        timeout: `<i class="${ax.prefix}c-error">请求超时了！</i>`,
+        error: `<i class="${ax.prefix}c-error">错误状态：{{this.status}}</i>`,
         submit: {
             btn: '正在提交',
             succ: '恭喜，提交成功！',
@@ -477,7 +271,7 @@ const lang = {
             info: '"{{this.label}}"还剩{{this.rest}}条信息',
             main: '主分支',
         },
-        result: `<i ${alias}="holder">还未选择...</i>`,
+        result: `<i ${ax.alias}="holder">还未选择...</i>`,
     },
     accordion: {
         label: '新板块',
@@ -595,13 +389,13 @@ const lang = {
             now: '设为当前时间',
             close: '关闭时间选择器',
         },
-        empty: `<i class="${prefix}c-ignore">还未选择日期!</i>`,
+        empty: `<i class="${ax.prefix}c-ignore">还未选择日期!</i>`,
         message: {
             requireTwoValue: '区间模式至少需要选择两个日期！',
             requireYearFormat: '请填入正确的年份格式!',
             requireOneSelected: '请至少选择一个日期!',
         },
-        noEvent: `<i class="${prefix}c-ignore">今天没有需要安排的事项!</i>`,
+        noEvent: `<i class="${ax.prefix}c-ignore">今天没有需要安排的事项!</i>`,
     },
     rate: {
         title: {
@@ -746,75 +540,6 @@ const lang = {
     },
 };
 
-const config = {
-    initial: true,
-    support: false,
-    privacy: false,
-    lang,
-    attrs: {
-        ajaxSpin: `spinning`,
-        ajaxState: `ajax`,
-    },
-    debounce: 200,
-    throttle: 500,
-    rootStart: -1,
-    idStart: 0,
-    floorStart: 0,
-    pathHyphen: '~',
-    rangeHyphen: '~',
-    labelHyphen: '/',
-    splitHyphen: ',',
-    wordHyphen: ' ',
-    actClass: `${prefix}opened`,
-    reqProp: 'REQRETRY',
-    parser: 'new Function',
-    warn: {
-        init: 'The initialization process of the instance has been stopped. You will need to manually initialize it using the init() method later!',
-        emptyCont: 'Data was not obtained, but execution was not halted!',
-    },
-    error: {
-        parse: 'Getting data from HTML resulted in an error, an empty array was returned, but execution was not interrupted!',
-    },
-    message: {},
-    valid: {
-        regChars: '~!@#$%^&*',
-        lengthStr: 6,
-    },
-    popup: {},
-    alert: {},
-    more: {},
-    menu: {},
-    tree: {},
-    drawer: {},
-};
-
-const isNull = (data) => [undefined, null, 'undefined', 'null'].includes(data);
-
-const augment = function (arg) {
-    if (isNull(arg) || !arg.name)
-        return;
-    let target;
-    if (!arg.target || arg.target === 'ax') {
-        target = this;
-    }
-    else {
-        for (let k in this) {
-            if (this[k].name === arg.target) {
-                target = this[k];
-                break;
-            }
-        }
-        if (!target)
-            throw new Error(`Cannot find the ${arg.target} property in the ax object!`);
-    }
-    if (arg.type === 'method') {
-        target[target.prototype ? 'prototype' : '__proto__'][arg.name] = arg.data;
-    }
-    else {
-        Reflect.set(target, arg.name, arg.data);
-    }
-};
-
 const getDataType = (obj) => {
     let tmp = Object.prototype.toString.call(obj).slice(8, -1), result;
     if (tmp === 'Function' && /^\s*class\s+/.test(obj.toString())) {
@@ -841,24 +566,6 @@ const isEmpty = (data) => {
                     (type === 'Symbol') ? (data.toString().replace(/\s+/g, '').match(/\(.*\)/g)[0] === '()') : false;
     }
     return flag;
-};
-
-const getEl = (obj, wrap) => {
-    let objType = getDataType(obj), parType = getDataType(wrap), parent = parType.includes('HTML') ? wrap : document.querySelector(wrap), result = null;
-    if (obj) {
-        if (objType.includes('HTML')) {
-            result = obj;
-        }
-        else if (objType === 'String') {
-            try {
-                result = (parent || document).querySelector(obj.trim());
-            }
-            catch {
-                result = null;
-            }
-        }
-    }
-    return result;
 };
 
 const deepClone = (data) => {
@@ -936,6 +643,53 @@ const deepMerge = (target, source, opt) => {
     return result;
 };
 
+const config = {
+    initial: true,
+    support: false,
+    privacy: false,
+    lang,
+    attrs: {
+        ajaxSpin: `spinning`,
+        ajaxState: `ajax`,
+    },
+    debounce: 200,
+    throttle: 500,
+    rootStart: -1,
+    idStart: 0,
+    floorStart: 0,
+    pathHyphen: '~',
+    rangeHyphen: '~',
+    labelHyphen: '/',
+    splitHyphen: ',',
+    wordHyphen: ' ',
+    actClass: `${ax.prefix}opened`,
+    reqProp: 'REQRETRY',
+    parser: 'new Function',
+    warn: {
+        init: 'The initialization process of the instance has been stopped. You will need to manually initialize it using the init() method later!',
+        emptyCont: 'Data was not obtained, but execution was not halted!',
+    },
+    error: {
+        parse: 'Getting data from HTML resulted in an error, an empty array was returned, but execution was not interrupted!',
+    },
+    message: {},
+    valid: {
+        regChars: '~!@#$%^&*',
+        lengthStr: 6,
+    },
+    popup: {},
+    alert: {},
+    more: {},
+    menu: {},
+    tree: {},
+    drawer: {},
+};
+ax.config = config;
+ax.install = (vue, options) => {
+    !isEmpty(options) && deepMerge(config, options);
+    vue.config.globalProperties.$ax = ax;
+};
+
 const requireTypes = (data, require, cb) => {
     let type = getDataType(data).toLowerCase(), types = typeof require === 'string' ? [require] : require;
     type.includes('html') ? type = 'element' : null;
@@ -956,97 +710,6 @@ const requireTypes = (data, require, cb) => {
         }
     }
 };
-
-const parseStr = ({ content = '', type = 'object', method = config.parser, catchable = false, error }) => {
-    let dft = {
-        start: type === 'object' ? '{' : '[',
-        end: type === 'object' ? '}' : ']',
-        return: type === 'object' ? {} : type === 'array' ? [] : null,
-    }, result = dft.return;
-    if (!content)
-        return dft.return;
-    let trim = content.trim();
-    if (['object', 'array'].includes(type)) {
-        if (!trim.startsWith(dft.start) || !trim.endsWith(dft.end))
-            return result;
-    }
-    try {
-        let tmp = typeof method === 'function' ? method(trim) : method === 'JSON.parse' ? JSON.parse(trim) : new Function(`"use strict"; return ${trim}`)();
-        result = tmp;
-    }
-    catch (err) {
-        error && error(err);
-        if (catchable)
-            throw err;
-    }
-    return result;
-};
-
-const strToJson = (str, type = 'object') => {
-    let dft = type === 'array' ? [] : {};
-    if (typeof str !== 'string')
-        return dft;
-    str = str.trim();
-    if (!str)
-        return dft;
-    str = (str.startsWith('[') && str.endsWith(']')) || (str.startsWith('{') && str.endsWith('}')) ? str : `{${str}}`;
-    try {
-        return parseStr({
-            content: str,
-            type,
-            catchable: true,
-        });
-    }
-    catch {
-        return dft;
-    }
-};
-
-const attrToJson = (elem, attr) => {
-    requireTypes(attr, 'string');
-    let el = getEl(elem), elAttr = el.getAttribute(attr), result = {};
-    if (el && attr && elAttr) {
-        result = strToJson(elAttr);
-    }
-    return result;
-};
-
-const extend = ({ target = {}, source = {}, host = null, attr = '' }) => {
-    let targetType = getDataType(target), el = getEl(host);
-    if (targetType !== 'Object') {
-        return target;
-    }
-    else {
-        source && deepMerge(target, source);
-        el && attr && deepMerge(target, attrToJson(el, attr));
-    }
-    return target;
-};
-
-const ax = {
-    frame: 0,
-    ajaxStorage: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    prefix,
-    alias,
-    dragNode: null,
-    compSign: 'comp',
-    embedSign: 'embed',
-    namePfx: 'TMP_',
-    messages: [],
-    valids: [],
-    config,
-    augment,
-    tasks: [],
-    install(vue, options) {
-        !isEmpty(options) && extend({
-            target: this.config,
-            source: options,
-        });
-        vue.config.globalProperties.$ax = this;
-    }
-};
-
-const fieldTypes = ['input', 'file', 'textarea', 'range', 'number', 'datetime', 'upload', 'select', 'radio', 'checkbox', 'radios', 'checkboxes'];
 
 const renderTpl = (html, data) => {
     requireTypes(html, 'string');
@@ -1073,6 +736,8 @@ const renderTpl = (html, data) => {
     }
     return result;
 };
+
+const getComputedVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 const getScreenSize = () => getComputedVar(`--SCREEN`);
 
@@ -1180,7 +845,7 @@ const toPixel = (data, multiple) => {
     if (!data) {
         return result;
     }
-    multiple = multiple || parseInt(getComputedVar(`--${prefix}fs-base`)) || 10;
+    multiple = multiple || parseInt(ax.fsRoot) || 10;
     if (typeof data === 'string') {
         data = data.trim();
         if (data.endsWith('rem') || data.endsWith('REM')) {
@@ -1204,42 +869,56 @@ const preventDft = (event, enhance = false) => {
     enhance && event.stopPropagation();
 };
 
-const isMobi = ('ontouchstart' in document.documentElement);
-
-const events = isMobi ? ['touchstart', 'touchmove', 'touchend', 'touchcancel'] : ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
+const events = ax.isTouchScr ? ['touchstart', 'touchmove', 'touchend', 'touchcancel'] : ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
 
 const icons = {
     font: {
-        succ: `<i class="${prefix}icon-check-o"></i>`,
-        error: `<i class="${prefix}icon-close-o"></i>`,
-        warn: `<i class="${prefix}icon-warn-o"></i>`,
-        info: `<i class="${prefix}icon-info-o"></i>`,
-        issue: `<i class="${prefix}icon-issue-o"></i>`,
-        'succ-t': `<i class="${prefix}icon-check-o-t"></i>`,
-        'error-t': `<i class="${prefix}icon-close-o-t"></i>`,
-        'warn-t': `<i class="${prefix}icon-warn-o-t"></i>`,
-        'info-t': `<i class="${prefix}icon-info-o-t"></i>`,
-        'issue-t': `<i class="${prefix}icon-issue-o-t"></i>`,
-        'succ-f': `<i class="${prefix}icon-check-o-f"></i>`,
-        'error-f': `<i class="${prefix}icon-close-o-f"></i>`,
-        'warn-f': `<i class="${prefix}icon-warn-o-f"></i>`,
-        'info-f': `<i class="${prefix}icon-info-o-f"></i>`,
-        'issue-f': `<i class="${prefix}icon-issue-o-f"></i>`,
+        succ: `<i class="${ax.prefix}icon-check-o"></i>`,
+        error: `<i class="${ax.prefix}icon-close-o"></i>`,
+        warn: `<i class="${ax.prefix}icon-warn-o"></i>`,
+        info: `<i class="${ax.prefix}icon-info-o"></i>`,
+        issue: `<i class="${ax.prefix}icon-issue-o"></i>`,
+        'succ-t': `<i class="${ax.prefix}icon-check-o-t"></i>`,
+        'error-t': `<i class="${ax.prefix}icon-close-o-t"></i>`,
+        'warn-t': `<i class="${ax.prefix}icon-warn-o-t"></i>`,
+        'info-t': `<i class="${ax.prefix}icon-info-o-t"></i>`,
+        'issue-t': `<i class="${ax.prefix}icon-issue-o-t"></i>`,
+        'succ-f': `<i class="${ax.prefix}icon-check-o-f"></i>`,
+        'error-f': `<i class="${ax.prefix}icon-close-o-f"></i>`,
+        'warn-f': `<i class="${ax.prefix}icon-warn-o-f"></i>`,
+        'info-f': `<i class="${ax.prefix}icon-info-o-f"></i>`,
+        'issue-f': `<i class="${ax.prefix}icon-issue-o-f"></i>`,
     },
     svg: {
-        succ: `<svg class="${prefix}svg-succ" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${prefix}line ${prefix}bg" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}out" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}in-1" d="M26.316,42.859L37.9984,54.5414L60.3826,32.1572"></path></svg>`,
-        error: `<svg class="${prefix}svg-error" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${prefix}line ${prefix}bg" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}out" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}in-1" d="M28.774,57.9246L57.9247,28.7739"></path><path class="${prefix}line ${prefix}in-2" d="M57.9246,57.9246L28.7739,28.7739"></path></svg>`,
-        warn: `<svg class="${prefix}svg-warn" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${prefix}line ${prefix}bg" d="M43.4611 7.24c2.8081,0.0924 4.39,1.7 5.3045,3.1159l17.4543 29.9414 17.3445 29.7538c0.5448,1.0193 1.596,4.0544 0.1109,6.4168 -1.4849,2.3626 -3.6815,2.9155 -5.3768,2.992l-34.9082 0.0002 -34.6892 -0.0002c-1.1636,-0.0421 -4.3433,-0.6583 -5.6666,-3.1131 -1.3232,-2.4549 -0.7085,-4.6157 0.0723,-6.1078l17.454 -29.9417 17.3449 -29.7537c0.6185,-0.977 2.7471,-3.396 5.5554,-3.3036z"></path><path class="${prefix}line ${prefix}out" d="M43.4611 7.24c2.8081,0.0924 4.39,1.7 5.3045,3.1159l17.4543 29.9414 17.3445 29.7538c0.5448,1.0193 1.596,4.0544 0.1109,6.4168 -1.4849,2.3626 -3.6815,2.9155 -5.3768,2.992l-34.9082 0.0002 -34.6892 -0.0002c-1.1636,-0.0421 -4.3433,-0.6583 -5.6666,-3.1131 -1.3232,-2.4549 -0.7085,-4.6157 0.0723,-6.1078l17.454 -29.9417 17.3449 -29.7537c0.6185,-0.977 2.7471,-3.396 5.5554,-3.3036z"></path><path class="${prefix}line ${prefix}in-1" d="M43.3493,27.8713L43.3493,57.2858"></path><circle class="${prefix}circle ${prefix}in-2" cx="43.3492" cy="64.3337" r="2.1166"></circle></svg>`,
-        info: `<svg class="${prefix}svg-info" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${prefix}line ${prefix}bg" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}out" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}in-1" d="M43.3493,65.0602L43.3493,30.9723"></path><circle class="${prefix}circle ${prefix}in-2" cx="43.3492" cy="23.5856" r="2.1166"></circle></svg>`,
-        issue: `<svg class="${prefix}svg-issue" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${prefix}line ${prefix}bg" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}out" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${prefix}line ${prefix}in-1" d="M32.3757 35.7255c-0.2203,-11.823 12.5789,-14.1087 18.4056,-9.4189 5.4663,4.3995 4.7426,12.804 -3.1088,17.9938 -3.0015,1.9839 -3.0003,3.8403 -3.0003,10.1707"></path><circle class="${prefix}circle ${prefix}in-2" cx="44.6612" cy="60.5502" r="2.1166"></circle></svg>`,
+        succ: `<svg class="${ax.prefix}svg-succ" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${ax.prefix}line ${ax.prefix}bg" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${ax.prefix}line ${ax.prefix}out" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${ax.prefix}line ${ax.prefix}in-1" d="M26.316,42.859L37.9984,54.5414L60.3826,32.1572"></path></svg>`,
+        error: `<svg class="${ax.prefix}svg-error" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${ax.prefix}line ${ax.prefix}bg" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${ax.prefix}line ${ax.prefix}out" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${ax.prefix}line ${ax.prefix}in-1" d="M28.774,57.9246L57.9247,28.7739"></path><path class="${ax.prefix}line ${ax.prefix}in-2" d="M57.9246,57.9246L28.7739,28.7739"></path></svg>`,
+        warn: `<svg class="${ax.prefix}svg-warn" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${ax.prefix}line ${ax.prefix}bg" d="M43.4611 7.24c2.8081,0.0924 4.39,1.7 5.3045,3.1159l17.4543 29.9414 17.3445 29.7538c0.5448,1.0193 1.596,4.0544 0.1109,6.4168 -1.4849,2.3626 -3.6815,2.9155 -5.3768,2.992l-34.9082 0.0002 -34.6892 -0.0002c-1.1636,-0.0421 -4.3433,-0.6583 -5.6666,-3.1131 -1.3232,-2.4549 -0.7085,-4.6157 0.0723,-6.1078l17.454 -29.9417 17.3449 -29.7537c0.6185,-0.977 2.7471,-3.396 5.5554,-3.3036z"></path><path class="${ax.prefix}line ${ax.prefix}out" d="M43.4611 7.24c2.8081,0.0924 4.39,1.7 5.3045,3.1159l17.4543 29.9414 17.3445 29.7538c0.5448,1.0193 1.596,4.0544 0.1109,6.4168 -1.4849,2.3626 -3.6815,2.9155 -5.3768,2.992l-34.9082 0.0002 -34.6892 -0.0002c-1.1636,-0.0421 -4.3433,-0.6583 -5.6666,-3.1131 -1.3232,-2.4549 -0.7085,-4.6157 0.0723,-6.1078l17.454 -29.9417 17.3449 -29.7537c0.6185,-0.977 2.7471,-3.396 5.5554,-3.3036z"></path><path class="${ax.prefix}line ${ax.prefix}in-1" d="M43.3493,27.8713L43.3493,57.2858"></path><circle class="${ax.prefix}circle ${ax.prefix}in-2" cx="43.3492" cy="64.3337" r="2.1166"></circle></svg>`,
+        info: `<svg class="${ax.prefix}svg-info" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${ax.prefix}line ${ax.prefix}bg" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${ax.prefix}line ${ax.prefix}out" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${ax.prefix}line ${ax.prefix}in-1" d="M43.3493,65.0602L43.3493,30.9723"></path><circle class="${ax.prefix}circle ${ax.prefix}in-2" cx="43.3492" cy="23.5856" r="2.1166"></circle></svg>`,
+        issue: `<svg class="${ax.prefix}svg-issue" xmlns="http://www.w3.org/2000/svg" width="86.6986mm" height="86.6986mm" viewBox="0 0 86.6986 86.6986"><path class="${ax.prefix}line ${ax.prefix}bg" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${ax.prefix}line ${ax.prefix}out" d="M7.238500000000002,43.3493A36.1108,36.1108 0,1,1 79.4601,43.3493A36.1108,36.1108 0,1,1 7.238500000000002,43.3493"></path><path class="${ax.prefix}line ${ax.prefix}in-1" d="M32.3757 35.7255c-0.2203,-11.823 12.5789,-14.1087 18.4056,-9.4189 5.4663,4.3995 4.7426,12.804 -3.1088,17.9938 -3.0015,1.9839 -3.0003,3.8403 -3.0003,10.1707"></path><circle class="${ax.prefix}circle ${ax.prefix}in-2" cx="44.6612" cy="60.5502" r="2.1166"></circle></svg>`,
     }
 };
-
-const getFullGap = () => getComputedVar(`--${prefix}g-full`);
 
 const propsMap = {
     x: { axis: 'x', position: 'left', start: 'insetInlineStart', startAlt: 'inset-inline-start', overflow: 'overflowX', inner: 'clientWidth', outer: 'offsetWidth', scroll: 'scrollLeft', client: 'clientX', size: 'width', index: 4, offset: 'offsetLeft', gap: 'marginInlineStart' },
     y: { axis: 'y', position: 'top', start: 'insetBlockStart', startAlt: 'inset-block-start', overflow: 'overflowY', inner: 'clientHeight', outer: 'offsetHeight', scroll: 'scrollTop', client: 'clientY', size: 'height', index: 5, offset: 'offsetTop', gap: 'marginBlockStart' }
+};
+
+const getEl = (obj, wrap) => {
+    let objType = getDataType(obj), parType = getDataType(wrap), parent = parType.includes('HTML') ? wrap : document.querySelector(wrap), result = null;
+    if (obj) {
+        if (objType.includes('HTML')) {
+            result = obj;
+        }
+        else if (objType === 'String') {
+            try {
+                result = (parent || document).querySelector(obj.trim());
+            }
+            catch {
+                result = null;
+            }
+        }
+    }
+    return result;
 };
 
 const instance = {
@@ -1415,6 +1094,66 @@ const createEl = (name, attrs, content) => {
     return rootEl;
 };
 
+const parseStr = ({ content = '', type = 'object', method = config.parser, catchable = false, error }) => {
+    
+    let result = type === 'object' ? {} : type === 'array' ? [] : null;
+    if (!content)
+        return result;
+    let trim = content.trim();
+    
+    try {
+        let tmp = typeof method === 'function' ? method(trim) : method === 'JSON.parse' ? JSON.parse(trim) : new Function(`"use strict"; return ${trim}`)();
+        result = tmp;
+    }
+    catch (err) {
+        error && error(err);
+        if (catchable)
+            throw err;
+    }
+    return result;
+};
+
+const strToJson = (str, type = 'object') => {
+    let dft = type === 'array' ? [] : {};
+    if (typeof str !== 'string')
+        return dft;
+    str = str.trim();
+    if (!str)
+        return dft;
+    str = (str.startsWith('[') && str.endsWith(']')) || (str.startsWith('{') && str.endsWith('}')) ? str : `{${str}}`;
+    try {
+        return parseStr({
+            content: str,
+            type,
+            catchable: true,
+        });
+    }
+    catch {
+        return dft;
+    }
+};
+
+const attrToJson = (elem, attr) => {
+    requireTypes(attr, 'string');
+    let el = getEl(elem), elAttr = el.getAttribute(attr), result = {};
+    if (el && attr && elAttr) {
+        result = strToJson(elAttr);
+    }
+    return result;
+};
+
+const extend = ({ target = {}, source = {}, host = null, attr = '' }) => {
+    let targetType = getDataType(target), el = getEl(host);
+    if (targetType !== 'Object') {
+        return target;
+    }
+    else {
+        source && deepMerge(target, source);
+        el && attr && deepMerge(target, attrToJson(el, attr));
+    }
+    return target;
+};
+
 const trim = (str, placement) => {
     requireTypes(str, 'string');
     return placement === 'start' ? str.trimStart() :
@@ -1487,7 +1226,7 @@ const ajax = (options) => {
     };
     extend({ target: dft, source: options });
     !dft.type && (dft.type = 'post');
-    let label = createEl('span', { [alias]: 'message' }), target = getEl(dft.target);
+    let label = createEl('span', { [ax.alias]: 'message' }), target = getEl(dft.target);
     target && (target.innerHTML = '', target.appendChild(label));
     let dftAbort = () => {
         target ? label.innerHTML = config.lang.ajax.abort : console.warn('The request has been suspended!');
@@ -1572,21 +1311,31 @@ const ajax = (options) => {
             dft.cb && dft.cb(resp);
         };
         successFun = (resp) => {
-            if ((dft.repeat.max && dft.repeat.keyword) && (ax.ajaxStorage[dft.repeat.index] < dft.repeat.max) && (typeof resp.content === 'string' && resp.content.includes(dft.repeat.keyword))) {
-                ajax(dft);
-                ax.ajaxStorage[dft.repeat.index]++;
-            }
-            else {
-                ax.ajaxStorage[dft.repeat.index] = 0;
-                if (spinEls.length > 0) {
-                    for (let k of spinEls)
-                        k.removeAttribute(config.attrs.ajaxSpin);
+            if (dft.repeat.max && dft.repeat.keyword && typeof resp.content === 'string') {
+                if (ax.ajaxStor[dft.repeat.index] < dft.repeat.max &&
+                    resp.content.includes(dft.repeat.keyword)) {
+                    if (isNull(ax.ajaxStor[dft.repeat.index])) {
+                        ax.ajaxStor.push(0);
+                        dft.repeat.index = ax.ajaxStor.length - 1;
+                    }
+                    else {
+                        ax.ajaxStor[dft.repeat.index]++;
+                    }
+                    ajax(dft);
+                    return;
                 }
-                target && target.setAttribute(config.attrs.ajaxState, 'success');
-                !isEmpty(dft.success) ? dft.success(resp) : dftSuccess(resp);
-                resolve(resp);
-                dft.cb && dft.cb(resp);
+                else {
+                    ax.ajaxStor[dft.repeat.index] = 0;
+                }
             }
+            if (spinEls.length > 0) {
+                for (let k of spinEls)
+                    k.removeAttribute(config.attrs.ajaxSpin);
+            }
+            target && target.setAttribute(config.attrs.ajaxState, 'success');
+            !isEmpty(dft.success) ? dft.success(resp) : dftSuccess(resp);
+            resolve(resp);
+            dft.cb && dft.cb(resp);
         };
         xhr.addEventListener('timeout', timeoutFun);
         xhr.onreadystatechange = function () {
@@ -1750,8 +1499,8 @@ const ul2Tree = (el, type = 'tree') => {
         });
         return data;
     }, getJson = (elem) => {
-        let obj = { node: elem.firstElementChild }, tmpLabel = obj.node.querySelector(`:scope> [${alias}="label"]`), tmpBadge = obj.node.querySelector(`:scope> [${alias}="badge"]`) || obj.node.querySelector(`:scope> AX-BADGE`), tmpTips = obj.node.querySelector(`:scope> [${alias}="tips"]`), tmpIcon = obj.node.querySelector(`:scope> [${alias}="icon"]`), tmpDisk = obj.node.querySelector(`:scope> [${alias}="disk"]`), tmpCube = obj.node.querySelector(`:scope> [${alias}="cube"]`), tmpCustom = obj.node.querySelector(`:scope> [${alias}="custom"]`), tmpBrief = elem.querySelector(`:scope> .${prefix}${type}-brief`), tmpCont = elem.querySelector(`:scope> .${prefix}${type}-cont`), tmpExtra = elem.querySelector(`:scope> .${prefix}${type}-extra`);
-        obj.node.classList.contains(`${prefix}${type}-head`) && (obj.headEl = obj.node);
+        let obj = { node: elem.firstElementChild }, tmpLabel = obj.node.querySelector(`:scope> [${ax.alias}="label"]`), tmpBadge = obj.node.querySelector(`:scope> [${ax.alias}="badge"]`) || obj.node.querySelector(`:scope> AX-BADGE`), tmpTips = obj.node.querySelector(`:scope> [${ax.alias}="tips"]`), tmpIcon = obj.node.querySelector(`:scope> [${ax.alias}="icon"]`), tmpDisk = obj.node.querySelector(`:scope> [${ax.alias}="disk"]`), tmpCube = obj.node.querySelector(`:scope> [${ax.alias}="cube"]`), tmpCustom = obj.node.querySelector(`:scope> [${ax.alias}="custom"]`), tmpBrief = elem.querySelector(`:scope> .${ax.prefix}${type}-brief`), tmpCont = elem.querySelector(`:scope> .${ax.prefix}${type}-cont`), tmpExtra = elem.querySelector(`:scope> .${ax.prefix}${type}-extra`);
+        obj.node.classList.contains(`${ax.prefix}${type}-head`) && (obj.headEl = obj.node);
         tmpLabel && (obj.labelEl = tmpLabel);
         tmpBadge && (obj.badgeEl = tmpBadge);
         tmpTips && (obj.tipsEl = tmpTips);
@@ -1801,17 +1550,17 @@ const getContent = async function (opts) {
         }
         return result;
     }, getIframe = (src) => {
-        let dft = { src }, iframe = createEl('iframe', Object.assign(dft, opts.contData)), media = createEl('div', { [alias]: 'media' }, iframe);
-        return createEl('div', { class: `${prefix}box-iframe` }, media);
+        let dft = { src }, iframe = createEl('iframe', Object.assign(dft, opts.contData)), media = createEl('div', { [ax.alias]: 'media' }, iframe);
+        return createEl('div', { class: `${ax.prefix}box-iframe` }, media);
     }, getImage = (src) => {
-        let dft = { src }, image = createEl('img', Object.assign(dft, opts.contData)), media = createEl('div', { [alias]: 'media' }, image);
-        return createEl('div', { class: `${prefix}box-image` }, media);
+        let dft = { src }, image = createEl('img', Object.assign(dft, opts.contData)), media = createEl('div', { [ax.alias]: 'media' }, image);
+        return createEl('div', { class: `${ax.prefix}box-image` }, media);
     }, getVideo = (src) => {
-        let dft = { src, controls: 'controls' }, video = createEl('video', Object.assign(dft, opts.contData)), media = createEl('div', { [alias]: 'media' }, video);
-        return createEl('div', { class: `${prefix}box-video` }, media);
+        let dft = { src, controls: 'controls' }, video = createEl('video', Object.assign(dft, opts.contData)), media = createEl('div', { [ax.alias]: 'media' }, video);
+        return createEl('div', { class: `${ax.prefix}box-video` }, media);
     }, getAudio = (src) => {
-        let dft = { src, controls: 'controls' }, audio = createEl('audio', Object.assign(dft, opts.contData)), media = createEl('div', { [alias]: 'media' }, audio);
-        return createEl('div', { class: `${prefix}box-audio` }, media);
+        let dft = { src, controls: 'controls' }, audio = createEl('audio', Object.assign(dft, opts.contData)), media = createEl('div', { [ax.alias]: 'media' }, audio);
+        return createEl('div', { class: `${ax.prefix}box-audio` }, media);
     }, getMedias = (type) => {
         let map = {
             iframe: getIframe,
@@ -2176,7 +1925,8 @@ const optBubble = [
         prop: 'padding',
         value: {
             enable: true,
-            value: '',
+            body: true,
+            foot: true,
         }
     },
     {
@@ -2845,7 +2595,7 @@ const breakpoints = (obj, points) => {
                 ~~tmp <= width && valids.push(value);
             }
             else if (key.startsWith('destop')) {
-                JSON.parse(tmp) !== isMobi && valids.push(value);
+                JSON.parse(tmp) !== ax.isTouchScr && valids.push(value);
             }
         }
         else {
@@ -2954,7 +2704,7 @@ const contains = (child, parent) => {
 
 const getRtl = () => {
     if (!ax.hasOwnProperty(ax.rtl)) {
-        let tmp = getComputedVar(`--${prefix}dir-coef`);
+        let tmp = getComputedVar(`--${ax.prefix}dir-coef`);
         ax.rtl = tmp == '-1' ? true : false;
     }
     return ax.rtl;
@@ -3012,7 +2762,7 @@ class ModBase {
     }
     
     isComp(elem) {
-        return elem.getAttribute(alias) === 'slot-host';
+        return elem.getAttribute(ax.alias) === 'slot-host';
     }
     
     getElOptsMap(elem) {
@@ -3068,12 +2818,12 @@ class ModBase {
         elem.children.length === 1 && (this.rawEl = elem.children[0]);
     }
     replaceMult(str = '', arr, opts = {}) {
-        let options = Object.assign({ ignore: true, nodename: 'i' }, opts), regx = new RegExp(`(${arr.join('|')})`, `g${options.ignore ? 'i' : ''}`), tmp = `<${options.nodename} ${alias}="mark"${options.classes ? ' class="' + options.classes + '"' : ''}>$1</${options.nodename}>`;
+        let options = Object.assign({ ignore: true, nodename: 'i' }, opts), regx = new RegExp(`(${arr.join('|')})`, `g${options.ignore ? 'i' : ''}`), tmp = `<${options.nodename} ${ax.alias}="mark"${options.classes ? ' class="' + options.classes + '"' : ''}>$1</${options.nodename}>`;
         return (str + '').replace(regx, tmp);
         
     }
     parseLayout(host = this.targetEl, template = '', map = {}) {
-        let target = getEl(host), holder = createEl('i', { [alias]: 'holder' }), gap = createEl('i', { [alias]: 'gap' }), condition = (key) => key === 'holder' ? holder.cloneNode(true) : key === 'gap' ? gap.cloneNode(true) : map[key], getNodes = (str) => str.split('|').map(condition).filter(Boolean);
+        let target = getEl(host), holder = createEl('i', { [ax.alias]: 'holder' }), gap = createEl('i', { [ax.alias]: 'gap' }), condition = (key) => key === 'holder' ? holder.cloneNode(true) : key === 'gap' ? gap.cloneNode(true) : map[key], getNodes = (str) => str.split('|').map(condition).filter(Boolean);
         if (!target || !template || isEmpty(map))
             return;
         if (template.includes('(') && template.includes(')')) {
@@ -3178,7 +2928,7 @@ class ModBase {
         this.on('initiate', () => {
             this.destroyed = false;
             this.updateOpts(spread);
-            this.targetEl && this.targetEl.classList.add(`${prefix}initiated`);
+            this.targetEl && this.targetEl.classList.add(`${ax.prefix}initiated`);
             this.options.hasOwnProperty('tplStr') && this.useTpl();
         });
         this.on('initiated', () => {
@@ -3594,34 +3344,34 @@ const bulletTools = {
     getIBulletTpl: (global = {}) => {
         return `
         {{let   value = this.value?'value="'+ this.value +'"':this.label?'value="'+ this.label +'"':'',
-                custom =this.custom?'<span ${alias}="custom">'+this.custom+'</span>':'',
+                custom =this.custom?'<span ${ax.alias}="custom">'+this.custom+'</span>':'',
                 badge = this.badge?'<ax-badge>'+this.badge+'</ax-badge>':'',
-                tips =this.tips?'<i ${alias}="tips">'+this.tips+'</i>':'',
-                arrow=this.arrow?'<i class="'+this.arrow+'" ${alias}="arrow"></i>':'',
+                tips =this.tips?'<i ${ax.alias}="tips">'+this.tips+'</i>':'',
+                arrow=this.arrow?'<i class="'+this.arrow+'" ${ax.alias}="arrow"></i>':'',
                 type = this.type || "${global.type}",
                 check = this.checked && !['checkboxes','radios'].includes(type) ?'checked':'',
                 name = this.name?'name="'+this.name+'"':'name="${ax.namePfx}${Date.now()}"',
-                icon = this.icon?'<i ${alias}="icon" class="'+this.icon+'"></i>':'',
-                disk = this.disk?'<span ${alias}="disk"><img src="'+this.disk+'"></span>':'',
-                cube = this.cube?'<span ${alias}="cube"><img src="'+this.cube+'"></span>':'',
+                icon = this.icon?'<i ${ax.alias}="icon" class="'+this.icon+'"></i>':'',
+                disk = this.disk?'<span ${ax.alias}="disk"><img src="'+this.disk+'"></span>':'',
+                cube = this.cube?'<span ${ax.alias}="cube"><img src="'+this.cube+'"></span>':'',
                 selected=this.selected?'selected':'',
                 active=this.active?'active':'',
                 disabled=this.disabled?'disabled':''; 
         /}}
         <${global.childNode}>
-                    <div class="${prefix}bullet" ${global.unpadded ? 'unpadded' : ''} ${global.hoverable ? 'hoverable' : ''}  ${global.multiline ? 'multiline' : ''} {{value}} {{selected}} {{active}} {{check}}  {{disabled}}>
+                    <div class="${ax.prefix}bullet" ${global.unpadded ? 'unpadded' : ''} ${global.hoverable ? 'hoverable' : ''}  ${global.multiline ? 'multiline' : ''} {{value}} {{selected}} {{active}} {{check}}  {{disabled}}>
                     {{icon}}
                     {{disk}}
                     {{cube}}
-                    <div class="${prefix}bullet-body">
+                    <div class="${ax.prefix}bullet-body">
                         {{if(type ==='checkboxes'){/}}
                             <ax-checkbox {{name}} {{this.checked?'check="ed"':''}} {{value}}>{{this.label}}</ax-checkbox>
                         {{}else if (type ==='radios'){/}}
                             <ax-radio {{name}} {{this.checked?'check="ed"':''}} {{value}}>{{this.label}}</ax-radio>
                         {{}else if(this.href){/}}
-                            <a ${alias}="label" href="{{this.href}}" {{this.target?'target="'+ this.target +'"':''}} {{this.rel?'rel="'+ this.rel +'"':''}}>{{this.label}}</a>
+                            <a ${ax.alias}="label" href="{{this.href}}" {{this.target?'target="'+ this.target +'"':''}} {{this.rel?'rel="'+ this.rel +'"':''}}>{{this.label}}</a>
                         {{}else{/}}
-                            <span ${alias}="label">{{this.label}}</span>
+                            <span ${ax.alias}="label">{{this.label}}</span>
                         {{}/}}
                     </div>
                     {{custom}}
@@ -3637,11 +3387,11 @@ const bulletTools = {
     getBulletsTpl: function (global = {}) {
         let grid = '';
         if (global.cols > 0) {
-            grid = `${prefix}grid  ${prefix}avg-${global.cols}`;
-            grid += global.lines === 'fence' ? ` ${prefix}fence` : global.lines === 'fluid' ? ` ${prefix}fluid` : '';
+            grid = `${ax.prefix}grid  ${ax.prefix}avg-${global.cols}`;
+            grid += global.lines === 'fence' ? ` ${ax.prefix}fence` : global.lines === 'fluid' ? ` ${ax.prefix}fluid` : '';
         }
         return `
-        <${global.parentNode} class="${prefix}reset ${grid}">
+        <${global.parentNode} class="${ax.prefix}reset ${grid}">
             {{for(let k of this){/}}
                 ${this.getIBulletTpl(global).replaceAll('this.', 'k.')}
             {{}/}}
@@ -3652,7 +3402,7 @@ const bulletTools = {
         if (isEmpty(target)) {
             return [];
         }
-        return getEls(`.${prefix}bullet`, target);
+        return getEls(`.${ax.prefix}bullet`, target);
     },
     getChecked: function (nodes) {
         let result = [];
@@ -3759,7 +3509,7 @@ const bulletTools = {
 
 const createBtns = (data, parent, settings = {}, refer) => {
     
-    let target = getEl(parent), wrapEl = createEl('div', { class: `${prefix}box-btns` }), map = {
+    let target = getEl(parent), wrapEl = createEl('div', { class: `${ax.prefix}box-btns` }), map = {
         submit: {
             name: 'submit',
             label: config.lang.button.submit,
@@ -3802,7 +3552,7 @@ const createBtns = (data, parent, settings = {}, refer) => {
         }, setProp = (type) => { type && !isNull(props[type]) && (dft[type] = props[type]); }, propArr = ['type', 'theme', 'size', 'width', 'shape', 'check', 'icon', 'tail', 'disk', 'cube', 'tips', 'mean', 'disabled', 'shaded', 'grad'];
         for (let k of propArr)
             setProp(k);
-        props.name && (dft[alias] = props.name);
+        props.name && (dft[ax.alias] = props.name);
         props.hasOwnProperty('badge') && (dft.badge = props.badge);
         !isNull(props.href) && (dft.href = props.href);
         props.target && !isNull(props.href) && (dft.target = props.target);
@@ -3820,7 +3570,7 @@ const createBtns = (data, parent, settings = {}, refer) => {
         data[i] = result;
     });
     if (target) {
-        let tmp = target.querySelector(`.${prefix}box-btns`);
+        let tmp = target.querySelector(`.${ax.prefix}box-btns`);
         tmp && tmp.remove();
         target.appendChild(wrapEl);
     }
@@ -3832,7 +3582,7 @@ const createFooter = ({ nodeName = 'div', layout = 'center', attrs, tips = false
     divider = spreadBool(divider, {});
     padding = spreadBool(padding, {});
     tips = spreadBool(tips, { html: config.lang.placehold.tips });
-    let target = getEl(parent), outer, footerEl = createEl(nodeName, Object.assign({ class: `${prefix}bubble-footer`, layout }, attrs)), dividerEl = divider.enable ? createEl(divider.nodeName || 'ax-line', Object.assign({ [alias]: 'divider' }, divider.attrs)) : null, paddingEl = padding.enable ? createEl(padding.nodeName || 'div', Object.assign({ class: `${prefix}p`, [alias]: 'padding' }, padding.attrs)) : null, tipsEl = tips.enable ? createEl(tips.nodeName || 'div', Object.assign({ [alias]: 'tips' }, tips.attrs), tips.html) : null, wrapEl = createEl('div', { class: `${prefix}bubble-footer-wrap` });
+    let target = getEl(parent), outer, footerEl = createEl(nodeName, Object.assign({ class: `${ax.prefix}bubble-footer`, layout }, attrs)), dividerEl = divider.enable ? createEl(divider.nodeName || 'ax-line', Object.assign({ [ax.alias]: 'divider' }, divider.attrs)) : null, paddingEl = padding.enable ? createEl(padding.nodeName || 'div', Object.assign({ class: `${ax.prefix}p`, [ax.alias]: 'padding' }, padding.attrs)) : null, tipsEl = tips.enable ? createEl(tips.nodeName || 'div', Object.assign({ [ax.alias]: 'tips' }, tips.attrs), tips.html) : null, wrapEl = createEl('div', { class: `${ax.prefix}bubble-footer-wrap` });
     footerEl.setAttribute('layout', layout);
     dividerEl && footerEl.appendChild(dividerEl);
     paddingEl ? (footerEl.appendChild(paddingEl), outer = paddingEl) : (outer = footerEl);
@@ -3842,7 +3592,7 @@ const createFooter = ({ nodeName = 'div', layout = 'center', attrs, tips = false
     }
     tipsEl && wrapEl.appendChild(tipsEl);
     if (target) {
-        let tmp = target.querySelector(`.${prefix}bubble-footer`);
+        let tmp = target.querySelector(`.${ax.prefix}bubble-footer`);
         tmp && tmp.remove();
         target.appendChild(footerEl);
     }
@@ -3851,70 +3601,70 @@ const createFooter = ({ nodeName = 'div', layout = 'center', attrs, tips = false
 
 const createTools = (data, parent, refer) => {
     
-    let target = getEl(parent), toolsEl = createEl('span', { class: `${prefix}box-tools` }), tipsIns, map = {
+    let target = getEl(parent), toolsEl = createEl('span', { class: `${ax.prefix}box-tools` }), tipsIns, map = {
         add: {
             name: 'add',
-            icon: `${prefix}icon-plus`,
+            icon: `${ax.prefix}icon-plus`,
         },
         close: {
             name: 'close',
-            icon: `${prefix}icon-close`,
+            icon: `${ax.prefix}icon-close`,
         },
         remove: {
             name: 'remove',
-            icon: `${prefix}icon-trash`,
+            icon: `${ax.prefix}icon-trash`,
         },
         edit: {
             name: 'edit',
-            icon: `${prefix}icon-edit`,
+            icon: `${ax.prefix}icon-edit`,
         },
         update: {
             name: 'update',
-            icon: `${prefix}icon-refresh`,
+            icon: `${ax.prefix}icon-refresh`,
         },
         move: {
             name: 'move',
-            icon: `${prefix}icon-drag`,
+            icon: `${ax.prefix}icon-drag`,
         },
         file: {
             name: 'file',
-            icon: `${prefix}icon-file`,
+            icon: `${ax.prefix}icon-file`,
         },
         folder: {
             name: 'folder',
-            icon: `${prefix}icon-folder`,
+            icon: `${ax.prefix}icon-folder`,
         },
         toggle: {
             name: 'toggle',
-            icon: `${prefix}icon-max`,
-            swap: `${prefix}icon-min`,
+            icon: `${ax.prefix}icon-max`,
+            swap: `${ax.prefix}icon-min`,
         },
         enlarge: {
             name: 'enlarge',
-            icon: `${prefix}icon-expand`,
-            swap: `${prefix}icon-collapse`,
+            icon: `${ax.prefix}icon-expand`,
+            swap: `${ax.prefix}icon-collapse`,
         },
         widen: {
             name: 'widen',
-            icon: `${prefix}icon-expand-h`,
-            swap: `${prefix}icon-collapse-h`,
+            icon: `${ax.prefix}icon-expand-h`,
+            swap: `${ax.prefix}icon-collapse-h`,
         },
         heighten: {
             name: 'heighten',
-            icon: `${prefix}icon-expand-v`,
-            swap: `${prefix}icon-collapse-v`,
+            icon: `${ax.prefix}icon-expand-v`,
+            swap: `${ax.prefix}icon-collapse-v`,
         }
     }, keys = Object.keys(map), renderFn = (props) => {
-        let dft = {}, arrow = props.extendable ? `<i ${alias}="arrow"></i>` : '', iconStr = props.icon ? `<i class="${props.icon}" ${alias}="icon"></i>` : '', diskStr = props.disk ? `<i ${alias}="disk"><img src="${props.disk}"/></i>` : '', cubeStr = props.cube ? `<i ${alias}="cube"><img src="${props.cube}"/></i>` : '', imageStr = props.image ? `<i ${alias}="image"><img src="${props.image}"/></i>` : '', label = props.label ? `<i ${alias}="label">${props.label}</i>` : '', html = iconStr + diskStr + cubeStr + imageStr + label + arrow;
-        props.name && (dft[alias] = props.name);
+        let dft = {}, arrow = props.extendable ? `<i ${ax.alias}="arrow"></i>` : '', iconStr = props.icon ? `<i class="${props.icon}" ${ax.alias}="icon"></i>` : '', diskStr = props.disk ? `<i ${ax.alias}="disk"><img src="${props.disk}"/></i>` : '', cubeStr = props.cube ? `<i ${ax.alias}="cube"><img src="${props.cube}"/></i>` : '', imageStr = props.image ? `<i ${ax.alias}="image"><img src="${props.image}"/></i>` : '', label = props.label ? `<i ${ax.alias}="label">${props.label}</i>` : '', html = iconStr + diskStr + cubeStr + imageStr + label + arrow;
+        props.name && (dft[ax.alias] = props.name);
         props.title && (dft.title = props.title);
         props.focusable && (dft.tabindex = 1);
         props.wrapEl = createEl(props.nodeName || 'span', Object.assign(dft, props.attrs), html);
-        props.iconEl = props.wrapEl.querySelector(`[${alias}="icon"]`);
-        props.cubeEl = props.wrapEl.querySelector(`[${alias}="cube"]`);
-        props.diskEl = props.wrapEl.querySelector(`[${alias}="disk"]`);
-        props.imageEl = props.wrapEl.querySelector(`[${alias}="image"]`);
-        props.labelEl = props.wrapEl.querySelector(`[${alias}="label"]`);
+        props.iconEl = props.wrapEl.querySelector(`[${ax.alias}="icon"]`);
+        props.cubeEl = props.wrapEl.querySelector(`[${ax.alias}="cube"]`);
+        props.diskEl = props.wrapEl.querySelector(`[${ax.alias}="disk"]`);
+        props.imageEl = props.wrapEl.querySelector(`[${ax.alias}="image"]`);
+        props.labelEl = props.wrapEl.querySelector(`[${ax.alias}="label"]`);
         !isEmpty(props.classes) && classes(props.wrapEl).add(props.classes);
         !isEmpty(props.styles) && (props.wrapEl.style.cssText += props.styles);
     };
@@ -3926,7 +3676,7 @@ const createTools = (data, parent, refer) => {
         data[i] = result;
     });
     if (target) {
-        let tmp = target.querySelector(`.${prefix}box-tools`);
+        let tmp = target.querySelector(`.${ax.prefix}box-tools`);
         tmp && tmp.remove();
         target.appendChild(toolsEl);
     }
@@ -4275,7 +4025,7 @@ class Message extends ModBaseListen {
     createParent = (placement) => {
         let parent = ax.messages.find((k) => k.placement === placement);
         if (!parent) {
-            this.parentEl = createEl('div', { class: `${prefix}message`, placement });
+            this.parentEl = createEl('div', { class: `${ax.prefix}message`, placement });
             this.options.classes && classes(this.parentEl).add(this.options.classes);
             ax.messages.push({ placement, el: this.parentEl });
         }
@@ -4299,7 +4049,7 @@ class Message extends ModBaseListen {
         this.targetEl = tplToEl(this.template);
     }
     getCloseBtns() {
-        for (let k of getEls(`[${alias}="closebubble"]`, this.targetEl))
+        for (let k of getEls(`[${ax.alias}="closebubble"]`, this.targetEl))
             k.onclick = () => this.hide();
     }
     
@@ -4775,7 +4525,7 @@ const formTools = {
             if (!opt.url)
                 throw new Error('The request url is required!');
             let btnEl = getEl(opt.button?.selector), btnText = btnEl ? btnEl.innerHTML : '', resume = () => {
-                formEl?.classList.remove(`${prefix}ajax-mask`);
+                formEl?.classList.remove(`${ax.prefix}ajax-mask`);
                 if (btnEl) {
                     if (opt?.button?.replace) {
                         btnEl.removeAttribute('inert');
@@ -4786,7 +4536,7 @@ const formTools = {
                     }
                 }
             };
-            if (formEl?.classList.contains(`${prefix}ajax-mask`))
+            if (formEl?.classList.contains(`${ax.prefix}ajax-mask`))
                 return;
             await ajax({
                 url: opt.url,
@@ -4796,7 +4546,7 @@ const formTools = {
                     opt.opened && opt.opened(response);
                 },
                 before: (response) => {
-                    formEl?.classList.add(`${prefix}ajax-mask`);
+                    formEl?.classList.add(`${ax.prefix}ajax-mask`);
                     if (btnEl) {
                         if (opt?.button?.replace === 'loading') {
                             btnEl.innerHTML = response.content;
@@ -5095,7 +4845,7 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
         if (Array.isArray(data) && typeof data[0] === 'string') {
             result = data.map((k) => { return { label: k }; });
         }
-        else if (typeof data === 'string' && !data.includes(`${prefix}bullet-body`)) {
+        else if (typeof data === 'string' && !data.includes(`${ax.prefix}bullet-body`)) {
             result = data.split(',').filter(Boolean).map((k) => { return { label: k }; });
         }
         return result;
@@ -5110,8 +4860,8 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
         this.listen({ name: 'render', params: [this.data] });
         let dataType = getDataType(this.data), tplEl = getEl(this.options.tplStr), template = tplEl?.innerHTML || this.options.tplStr || this.getBulletsTpl();
         if (dataType.includes('HTML') && ['image', 'iframe', 'audio', 'video'].includes(this.options.contType)) {
-            this.options.media.caption && this.data.insertAdjacentHTML('afterbegin', `<div ${alias}="caption">${this.options.media.caption}</div>`);
-            this.options.media.brief && this.data.insertAdjacentHTML('beforeend', `<div ${alias}="brief">${this.options.media.brief}</div>`);
+            this.options.media.caption && this.data.insertAdjacentHTML('afterbegin', `<div ${ax.alias}="caption">${this.options.media.caption}</div>`);
+            this.options.media.brief && this.data.insertAdjacentHTML('beforeend', `<div ${ax.alias}="brief">${this.options.media.brief}</div>`);
         }
         setContent({
             content: this.data,
@@ -5128,17 +4878,17 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
         
         this.mainEl = tplToEl(this.template);
         
-        this.wrapEl = this.mainEl.querySelector(`.${prefix}${name}-wrap`);
+        this.wrapEl = this.mainEl.querySelector(`.${ax.prefix}${name}-wrap`);
         
-        this.contEl = this.mainEl.querySelector(`.${prefix}${name}-cont`);
+        this.contEl = this.mainEl.querySelector(`.${ax.prefix}${name}-cont`);
         
-        this.bodyEl = this.mainEl.querySelector(`.${prefix}${name}-body`);
+        this.bodyEl = this.mainEl.querySelector(`.${ax.prefix}${name}-body`);
         
-        this.headEl = this.mainEl.querySelector(`.${prefix}${name}-head`);
+        this.headEl = this.mainEl.querySelector(`.${ax.prefix}${name}-head`);
         
-        this.footEl = this.mainEl.querySelector(`.${prefix}${name}-foot`);
+        this.footEl = this.mainEl.querySelector(`.${ax.prefix}${name}-foot`);
         
-        this.maskEl = this.mainEl.querySelector(`.${prefix}${name}-mask`);
+        this.maskEl = this.mainEl.querySelector(`.${ax.prefix}${name}-mask`);
         if (this.options.tools.enable) {
             createTools(this.options.tools.children, this.wrapEl, this);
         }
@@ -5168,28 +4918,28 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
     getTpl(name = 'popup') {
         return `
                             {{let noPadding = (this.padding.enable  && !this.bullet.enable) || (this.padding.enable && this.bullet.enable && this.bullet.cols>0 && this.bullet.lines==='fluid');/}}
-                            <div class="${prefix}${name}">
-                                {{ if(this?.mask?.enable){ /}}<div class="${prefix}${name}-mask"></div>{{ } /}}
-                                <div class="${prefix}${name}-wrap">
+                            <div class="${ax.prefix}${name}">
+                                {{ if(this?.mask?.enable){ /}}<div class="${ax.prefix}${name}-mask"></div>{{ } /}}
+                                <div class="${ax.prefix}${name}-wrap">
                                     {{ if(this.heading){ /}}
-                                        <div class="${prefix}${name}-head">{{ this.heading }}</div>
+                                        <div class="${ax.prefix}${name}-head">{{ this.heading }}</div>
                                         {{ } /}}
                                     {{ if(this.divider){ /}}
                                         <ax-line></ax-line>
                                         {{ } /}}
-                                    <div class="${prefix}${name}-body">
+                                    <div class="${ax.prefix}${name}-body">
                                         {{ if(this.padding.enable){ /}}
-                                            <div class="${prefix}${name}-padding {{ this.padding.value || '${prefix}p' }} "> 
+                                            <div class="${ax.prefix}${name}-padding {{ this.padding.value || '${ax.prefix}p' }} "> 
                                         {{ }else if(noPadding){ /}}
-                                            <div class="${prefix}${name}-padding"> 
+                                            <div class="${ax.prefix}${name}-padding"> 
                                         {{ } /}}
-                                                <div class="${prefix}${name}-cont"></div>
+                                                <div class="${ax.prefix}${name}-cont"></div>
                                         {{ if(noPadding || this.padding.enable){ /}}
                                             </div>
                                             {{ } /}}
                                     </div>
                                     {{ if((!this.bullet.enable && this.footer.enable) || (this.bullet.enable && ['custom','checkboxes','select-multi'].includes(this.bullet.type) && this.footer.enable)){ /}}
-                                    <div class="${prefix}${name}-foot {{ this.footer.layout !=='plain'? this.padding.value || '${prefix}p':'' }} "></div>
+                                    <div class="${ax.prefix}${name}-foot {{ this.footer.layout !=='plain'? this.padding.value || '${ax.prefix}p':'' }} "></div>
                                     {{ } /}}
                                 </div>
                             </div>
@@ -5420,7 +5170,7 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
         if (this.maskEl && this.options.mask.closable) {
             this.maskEl.removeEventListener('click', this.triggerShow);
         }
-        this.contEl.querySelectorAll(`[${alias}="closebubble"]`).forEach((k) => {
+        this.contEl.querySelectorAll(`[${ax.alias}="closebubble"]`).forEach((k) => {
             k.removeEventListener('click', this.triggerClose);
         });
         if (this.bubbleType === 'dialog' && ['confirm', 'alert'].includes(this.options.feature)) {
@@ -5550,7 +5300,7 @@ class Drawer extends ModBaseListenCacheBubble {
         this.handleFooter();
         this.handleTools();
         this.bindTrigger();
-        this.contEl.querySelectorAll(`[${alias}="closebubble"]`).forEach((k) => {
+        this.contEl.querySelectorAll(`[${ax.alias}="closebubble"]`).forEach((k) => {
             k.removeEventListener('click', this.triggerClose);
             k.addEventListener('click', this.triggerClose, false);
         });
@@ -5561,7 +5311,7 @@ class Drawer extends ModBaseListenCacheBubble {
     handleTools() {
         if (this.options.tools.enable) {
             this.options.tools.children.forEach((k) => {
-                k.wrapEl.querySelector(`[${alias}="icon"]`);
+                k.wrapEl.querySelector(`[${ax.alias}="icon"]`);
                 if (k.name === 'close') {
                     k.wrapEl.onclick = () => {
                         this.hide();
@@ -6305,7 +6055,7 @@ const throttle = (fn, options) => {
 
 const debounce = (fn, options) => {
     let dft = { delay: config.debounce, prevent: false, auto: false }, opts = stdParam(options, dft, 'delay');
-    if (isMobi && opts.auto) {
+    if (ax.isTouchScr && opts.auto) {
         return throttle(fn, { intvl: opts.delay, prevent: opts.prevent });
     }
     else {
@@ -6671,7 +6421,7 @@ const treeTools = {
             source.headEl.insertAdjacentElement('afterEnd', source.childrenEl);
         }
         if (!source.arrowEl) {
-            source.arrowEl = createEl('i', { [alias]: 'arrow' });
+            source.arrowEl = createEl('i', { [ax.alias]: 'arrow' });
             source.headEl.insertAdjacentElement(arrowEnd ? 'beforeEnd' : 'afterBegin', source.arrowEl);
         }
     },
@@ -6974,7 +6724,7 @@ const getAttrArr = (val, dft = '') => {
         let tmp = val.trim();
         try {
             if (tmp === '' || tmp === 'true') {
-                result = dft.split(',').filter(Boolean);
+                dft && (result = dft.split(',').filter(Boolean));
             }
             else {
                 let val = parseStr({
@@ -7081,10 +6831,10 @@ let theme = {
         let rootDom = document.querySelector(":root");
         for (let k in hslaObj) {
             if (hslaObj.hasOwnProperty(k) && hslaObj[k].length > 2) {
-                rootDom.style.setProperty(`--${prefix}h-${k}`, hslaObj[k][0]);
-                rootDom.style.setProperty(`--${prefix}s-${k}`, typeof hslaObj[k][1] === 'string' && hslaObj[k][1].includes('%') ? hslaObj[k][1] : hslaObj[k][1] + '%');
-                rootDom.style.setProperty(`--${prefix}l-${k}`, typeof hslaObj[k][2] === 'string' && hslaObj[k][2].includes('%') ? hslaObj[k][2] : hslaObj[k][2] + '%');
-                rootDom.style.setProperty(`--${prefix}a-${k}`, hslaObj[k][3]);
+                rootDom.style.setProperty(`--${ax.prefix}h-${k}`, hslaObj[k][0]);
+                rootDom.style.setProperty(`--${ax.prefix}s-${k}`, typeof hslaObj[k][1] === 'string' && hslaObj[k][1].includes('%') ? hslaObj[k][1] : hslaObj[k][1] + '%');
+                rootDom.style.setProperty(`--${ax.prefix}l-${k}`, typeof hslaObj[k][2] === 'string' && hslaObj[k][2].includes('%') ? hslaObj[k][2] : hslaObj[k][2] + '%');
+                rootDom.style.setProperty(`--${ax.prefix}a-${k}`, hslaObj[k][3]);
             }
         }
         name ? storage.set(name, hslaObj) : null;
@@ -7092,10 +6842,10 @@ let theme = {
     get: function () {
         let getValue = (type) => {
             return [
-                getComputedVar(`--${prefix}h-${type}`),
-                getComputedVar(`--${prefix}s-${type}`),
-                getComputedVar(`--${prefix}l-${type}`),
-                getComputedVar(`--${prefix}a-${type}`),
+                getComputedVar(`--${ax.prefix}h-${type}`),
+                getComputedVar(`--${ax.prefix}s-${type}`),
+                getComputedVar(`--${ax.prefix}l-${type}`),
+                getComputedVar(`--${ax.prefix}a-${type}`),
             ].map(k => {
                 let val = k.trim();
                 return val.includes('%') ? val : Number(val);
@@ -7365,10 +7115,10 @@ const isScrollUp = (event, detailName = getScrollObj().detail) => {
     return isUp;
 };
 
-const eventMap = isMobi ? ['touchstart', 'touchmove', 'touchend', 'touchcancel'] : ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
+const eventMap = ax.isTouchScr ? ['touchstart', 'touchmove', 'touchend', 'touchcancel'] : ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
 
 const getClientObj = (event) => {
-    let tmp = isMobi ? event.targetTouches[0] : event;
+    let tmp = ax.isTouchScr ? event.targetTouches[0] : event;
     return tmp ? { x: tmp.clientX, y: tmp.clientY } : null;
 };
 
@@ -7482,7 +7232,7 @@ const isOutside = (ev, elem) => {
     let el = getEl(elem);
     if (!el || !ev)
         return true;
-    let point = isMobi ? { x: ev.targetTouches[0].clientX, y: ev.targetTouches[0].clientY } : { x: ev.clientX, y: ev.clientY }, lt = { x: el.getBoundingClientRect().left, y: el.getBoundingClientRect().top }, rb = { x: lt.x + el.offsetWidth, y: lt.y + el.offsetHeight };
+    let point = ax.isTouchScr ? { x: ev.targetTouches[0].clientX, y: ev.targetTouches[0].clientY } : { x: ev.clientX, y: ev.clientY }, lt = { x: el.getBoundingClientRect().left, y: el.getBoundingClientRect().top }, rb = { x: lt.x + el.offsetWidth, y: lt.y + el.offsetHeight };
     return (point.x < lt.x || point.x > rb.x || point.y < lt.y || point.y > rb.y) ? true : false;
 };
 
@@ -7569,7 +7319,7 @@ const setSingleSel = (target, sel) => {
 const splitNum = (value) => {
     let num = value.toString().split('.'), str = `<s>${num[0]}</s>`;
     !isNull(num[1]) && (str += `<u>.${num[1]}</u>`);
-    return `<span class="${prefix}splitnum">${str}</span>`;
+    return `<span class="${ax.prefix}splitnum">${str}</span>`;
 };
 
 const parseUrlArr = (url, opts = {}) => {
@@ -7926,18 +7676,18 @@ class CompBase extends HTMLElement {
     }
     getRawCont() {
         if (!this.connCount) {
-            let tmp = this.querySelector(`:scope>[${alias}="source"]`);
+            let tmp = this.querySelector(`:scope>[${ax.alias}="source"]`);
             if (tmp) {
                 this.rawHtml = tmp.innerHTML;
             }
             else {
-                this.sourceEl = createEl('template', { [alias]: 'source' });
+                this.sourceEl = createEl('template', { [ax.alias]: 'source' });
                 this.sourceEl.innerHTML = this.rawHtml = this.innerHTML;
             }
         }
     }
     insertSource() {
-        let tmpSourceEl = this.sourceEl || this.querySelector(`:scope>[${alias}="source"]`);
+        let tmpSourceEl = this.sourceEl || this.querySelector(`:scope>[${ax.alias}="source"]`);
         this.innerHTML = tmpSourceEl.outerHTML || '';
     }
     createPropsObs() {
@@ -8098,7 +7848,7 @@ const createComp = (options) => {
                 }
                 render() {
                     this.insertSource();
-                    this.wrapEl = createEl('${hostName}',{${alias}:'slot-host'}, this.rawHtml);
+                    this.wrapEl = createEl('${hostName}',{${ax.alias}:'slot-host'}, this.rawHtml);
                     this.appendChild(this.wrapEl);
                     autoIns && module && (this.ins = new module(this.wrapEl,modOpts));
                     this.propsObs.on('completed', (data) => {
@@ -8603,15 +8353,6 @@ const optGesture = [
     ...optBase
 ];
 
-const curveVars = {
-    linear: getComputedVar(`--${prefix}bez-linear`),
-    ease: getComputedVar(`--${prefix}bez-ease`),
-    easeOut: getComputedVar(`--${prefix}bez-eo`),
-    easeIn: getComputedVar(`--${prefix}bez-ei`),
-    easeInOut: getComputedVar(`--${prefix}bez-eio`),
-    easeOutIn: getComputedVar(`--${prefix}bez-eoi`),
-};
-
 const optSpy = [
     {
         attr: 'margin',
@@ -8778,7 +8519,7 @@ class Spy extends ModBaseListen {
                 }
                 if (el.ax.spy?.in) {
                     classes(el).remove(el.ax.spy?.in);
-                    !this.options.visible && classes(el).add(`${prefix}o`);
+                    !this.options.visible && classes(el).add(`${ax.prefix}o`);
                 }
                 if (this.active) {
                     el.ax.spy.wing.forEach((k) => {
@@ -8824,7 +8565,7 @@ class Spy extends ModBaseListen {
                     }
                     if (i.target.ax.spy.ratio < i.intersectionRatio) {
                         super.listen({ name: 'in', params: [args] });
-                        !this.options.visible && classes(i.target).remove(`${prefix}o`);
+                        !this.options.visible && classes(i.target).remove(`${ax.prefix}o`);
                         if (i.target.ax.spy.state = 'showing') {
                             if (i.target.ax.spy?.in) {
                                 classes(i.target).add(i.target.ax.spy?.in, (name) => i.target.classList.contains(name) ? false : true);
@@ -8916,7 +8657,7 @@ class Spy extends ModBaseListen {
             el.ax.spy = props;
         }
         this.options.classes && classes(el).add(this.options.classes);
-        !this.options.visible && classes(el).add(`${prefix}o`);
+        !this.options.visible && classes(el).add(`${ax.prefix}o`);
     }
     getWings(el) {
         let arrFromId = [], arrFromSpy = [], arrFromOpt = [], wingArr = [];
@@ -9035,7 +8776,6 @@ class Gesture extends ModBaseListen {
     eventState;
     scrollObj;
     evtTarget;
-    isMobi;
     startTime;
     diffTime;
     jitterClick;
@@ -9105,11 +8845,10 @@ class Gesture extends ModBaseListen {
         this.eventState = 'end';
         this.scrollObj = getScrollObj();
         this.evtTarget = null;
-        this.isMobi = isMobi;
         this.startTime = 0;
         this.diffTime = 0;
-        this.jitterClick = _this.options.jitterClick + (this.isMobi ? 10 : 0);
-        this.jitterTrans = _this.options.jitterTrans + (this.isMobi ? 4 : 0);
+        this.jitterClick = _this.options.jitterClick + (ax.isTouchScr ? 10 : 0);
+        this.jitterTrans = _this.options.jitterTrans + (ax.isTouchScr ? 4 : 0);
         this.clickCount = 0;
         this.preventEase = false;
         this.holdHandler = null;
@@ -9133,7 +8872,7 @@ class Gesture extends ModBaseListen {
         this.touchesMoveCount = 0;
         this.paramsFormat = {
             orgEvt: null,
-            pointer: this.isMobi ? 'finger' : 'mouse',
+            pointer: ax.isTouchScr ? 'finger' : 'mouse',
             scale: {
                 direction: 0,
                 diff: 0,
@@ -9186,7 +8925,7 @@ class Gesture extends ModBaseListen {
             _this.prevEvtDft(e);
             _this.params = { ...deepClone(_this.paramsFormat), evtTarget: _this.evtTarget, relatedTarget: null };
             _this.params.orgEvt = e;
-            if ((_this.isMobi && e.targetTouches.length > 2 && e.changedTouches.length === 0) || !contains(_this.evtTarget, _this.targetEl)) {
+            if ((ax.isTouchScr && e.targetTouches.length > 2 && e.changedTouches.length === 0) || !contains(_this.evtTarget, _this.targetEl)) {
                 _this.started = false;
                 return;
             }
@@ -9196,7 +8935,7 @@ class Gesture extends ModBaseListen {
             let changedVals = _this.getTouchCoords(e, 'targetTouches'), targetVals = _this.getTouchCoords(e, 'targetTouches'), paramsHold = { ..._this.params }, paramsTranslate = { ..._this.params }, paramsScale = { ..._this.params }, paramsRotate = { ..._this.params }, paramsStart = { ..._this.params };
             _this.startCoord = _this.getCenterCoord(changedVals);
             _this.startTime = Date.now();
-            if (!_this.isMobi || e.targetTouches.length === 1) {
+            if (!ax.isTouchScr || e.targetTouches.length === 1) {
                 _this.holdHandler = setTimeout(() => {
                     paramsHold.coord = { ..._this.startCoord };
                     paramsHold.name = 'hold';
@@ -9207,7 +8946,7 @@ class Gesture extends ModBaseListen {
             else {
                 _this.holdHandler && clearTimeout(_this.holdHandler);
             }
-            if (_this.isMobi && e.targetTouches.length > 1) {
+            if (ax.isTouchScr && e.targetTouches.length > 1) {
                 if (_this.options.scale.enable) {
                     _this.startCoord = _this.getCenterCoord(targetVals);
                     paramsScale.coord = { ..._this.startCoord };
@@ -9293,7 +9032,7 @@ class Gesture extends ModBaseListen {
                     }
                 }
             }
-            if (_this.isMobi && e.targetTouches.length > 1) {
+            if (ax.isTouchScr && e.targetTouches.length > 1) {
                 _this.touchesMoveCount++;
                 _this.triangleVals.now = _this.getTriangleVals(targetVals[0], targetVals[1]);
                 if (_this.touchesMoveCount === 1) {
@@ -9393,7 +9132,7 @@ class Gesture extends ModBaseListen {
                 ..._this.endParams,
             }, paramsClick = { ..._this.params, ..._this.endParams }, paramsScale = { ...paramsClick }, paramsRotate = { ...paramsClick }, paramsEnd = { ...paramsClick };
             if (_this.diffVals.translate.h < _this.jitterClick) {
-                if (_this.diffTime < _this.options.click.timeThr && (!_this.isMobi && e.button === 0 || _this.isMobi)) {
+                if (_this.diffTime < _this.options.click.timeThr && (!ax.isTouchScr && e.button === 0 || ax.isTouchScr)) {
                     let coords = _this.getTouchCoords(e, 'changedTouches'), endCoord = _this.getCenterCoord(coords);
                     paramsClick.coord = endCoord;
                     paramsClick.name = 'click';
@@ -9418,7 +9157,7 @@ class Gesture extends ModBaseListen {
                 }
             }
             if (_this.canTrans && _this.options.translate.enable) {
-                let canDrift = _this.diffVals.translate.h > (_this.options.drift.distThr * (_this.isMobi ? 2 : 1)) && _this.diffTime < (_this.options.drift.timeThr / (_this.isMobi ? 2 : 1));
+                let canDrift = _this.diffVals.translate.h > (_this.options.drift.distThr * (ax.isTouchScr ? 2 : 1)) && _this.diffTime < (_this.options.drift.timeThr / (ax.isTouchScr ? 2 : 1));
                 paramsTranslate.translate.canSwipe = _this.transType === 'swipe' ? true : false;
                 paramsTranslate.translate.canDrift = paramsTranslate.translate.canSwipe ? false : canDrift;
                 paramsTranslate.name = 'translated';
@@ -9433,7 +9172,7 @@ class Gesture extends ModBaseListen {
                 }
                 _this.options.viewport.enable && _this.moveVals.h > 1 && _this.rebound();
             }
-            if (_this.isMobi) {
+            if (ax.isTouchScr) {
                 if (_this.options.scale.enable) {
                     paramsScale.scale.diff = toNumber(_this.diffVals.scale);
                     paramsScale.scale.value = { x: toNumber(_this.nowVals.scale.x), y: toNumber(_this.nowVals.scale.y) };
@@ -9467,7 +9206,7 @@ class Gesture extends ModBaseListen {
             _this.options.viewport.enable && _this.getSizeDiff();
             _this.getStartVals();
             _this.options.step.duration ? _this.targetEl.style.transitionDuration = `${_this.options.step.duration}ms` : null;
-            _this.targetEl.style.transitionTimingFunction = curveVars[_this.options.step.curve];
+            _this.targetEl.style.transitionTimingFunction = ax.curves[_this.options.step.curve];
             _this.params = {
                 ...deepClone(_this.paramsFormat),
                 relatedTarget: null,
@@ -9644,7 +9383,7 @@ class Gesture extends ModBaseListen {
             transformTools.get(this.targetEl, ['translate', 'scale', 'rotate', 'skew'], this.options.translate.instead) :
             this.targetEl.style.transform;
         this.addPrimEvents();
-        if (this.isMobi) {
+        if (ax.isTouchScr) {
             if (this.handleEls.length) {
                 for (let k of this.handleEls)
                     k.addEventListener('touchstart', this.preventDft, { passive: false });
@@ -9654,7 +9393,7 @@ class Gesture extends ModBaseListen {
             }
         }
         this.targetEl.addEventListener("transitionend", this.transitionendFn, { passive: false });
-        if (!this.isMobi) {
+        if (!ax.isTouchScr) {
             if (this.options.wheel) {
                 this.targetEl.removeEventListener(this.scrollObj.event, this.wheelFn);
                 this.targetEl.addEventListener(this.scrollObj.event, this.wheelFn, { passive: false });
@@ -9672,7 +9411,7 @@ class Gesture extends ModBaseListen {
     setEmpty() {
     }
     prevEvtDft(evt, target = this.evtTarget) {
-        if (this.isMobi) {
+        if (ax.isTouchScr) {
             if (!this.options.scale.enable && !this.options.rotate.enable) {
                 if (this.useHandle(target) || (!this.handleEls.length && contains(target, this.targetEl))) {
                     preventDft(evt, true);
@@ -9697,11 +9436,11 @@ class Gesture extends ModBaseListen {
                     super.listen({ name: 'showing' });
                 },
                 onOut: () => {
-                    this.options.keyboard.enable && !this.isMobi && window.removeEventListener('keydown', this.keyboardFn);
+                    this.options.keyboard.enable && !ax.isTouchScr && window.removeEventListener('keydown', this.keyboardFn);
                     super.listen({ name: 'hidden' });
                 },
                 onShown: () => {
-                    this.options.keyboard.enable && !this.isMobi && window.addEventListener('keydown', this.keyboardFn, { passive: false });
+                    this.options.keyboard.enable && !ax.isTouchScr && window.addEventListener('keydown', this.keyboardFn, { passive: false });
                     super.listen({ name: 'shown' });
                 }
             },
@@ -9714,7 +9453,7 @@ class Gesture extends ModBaseListen {
         return unbounds.find((k) => contains(target, k));
     }
     updateEaseParamsListen(params, type = 'drift') {
-        let distH = ~~((this.options[type].timeThr - this.diffTime) * this.options[type].coef) * (type === 'swipe' ? (this.isMobi ? 8 : 12) : 1), distX = ~~(distH * (this.diffVals.translate.x / this.diffVals.translate.h)), distY = ~~(distH * (this.diffVals.translate.y / this.diffVals.translate.h)), driftX = this.clampVals('translate', params.translate.value.x + distX), driftY = this.clampVals('translate', params.translate.value.y + distY);
+        let distH = ~~((this.options[type].timeThr - this.diffTime) * this.options[type].coef) * (type === 'swipe' ? (ax.isTouchScr ? 8 : 12) : 1), distX = ~~(distH * (this.diffVals.translate.x / this.diffVals.translate.h)), distY = ~~(distH * (this.diffVals.translate.y / this.diffVals.translate.h)), driftX = this.clampVals('translate', params.translate.value.x + distX), driftY = this.clampVals('translate', params.translate.value.y + distY);
         params[type].direction = params.translate.direction;
         params[type].diff = { x: distX, y: distY, h: distH };
         params[type].duration = this.options[type].duration;
@@ -9797,7 +9536,7 @@ class Gesture extends ModBaseListen {
     }
     getTouchCoords(event, target = 'targetTouches') {
         let touches = [];
-        if (this.isMobi) {
+        if (ax.isTouchScr) {
             for (let k of event[target]) {
                 touches.push({
                     x: ~~k.clientX,
@@ -10031,7 +9770,7 @@ class Gesture extends ModBaseListen {
         this.setCompleted();
         this.targetEl.removeEventListener('pointerdown', this.triggerFn);
         this.targetEl.removeEventListener("transitionend", this.transitionendFn);
-        if (this.isMobi) {
+        if (ax.isTouchScr) {
             if (this.handleEls.length) {
                 for (let k of this.handleEls)
                     k.removeEventListener('touchstart', this.preventDft);
@@ -10041,7 +9780,7 @@ class Gesture extends ModBaseListen {
             }
         }
         this.removeSecondEvents();
-        if (!this.isMobi) {
+        if (!ax.isTouchScr) {
             this.options.wheel && this.targetEl.removeEventListener(this.scrollObj.event, this.wheelFn);
             this.options.keyboard.enable && window.removeEventListener('keydown', this.keyboardFn);
             this.options.click.hold2Menu && this.targetEl.removeEventListener('contextmenu', this.menuFn);
@@ -10115,10 +9854,10 @@ class Dialog extends ModBaseListenCacheBubble {
             !this.options.keepShow && this.hide();
         };
         this.addPulseAnim = () => {
-            this.mainEl.classList.add(`${prefix}pulseShow`);
+            this.mainEl.classList.add(`${ax.prefix}pulseShow`);
         };
         this.removePulseAnim = () => {
-            this.mainEl.classList.remove(`${prefix}pulseShow`);
+            this.mainEl.classList.remove(`${ax.prefix}pulseShow`);
         };
         super.listen({ name: 'constructed' });
         initial && this.init();
@@ -10163,7 +9902,7 @@ class Dialog extends ModBaseListenCacheBubble {
         this.handleTools();
         this.bindTrigger();
         this.setDraggable();
-        this.contEl.querySelectorAll(`[${alias}="closebubble"]`).forEach((k) => {
+        this.contEl.querySelectorAll(`[${ax.alias}="closebubble"]`).forEach((k) => {
             k.removeEventListener('click', this.triggerClose);
             k.addEventListener('click', this.triggerClose, false);
         });
@@ -10184,7 +9923,7 @@ class Dialog extends ModBaseListenCacheBubble {
         if (['confirm', 'alert', 'prompt'].includes(this.options.feature)) {
             this.options.mask.closable = false;
             this.options.placement = 'center-top';
-            this.options.padding.value = `${prefix}p-md`;
+            this.options.padding.value = `${ax.prefix}p-md`;
             this.options.in = 'fadeInDown';
             this.options.out = 'fadeOutDown';
             this.options.tools.enable = false;
@@ -10215,7 +9954,7 @@ class Dialog extends ModBaseListenCacheBubble {
     handleTools() {
         if (this.options.tools.enable) {
             this.options.tools.children.forEach((k) => {
-                k.wrapEl.querySelector(`[${alias}="icon"]`);
+                k.wrapEl.querySelector(`[${ax.alias}="icon"]`);
                 if (k.name === 'close') {
                     k.wrapEl.onclick = () => {
                         this.hide();
@@ -10476,22 +10215,23 @@ const notice = ({ content, contType = '', contData = {}, heading = '', label = '
 const prompt = (options) => {
     let opts = Object.assign({ fields: [{ type: 'input' }] }, options), data = Array.isArray(opts.fields) ? opts.fields : [opts.fields], frags = document.createDocumentFragment();
     for (let k of data) {
-        let label = k.label ? `<div class="${prefix}field-label">${k.label}</div>` : '', note = k.note ? `<div  class="${prefix}field-note">${k.note}</div>` : '', attrs = Object.assign(k.type === 'upload' ? { feature: 'gallery' } : k.type === 'datetime' ? { display: 'inline', 'auto-fill': true, } : {}, k.attrs), input = createEl(`ax-${k.type || 'input'}`, { ...attrs }), tpl = `
-            <section class="${prefix}field ${prefix}field-apart">
+        let label = k.label ? `<div class="${ax.prefix}field-label">${k.label}</div>` : '', note = k.note ? `<div  class="${ax.prefix}field-note">${k.note}</div>` : '', attrs = Object.assign(k.type === 'upload' ? { feature: 'gallery' } : k.type === 'datetime' ? { display: 'inline', footer: false, 'auto-fill': true, } : {}, k.attrs), input = createEl(`ax-${k.type || 'input'}`, { ...attrs }), tpl = `
+            <section class="${ax.prefix}field ${ax.prefix}field-apart">
                 ${label}
-                <div class="${prefix}field-cont">
-                    <div class="${prefix}field-input"></div>
+                <div class="${ax.prefix}field-cont">
+                    <div class="${ax.prefix}field-input"></div>
                     ${note}
                 </div>
             </section>
         `, dom = tplToEl(tpl);
-        dom.querySelector(`.${prefix}field-input`).appendChild(input);
+        dom.querySelector(`.${ax.prefix}field-input`).appendChild(input);
         frags.appendChild(dom);
         k.field = input;
     }
     return new Promise((resolve) => {
         new Dialog(null, {
             heading: opts.heading,
+            size: 'lg',
             feature: 'prompt',
             onInitiated: function () {
                 this.contEl.appendChild(frags);
@@ -10532,41 +10272,6 @@ const regElem = (comp) => {
     if (!comp || getDataType(comp) !== 'Class')
         return;
     window.customElements.define(`ax-${comp.name.replace('Elem', '').toLowerCase()}`, comp);
-};
-
-const getImgSpin = () => {
-    if (!ax.imgSpin) {
-        ax.imgSpin = getComputedVar(`--${prefix}spin`).split('"')[1];
-    }
-    return ax.imgSpin;
-};
-
-const getImgSpinDk = () => {
-    if (!ax.imgSpinDk) {
-        ax.imgSpinDk = getComputedVar(`--${prefix}spin-dk`).split('"')[1];
-    }
-    return ax.imgSpinDk;
-};
-
-const getImgNone = () => {
-    if (!ax.imgNone) {
-        ax.imgNone = getComputedVar(`--${prefix}none`).split('"')[1];
-    }
-    return ax.imgNone;
-};
-
-const getImgEmpty = () => {
-    if (!ax.imgEmpty) {
-        ax.imgEmpty = getComputedVar(`--${prefix}empty`).split('"')[1];
-    }
-    return ax.imgEmpty;
-};
-
-const getImgAvatar = () => {
-    if (!ax.imgAvatar) {
-        ax.imgAvatar = getComputedVar(`--${prefix}avatar`).split('"')[1];
-    }
-    return ax.imgAvatar;
 };
 
 const promiseRaf = (cb) => {
@@ -10636,7 +10341,7 @@ class ModBaseListenCacheNest extends ModBaseListenCache {
     getArrowEl(item) {
         if (!this.options.arrow.enable)
             return;
-        item.arrowEl = createEl('i', { [alias]: 'arrow' });
+        item.arrowEl = createEl('i', { [ax.alias]: 'arrow' });
         this.updateArrowEl(item);
     }
     toggleArrow(val, item) {
@@ -10864,12 +10569,12 @@ const optMore = [
     {
         attr: 'class-fold',
         prop: 'classFold',
-        value: `${prefix}c-prim`,
+        value: `${ax.prefix}c-prim`,
     },
     {
         attr: 'class-unfold',
         prop: 'classUnfold',
-        value: `${prefix}c-prim`,
+        value: `${ax.prefix}c-prim`,
     },
     {
         attr: 'on-fold',
@@ -11181,7 +10886,6 @@ class Position extends ModBaseListen {
         if (!this.places.includes(this.placement))
             return this;
         this.options.placement = this.placement;
-        this.fullGap = getFullGap();
         !['center', 'center-max'].includes(this.placement) && this.createArrow();
         this.setAttrs();
         this.resetPlacement();
@@ -11242,7 +10946,7 @@ class Position extends ModBaseListen {
     }
     createArrow() {
         if (this.options.arrow.enable) {
-            this.arrowEl = createEl('i', { style: 'position:absolute', [alias]: 'arrow' });
+            this.arrowEl = createEl('i', { style: 'position:absolute', [ax.alias]: 'arrow' });
             this.bubbleEl.appendChild(this.arrowEl);
         }
     }
@@ -11386,9 +11090,9 @@ class Position extends ModBaseListen {
             }
         }
         if (this.placement === 'center-max') {
-            cssText = `width:calc(100vw - ${this.fullGap}*2);height:calc(100vh - ${this.fullGap}*2);`;
-            left = this.fullGap;
-            top = this.fullGap;
+            cssText = `width:calc(100vw - ${ax.fullGap}*2);height:calc(100vh - ${ax.fullGap}*2);`;
+            left = ax.fullGap;
+            top = ax.fullGap;
         }
         else if (this.placement === 'center') {
             cssText = `margin-left:-${toNumber(this.bubbleEl.getBoundingClientRect().width / 2, { mode: 'ceil' })}px;margin-top:-${toNumber(this.bubbleEl.getBoundingClientRect().height / 2, { mode: 'ceil' })}px;`;
@@ -11396,12 +11100,12 @@ class Position extends ModBaseListen {
             top = '50%';
         }
         else if (this.placement === 'top-max' || this.placement === 'bottom-max') {
-            left = `${toNumber(this.browserData.scrollLeft + toPixel(this.fullGap), { mode: 'ceil' })}px`;
-            cssText = `width:calc(100vw - ${this.fullGap}*2);`;
+            left = `${toNumber(this.browserData.scrollLeft + toPixel(ax.fullGap), { mode: 'ceil' })}px`;
+            cssText = `width:calc(100vw - ${ax.fullGap}*2);`;
         }
         else if (this.placement === 'left-max' || this.placement === 'right-max') {
-            top = `${toNumber(this.browserData.scrollTop + toPixel(this.fullGap), { mode: 'ceil' })}px`;
-            cssText = `height:calc(100vh - ${this.fullGap}*2);`;
+            top = `${toNumber(this.browserData.scrollTop + toPixel(ax.fullGap), { mode: 'ceil' })}px`;
+            cssText = `height:calc(100vh - ${ax.fullGap}*2);`;
         }
         this.bubbleEl.style.cssText += (cssText + `left:${left};right:${right};top:${top};bottom:${bottom};`);
         
@@ -11606,6 +11310,7 @@ class Position extends ModBaseListen {
     }
     
     resetPlacement(cb) {
+        (this.placement);
         if (this.destroyed || !this.places.includes(this.placement) || this.unsettable()) {
             return this;
         }
@@ -11934,21 +11639,6 @@ const optPopup = [
     ...optBubble
 ];
 
-const ceils = {
-    xs: parseInt(getComputedVar('--_ceil-xs')) || 500,
-    sm: parseInt(getComputedVar('--_ceil-sm')) || 900,
-    md: parseInt(getComputedVar('--_ceil-md')) || 1200,
-    lg: parseInt(getComputedVar('--_ceil-lg')) || 1500,
-};
-
-const getClientType = () => {
-    let width = document.body.clientWidth, result = (width < ceils.xs) ? 'phone' :
-        (width > ceils.xs && width < ceils.sm) ? 'pad' :
-            (width > ceils.sm && width < ceils.md) ? 'flip' :
-                (width > ceils.md && width < ceils.lg) ? 'pro' : 'pc';
-    return result;
-};
-
 class Popup extends ModBaseListenCacheBubble {
     options = {};
     confirmEl;
@@ -12049,6 +11739,7 @@ class Popup extends ModBaseListenCacheBubble {
         }
         this.setEmpty();
         this.options.placement = this.options.placement || 'top';
+        this.options.trigger = this.options.trigger === 'hover' && ax.isTouchScr ? 'click' : this.options.trigger;
         this.isCompField = fieldTypes.includes(this.options.contType.toLowerCase());
         if (this.isCompField) {
             this.options.tools.placement = 'outside';
@@ -12078,7 +11769,7 @@ class Popup extends ModBaseListenCacheBubble {
         this.handleFooter();
         this.handleTools();
         this.bindTrigger();
-        this.contEl.querySelectorAll(`[${alias}="closebubble"]`).forEach((k) => {
+        this.contEl.querySelectorAll(`[${ax.alias}="closebubble"]`).forEach((k) => {
             k.removeEventListener('click', this.triggerClose);
             k.addEventListener('click', this.triggerClose, false);
         });
@@ -12182,9 +11873,12 @@ class Popup extends ModBaseListenCacheBubble {
     }
     createPosition() {
         let tmpArr = this.options.placement.split('-'), placement = this.options.placement;
-        if (tmpArr.length === 2 && this.options.adaptive && getClientType() === 'phone') {
-            if (!tmpArr.includes('max') && !['top', 'bottom'].includes(tmpArr[0])) {
+        if (this.options.adaptive && ax.screen === 'xxs') {
+            if (tmpArr[0] === 'left') {
                 placement = 'top-max';
+            }
+            else if (tmpArr[0] === 'right') {
+                placement = 'bottom-max';
             }
             else if (!tmpArr.includes('max') && ['top', 'bottom'].includes(tmpArr[0])) {
                 placement = tmpArr[0] + '-max';
@@ -12296,7 +11990,7 @@ class Popup extends ModBaseListenCacheBubble {
             }
             else {
                 this.options.duration && (this.mainEl.style.animationDuration = `${this.options.duration}ms`);
-                this.aniIn && (this.mainEl.style.animationName = prefix + this.aniIn);
+                this.aniIn && (this.mainEl.style.animationName = ax.prefix + this.aniIn);
             }
             await delay({
                 duration: this.duration,
@@ -12328,7 +12022,7 @@ class Popup extends ModBaseListenCacheBubble {
                 easeHeight({ el: this.wrapEl, height: this.wrapHeight, type: 'up', duration: this.duration, unaware: false });
             }
             else {
-                this.aniOut && (this.mainEl.style.animationName = prefix + this.aniOut);
+                this.aniOut && (this.mainEl.style.animationName = ax.prefix + this.aniOut);
             }
             this.mainEl.querySelectorAll('video,audio').forEach((k) => {
                 k.pause();
@@ -12460,7 +12154,7 @@ class Dodge extends ModBaseListenCache {
         }
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}dodge`);
+        this.targetEl.classList.add(`${ax.prefix}dodge`);
         this.inputEl.toggleAttribute('readonly', true);
         this.inputEl.classList.contains("ax-lg") ? this.targetEl.classList.add("ax-lg") : null;
     }
@@ -12955,28 +12649,27 @@ class Valid extends ModBaseListenCache {
                 
                 this.output = { ...resp, name: this.name, label: this.label, value, ins: this, strength: this.getStrength(value) };
                 super.listen({ name: 'trigger', params: [this.output] });
-                this.observer.proxy.passed = resp.passed;
-                this.observer.proxy.type = resp.type;
+                Object.assign(this.observer.proxy, resp);
             }
         });
     }
     toggleStyle(passed) {
         if (passed) {
-            this.msgEl.classList.remove(`${prefix}c-error`);
-            this.msgEl.classList.add(`${prefix}c-succ`);
+            this.msgEl.classList.remove(`${ax.prefix}c-error`);
+            this.msgEl.classList.add(`${ax.prefix}c-succ`);
             this.targetEl.setAttribute('validate', 'passed');
             if (this.options.styleHost) {
-                this.targetEl.classList.remove(`${prefix}c-error`);
-                this.targetEl.classList.add(`${prefix}c-succ`);
+                this.targetEl.classList.remove(`${ax.prefix}c-error`);
+                this.targetEl.classList.add(`${ax.prefix}c-succ`);
             }
         }
         else {
-            this.msgEl.classList.remove(`${prefix}c-succ`);
-            this.msgEl.classList.add(`${prefix}c-error`);
+            this.msgEl.classList.remove(`${ax.prefix}c-succ`);
+            this.msgEl.classList.add(`${ax.prefix}c-error`);
             this.targetEl.setAttribute('validate', 'failed');
             if (this.options.styleHost) {
-                this.targetEl.classList.remove(`${prefix}c-succ`);
-                this.targetEl.classList.add(`${prefix}c-error`);
+                this.targetEl.classList.remove(`${ax.prefix}c-succ`);
+                this.targetEl.classList.add(`${ax.prefix}c-error`);
             }
         }
     }
@@ -12990,6 +12683,7 @@ class Valid extends ModBaseListenCache {
             this.msgIcon = this.options.iconShow ? icons.font["error-f"] : '';
             this.msgText = msg.fail;
         }
+        (this.msgText, this.msgEl.innerHTML);
         this.msgEl.innerHTML = this.msgIcon + this.msgText;
         if (this.otherBox) {
             elState(this.msgEl).isVirtual && this.otherBox.appendChild(this.msgEl);
@@ -13000,11 +12694,11 @@ class Valid extends ModBaseListenCache {
             }
             this.options.placement = this.options.placement.trim();
             if (this.options.placement === 'down') {
-                let box = this.targetEl.closest(`.${prefix}box-input`)?.querySelector(`[${alias}="input"]`);
+                let box = this.targetEl.closest(`.${ax.prefix}box-input`)?.querySelector(`[${ax.alias}="input"]`);
                 box ? box.insertAdjacentElement('afterEnd', this.msgEl) : null;
             }
             else if (this.options.placement === 'right') {
-                let box = this.targetEl.closest(`.${prefix}box-input`)?.querySelector(`[${alias}="help"]`);
+                let box = this.targetEl.closest(`.${ax.prefix}box-input`)?.querySelector(`[${ax.alias}="help"]`);
                 box ? box.appendChild(this.msgEl) : null;
             }
             else if (this.options.placement === 'popup') {
@@ -13019,7 +12713,7 @@ class Valid extends ModBaseListenCache {
                             enable: false,
                             gap: 0,
                         },
-                        classes: `${prefix}plain`,
+                        classes: `${ax.prefix}plain`,
                         trigger: 'sticky'
                     });
                 }
@@ -13046,7 +12740,7 @@ class Valid extends ModBaseListenCache {
     }
     createMsgEl() {
         
-        this.msgEl = this.hostValid ? this.hostValid.ins.msgEl : createEl(this.options.nodeName, { class: `${prefix}valid` });
+        this.msgEl = this.hostValid ? this.hostValid.ins.msgEl : createEl(this.options.nodeName, { class: `${ax.prefix}valid` });
     }
     createObs() {
         
@@ -13390,9 +13084,9 @@ const optTree = [
         prop: 'arrow',
         value: {
             enable: true,
-            show: `${prefix}icon-right`,
-            hide: `${prefix}icon-right`,
-            anim: `${prefix}rotate90`,
+            show: `${ax.prefix}icon-right`,
+            hide: `${ax.prefix}icon-right`,
+            anim: `${ax.prefix}rotate90`,
             type: 'icon',
             trigger: 'click',
         },
@@ -13402,8 +13096,8 @@ const optTree = [
         prop: 'legend',
         value: {
             enable: false,
-            parent: [`${prefix}icon-folder`, `${prefix}icon-folder-open`],
-            child: `${prefix}icon-file-text`,
+            parent: [`${ax.prefix}icon-folder`, `${ax.prefix}icon-folder-open`],
+            child: `${ax.prefix}icon-file-text`,
             type: 'icon',
         },
     },
@@ -13824,7 +13518,7 @@ const optTree = [
     ...optBase
 ];
 
-const optDrag$1 = [
+const optDrag = [
     {
         attr: 'original',
         prop: 'original',
@@ -13919,7 +13613,7 @@ const optDrag$1 = [
         prop: 'arrow',
         value: {
             enable: false,
-            icon: `${prefix}icon-right`,
+            icon: `._icon-right`,
             placement: 'left',
             selector: '',
         },
@@ -14295,20 +13989,6 @@ class Flip extends ModBaseListen {
     }
 }
 
-const _tmp = { ...tmp };
-for (let k in _tmp) {
-    typeof _tmp[k] === 'function' && _tmp[k]?.name?.endsWith(`Elem`) && _tmp.regElem(_tmp[k]);
-}
-document.addEventListener("DOMContentLoaded", () => {
-    for (let k of ax.tasks)
-        k();
-    ax.tasks = [];
-});
-ax.config.support && _tmp.support(true);
-ax.config.privacy && _tmp.privacy({});
-Reflect.deleteProperty(_tmp, 'ax');
-Object.assign(ax, _tmp);
-
 class Drag extends ModBaseListen {
     targetEl;
     options = {};
@@ -14355,7 +14035,6 @@ class Drag extends ModBaseListen {
     orgVal;
     nowVal;
     orgStyle;
-    isMobi;
     parentEl;
     wrapEls;
     ignoreEls;
@@ -14385,16 +14064,16 @@ class Drag extends ModBaseListen {
         super();
         super.ready({
             options,
-            maps: optDrag$1,
+            maps: optDrag,
             host: elem,
             component: false,
             spread: ['arrow', 'pushable', 'holder', 'flip']
         });
         if (!this.targetEl)
             throw new Error('The target node for drag start is missing!');
-        this.holderEmpty = createEl('div', { class: `${prefix}holder-empty` }, this.options.lang.holderEmpty);
-        this.holderDrop = createEl('div', { class: `${prefix}holder-drop ${prefix}d-none` }, this.options.lang.holderDrop);
-        this.dropArrow = createEl('i', { class: `${prefix}drop-arrow ${this.options.arrow.icon}`, placement: this.options.arrow.placement, point: 'inside' });
+        this.holderEmpty = createEl('div', { class: `${ax.prefix}holder-empty` }, this.options.lang.holderEmpty);
+        this.holderDrop = createEl('div', { class: `${ax.prefix}holder-drop ${ax.prefix}d-none` }, this.options.lang.holderDrop);
+        this.dropArrow = createEl('i', { class: `${ax.prefix}drop-arrow ${this.options.arrow.icon}`, placement: this.options.arrow.placement, point: 'inside' });
         this.lastPoint = '';
         this.targetPoints = [];
         this.dragstartEvt = (evt) => {
@@ -14461,7 +14140,7 @@ class Drag extends ModBaseListen {
             }
             this.setHolderAttrs();
             requestAnimationFrame(() => {
-                this.sourceNode.classList.add(`${prefix}drag-wait`);
+                this.sourceNode.classList.add(`${ax.prefix}drag-wait`);
             });
             super.listen({ name: 'dragStart', params: [{ target: null, source: this.sourceNode, point: 'outside', event: evt, type: '' }] });
         };
@@ -14571,7 +14250,7 @@ class Drag extends ModBaseListen {
             let param = { source: this.sourceNode, event: evt }, target;
             if (this.wrapEls.includes(evtTarget)) {
                 target = evtTarget;
-                let isEmpty = !target.children.length || getEl(`:scope > .${prefix}holder-empty`, target);
+                let isEmpty = !target.children.length || getEl(`:scope > .${ax.prefix}holder-empty`, target);
                 if (!isEmpty)
                     return;
                 this.flipIns && this.flipIns.setNowRects();
@@ -14673,9 +14352,8 @@ class Drag extends ModBaseListen {
         this.holderAttr = ['left', 'right'].includes(this.options.arrow.placement) ? 'height' :
             ['top', 'bottom'].includes(this.options.arrow.placement) ? 'width' : '';
         this.setFlip();
-        this.isMobi = isMobi;
         if (this.options.original) {
-            this.isMobi ? this.setCommDrag() : this.setDestopDrag();
+            ax.isTouchScr ? this.setCommDrag() : this.setDestopDrag();
         }
         else {
             this.setCommDrag();
@@ -14731,7 +14409,7 @@ class Drag extends ModBaseListen {
         });
     }
     canClone(target) {
-        let tmp = this.options.original && !this.isMobi ? !this.selfEls.includes(ax.dragNode) : this.otherGroupIns.find((k) => k.targetEl.contains(target));
+        let tmp = this.options.original && !ax.isTouchScr ? !this.selfEls.includes(ax.dragNode) : this.otherGroupIns.find((k) => k.targetEl.contains(target));
         return this.options.pushable.intent === 'clone' && tmp;
     }
     cloneStart(bool = true) {
@@ -14765,15 +14443,15 @@ class Drag extends ModBaseListen {
     getCopyNode(node) {
         let tmp = node.cloneNode(true);
         tmp.removeAttribute('draggable');
-        tmp.classList.remove(`${prefix}drag-wait`);
+        tmp.classList.remove(`${ax.prefix}drag-wait`);
         tmp.toggleAttribute('cloned', true);
         return tmp;
     }
     getGhostNode(node) {
         let tmp = node.cloneNode(true), styles = style(node), rects = node.getBoundingClientRect(), left = rects.left - parseFloat(styles.marginLeft), top = rects.top - parseFloat(styles.marginTop);
         tmp.removeAttribute('draggable');
-        tmp.classList.remove(`${prefix}drag-wait`);
-        tmp.classList.add(`${prefix}drag-ghost`);
+        tmp.classList.remove(`${ax.prefix}drag-wait`);
+        tmp.classList.add(`${ax.prefix}drag-ghost`);
         tmp.style.width = `min(${styles.width},100%)`;
         tmp.style.height = styles.height;
         tmp.style.left = left + 'px';
@@ -14842,7 +14520,7 @@ class Drag extends ModBaseListen {
     hideHolder() {
         this.holderDrop.toggleAttribute('dropping', false);
         if (elState(this.holderDrop).isVisible) {
-            this.holderDrop.classList.add(`${prefix}d-none`);
+            this.holderDrop.classList.add(`${ax.prefix}d-none`);
             this.holderDrop.remove();
         }
     }
@@ -14921,10 +14599,10 @@ class Drag extends ModBaseListen {
         if (!this.options.holder.enable)
             return;
         let tmp = style(this.sourceNode);
-        this.holderDrop.style.setProperty(`--${prefix}holder-w`, `min(${tmp.width},100%)`);
-        this.holderDrop.style.setProperty(`--${prefix}holder-h`, tmp.height);
-        this.holderDrop.style.setProperty(`--${prefix}holder-r`, tmp.borderRadius);
-        this.holderDrop.style.setProperty(`--${prefix}holder-m`, tmp.margin);
+        this.holderDrop.style.setProperty(`--${ax.prefix}holder-w`, `min(${tmp.width},100%)`);
+        this.holderDrop.style.setProperty(`--${ax.prefix}holder-h`, tmp.height);
+        this.holderDrop.style.setProperty(`--${ax.prefix}holder-r`, tmp.borderRadius);
+        this.holderDrop.style.setProperty(`--${ax.prefix}holder-m`, tmp.margin);
         if (this.options.holder.style.length) {
             for (let k of this.options.holder.style)
                 this.holderDrop.style.setProperty(k, tmp[k]);
@@ -14956,11 +14634,11 @@ class Drag extends ModBaseListen {
                 children: this.getFlipChldren(),
                 b4Play: (data) => {
                     return new Promise(resolve => {
-                        if (data !== this.holderDrop || (data === this.holderDrop && !this.holderDrop.classList.contains(`${prefix}d-none`))) {
+                        if (data !== this.holderDrop || (data === this.holderDrop && !this.holderDrop.classList.contains(`${ax.prefix}d-none`))) {
                             resolve(null);
                         }
-                        else if (data === this.holderDrop && this.holderDrop.classList.contains(`${prefix}d-none`)) {
-                            data.classList.remove(`${prefix}d-none`);
+                        else if (data === this.holderDrop && this.holderDrop.classList.contains(`${ax.prefix}d-none`)) {
+                            data.classList.remove(`${ax.prefix}d-none`);
                         }
                     });
                 },
@@ -14973,25 +14651,25 @@ class Drag extends ModBaseListen {
         this.flipIns = new Flip(opts);
     }
     setDestopDrag() {
-        if (isMobi || !this.options.original)
+        if (ax.isTouchScr || !this.options.original)
             return;
         this.removeMouseEvents();
         this.addMouseEvents();
     }
     addMouseEvents() {
-        if (isMobi || !this.options.original)
+        if (ax.isTouchScr || !this.options.original)
             return;
         document.addEventListener('mousedown', this.mousedownEvt, { passive: false });
         document.addEventListener('mouseup', this.mouseupEvt, { passive: false });
     }
     removeMouseEvents() {
-        if (isMobi || !this.options.original)
+        if (ax.isTouchScr || !this.options.original)
             return;
         document.removeEventListener('mousedown', this.mousedownEvt);
         document.removeEventListener('mouseup', this.mouseupEvt);
     }
     addDestopEvents() {
-        if (isMobi || !this.options.original)
+        if (ax.isTouchScr || !this.options.original)
             return;
         this.targetEl.addEventListener('dragstart', this.dragstartEvt, { passive: false });
         this.targetEl.addEventListener('dragenter', this.dragenterEvt, { passive: false });
@@ -15001,7 +14679,7 @@ class Drag extends ModBaseListen {
         this.targetEl.addEventListener('dragend', this.dragendEvt, { passive: false });
     }
     removeDestopEvents() {
-        if (isMobi || !this.options.original)
+        if (ax.isTouchScr || !this.options.original)
             return;
         this.targetEl.removeEventListener('dragstart', this.dragstartEvt);
         this.targetEl.removeEventListener('dragenter', this.dragenterEvt);
@@ -15054,7 +14732,7 @@ class Drag extends ModBaseListen {
         if (!this.options.showEmpty)
             return;
         let fn = (el) => {
-            let len = el.children.length, tmp = getEl(`:scope > .${prefix}holder-empty`, el);
+            let len = el.children.length, tmp = getEl(`:scope > .${ax.prefix}holder-empty`, el);
             if (!len) {
                 el.appendChild(this.holderEmpty.cloneNode(true));
             }
@@ -15085,7 +14763,7 @@ class Drag extends ModBaseListen {
         this.targetPoints = [];
         this.lastPoint = '';
         this.hideHolder();
-        this.sourceNode.classList.remove(`${prefix}drag-wait`);
+        this.sourceNode.classList.remove(`${ax.prefix}drag-wait`);
         this.removeDroppings();
         this.removeDraggables();
         this.removeArrow();
@@ -15111,7 +14789,7 @@ class Drag extends ModBaseListen {
     }
 }
 
-let AXTMP_emptyTpl = `<i class="${prefix}c-ignore">${config.lang.tags.emptyholder}</i>`, AXTMP_editorHolder = config.lang.tags.placeholder, AXTMP_separator$3 = config.splitHyphen;
+let AXTMP_emptyTpl = `<i class="${ax.prefix}c-ignore">${config.lang.tags.emptyholder}</i>`, AXTMP_editorHolder = config.lang.tags.placeholder, AXTMP_separator$3 = config.splitHyphen;
 const optTags = [
     {
         attr: 'ajax',
@@ -15189,7 +14867,7 @@ const optTags = [
         value: {
             enable: false,
             refer: 'id',
-            template: `{{this.field}}<i class="${prefix}c-brief">({{this.key}}:{{this.value}})</i>`,
+            template: `{{this.field}}<i class="${ax.prefix}c-brief">({{this.key}}:{{this.value}})</i>`,
         },
     },
     {
@@ -15322,7 +15000,7 @@ class Tags extends ModBaseListenCache {
         
         
         
-        this.emptyEl = createEl('span', { [alias]: 'empty' }, this.options.empty.content);
+        this.emptyEl = createEl('span', { [ax.alias]: 'empty' }, this.options.empty.content);
         
         this.content = '';
         let _this = this;
@@ -15355,7 +15033,7 @@ class Tags extends ModBaseListenCache {
             }
         };
         this.toggleSelected = function (e) {
-            if (e.target.getAttribute(alias) !== 'remove') {
+            if (e.target.getAttribute(ax.alias) !== 'remove') {
                 let item = _this.data.find((k) => k.wrapEl === this);
                 item.selected = true;
                 _this.data.filter((k) => k !== item).forEach((k) => {
@@ -15555,7 +15233,7 @@ class Tags extends ModBaseListenCache {
         this.options.editor.enable && !this.options.editor.selector && this.targetEl.appendChild(this.editEl);
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}tags`);
+        this.targetEl.classList.add(`${ax.prefix}tags`);
         classes(this.targetEl).add(this.options.classes);
         this.options.theme ? this.targetEl.setAttribute('theme', this.options.theme) : this.targetEl.removeAttribute('theme');
         this.options.type ? this.targetEl.setAttribute('type', this.options.type) : this.targetEl.removeAttribute('type');
@@ -15568,24 +15246,24 @@ class Tags extends ModBaseListenCache {
     }
     useLegend(obj) {
         if (obj.hasOwnProperty('icon')) {
-            obj.iconEl = createEl('i', { [alias]: 'icon', class: `${obj.icon}` });
+            obj.iconEl = createEl('i', { [ax.alias]: 'icon', class: `${obj.icon}` });
             obj.labelEl.insertAdjacentElement('beforebegin', obj.iconEl);
         }
         if (obj.hasOwnProperty('disk')) {
-            obj.diskEl = createEl('img', { [alias]: 'disk', src: `${obj.disk || getImgNone()}` });
+            obj.diskEl = createEl('img', { [ax.alias]: 'disk', src: `${obj.disk || ax.images.none}` });
             obj.labelEl.insertAdjacentElement('beforebegin', obj.diskEl);
         }
         if (obj.hasOwnProperty('cube')) {
-            obj.cubeEl = createEl('img', { [alias]: 'cube', src: `${obj.cube || getImgNone()}` });
+            obj.cubeEl = createEl('img', { [ax.alias]: 'cube', src: `${obj.cube || ax.images.none}` });
             obj.labelEl.insertAdjacentElement('beforebegin', obj.cubeEl);
         }
         if (obj.hasOwnProperty('image')) {
-            obj.imageEl = createEl('img', { [alias]: 'image', src: `${obj.image || getImgNone()}` });
+            obj.imageEl = createEl('img', { [ax.alias]: 'image', src: `${obj.image || ax.images.none}` });
             obj.labelEl.insertAdjacentElement('beforebegin', obj.imageEl);
         }
     }
     createTag(obj) {
-        let labelObj = { [alias]: 'label' }, text = this.data.find((k) => k !== obj && k[this.options.field] === obj[this.options.field]) ?
+        let labelObj = { [ax.alias]: 'label' }, text = this.data.find((k) => k !== obj && k[this.options.field] === obj[this.options.field]) ?
             renderTpl(this.options.unique.template, { field: obj[this.options.field], value: obj[this.options.unique.refer], key: this.options.unique.refer }) :
             obj[this.options.field];
         obj.hasOwnProperty('href') && (labelObj.href = obj.href);
@@ -15593,8 +15271,8 @@ class Tags extends ModBaseListenCache {
         obj.hasOwnProperty('href') && obj.rel && (labelObj.rel = obj.rel);
         obj.hasOwnProperty('href') && obj.download && (labelObj.download = obj.download);
         obj.labelEl = createEl(labelObj.hasOwnProperty('href') ? 'a' : 'i', labelObj, text);
-        obj.wrapEl = createEl('span', { class: `${prefix}tag` }, obj.labelEl);
-        obj.removeEl = createEl('i', { [alias]: 'remove' });
+        obj.wrapEl = createEl('span', { class: `${ax.prefix}tag` }, obj.labelEl);
+        obj.removeEl = createEl('i', { [ax.alias]: 'remove' });
         this.options.removable && obj.wrapEl.appendChild(obj.removeEl);
         this.useLegend(obj);
         !this.options.theme && obj.theme && obj.wrapEl.setAttribute('theme', obj.theme);
@@ -15866,7 +15544,7 @@ class Tree extends ModBaseListenCacheNest {
         
         let _this = this;
         this.expandEvt = debounce(function () {
-            let attr = this.getAttribute(alias) === 'arrow' ? 'arrowEl' : this.getAttribute(alias) === 'legend' ? 'legendEl' : 'headEl', item = findItem(this, _this.flatData, attr);
+            let attr = this.getAttribute(ax.alias) === 'arrow' ? 'arrowEl' : this.getAttribute(ax.alias) === 'legend' ? 'legendEl' : 'headEl', item = findItem(this, _this.flatData, attr);
             _this.toggleExpanded(item);
         }, this.options.delay);
         this.selectEvt = debounce(function () {
@@ -15890,7 +15568,7 @@ class Tree extends ModBaseListenCacheNest {
             let item = findItem(this, _this.flatData, 'headEl'), condition = false;
             if (!item)
                 return;
-            if (_this.options.shortcut.span === 'blank' && (e.target === item.headEl || ['holder', 'group', 'gap'].includes(e.target.getAttribute(alias)))) {
+            if (_this.options.shortcut.span === 'blank' && (e.target === item.headEl || ['holder', 'group', 'gap'].includes(e.target.getAttribute(ax.alias)))) {
                 condition = true;
             }
             else if (!contains(e.target, [item.arrowEl, item.checkEl, item.toolsEl, ((_this.options.select.enable && !item.headEl.hasAttribute('unselectable')) || (item.labelEl.nodeName === 'A' && item.labelEl.hasAttribute('href'))) ? item.labelEl : null])) {
@@ -16296,7 +15974,7 @@ class Tree extends ModBaseListenCacheNest {
     async renderData(data) {
         let outer = createEl('ul');
         let plantTree = async (parent, data) => {
-            let ul = createEl('ul', { class: `${prefix}reset ${prefix}tree-children` });
+            let ul = createEl('ul', { class: `${ax.prefix}reset ${ax.prefix}tree-children` });
             for (let k of data) {
                 this.createHeadEl(k, parent);
                 await this.createBodyEl(k);
@@ -16316,7 +15994,7 @@ class Tree extends ModBaseListenCacheNest {
             return ul;
         };
         await plantTree(outer, data);
-        this.resultEl = createEl('div', { class: `${prefix}tree-result` });
+        this.resultEl = createEl('div', { class: `${ax.prefix}tree-result` });
         this.options.output.enable && !this.options.output.instant && this.targetEl.appendChild(this.resultEl);
         if (this.options.name) {
             this.inputEl = createEl('input', { type: 'hidden', name: this.options.name });
@@ -16339,7 +16017,7 @@ class Tree extends ModBaseListenCacheNest {
                 this.options.arrow.hide && (item.arrowEl.style.backgroundImage = `url("${this.options.arrow.hide}")`);
             }
             else {
-                item.arrowEl.classList.remove(`${prefix}none`);
+                item.arrowEl.classList.remove(`${ax.prefix}none`);
                 this.options.arrow.hide && item.arrowEl.classList.add(this.options.arrow.hide);
             }
         }
@@ -16350,7 +16028,7 @@ class Tree extends ModBaseListenCacheNest {
                 item.arrowEl.removeAttribute('style');
             }
             else {
-                classes(item.arrowEl).remove([this.options.arrow.show, this.options.arrow.hide]).add(`${prefix}none`);
+                classes(item.arrowEl).remove([this.options.arrow.show, this.options.arrow.hide]).add(`${ax.prefix}none`);
             }
         }
     }
@@ -16399,54 +16077,54 @@ class Tree extends ModBaseListenCacheNest {
         }
     }
     getLegendEl(item) {
-        item.legendEl = createEl('i', { [alias]: 'legend' });
+        item.legendEl = createEl('i', { [ax.alias]: 'legend' });
         this.updateLegendEl(item);
     }
     createHeadEl(item, parent) {
         if (item.wrapEl)
             return;
-        item.wrapEl = createEl('li', { class: `${prefix}tree-wrap` });
-        item.groupEl = createEl('div', { [alias]: 'group' });
+        item.wrapEl = createEl('li', { class: `${ax.prefix}tree-wrap` });
+        item.groupEl = createEl('div', { [ax.alias]: 'group' });
         if (item.headEl) {
             if (!item.labelEl) {
-                item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [alias]: 'label' }, item.label);
+                item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [ax.alias]: 'label' }, item.label);
                 item.headEl.appendChild(item.labelEl);
             }
         }
         else {
-            item.headEl = createEl('div', { class: `${prefix}tree-head` });
-            !item.labelEl && (item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [alias]: 'label' }, item.label));
+            item.headEl = createEl('div', { class: `${ax.prefix}tree-head` });
+            !item.labelEl && (item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [ax.alias]: 'label' }, item.label));
             item.headEl.appendChild(item.labelEl);
         }
         item.wrapEl.appendChild(item.headEl);
         item.href && (item.labelEl.href = item.href);
         item.target && (item.labelEl.target = item.target);
-        item.indentHeadEl = createEl('span', { [alias]: 'indent' });
-        item.indentBodyEl = createEl('span', { [alias]: 'indent' });
-        item.indentFootEl = createEl('span', { [alias]: 'indent' });
+        item.indentHeadEl = createEl('span', { [ax.alias]: 'indent' });
+        item.indentBodyEl = createEl('span', { [ax.alias]: 'indent' });
+        item.indentFootEl = createEl('span', { [ax.alias]: 'indent' });
         item.indentHeadEl.innerHTML = item.indentBodyEl.innerHTML = item.indentFootEl.innerHTML = this.getIndentHtml(item.floor);
         item.onclick && item.labelEl.setAttribute('onclick', item.onclick);
         this.options.arrow.enable && super.getArrowEl(item);
         if (!item.iconEl) {
-            item.iconEl = item.hasOwnProperty('icon') ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
+            item.iconEl = item.hasOwnProperty('icon') ? createEl('i', { [ax.alias]: 'icon', class: item.icon }) : null;
         }
         if (!item.diskEl) {
-            item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || getImgNone() }) : null;
+            item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [ax.alias]: 'disk', src: item.disk || ax.images.none }) : null;
         }
         if (!item.cubeEl) {
-            item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || getImgNone() }) : null;
+            item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [ax.alias]: 'cube', src: item.cube || ax.images.none }) : null;
         }
         if (!item.imageEl) {
-            item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || getImgNone() }) : null;
+            item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [ax.alias]: 'image', src: item.image || ax.images.none }) : null;
         }
         if (!item.badgeEl) {
-            item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge', label: item.badge.toString().trim() }) : null;
+            item.badgeEl = item.badge ? createEl('ax-badge', { [ax.alias]: 'badge', label: item.badge.toString().trim() }) : null;
         }
         if (!item.tipsEl) {
-            item.tipsEl = item.tips ? createEl('i', { [alias]: 'tips' }, item.tips) : null;
+            item.tipsEl = item.tips ? createEl('i', { [ax.alias]: 'tips' }, item.tips) : null;
         }
         if (!item.customEl) {
-            item.customEl = item.custom ? createEl('div', { [alias]: 'custom' }, item.custom) : null;
+            item.customEl = item.custom ? createEl('div', { [ax.alias]: 'custom' }, item.custom) : null;
         }
         item.expanded && item.headEl.toggleAttribute('expanded', true);
         item.selected && item.headEl.toggleAttribute('selected', true);
@@ -16456,14 +16134,14 @@ class Tree extends ModBaseListenCacheNest {
         this.options.drag.enable && item.headEl.toggleAttribute([this.dropTag], true);
         if (this.options.check.enable) {
             item.checkType = this.getCheckType(parent);
-            item.checkEl = createEl(`ax-${item.checkType}`, { [alias]: 'check' });
+            item.checkEl = createEl(`ax-${item.checkType}`, { [ax.alias]: 'check' });
         }
         if (this.options.legend.enable) {
             this.getLegendEl(item);
         }
         if (this.options.tools.enable) {
             item.toolsEl = createTools(this.options.tools.children, item.headEl);
-            item.toolsEl.setAttribute(alias, 'tools');
+            item.toolsEl.setAttribute(ax.alias, 'tools');
             item.tools = deepClone(this.options.tools.children);
             for (let k of item.tools) {
                 this.options.lang.title[k.name] && k.wrapEl.setAttribute('title', this.options.lang.title[k.name]);
@@ -16501,11 +16179,11 @@ class Tree extends ModBaseListenCacheNest {
     async createBodyEl(item, autoFill = this.options.autoFill) {
         if (item.bodyEl)
             return;
-        item.bodyEl = createEl('div', { class: `${prefix}tree-body` });
+        item.bodyEl = createEl('div', { class: `${ax.prefix}tree-body` });
         item.bodyEl.appendChild(item.indentBodyEl);
-        item.indentBodyEl.insertAdjacentHTML('afterend', `<i  class="${prefix}none"></i>`);
+        item.indentBodyEl.insertAdjacentHTML('afterend', `<i  class="${ax.prefix}none"></i>`);
         if (!item.briefEl) {
-            item.briefEl = createEl('div', { class: `${prefix}tree-brief` });
+            item.briefEl = createEl('div', { class: `${ax.prefix}tree-brief` });
             if (autoFill) {
                 
                 await super.getElCont({
@@ -16524,16 +16202,16 @@ class Tree extends ModBaseListenCacheNest {
     createFootEl(item) {
         if (!this.options.paginated.enable || item.pageEl)
             return;
-        item.moreEl = createEl('i', { [alias]: 'more' }, this.options.lang.paginated.more);
-        item.nextEl = createEl('i', { [alias]: 'next' }, this.options.lang.paginated.next);
-        item.firstEl = createEl('i', { [alias]: 'first' }, this.options.lang.paginated.first);
-        item.infoEl = createEl('i', { [alias]: 'info' });
-        item.pageEl = createEl('div', { class: `${prefix}tree-page` }, item.infoEl);
+        item.moreEl = createEl('i', { [ax.alias]: 'more' }, this.options.lang.paginated.more);
+        item.nextEl = createEl('i', { [ax.alias]: 'next' }, this.options.lang.paginated.next);
+        item.firstEl = createEl('i', { [ax.alias]: 'first' }, this.options.lang.paginated.first);
+        item.infoEl = createEl('i', { [ax.alias]: 'info' });
+        item.pageEl = createEl('div', { class: `${ax.prefix}tree-page` }, item.infoEl);
         this.options.paginated.override ? item.pageEl.append(item.nextEl, item.firstEl) : item.pageEl.appendChild(item.moreEl);
-        item.footEl = createEl('div', { class: `${prefix}tree-foot` });
+        item.footEl = createEl('div', { class: `${ax.prefix}tree-foot` });
         if (item !== this.pagination) {
             item.footEl.appendChild(item.indentFootEl);
-            item.indentFootEl.insertAdjacentHTML('afterend', `<i  class="${prefix}none"></i>`);
+            item.indentFootEl.insertAdjacentHTML('afterend', `<i  class="${ax.prefix}none"></i>`);
         }
         item.footEl.appendChild(item.pageEl);
         item.children && item.wrapEl.appendChild(item.footEl);
@@ -16603,7 +16281,7 @@ class Tree extends ModBaseListenCacheNest {
     createChildrenEl(item) {
         if (item.childrenEl)
             return;
-        item.childrenEl = createEl('ul', { class: `${prefix}reset ${prefix}tree-children` });
+        item.childrenEl = createEl('ul', { class: `${ax.prefix}reset ${ax.prefix}tree-children` });
         let target = item.hasOwnProperty('brief') ? item.bodyEl : item.headEl;
         target.insertAdjacentElement('afterEnd', item.childrenEl);
     }
@@ -16620,7 +16298,7 @@ class Tree extends ModBaseListenCacheNest {
         this.updateEvt(item);
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}tree`);
+        this.targetEl.classList.add(`${ax.prefix}tree`);
         this.options.classes && classes(this.targetEl).add(this.options.classes);
         this.targetEl.toggleAttribute('inert', this.options.passive);
         this.targetEl.setAttribute('tools-trigger', this.options.tools.trigger);
@@ -17250,7 +16928,7 @@ class Tree extends ModBaseListenCacheNest {
             }
             if (!isEmpty(this.ignores)) {
                 for (let k of this.ignores)
-                    k.wrapEl.classList.remove(`${prefix}d-none`);
+                    k.wrapEl.classList.remove(`${ax.prefix}d-none`);
             }
             this.searchs = [];
             this.ignores = [];
@@ -17272,9 +16950,9 @@ class Tree extends ModBaseListenCacheNest {
                 let currents = unique([...p, ...this.searchs]);
                 this.ignores = this.flatData.filter((k) => !currents.includes(k));
                 for (let k of this.ignores)
-                    k.wrapEl.classList.add(`${prefix}d-none`);
+                    k.wrapEl.classList.add(`${ax.prefix}d-none`);
                 for (let k of currents)
-                    k.wrapEl.classList.remove(`${prefix}d-none`);
+                    k.wrapEl.classList.remove(`${ax.prefix}d-none`);
             });
         }
         super.updateCache({ search: { value: keys } });
@@ -17647,9 +17325,9 @@ class Menu extends ModBaseListenCache {
             },
             arrow: {
                 enable: this.options.arrow.enable,
-                show: this.options.arrow.icon || `${prefix}icon-${this.options.nav.enable ? 'down' : 'right'}`,
-                hide: this.options.arrow.icon || `${prefix}icon-${this.options.nav.enable ? 'down' : 'right'}`,
-                anim: `${prefix}rotate${this.options.nav.enable || this.options.spill ? '180' : '90'}`,
+                show: this.options.arrow.icon || `${ax.prefix}icon-${this.options.nav.enable ? 'down' : 'right'}`,
+                hide: this.options.arrow.icon || `${ax.prefix}icon-${this.options.nav.enable ? 'down' : 'right'}`,
+                anim: `${ax.prefix}rotate${this.options.nav.enable || this.options.spill ? '180' : '90'}`,
                 type: 'icon',
                 trigger: this.options.trigger,
             },
@@ -17703,7 +17381,7 @@ class Menu extends ModBaseListenCache {
         }
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}menu`);
+        this.targetEl.classList.add(`${ax.prefix}menu`);
         this.options.classes && classes(this.targetEl).add(this.options.classes);
         this.targetEl.setAttribute('theme', this.options.theme);
         this.targetEl.toggleAttribute('inert', this.options.passive);
@@ -18048,7 +17726,7 @@ class Tab extends ModBaseListenCacheNest {
         this.actEvt = function (evt) {
             if (this.hasAttribute('selected') || this.hasAttribute('disabled'))
                 return;
-            let toolsEl = this.querySelector(`:scope > [${alias}="tools"]`);
+            let toolsEl = this.querySelector(`:scope > [${ax.alias}="tools"]`);
             if (toolsEl && toolsEl.contains(evt.target))
                 return;
             let item = _this.treeData.find((k) => k.headEl === this);
@@ -18101,7 +17779,7 @@ class Tab extends ModBaseListenCacheNest {
             });
         }
         else {
-            if (this.targetEl.querySelector(`.${prefix}tab-head`) && this.targetEl.querySelector(`.${prefix}tab-body`)) {
+            if (this.targetEl.querySelector(`.${ax.prefix}tab-head`) && this.targetEl.querySelector(`.${ax.prefix}tab-body`)) {
                 this.treeDataOrig = this.htmlToArr();
                 treeTools.addIdPath({ source: this.treeDataOrig });
                 this.rawData = this.treeDataOrig;
@@ -18191,8 +17869,8 @@ class Tab extends ModBaseListenCacheNest {
     htmlToArr() {
         
         let data = [];
-        this.headsEl = this.targetEl.querySelector(`.${prefix}tab-head`);
-        this.bodiesEl = this.targetEl.querySelector(`.${prefix}tab-body`);
+        this.headsEl = this.targetEl.querySelector(`.${ax.prefix}tab-head`);
+        this.bodiesEl = this.targetEl.querySelector(`.${ax.prefix}tab-body`);
         if (!this.headsEl || !this.bodiesEl) {
             return data;
         }
@@ -18221,19 +17899,19 @@ class Tab extends ModBaseListenCacheNest {
                 loop(props);
             }
         }, getPropsFromHead = (elem) => {
-            let obj = {}, tmpLabel = elem.querySelector(`[${alias}="label"]`);
+            let obj = {}, tmpLabel = elem.querySelector(`[${ax.alias}="label"]`);
             obj.headEl = elem;
             obj.labelEl = tmpLabel || elem;
             obj.label = obj.labelEl.textContent.trim();
-            obj.tipsEl = elem.querySelector(`[${alias}="tips"]`);
+            obj.tipsEl = elem.querySelector(`[${ax.alias}="tips"]`);
             obj.tips = obj.tipsEl ? obj.tipsEl.textContent.trim() : '';
-            obj.iconEl = elem.querySelector(`[${alias}="icon"]`);
+            obj.iconEl = elem.querySelector(`[${ax.alias}="icon"]`);
             obj.icon = obj.iconEl ? obj.iconEl.getAttribute('class') : '';
-            obj.cubeEl = elem.querySelector(`[${alias}="cube"]`);
+            obj.cubeEl = elem.querySelector(`[${ax.alias}="cube"]`);
             obj.cube = obj.cubeEl ? obj.cubeEl.src : '';
-            obj.diskEl = elem.querySelector(`[${alias}="disk"]`);
+            obj.diskEl = elem.querySelector(`[${ax.alias}="disk"]`);
             obj.disk = obj.diskEl ? obj.diskEl.src : '';
-            obj.badgeEl = elem.querySelector(`[${alias}="badge"],ax-badge`);
+            obj.badgeEl = elem.querySelector(`[${ax.alias}="badge"],ax-badge`);
             obj.badge = obj.badgeEl ? obj.badgeEl.getAttribute('label') || obj.badgeEl.textContent.trim() : '';
             setBoolean(obj, ['selected', 'disabled']);
             return obj;
@@ -18249,8 +17927,8 @@ class Tab extends ModBaseListenCacheNest {
     renderData(data) {
         this.dividerEl = createEl('ax-br');
         this.options.divider.size && this.dividerEl.setAttribute('size', this.options.divider.size);
-        this.headsEl = createEl('ul', { class: `${prefix}tab-head` });
-        this.bodiesEl = createEl('ul', { class: `${prefix}tab-body` });
+        this.headsEl = createEl('ul', { class: `${ax.prefix}tab-head` });
+        this.bodiesEl = createEl('ul', { class: `${ax.prefix}tab-body` });
         this.updateHeadBodyAttrs();
         for (let k of data) {
             if (!k.hasOwnProperty('label') || !k.hasOwnProperty('content')) {
@@ -18266,15 +17944,15 @@ class Tab extends ModBaseListenCacheNest {
         this.targetEl.append(this.headsEl, this.options.divider.enable ? this.dividerEl : '', this.bodiesEl);
     }
     createItemEl(item) {
-        item.labelEl = createEl('i', { [alias]: 'label' }, item.label);
-        item.iconEl = item.icon ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
-        item.diskEl = item.disk ? createEl('img', { [alias]: 'disk', src: item.disk }) : null;
-        item.cubeEl = item.cube ? createEl('img', { [alias]: 'cube', src: item.cube }) : null;
-        item.imageEl = item.image ? createEl('img', { [alias]: 'image', src: item.image }) : null;
+        item.labelEl = createEl('i', { [ax.alias]: 'label' }, item.label);
+        item.iconEl = item.icon ? createEl('i', { [ax.alias]: 'icon', class: item.icon }) : null;
+        item.diskEl = item.disk ? createEl('img', { [ax.alias]: 'disk', src: item.disk }) : null;
+        item.cubeEl = item.cube ? createEl('img', { [ax.alias]: 'cube', src: item.cube }) : null;
+        item.imageEl = item.image ? createEl('img', { [ax.alias]: 'image', src: item.image }) : null;
         item.headEl = createEl('li');
         item.bodyEl = createEl('li');
-        item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge' }, item?.badge?.trim()) : null;
-        item.tipsEl = item.tips ? createEl('i', { [alias]: 'tips' }, item.tips) : null;
+        item.badgeEl = item.badge ? createEl('ax-badge', { [ax.alias]: 'badge' }, item?.badge?.trim()) : null;
+        item.tipsEl = item.tips ? createEl('i', { [ax.alias]: 'tips' }, item.tips) : null;
         item.selected && (item.headEl.toggleAttribute('selected', true), item.bodyEl.toggleAttribute('selected', true));
         item.disabled && item.headEl.toggleAttribute('disabled', true);
         item.headEl.append(...[item.iconEl, item.diskEl, item.cubeEl, item.imageEl, item.labelEl, item.tipsEl, item.badgeEl].filter(Boolean));
@@ -18283,7 +17961,7 @@ class Tab extends ModBaseListenCacheNest {
     getTools(item) {
         if (this.options.tools.enable) {
             item.toolsEl = createTools(this.options.tools.children, item.headEl);
-            item.toolsEl.setAttribute(alias, 'tools');
+            item.toolsEl.setAttribute(ax.alias, 'tools');
             item.tools = deepClone(this.options.tools.children);
             for (let k of item.tools) {
                 this.options.lang.title[k.name] && k.wrapEl.setAttribute('title', this.options.lang.title[k.name]);
@@ -18332,8 +18010,8 @@ class Tab extends ModBaseListenCacheNest {
         !isEmpty(this.options.attrs?.head) && setAttrs(this.headsEl, this.options.attrs.head);
         !isEmpty(this.options.attrs?.body) && setAttrs(this.bodiesEl, this.options.attrs.body);
         if (this.options.layout) {
-            if (!this.headsEl.getAttribute('class')?.includes(`${prefix}group-`)) {
-                this.headLayout = `${prefix}group-${this.options.layout}`;
+            if (!this.headsEl.getAttribute('class')?.includes(`${ax.prefix}group-`)) {
+                this.headLayout = `${ax.prefix}group-${this.options.layout}`;
                 this.headsEl.classList.add(this.headLayout);
             }
         }
@@ -18342,7 +18020,7 @@ class Tab extends ModBaseListenCacheNest {
         }
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}tab`);
+        this.targetEl.classList.add(`${ax.prefix}tab`);
         this.options.classes?.target && classes(this.targetEl).add(this.options.classes.target);
         !isEmpty(this.options.attrs?.target) && setAttrs(this.targetEl, this.options.attrs.target);
         this.targetEl.toggleAttribute('inert', this.options.passive);
@@ -18695,7 +18373,7 @@ class Tooltip extends Popup {
         !options?.theme ? options.theme = 'text' : null;
         super(elem, options, initial);
         this.on('initiated', () => {
-            this.mainEl.classList.add(`${prefix}tooltip`);
+            this.mainEl.classList.add(`${ax.prefix}tooltip`);
         });
     }
 }
@@ -18774,7 +18452,7 @@ const optDropdown = [
     {
         attr: 'child-sel',
         prop: 'childSel',
-        value: `[${alias}="label"]`,
+        value: `[${ax.alias}="label"]`,
     },
     {
         attr: 'val-key',
@@ -18827,7 +18505,7 @@ class Dropdown extends ModBaseListenCache {
             tools: false,
             trigger: 'click',
             placement: 'bottom-start',
-            classes: `${prefix}dropdown`,
+            classes: `${ax.prefix}dropdown`,
             autoFill: {
                 enable: true,
                 childSel: this.options.childSel,
@@ -18939,7 +18617,7 @@ const optRetrieval = [
             enable: false,
             props: 'label',
             node: 'i',
-            classes: `${prefix}c-issue`,
+            classes: `${ax.prefix}c-issue`,
         },
     },
     {
@@ -19091,7 +18769,7 @@ class Retrieval extends ModBaseListenCache {
         
         this.targetEl = getEl(this.options.target);
         this.inputEl = getEl(this.options.editor);
-        this.statusEl = createEl('div', { class: `${prefix}retrieval-status` });
+        this.statusEl = createEl('div', { class: `${ax.prefix}retrieval-status` });
         this.inputEvt = debounce(() => {
             let keys = this.getInputVals();
             this.updateKeys(keys);
@@ -19158,7 +18836,7 @@ class Retrieval extends ModBaseListenCache {
     }
     setAttrs() {
         if (this.targetEl) {
-            this.targetEl.classList.add(`${prefix}retrieval`);
+            this.targetEl.classList.add(`${ax.prefix}retrieval`);
             this.options.classes && classes(this.targetEl).add(this.options.classes);
         }
     }
@@ -19490,7 +19168,7 @@ class Autocomplete extends ModBaseListenCache {
         this.retrievalIns && this.retrievalIns.destroy();
     }
     setAttrs() {
-        this.popupIns.mainEl.classList.add(`${prefix}autocomplete`);
+        this.popupIns.mainEl.classList.add(`${ax.prefix}autocomplete`);
     }
     createPopup() {
         this.popupIns = new Popup(this.targetEl, extend({
@@ -19850,7 +19528,6 @@ class Scroll extends ModBaseListenCache {
     started;
     scrolled;
     cross;
-    isMobi;
     childAvgSize;
     resizeCount;
     mutateCount;
@@ -19905,7 +19582,6 @@ class Scroll extends ModBaseListenCache {
         this.started = false;
         this.scrolled = true;
         this.cross = '';
-        this.isMobi = isMobi;
         this.childAvgSize = null;
         this.resizeCount = 0;
         this.mutateCount = 0;
@@ -19984,8 +19660,8 @@ class Scroll extends ModBaseListenCache {
     setEmpty() {
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}scroll`);
-        this.wrapEl.classList.add(`${prefix}scroll-wrap`);
+        this.targetEl.classList.add(`${ax.prefix}scroll`);
+        this.wrapEl.classList.add(`${ax.prefix}scroll-wrap`);
         this.targetEl.setAttribute('axis', this.options.axis);
         this.targetEl.toggleAttribute('gridded', this.options.gridded);
         this.options.rtl ? this.targetEl.setAttribute('dir', 'rtl') : this.targetEl.removeAttribute('dir');
@@ -20135,11 +19811,11 @@ class Scroll extends ModBaseListenCache {
         if (this.options.bar.enable) {
             if (!this.trackEl) {
                 this.thumbEl = createEl('span');
-                this.trackEl = createEl('div', { class: `${prefix}scroll-bar` }, this.thumbEl);
+                this.trackEl = createEl('div', { class: `${ax.prefix}scroll-bar` }, this.thumbEl);
                 this.options.bar.sticky && this.trackEl.setAttribute('shown', '');
                 this.targetEl.appendChild(this.trackEl);
             }
-            if (this.options.bar.triggerable && !this.isMobi) {
+            if (this.options.bar.triggerable && !ax.isTouchScr) {
                 let prog = 0;
                 this.barIns = new Gesture(this.trackEl, {
                     onTranslate: () => {
@@ -20626,7 +20302,7 @@ class Scroll extends ModBaseListenCache {
             return this;
         this.sizeObs.disconnect();
         this.wrapStyleObs.disconnect();
-        this.options.bar.enable && this.options.bar.triggerable && !this.isMobi && this.barIns.destroy();
+        this.options.bar.enable && this.options.bar.triggerable && !ax.isTouchScr && this.barIns.destroy();
         this.gestureIns.destroy();
         this.destroyed = true;
         super.listen({ name: 'destroyed', cb });
@@ -20788,7 +20464,7 @@ class Masonry extends ModBaseListenCache {
         return this;
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}masonry`);
+        this.targetEl.classList.add(`${ax.prefix}masonry`);
         classes(this.targetEl).add(this.options.classes);
         this.targetEl.style.columnGap = `${this.gap}px`;
         this.options.cols ? addStyle(this.targetEl, 'grid-template-columns', `repeat(${this.options.cols}, 1fr)`) : removeStyle(this.targetEl, 'grid-template-columns');
@@ -21380,7 +21056,7 @@ class Progress extends ModBaseListenCache {
         this.valNow = 0;
         this.barNow = 0;
         this.toggleCtrl = () => {
-            this.controlEl.classList.contains(`${prefix}icon-pause`) ? this.pause() : this.continue();
+            this.controlEl.classList.contains(`${ax.prefix}icon-pause`) ? this.pause() : this.continue();
         };
         super.listen({ name: 'constructed' });
         initial && this.init();
@@ -21398,9 +21074,9 @@ class Progress extends ModBaseListenCache {
         this.barSize = this.options.type === 'circle' ? 251.2 : this.options.type === 'semicircle' ? 125.6 : this.options.type === 'gapcircle' ? 167.6 : this.range[1];
         this.steps = this.options.steps.length ? [...this.options.steps].sort((a, b) => b.value - a.value) : [];
         this.getInitVals();
-        this.completeEl = createEl('span', { [alias]: 'complete' }, this.options.lang.complete);
-        this.textEl = createEl('div', { [alias]: 'text' });
-        this.controlEl = createEl('i', { [alias]: 'control', class: `${prefix}icon-pause`, disabled: '' });
+        this.completeEl = createEl('span', { [ax.alias]: 'complete' }, this.options.lang.complete);
+        this.textEl = createEl('div', { [ax.alias]: 'text' });
+        this.controlEl = createEl('i', { [ax.alias]: 'control', class: `${ax.prefix}icon-pause`, disabled: '' });
         this.controlEl.addEventListener('click', this.toggleCtrl, false);
         this.setObs();
         this.render();
@@ -21430,10 +21106,10 @@ class Progress extends ModBaseListenCache {
     }
     setControl(pause, disabled) {
         if (pause) {
-            classes(this.controlEl).replace(`${prefix}icon-pause`, `${prefix}icon-play`);
+            classes(this.controlEl).replace(`${ax.prefix}icon-pause`, `${ax.prefix}icon-play`);
         }
         else {
-            classes(this.controlEl).replace(`${prefix}icon-play`, `${prefix}icon-pause`);
+            classes(this.controlEl).replace(`${ax.prefix}icon-play`, `${ax.prefix}icon-pause`);
         }
         if (disabled) {
             this.controlEl.setAttribute('disabled', '');
@@ -21443,7 +21119,7 @@ class Progress extends ModBaseListenCache {
         }
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}progress`);
+        this.targetEl.classList.add(`${ax.prefix}progress`);
         this.targetEl.setAttribute('linecap', this.options.linecap);
         this.targetEl.setAttribute('type', this.options.type);
         this.options.thk ? this.targetEl.setAttribute('thk', this.options.thk) : this.targetEl.removeAttribute('thk');
@@ -21452,7 +21128,7 @@ class Progress extends ModBaseListenCache {
         this.targetEl.toggleAttribute('gradient', this.options.gradient);
         this.targetEl.toggleAttribute('simple', this.options.simple);
         this.options.classes && classes(this.targetEl).add(this.options.classes);
-        let tmp = [`${prefix}rotate360`, `${prefix}loop-inf`];
+        let tmp = [`${ax.prefix}rotate360`, `${ax.prefix}loop-inf`];
         (this.options.rotate && this.options.type === 'circle') ? this.wrapEl.classList.add(...tmp) : this.wrapEl.classList.remove(...tmp);
     }
     getInitVals() {
@@ -21530,11 +21206,11 @@ class Progress extends ModBaseListenCache {
     }
     render() {
         this.targetEl.innerHTML = '';
-        this.labelTpl = this.options.label.template || `<div ${alias}=label><div ${alias}=result><i ${alias}=number></i><i ${alias}=unit></i></div></div>`;
+        this.labelTpl = this.options.label.template || `<div ${ax.alias}=label><div ${ax.alias}=result><i ${ax.alias}=number></i><i ${ax.alias}=unit></i></div></div>`;
         if (this.options.type == 'line') {
-            this.trackEl = createEl('div', { [alias]: 'track' });
+            this.trackEl = createEl('div', { [ax.alias]: 'track' });
             this.wrapEl = this.trackEl;
-            this.barEl = createEl('div', { [alias]: 'bar', 'style': `width:${this.vals.percent}%` });
+            this.barEl = createEl('div', { [ax.alias]: 'bar', 'style': `width:${this.vals.percent}%` });
             this.wrapEl.appendChild(this.barEl);
         }
         else {
@@ -21543,48 +21219,48 @@ class Progress extends ModBaseListenCache {
                 if (this.options.theme == 'prim') {
                     gradient = `
                 <linearGradient id="svgbar-prim" >
-                    <stop offset="0%" style="stop-color:var(--${prefix}c-prim);" ></stop>
-                    <stop offset="100%" style="stop-color:var(--${prefix}c-prim-aj);" ></stop>
+                    <stop offset="0%" style="stop-color:var(--${ax.prefix}c-prim);" ></stop>
+                    <stop offset="100%" style="stop-color:var(--${ax.prefix}c-prim-aj);" ></stop>
                 </linearGradient>
               `;
                 }
                 else if (this.options.theme == 'error') {
                     gradient = `
                 <linearGradient id="svgbar-error" >
-                    <stop offset="0%" style="stop-color:var(--${prefix}c-error);" ></stop>
-                    <stop offset="100%" style="stop-color:var(--${prefix}c-error-aj);" ></stop>
+                    <stop offset="0%" style="stop-color:var(--${ax.prefix}c-error);" ></stop>
+                    <stop offset="100%" style="stop-color:var(--${ax.prefix}c-error-aj);" ></stop>
                 </linearGradient>
               `;
                 }
                 else if (this.options.theme == 'succ') {
                     gradient = `
                 <linearGradient id="svgbar-succ" >
-                    <stop offset="0%" style="stop-color:var(--${prefix}c-succ);" ></stop>
-                    <stop offset="100%" style="stop-color:var(--${prefix}c-succ-aj);" ></stop>
+                    <stop offset="0%" style="stop-color:var(--${ax.prefix}c-succ);" ></stop>
+                    <stop offset="100%" style="stop-color:var(--${ax.prefix}c-succ-aj);" ></stop>
                 </linearGradient>
               `;
                 }
                 else if (this.options.theme == 'warn') {
                     gradient = `
             <linearGradient id="svgbar-warn" >
-                <stop offset="0%" style="stop-color:var(--${prefix}c-warn);" ></stop>
-                <stop offset="100%" style="stop-color:var(--${prefix}c-warn-aj);" ></stop>
+                <stop offset="0%" style="stop-color:var(--${ax.prefix}c-warn);" ></stop>
+                <stop offset="100%" style="stop-color:var(--${ax.prefix}c-warn-aj);" ></stop>
             </linearGradient>
           `;
                 }
                 else if (this.options.theme == 'info') {
                     gradient = `
                 <linearGradient id="svgbar-info" >
-                    <stop offset="0%" style="stop-color:var(--${prefix}c-info);" ></stop>
-                    <stop offset="100%" style="stop-color:var(--${prefix}c-info-aj);" ></stop>
+                    <stop offset="0%" style="stop-color:var(--${ax.prefix}c-info);" ></stop>
+                    <stop offset="100%" style="stop-color:var(--${ax.prefix}c-info-aj);" ></stop>
                 </linearGradient>
               `;
                 }
                 else if (this.options.theme == 'issue') {
                     gradient = `
                 <linearGradient id="svgbar-issue" >
-                    <stop offset="0%" style="stop-color:var(--${prefix}c-issue);" ></stop>
-                    <stop offset="100%" style="stop-color:var(--${prefix}c-issue-aj);"></stop>
+                    <stop offset="0%" style="stop-color:var(--${ax.prefix}c-issue);" ></stop>
+                    <stop offset="100%" style="stop-color:var(--${ax.prefix}c-issue-aj);"></stop>
                 </linearGradient>
               `;
                 }
@@ -21592,56 +21268,56 @@ class Progress extends ModBaseListenCache {
             if (this.options.type == 'circle') {
                 svg = `<svg viewBox="0 0 100 100">
                             ${gradient}
-                            ${!this.options.simple ? `<path d="M 50 50 m -40 0 a 40 40 0 1 1 80 0  a 40 40 0 1 1 -80 0" ${alias}="track"></path>` : ''}
-                            <path d="M 50 50 m -40 0 a 40 40 0 1 1 80 0  a 40 40 0 1 1 -80 0" ${alias}="bar" stroke-dasharray=${this.barSize} stroke-linecap=${this.options.linecap}  stroke-dashoffset=${this.vals.bar}></path>
+                            ${!this.options.simple ? `<path d="M 50 50 m -40 0 a 40 40 0 1 1 80 0  a 40 40 0 1 1 -80 0" ${ax.alias}="track"></path>` : ''}
+                            <path d="M 50 50 m -40 0 a 40 40 0 1 1 80 0  a 40 40 0 1 1 -80 0" ${ax.alias}="bar" stroke-dasharray=${this.barSize} stroke-linecap=${this.options.linecap}  stroke-dashoffset=${this.vals.bar}></path>
                        </svg>
                         `;
             }
             else if (this.options.type == 'semicircle') {
                 svg = `<svg viewBox="0 0 100 60">
                             ${gradient}
-                            ${!this.options.simple ? `<path d="M 50 50 m -40 0 a 40 40 0 1 1 80 0" ${alias}="track" stroke-linecap=${this.options.linecap}></path>` : ''}
-                            <path d="M 50 50 m -40 0 a 40 40 0 1 1 80 0" ${alias}="bar" stroke-dasharray=${this.barSize} stroke-linecap=${this.options.linecap} stroke-dashoffset=${this.vals.bar}></path>
+                            ${!this.options.simple ? `<path d="M 50 50 m -40 0 a 40 40 0 1 1 80 0" ${ax.alias}="track" stroke-linecap=${this.options.linecap}></path>` : ''}
+                            <path d="M 50 50 m -40 0 a 40 40 0 1 1 80 0" ${ax.alias}="bar" stroke-dasharray=${this.barSize} stroke-linecap=${this.options.linecap} stroke-dashoffset=${this.vals.bar}></path>
                        </svg>
                         `;
             }
             else if (this.options.type == 'gapcircle') {
                 svg = `<svg viewBox="0 0 100 80">
                             ${gradient}
-                            ${!this.options.simple ? `<path d="M15.367,70.026C11.954,64.137,10,57.296,10,49.999 C10,27.909,27.909,10,50,10c22.092,0,40,17.909,40,39.999c0,7.295-1.952,14.134-5.363,20.022" ${alias}="track" stroke-linecap=${this.options.linecap}></path>` : ''}
-                            <path d="M15.367,70.026C11.954,64.137,10,57.296,10,49.999 C10,27.909,27.909,10,50,10c22.092,0,40,17.909,40,39.999c0,7.295-1.952,14.134-5.363,20.022" ${alias}="bar" stroke-dasharray=${this.barSize} stroke-linecap=${this.options.linecap} stroke-dashoffset=${this.vals.bar}></path>
+                            ${!this.options.simple ? `<path d="M15.367,70.026C11.954,64.137,10,57.296,10,49.999 C10,27.909,27.909,10,50,10c22.092,0,40,17.909,40,39.999c0,7.295-1.952,14.134-5.363,20.022" ${ax.alias}="track" stroke-linecap=${this.options.linecap}></path>` : ''}
+                            <path d="M15.367,70.026C11.954,64.137,10,57.296,10,49.999 C10,27.909,27.909,10,50,10c22.092,0,40,17.909,40,39.999c0,7.295-1.952,14.134-5.363,20.022" ${ax.alias}="bar" stroke-dasharray=${this.barSize} stroke-linecap=${this.options.linecap} stroke-dashoffset=${this.vals.bar}></path>
                        </svg>
                         `;
             }
             this.wrapEl = tplToEl(svg);
-            this.barEl = this.wrapEl.querySelector(`[${alias}="bar"]`);
-            this.trackEl = this.wrapEl.querySelector(`[${alias}="track"]`);
+            this.barEl = this.wrapEl.querySelector(`[${ax.alias}="bar"]`);
+            this.trackEl = this.wrapEl.querySelector(`[${ax.alias}="track"]`);
         }
         this.targetEl.appendChild(this.wrapEl);
         this.targetEl.appendChild(this.textEl);
         if (this.options.label.enable) {
             if (!this.options.label.placement) {
                 this.textEl.insertAdjacentHTML('beforeEnd', this.labelTpl);
-                this.labelEl = this.targetEl.querySelector(`[${alias}="label"]`);
+                this.labelEl = this.targetEl.querySelector(`[${ax.alias}="label"]`);
             }
             else {
                 let place = getEl(this.options.label.placement);
                 if (place) {
                     place.insertAdjacentHTML('beforeEnd', this.labelTpl);
-                    this.labelEl = place.querySelector(`[${alias}="label"]`);
+                    this.labelEl = place.querySelector(`[${ax.alias}="label"]`);
                 }
             }
-            this.numEl = this.labelEl.querySelector(`[${alias}="number"]`);
-            this.unitEl = this.labelEl.querySelector(`[${alias}="unit"]`);
+            this.numEl = this.labelEl.querySelector(`[${ax.alias}="number"]`);
+            this.unitEl = this.labelEl.querySelector(`[${ax.alias}="unit"]`);
             this.numEl && (this.numEl.innerHTML = this.vals.number);
             this.unitEl && (this.unitEl.innerHTML = this.options.label.unit);
             if (this.options.label.tips) {
-                if (!this.labelEl.querySelector(`[${alias}="tips"]`)) {
-                    this.tipsEl = createEl('span', { [alias]: 'tips' }, this.options.lang.tips);
+                if (!this.labelEl.querySelector(`[${ax.alias}="tips"]`)) {
+                    this.tipsEl = createEl('span', { [ax.alias]: 'tips' }, this.options.lang.tips);
                     this.labelEl.insertAdjacentElement('afterbegin', this.tipsEl);
                 }
                 else {
-                    this.tipsEl = this.labelEl.querySelector(`[${alias}="tips"]`);
+                    this.tipsEl = this.labelEl.querySelector(`[${ax.alias}="tips"]`);
                     this.tipsEl.innerHTML = this.options.lang.tips;
                 }
             }
@@ -21914,7 +21590,7 @@ class Swipe extends ModBaseListenCache {
             this.fillWedgets();
             this.setBulletActive(this.bullets.find((k) => this.actIdx === k.index) || 0);
             this.toggleNavDisabled();
-            this.targetEl.classList.remove(`${prefix}initiating`);
+            this.targetEl.classList.remove(`${ax.prefix}initiating`);
             this.setAutoPlay();
         });
         this.resetListener = throttle(() => {
@@ -21976,7 +21652,7 @@ class Swipe extends ModBaseListenCache {
     
     
     setAttrs() {
-        classes(this.targetEl).add(`${prefix}swipe,${prefix}initiating`);
+        classes(this.targetEl).add(`${ax.prefix}swipe,${ax.prefix}initiating`);
     }
     getDriftParams() {
         if (this.group)
@@ -22098,18 +21774,18 @@ class Swipe extends ModBaseListenCache {
     createWrap() {
         let firstChild = this.targetEl.firstElementChild;
         if (firstChild) {
-            firstChild.classList.add(`${prefix}swipe-wrap`);
+            firstChild.classList.add(`${ax.prefix}swipe-wrap`);
             this.wrapEl = firstChild;
         }
         else {
-            this.wrapEl = createEl('ul', { class: `${prefix}swipe-wrap ${prefix}reset` }, '');
+            this.wrapEl = createEl('ul', { class: `${ax.prefix}swipe-wrap ${ax.prefix}reset` }, '');
             this.targetEl.appendChild(this.wrapEl);
         }
-        if (this.targetEl.querySelector(`.${prefix}swipe-nav`)) {
-            this.navEl = this.targetEl.querySelector(`.${prefix}swipe-nav`);
+        if (this.targetEl.querySelector(`.${ax.prefix}swipe-nav`)) {
+            this.navEl = this.targetEl.querySelector(`.${ax.prefix}swipe-nav`);
         }
         else if (this.options.integrated) {
-            this.navEl = createEl('div', { class: `${prefix}swipe-nav` }, '');
+            this.navEl = createEl('div', { class: `${ax.prefix}swipe-nav` }, '');
             this.targetEl.appendChild(this.navEl);
         }
     }
@@ -22377,7 +22053,7 @@ class Swipe extends ModBaseListenCache {
         if (!this.options.total.enable)
             return false;
         let total = this.getTotal();
-        this.totalEl = createEl('span', { class: `${prefix}swipe-total` }, `<i></i><s>${this.options.total.hyphen}</s><u></u>`);
+        this.totalEl = createEl('span', { class: `${ax.prefix}swipe-total` }, `<i></i><s>${this.options.total.hyphen}</s><u></u>`);
         this.numEl = this.totalEl.querySelector('i');
         this.denomEl = this.totalEl.querySelector('u');
         this.updateTotal(total);
@@ -22391,8 +22067,8 @@ class Swipe extends ModBaseListenCache {
         if (!this.options.nav.enable)
             return false;
         let addNav = (type) => {
-            let result = null, text = (type === 'prev') ? (this.options.axis === 'x' ? `${prefix}icon-left` : `${prefix}icon-up`) :
-                (type === 'next') ? (this.options.axis === 'x' ? `${prefix}icon-right` : `${prefix}icon-down`) : '', className = `${prefix}swipe-${type}`, el = getEl(`.${className}`, this.targetEl);
+            let result = null, text = (type === 'prev') ? (this.options.axis === 'x' ? `${ax.prefix}icon-left` : `${ax.prefix}icon-up`) :
+                (type === 'next') ? (this.options.axis === 'x' ? `${ax.prefix}icon-right` : `${ax.prefix}icon-down`) : '', className = `${ax.prefix}swipe-${type}`, el = getEl(`.${className}`, this.targetEl);
             if (el) {
                 result = el;
             }
@@ -22430,7 +22106,7 @@ class Swipe extends ModBaseListenCache {
         if (!this.options.pgn.enable)
             return false;
         this.pgnIns = null;
-        let className = `${prefix}swipe-pgn`, pgnTmp = [...this.targetEl.children].find((k) => k.classList.contains(className));
+        let className = `${ax.prefix}swipe-pgn`, pgnTmp = [...this.targetEl.children].find((k) => k.classList.contains(className));
         if (pgnTmp) {
             this.pgnEl = pgnTmp;
         }
@@ -22454,7 +22130,7 @@ class Swipe extends ModBaseListenCache {
             }
         }
         else {
-            this.pgnEl = createEl('ul', { class: `${className} ${prefix}reset` }, '');
+            this.pgnEl = createEl('ul', { class: `${className} ${ax.prefix}reset` }, '');
             this.navEl && this.prevEl ? this.prevEl.insertAdjacentElement('afterend', this.pgnEl) : this.targetEl.appendChild(this.pgnEl);
         }
         if (this.pgnEl) {
@@ -22894,13 +22570,6 @@ const optLazy = [
     ...optBase
 ];
 
-const getImgBlank = () => {
-    if (!ax.imgBlank) {
-        ax.imgBlank = getComputedVar(`--${prefix}blanck`).split('"')[1];
-    }
-    return ax.imgBlank;
-};
-
 class Lazy extends ModBaseListenCache {
     nodeName;
     resType;
@@ -22936,7 +22605,7 @@ class Lazy extends ModBaseListenCache {
         }
         this.resType = this.options.type || (this.targetEl.hasAttribute('src') ? 'src' : 'async');
         if (this.resType === 'src') {
-            this.targetEl.src = getImgBlank();
+            this.targetEl.src = ax.images.blank;
             !this.targetEl.hasAttribute('lazy-src') && this.targetEl.setAttribute('lazy-src', '');
         }
         this.spyIns = new Spy(this.targetEl, extend({
@@ -23167,7 +22836,7 @@ class Infinite extends ModBaseListenCache {
         return this;
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}inf`);
+        this.targetEl.classList.add(`${ax.prefix}inf`);
         classes(this.targetEl).add(this.options.classes);
         this.targetEl.setAttribute('trigger', this.options.trigger);
     }
@@ -23182,7 +22851,7 @@ class Infinite extends ModBaseListenCache {
             target: {
                 repeat: false,
                 visible: false,
-                in: `${prefix}fadeIn`,
+                in: `${ax.prefix}fadeIn`,
             },
             source: this.options.spy,
         }));
@@ -23206,7 +22875,7 @@ class Infinite extends ModBaseListenCache {
             this.tipsEl.innerHTML = this.options.lang.loaded;
             let fragment = document.createDocumentFragment();
             for (let k of data) {
-                k.classList.add(`${prefix}inf-item`);
+                k.classList.add(`${ax.prefix}inf-item`);
                 fragment.appendChild(k);
             }
             this.targetEl.insertBefore(fragment, this.statusEl);
@@ -23217,24 +22886,24 @@ class Infinite extends ModBaseListenCache {
         });
     }
     getStatusEl() {
-        this.statusEl = this.targetEl.querySelector(`.${prefix}inf-status`) || createEl('div', { class: `${prefix}inf-status`, status: 'preload' });
-        this.spinEl = createEl('div', { [alias]: 'spin' }, this.options.spin);
+        this.statusEl = this.targetEl.querySelector(`.${ax.prefix}inf-status`) || createEl('div', { class: `${ax.prefix}inf-status`, status: 'preload' });
+        this.spinEl = createEl('div', { [ax.alias]: 'spin' }, this.options.spin);
         this.statusEl.appendChild(this.spinEl);
-        let nextTmp = this.targetEl.querySelector(`[${alias}="next"]`);
+        let nextTmp = this.targetEl.querySelector(`[${ax.alias}="next"]`);
         if (nextTmp) {
             this.nextEl = nextTmp;
         }
         else {
-            this.nextEl = createEl('div', { [alias]: 'next' }, this.options.lang.next);
+            this.nextEl = createEl('div', { [ax.alias]: 'next' }, this.options.lang.next);
             ['click', 'clicks'].includes(this.options.trigger) && this.statusEl.appendChild(this.nextEl);
         }
         this.nextBtn = this.nextEl.firstElementChild;
-        let tipsTmp = this.targetEl.querySelector(`[${alias}="tips"]`);
+        let tipsTmp = this.targetEl.querySelector(`[${ax.alias}="tips"]`);
         if (tipsTmp) {
             this.tipsEl = tipsTmp;
         }
         else {
-            this.tipsEl = createEl('div', { [alias]: 'tips' }, this.options.lang.preload);
+            this.tipsEl = createEl('div', { [ax.alias]: 'tips' }, this.options.lang.preload);
             this.statusEl.appendChild(this.tipsEl);
         }
     }
@@ -23273,7 +22942,7 @@ class Infinite extends ModBaseListenCache {
             }
         }
         else {
-            let pages = getEls(`[${alias}="page"]`, this.statusEl);
+            let pages = getEls(`[${ax.alias}="page"]`, this.statusEl);
             result = pages.map((k) => k.href).filter(Boolean);
         }
         this.content = result.filter((k) => !isEmpty(k));
@@ -23564,7 +23233,7 @@ class Virtualize extends ModBaseListenCache {
         return this;
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}virt`);
+        this.targetEl.classList.add(`${ax.prefix}virt`);
         this.targetEl.setAttribute('axis', this.options.axis);
         classes(this.targetEl).add(this.options.classes);
     }
@@ -23602,32 +23271,32 @@ class Virtualize extends ModBaseListenCache {
         });
     }
     getNodesTree() {
-        let tmpWrap = this.targetEl.querySelector(`.${prefix}virt-wrap`);
+        let tmpWrap = this.targetEl.querySelector(`.${ax.prefix}virt-wrap`);
         if (tmpWrap) {
             this.wrapEl = tmpWrap;
         }
         else {
-            this.wrapEl = createEl(this.options.names.wrap, { class: `${prefix}virt-wrap` });
+            this.wrapEl = createEl(this.options.names.wrap, { class: `${ax.prefix}virt-wrap` });
             this.targetEl.appendChild(this.wrapEl);
         }
-        let tmpCont = this.wrapEl.querySelector(`.${prefix}virt-cont`);
+        let tmpCont = this.wrapEl.querySelector(`.${ax.prefix}virt-cont`);
         if (tmpCont) {
             this.contEl = tmpWrap;
         }
         else {
-            this.contEl = createEl(this.options.names.cont, { class: `${prefix}virt-cont` });
+            this.contEl = createEl(this.options.names.cont, { class: `${ax.prefix}virt-cont` });
             this.wrapEl.appendChild(this.contEl);
         }
-        let tmpList = this.contEl.querySelector(`.${prefix}virt-list`);
+        let tmpList = this.contEl.querySelector(`.${ax.prefix}virt-list`);
         if (tmpList) {
             this.wrapEl = tmpList;
         }
         else {
-            this.listEl = createEl(this.options.names.list, { class: `${prefix}virt-list` });
+            this.listEl = createEl(this.options.names.list, { class: `${ax.prefix}virt-list` });
             this.contEl.appendChild(this.listEl);
         }
-        this.startSpaceEl = createEl('div', { class: `${prefix}virt-space` }, `${this.options.lang.preload}`);
-        this.endSpaceEl = createEl('div', { class: `${prefix}virt-space` }, `${this.options.lang.preload}`);
+        this.startSpaceEl = createEl('div', { class: `${ax.prefix}virt-space` }, `${this.options.lang.preload}`);
+        this.endSpaceEl = createEl('div', { class: `${ax.prefix}virt-space` }, `${this.options.lang.preload}`);
         this.contEl.insertAdjacentElement('afterbegin', this.startSpaceEl);
         this.contEl.appendChild(this.endSpaceEl);
     }
@@ -24245,7 +23914,7 @@ class Pagination extends ModBaseListenCache {
         this.output = this.outputObs.proxy;
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}pagination`);
+        this.targetEl.classList.add(`${ax.prefix}pagination`);
         this.options.align ? this.targetEl.setAttribute('align', this.options.align) : this.targetEl.removeAttribute('align');
         this.options.type ? this.targetEl.setAttribute('type', this.options.type) : this.targetEl.removeAttribute('type');
         this.options.classes && classes(this.targetEl).add(this.options.classes);
@@ -24254,17 +23923,17 @@ class Pagination extends ModBaseListenCache {
     }
     getNodesTree() {
         this.targetEl.innerHTML = '';
-        this.mainEl = createEl(this.options.names.main, { [alias]: 'main' }, this.pagesEl);
-        this.pagesEl = createEl(this.options.names.pages, { [alias]: 'pages' });
-        this.firstEl = createEl(this.options.names.first, { [alias]: 'first' }, this.options.lang?.first);
-        this.lastEl = createEl(this.options.names.last, { [alias]: 'last' }, this.options.lang?.last);
-        this.prevEl = createEl(this.options.names.prev, { [alias]: 'prev' }, this.options.lang?.prev);
-        this.nextEl = createEl(this.options.names.next, { [alias]: 'next' }, this.options.lang?.next);
-        this.totalEl = createEl(this.options.names.total, { [alias]: 'total' });
-        this.tipsEl = createEl(this.options.names.tips, { [alias]: 'tips' });
-        this.locateEl = createEl(this.options.names.lacate, { [alias]: 'locate' });
-        this.countEl = createEl(this.options.names.count, { [alias]: 'count' });
-        this.ellEl = createEl(this.options.names.ellipsis, { [alias]: 'ell' }, this.options.lang?.ellipsis);
+        this.mainEl = createEl(this.options.names.main, { [ax.alias]: 'main' }, this.pagesEl);
+        this.pagesEl = createEl(this.options.names.pages, { [ax.alias]: 'pages' });
+        this.firstEl = createEl(this.options.names.first, { [ax.alias]: 'first' }, this.options.lang?.first);
+        this.lastEl = createEl(this.options.names.last, { [ax.alias]: 'last' }, this.options.lang?.last);
+        this.prevEl = createEl(this.options.names.prev, { [ax.alias]: 'prev' }, this.options.lang?.prev);
+        this.nextEl = createEl(this.options.names.next, { [ax.alias]: 'next' }, this.options.lang?.next);
+        this.totalEl = createEl(this.options.names.total, { [ax.alias]: 'total' });
+        this.tipsEl = createEl(this.options.names.tips, { [ax.alias]: 'tips' });
+        this.locateEl = createEl(this.options.names.lacate, { [ax.alias]: 'locate' });
+        this.countEl = createEl(this.options.names.count, { [ax.alias]: 'count' });
+        this.ellEl = createEl(this.options.names.ellipsis, { [ax.alias]: 'ell' }, this.options.lang?.ellipsis);
         super.parseLayout(this.targetEl, this.options.layout, {
             prev: this.prevEl,
             next: this.nextEl,
@@ -24454,7 +24123,7 @@ class Pagination extends ModBaseListenCache {
             else {
                 let condL = i > this.options.visible?.edge && i < current - this.options.visible?.center, condR = i > current + this.options.visible?.center && i <= this.output.pages - this.options.visible?.edge;
                 if (condL || condR) {
-                    if (this.items.at(-1) && this.items.at(-1).getAttribute(alias) === 'ell') {
+                    if (this.items.at(-1) && this.items.at(-1).getAttribute(ax.alias) === 'ell') {
                         continue;
                     }
                     else {
@@ -24472,7 +24141,7 @@ class Pagination extends ModBaseListenCache {
         super.listen({ name: 'renderedPages', params: [{ nodes: this.items, ...this.output }] });
     }
     createItem(current) {
-        let tmp = createEl(this.options.names.item, { [alias]: 'page', page: current }, current);
+        let tmp = createEl(this.options.names.item, { [ax.alias]: 'page', page: current }, current);
         this.output.current == current && tmp.setAttribute('selected', '');
         tmp.onclick = debounce(() => {
             this.locate(current);
@@ -24480,7 +24149,7 @@ class Pagination extends ModBaseListenCache {
         return tmp;
     }
     hasEll() {
-        return this.items.find((k) => k.getAttribute(alias, 'ell'));
+        return this.items.find((k) => k.getAttribute(ax.alias, 'ell'));
     }
     correctCur(current) {
         return clampVal({ val: current, min: 1, max: this.output.pages });
@@ -24684,8 +24353,8 @@ const optRange = [
         prop: 'button',
         value: {
             enable: false,
-            decrease: `<i class="${prefix}icon-minus-o-f"></i>`,
-            increase: `<i class="${prefix}icon-plus-o-f"></i>`,
+            decrease: `<i class="${ax.prefix}icon-minus-o-f"></i>`,
+            increase: `<i class="${ax.prefix}icon-plus-o-f"></i>`,
         }
     },
     {
@@ -24815,13 +24484,13 @@ class Range extends ModBaseListenCache {
         if (tmp.nodeName === 'INPUT') {
             this.inputEl = tmp;
             this.inputEl.type = 'hidden';
-            host = createEl('div', { class: `${prefix}range` });
+            host = createEl('div', { class: `${ax.prefix}range` });
             tmp.insertAdjacentElement('beforebegin', host);
             host.appendChild(tmp);
         }
         else {
             host = tmp;
-            host.classList.add(`${prefix}range`);
+            host.classList.add(`${ax.prefix}range`);
             this.inputEl = createEl('input', { type: 'hidden', value: tmp.textContent.trim() });
             tmp.innerHTML = '';
             host.appendChild(this.inputEl);
@@ -25132,60 +24801,60 @@ class Range extends ModBaseListenCache {
             this.inputEl.value = '';
         }
         else {
-            this.wrapEl = createEl('div', { class: `${prefix}range-wrap` });
+            this.wrapEl = createEl('div', { class: `${ax.prefix}range-wrap` });
             this.targetEl.appendChild(this.wrapEl);
             !this.inputEl.name && (this.inputEl.name = this.options.name);
         }
         this.bubbles = {};
         this.wrapEl.innerHTML = `
-        <div class="${prefix}range-main">
-            <div class="${prefix}range-track">
-                <div ${alias}="base"></div>
-                <div ${alias}="thumb"></div>
+        <div class="${ax.prefix}range-main">
+            <div class="${ax.prefix}range-track">
+                <div ${ax.alias}="base"></div>
+                <div ${ax.alias}="thumb"></div>
             </div>
-            <div class="${prefix}range-bubble">
-                ${this.options.limitShow ? '<span ' + alias + '="min">' + this.options.min + '</span><span ' + alias + '="max">' + this.options.max + '</span>' : ''}
+            <div class="${ax.prefix}range-bubble">
+                ${this.options.limitShow ? '<span ' + ax.alias + '="min">' + this.options.min + '</span><span ' + ax.alias + '="max">' + this.options.max + '</span>' : ''}
             </div>
-            <div class="${prefix}range-handle"></div>
-            <div class="${prefix}range-ruler"><ul></ul></div>
+            <div class="${ax.prefix}range-handle"></div>
+            <div class="${ax.prefix}range-ruler"><ul></ul></div>
         </div>
         `;
-        this.mainEl = this.wrapEl.querySelector(`.${prefix}range-main`);
-        this.trackEl = this.wrapEl.querySelector(`.${prefix}range-track`);
-        this.thumbEl = this.wrapEl.querySelector(`[${alias}="thumb"]`);
-        this.baseEl = this.wrapEl.querySelector(`[${alias}="base"]`);
-        this.bubbleEl = this.wrapEl.querySelector(`.${prefix}range-bubble`);
-        this.bubbles.min = this.bubbleEl.querySelector(`[${alias}="min"]`);
-        this.bubbles.max = this.bubbleEl.querySelector(`[${alias}="max"]`);
-        this.handleEl = this.wrapEl.querySelector(`.${prefix}range-handle`);
-        this.rulerEl = this.wrapEl.querySelector(`.${prefix}range-ruler`);
+        this.mainEl = this.wrapEl.querySelector(`.${ax.prefix}range-main`);
+        this.trackEl = this.wrapEl.querySelector(`.${ax.prefix}range-track`);
+        this.thumbEl = this.wrapEl.querySelector(`[${ax.alias}="thumb"]`);
+        this.baseEl = this.wrapEl.querySelector(`[${ax.alias}="base"]`);
+        this.bubbleEl = this.wrapEl.querySelector(`.${ax.prefix}range-bubble`);
+        this.bubbles.min = this.bubbleEl.querySelector(`[${ax.alias}="min"]`);
+        this.bubbles.max = this.bubbleEl.querySelector(`[${ax.alias}="max"]`);
+        this.handleEl = this.wrapEl.querySelector(`.${ax.prefix}range-handle`);
+        this.rulerEl = this.wrapEl.querySelector(`.${ax.prefix}range-ruler`);
         this.tickEl = this.rulerEl.querySelector('ul');
-        this.decrEl = createEl('span', { class: `${prefix}range-btn`, [alias]: 'decrease' }, this.options.button.decrease);
-        this.incrEl = createEl('span', { class: `${prefix}range-btn`, [alias]: 'increase' }, this.options.button.increase);
+        this.decrEl = createEl('span', { class: `${ax.prefix}range-btn`, [ax.alias]: 'decrease' }, this.options.button.decrease);
+        this.incrEl = createEl('span', { class: `${ax.prefix}range-btn`, [ax.alias]: 'increase' }, this.options.button.increase);
         if (this.options.button.enable) {
             this.mainEl.insertAdjacentElement('beforebegin', this.decrEl);
             this.mainEl.insertAdjacentElement('afterend', this.incrEl);
         }
-        this.resultEl = createEl('span', { class: `${prefix}range-result` });
+        this.resultEl = createEl('span', { class: `${ax.prefix}range-result` });
         if (this.options.result.enable) {
             this.resultParent ? this.resultParent.appendChild(this.resultEl) : this.wrapEl.appendChild(this.resultEl);
         }
         if (this.options.multiple) {
-            this.handles.from = createEl('span', { [alias]: 'from', tabindex: 0 });
-            this.handles.to = createEl('span', { [alias]: 'to', tabindex: 0 });
+            this.handles.from = createEl('span', { [ax.alias]: 'from', tabindex: 0 });
+            this.handles.to = createEl('span', { [ax.alias]: 'to', tabindex: 0 });
             this.handleEl.append(this.handles.from, this.handles.to);
             if (this.options.tipShow) {
-                this.bubbles.from = createEl('span', { [alias]: 'from' });
-                this.bubbles.to = createEl('span', { [alias]: 'to' });
-                this.bubbles.merge = createEl('span', { [alias]: 'merge' });
+                this.bubbles.from = createEl('span', { [ax.alias]: 'from' });
+                this.bubbles.to = createEl('span', { [ax.alias]: 'to' });
+                this.bubbles.merge = createEl('span', { [ax.alias]: 'merge' });
                 this.bubbleEl.append(this.bubbles.from, this.bubbles.to, this.bubbles.merge);
             }
         }
         else {
-            this.handles.single = createEl('span', { [alias]: 'single', tabindex: 0 });
+            this.handles.single = createEl('span', { [ax.alias]: 'single', tabindex: 0 });
             this.handleEl.append(this.handles.single);
             if (this.options.tipShow) {
-                this.bubbles.single = createEl('span', { [alias]: 'single' });
+                this.bubbles.single = createEl('span', { [ax.alias]: 'single' });
                 this.bubbleEl.append(this.bubbles.single);
             }
         }
@@ -25423,7 +25092,7 @@ class Range extends ModBaseListenCache {
         if (!this.options.fence.enable)
             return;
         let fullSize = (this.options.max - this.options.min), sizeRatio = (this.fence.max - this.fence.min) / fullSize, offsetRatio = (this.fence.min - this.options.min) / fullSize;
-        this.fenceEl = createEl('div', { [alias]: 'fence', style: `${this.propsMap.size}:${sizeRatio * 100}%;${this.propsMap.startAlt}:${offsetRatio * 100}%` });
+        this.fenceEl = createEl('div', { [ax.alias]: 'fence', style: `${this.propsMap.size}:${sizeRatio * 100}%;${this.propsMap.startAlt}:${offsetRatio * 100}%` });
         this.rulerEl.appendChild(this.fenceEl);
     }
     setMinorTicks(offsetRatio) {
@@ -25733,7 +25402,7 @@ const optDatetime = [
         value: {
             enable: false,
             display: 'popup',
-            tplStr: `<div ${alias}="label">{{this.label}}</div><div ${alias}="content">{{this.content}}</div>`,
+            tplStr: `<div ${ax.alias}="label">{{this.label}}</div><div ${ax.alias}="content">{{this.content}}</div>`,
             tplEng: null,
             heading: `YYYY年MM月DD日 WW`,
             list: [],
@@ -25903,8 +25572,7 @@ class Datetime extends ModBaseListenCache {
         
         this.value = [];
         this.raw = [];
-        this.monthStr = repeatStr(`<li><span ${alias}="content"><i ${alias}="label">{{this.data[this.index-1]}}</i></span></li>`, 12, this.options.lang.month);
-        this.client = getClientType();
+        this.monthStr = repeatStr(`<li><span ${ax.alias}="content"><i ${ax.alias}="label">{{this.data[this.index-1]}}</i></span></li>`, 12, this.options.lang.month);
         super.listen({ name: 'constructed' });
         initial && this.init();
     }
@@ -25947,7 +25615,7 @@ class Datetime extends ModBaseListenCache {
         this.data.type = dateTools.getDateType(this.format);
         this.getDateTimeSpan();
         this.options.mode === 'range' && this.options.cols === 1 && (this.options.cols = 2);
-        if (this.client === 'phone') {
+        if (ax.screen === 'xxs') {
             this.options.display !== 'inline' && this.options.toDrawer && (this.options.display = 'drawer');
             if (this.options.lunar.enable) {
                 this.options.cols = 1;
@@ -25987,8 +25655,8 @@ class Datetime extends ModBaseListenCache {
         if (this.options.display === 'inline') {
             if (this.targetEl) {
                 this.targetEl.insertAdjacentElement('afterend', this.bubbleEl);
-                this.bubbleEl.insertAdjacentHTML('beforebegin', `<div class="${prefix}datetime-br"></div>`);
-                this.bubbleEl.insertAdjacentHTML('afterend', `<div class="${prefix}datetime-br"></div>`);
+                this.bubbleEl.insertAdjacentHTML('beforebegin', `<div class="${ax.prefix}datetime-br"></div>`);
+                this.bubbleEl.insertAdjacentHTML('afterend', `<div class="${ax.prefix}datetime-br"></div>`);
             }
         }
         else {
@@ -26063,9 +25731,9 @@ class Datetime extends ModBaseListenCache {
         }
     }
     getTargets() {
-        if (this.targetEl && this.targetEl.classList.contains(`${prefix}datetime-wrap`)) {
+        if (this.targetEl && this.targetEl.classList.contains(`${ax.prefix}datetime-wrap`)) {
             this.targetEl.innerHTML = '';
-            this.inputEl = createEl('ax-textarea', { mean: `${prefix}icon-calendar`, placeholder: this.options.placeholder || config.lang.form.placeholder });
+            this.inputEl = createEl('ax-textarea', { mean: `${ax.prefix}icon-calendar`, placeholder: this.options.placeholder || config.lang.form.placeholder });
             this.options.name && this.inputEl.setAttribute('name', this.options.name);
             this.options.label && this.inputEl.setAttribute('label', this.options.label);
             if (this.options.tools.enable && !isEmpty(this.options.tools.children)) {
@@ -26082,7 +25750,7 @@ class Datetime extends ModBaseListenCache {
         else {
             this.positionEl = getEl(this.options.posSel) || this.targetEl;
             this.inputEl = getEl(this.options.inputSel) || this.targetEl;
-            this.inputEl && this.inputEl.classList.add(`${prefix}bind-datetime`);
+            this.inputEl && this.inputEl.classList.add(`${ax.prefix}bind-datetime`);
             this.childEl = getEl(this.options.childSel, this.inputEl);
         }
     }
@@ -26112,22 +25780,22 @@ class Datetime extends ModBaseListenCache {
             panelObj.year = curDate.getFullYear();
             panelObj.panelEl = tplToEl(`
                         <li panel='${this.options.lunar.enable ? 'lunar' : 'date'}'>
-                            <div ${alias}="head">
-                                <span ${alias}="year"><i>${panelObj.year}</i>${this.options.lang.unit.Y}</span><span ${alias}="month"><i>${panelObj.month + 1}</i>${this.options.lang.unit.M}</span>
+                            <div ${ax.alias}="head">
+                                <span ${ax.alias}="year"><i>${panelObj.year}</i>${this.options.lang.unit.Y}</span><span ${ax.alias}="month"><i>${panelObj.month + 1}</i>${this.options.lang.unit.M}</span>
                             </div>
-                            <div ${alias}="body" days>
-                                <ul ${alias}="column" class="${prefix}reset  ${prefix}grid ${prefix}avg-7">
+                            <div ${ax.alias}="body" days>
+                                <ul ${ax.alias}="column" class="${ax.prefix}reset  ${ax.prefix}grid ${ax.prefix}avg-7">
                                     ${getWeek()}
                                 </ul>
-                                <ul ${alias}="list" class="${prefix}reset ${prefix}grid ${prefix}avg-7"></ul>
+                                <ul ${ax.alias}="list" class="${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}avg-7"></ul>
                             </div>
                         </li>
                         `);
             panelObj.type = 'date';
-            panelObj.headEl = panelObj.panelEl.querySelector(`[${alias}="head"]`);
-            panelObj.yearEl = panelObj.headEl.querySelector(`[${alias}="year"]`);
-            panelObj.monthEl = panelObj.headEl.querySelector(`[${alias}="month"]`);
-            panelObj.listEl = panelObj.panelEl.querySelector(`[${alias}="list"]`);
+            panelObj.headEl = panelObj.panelEl.querySelector(`[${ax.alias}="head"]`);
+            panelObj.yearEl = panelObj.headEl.querySelector(`[${ax.alias}="year"]`);
+            panelObj.monthEl = panelObj.headEl.querySelector(`[${ax.alias}="month"]`);
+            panelObj.listEl = panelObj.panelEl.querySelector(`[${ax.alias}="list"]`);
             panelObj.list = this.createPanelDayList(panelObj.listEl, curDate);
         }
         else if (this.data.type === 'month') {
@@ -26135,18 +25803,18 @@ class Datetime extends ModBaseListenCache {
             panelObj.year = curDate.getFullYear();
             panelObj.panelEl = tplToEl(`
                     <li panel='month'>
-                        <div ${alias}="head">
-                            <span ${alias}="year"><i>${panelObj.year}</i>${this.options.lang.unit.Y}</span>
+                        <div ${ax.alias}="head">
+                            <span ${ax.alias}="year"><i>${panelObj.year}</i>${this.options.lang.unit.Y}</span>
                         </div>
                         <div body>
-                            <ul ${alias}="list" class="${prefix}reset ${prefix}grid ${prefix}avg-3">${this.monthStr}</ul>
+                            <ul ${ax.alias}="list" class="${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}avg-3">${this.monthStr}</ul>
                         </div>
                     </li>
                     `);
             panelObj.type = 'month';
-            panelObj.headEl = panelObj.panelEl.querySelector(`[${alias}="head"]`);
-            panelObj.yearEl = panelObj.headEl.querySelector(`[${alias}="year"]`);
-            panelObj.listEl = panelObj.panelEl.querySelector(`[${alias}="list"]`);
+            panelObj.headEl = panelObj.panelEl.querySelector(`[${ax.alias}="head"]`);
+            panelObj.yearEl = panelObj.headEl.querySelector(`[${ax.alias}="year"]`);
+            panelObj.listEl = panelObj.panelEl.querySelector(`[${ax.alias}="list"]`);
             panelObj.list = this.createPanelMonthList(panelObj.listEl, curDate);
         }
         else if (this.data.type === 'year') {
@@ -26154,20 +25822,20 @@ class Datetime extends ModBaseListenCache {
             panelObj.year = curDate.getFullYear();
             panelObj.panelEl = tplToEl(`
                 <li panel='year'>
-                    <div ${alias}="head">
-                        <span ${alias}="year"><i>${panelObj.year}</i>${this.options.lang.unit.Y}~<i>${panelObj.year + 17}</i>${this.options.lang.unit.Y}</span>
+                    <div ${ax.alias}="head">
+                        <span ${ax.alias}="year"><i>${panelObj.year}</i>${this.options.lang.unit.Y}~<i>${panelObj.year + 17}</i>${this.options.lang.unit.Y}</span>
                     </div>
-                    <div ${alias}="body">
-                        <ul ${alias}="list" class="${prefix}reset ${prefix}grid ${prefix}avg-3"></ul>
+                    <div ${ax.alias}="body">
+                        <ul ${ax.alias}="list" class="${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}avg-3"></ul>
                     </div>
                 </li>
                 `);
             panelObj.type = 'year';
-            panelObj.headEl = panelObj.panelEl.querySelector(`[${alias}="head"]`);
-            panelObj.listEl = panelObj.panelEl.querySelector(`[${alias}="list"]`);
+            panelObj.headEl = panelObj.panelEl.querySelector(`[${ax.alias}="head"]`);
+            panelObj.listEl = panelObj.panelEl.querySelector(`[${ax.alias}="list"]`);
             panelObj.list = this.createPanelYearList(panelObj.listEl, curDate);
         }
-        panelObj.bodyEl = panelObj.panelEl.querySelector(`[${alias}="body"]`);
+        panelObj.bodyEl = panelObj.panelEl.querySelector(`[${ax.alias}="body"]`);
         this.data.panels.push(panelObj);
         this.panelsEl.appendChild(panelObj.panelEl);
     }
@@ -26376,62 +26044,62 @@ class Datetime extends ModBaseListenCache {
         let outerHTML = '', footHTML = '';
         if (this.data.type !== 'daytime') {
             outerHTML = `
-            <div ${alias}="outer">
-                        <div ${alias}="prev"></div>
-                            <div ${alias}="next"></div>
-                            <ul ${alias}="panels" class="${prefix}reset ${prefix}grid ${this.client === 'phone' ? prefix + 'avg-1' : this.spreadFooter ? prefix + 'fence ' + prefix + 'avg-' + this.options.cols : prefix + 'avg-1'}" ></ul>
+            <div ${ax.alias}="outer">
+                        <div ${ax.alias}="prev"></div>
+                            <div ${ax.alias}="next"></div>
+                            <ul ${ax.alias}="panels" class="${ax.prefix}reset ${ax.prefix}grid ${ax.screen === 'xxs' ? ax.prefix + 'avg-1' : this.spreadFooter ? ax.prefix + 'fence ' + ax.prefix + 'avg-' + this.options.cols : ax.prefix + 'avg-1'}" ></ul>
                         </div>`;
         }
         if (this.options.footer.enable) {
-            footHTML = `<div ${alias}="foot"></div>`;
+            footHTML = `<div ${ax.alias}="foot"></div>`;
         }
         this.bubbleEl = tplToEl(`
-                <div class="${prefix}datetime">
-                    <div ${alias}="wrap">
-                        ${this.options.menu.length > 0 ? '<ul ' + alias + '="menu"  class="' + prefix + 'reset"></ul>' : ''}
-                        <div ${alias}="main">
-                            ${this.options.resultShow && this.data.type !== 'daytime' ? '<div ' + alias + '="result"></div>' : ''}
+                <div class="${ax.prefix}datetime">
+                    <div ${ax.alias}="wrap">
+                        ${this.options.menu.length > 0 ? '<ul ' + ax.alias + '="menu"  class="' + ax.prefix + 'reset"></ul>' : ''}
+                        <div ${ax.alias}="main">
+                            ${this.options.resultShow && this.data.type !== 'daytime' ? '<div ' + ax.alias + '="result"></div>' : ''}
                             ${outerHTML}
                             ${footHTML}
                         </div>
                     </div>
                 </div>
             `);
-        this.wrapEl = this.bubbleEl.querySelector(`[${alias}="wrap"]`);
-        this.menuEl = this.bubbleEl.querySelector(`[${alias}="menu"]`);
-        this.resultEl = this.bubbleEl.querySelector(`[${alias}="result"]`);
-        this.outerEl = this.bubbleEl.querySelector(`[${alias}="outer"]`);
-        this.prevEl = this.bubbleEl.querySelector(`[${alias}="prev"]`);
-        this.nextEl = this.bubbleEl.querySelector(`[${alias}="next"]`);
-        this.mainEl = this.bubbleEl.querySelector(`[${alias}="main"]`);
-        this.panelsEl = this.mainEl.querySelector(`[${alias}="panels"]`);
+        this.wrapEl = this.bubbleEl.querySelector(`[${ax.alias}="wrap"]`);
+        this.menuEl = this.bubbleEl.querySelector(`[${ax.alias}="menu"]`);
+        this.resultEl = this.bubbleEl.querySelector(`[${ax.alias}="result"]`);
+        this.outerEl = this.bubbleEl.querySelector(`[${ax.alias}="outer"]`);
+        this.prevEl = this.bubbleEl.querySelector(`[${ax.alias}="prev"]`);
+        this.nextEl = this.bubbleEl.querySelector(`[${ax.alias}="next"]`);
+        this.mainEl = this.bubbleEl.querySelector(`[${ax.alias}="main"]`);
+        this.panelsEl = this.mainEl.querySelector(`[${ax.alias}="panels"]`);
         if (this.options.footer.enable) {
-            this.footEl = this.bubbleEl.querySelector(`[${alias}="foot"]`);
+            this.footEl = this.bubbleEl.querySelector(`[${ax.alias}="foot"]`);
             if (this.spreadFooter) {
                 this.bubbleFootEl = createFooter(Object.assign(this.options.footer, { layout: 'right' }), this.footEl, this);
-                this.footBtnsEl = this.bubbleFootEl.querySelector(`.${prefix}box-btns`);
-                let tmp = this.bubbleFootEl.querySelector(`[${alias}="tips"]`);
+                this.footBtnsEl = this.bubbleFootEl.querySelector(`.${ax.prefix}box-btns`);
+                let tmp = this.bubbleFootEl.querySelector(`[${ax.alias}="tips"]`);
                 if (tmp) {
                     this.footTipsEl = tmp;
                 }
                 else {
-                    this.footTipsEl = createEl('div', { [alias]: 'tips' });
+                    this.footTipsEl = createEl('div', { [ax.alias]: 'tips' });
                     this.footBtnsEl.insertAdjacentElement('afterend', this.footTipsEl);
                 }
             }
             else {
                 this.bubbleFootEl = createFooter(Object.assign(this.options.footer, { layout: 'plain' }), this.footEl, this);
-                this.footBtnsEl = this.bubbleFootEl.querySelector(`.${prefix}box-btns`);
+                this.footBtnsEl = this.bubbleFootEl.querySelector(`.${ax.prefix}box-btns`);
                 this.footTipsEl = this.footBtnsEl;
             }
-            this.confirmEl = this.bubbleFootEl.querySelector(`[${alias}="confirm"]`);
-            this.clearEl = this.bubbleFootEl.querySelector(`[${alias}="clear"]`);
-            this.closeEl = this.bubbleFootEl.querySelector(`[${alias}="close"]`);
-            this.cancelEl = this.bubbleFootEl.querySelector(`[${alias}="cancel"]`);
-            this.nowEl = this.bubbleFootEl.querySelector(`[${alias}="now"]`);
-            this.daytimeBtnEl = this.data.type.includes('time') ? createEl('ax-btn', { type: 'plain', [alias]: 'daytime', label: this.options.lang.daytime.select }) : null;
-            this.yearSearchEl = this.data.type === 'year' ? createEl('ax-input', { [alias]: 'search', placeholder: this.options.lang.year.placeholder, btn: `<i class="${prefix}icon-arrow-right"></i>` }) : null;
-            this.rangeChkEl = this.options.mode === 'range' && this.data.type === 'datetime' ? createEl('ax-checkbox', { disabled: '', [alias]: 'checkbox', label: this.options.lang.range.checkbox }) : null;
+            this.confirmEl = this.bubbleFootEl.querySelector(`[${ax.alias}="confirm"]`);
+            this.clearEl = this.bubbleFootEl.querySelector(`[${ax.alias}="clear"]`);
+            this.closeEl = this.bubbleFootEl.querySelector(`[${ax.alias}="close"]`);
+            this.cancelEl = this.bubbleFootEl.querySelector(`[${ax.alias}="cancel"]`);
+            this.nowEl = this.bubbleFootEl.querySelector(`[${ax.alias}="now"]`);
+            this.daytimeBtnEl = this.data.type.includes('time') ? createEl('ax-btn', { type: 'plain', [ax.alias]: 'daytime', label: this.options.lang.daytime.select }) : null;
+            this.yearSearchEl = this.data.type === 'year' ? createEl('ax-input', { [ax.alias]: 'search', placeholder: this.options.lang.year.placeholder, btn: `<i class="${ax.prefix}icon-arrow-right"></i>` }) : null;
+            this.rangeChkEl = this.options.mode === 'range' && this.data.type === 'datetime' ? createEl('ax-checkbox', { disabled: '', [ax.alias]: 'checkbox', label: this.options.lang.range.checkbox }) : null;
             this.daytimeBtnEl && this.footTipsEl.insertAdjacentElement('afterbegin', this.daytimeBtnEl);
             this.yearSearchEl && this.footTipsEl.insertAdjacentElement('afterbegin', this.yearSearchEl);
             if (this.rangeChkEl) {
@@ -26454,13 +26122,13 @@ class Datetime extends ModBaseListenCache {
             }
         }
         if (this.options.events.enable) {
-            this.detailEl = createEl('div', { [alias]: 'detail' });
-            this.headingEl = createEl('div', { [alias]: 'heading' });
-            this.eventEl = createEl('div', { [alias]: 'event' }, this.options.lang.noEvent);
+            this.detailEl = createEl('div', { [ax.alias]: 'detail' });
+            this.headingEl = createEl('div', { [ax.alias]: 'heading' });
+            this.eventEl = createEl('div', { [ax.alias]: 'event' }, this.options.lang.noEvent);
             this.detailEl.appendChild(this.headingEl);
             this.detailEl.appendChild(this.eventEl);
             if (this.options.lunar.enable && this.options.lunar.handler) {
-                this.lunarEl = createEl('div', { [alias]: 'lunar' });
+                this.lunarEl = createEl('div', { [ax.alias]: 'lunar' });
                 this.headingEl.insertAdjacentElement('afterend', this.lunarEl);
             }
             if (this.options.events.display === 'inline') {
@@ -26487,17 +26155,17 @@ class Datetime extends ModBaseListenCache {
                 });
             }
             if (this.data.type === 'year' || this.data.type === 'month') {
-                this.prevEl.innerHTML = `<i ${alias}="prevYear" class= "${prefix}icon-left-double"></i> `;
-                this.nextEl.innerHTML = `<i ${alias}="nextYear" class= "${prefix}icon-right-double"></i> `;
+                this.prevEl.innerHTML = `<i ${ax.alias}="prevYear" class= "${ax.prefix}icon-left-double"></i> `;
+                this.nextEl.innerHTML = `<i ${ax.alias}="nextYear" class= "${ax.prefix}icon-right-double"></i> `;
             }
             else if (this.data.type.includes('date')) {
-                this.prevEl.innerHTML = `<i ${alias}="prevYear" class= "${prefix}icon-left-double"></i> <i ${alias}="prevMonth" class="${prefix}icon-left"></i>`;
-                this.nextEl.innerHTML = `<i ${alias}="nextYear" class= "${prefix}icon-right-double"></i> <i ${alias}="nextMonth" class="${prefix}icon-right"></i>`;
+                this.prevEl.innerHTML = `<i ${ax.alias}="prevYear" class= "${ax.prefix}icon-left-double"></i> <i ${ax.alias}="prevMonth" class="${ax.prefix}icon-left"></i>`;
+                this.nextEl.innerHTML = `<i ${ax.alias}="nextYear" class= "${ax.prefix}icon-right-double"></i> <i ${ax.alias}="nextMonth" class="${ax.prefix}icon-right"></i>`;
             }
-            this.prevYearEl = this.prevEl.querySelector(`[${alias}="prevYear"]`);
-            this.prevMonthEl = this.prevEl.querySelector(`[${alias}="prevMonth"]`);
-            this.nextYearEl = this.mainEl.querySelector(`[${alias}="nextYear"]`);
-            this.nextMonthEl = this.mainEl.querySelector(`[${alias}="nextMonth"]`);
+            this.prevYearEl = this.prevEl.querySelector(`[${ax.alias}="prevYear"]`);
+            this.prevMonthEl = this.prevEl.querySelector(`[${ax.alias}="prevMonth"]`);
+            this.nextYearEl = this.mainEl.querySelector(`[${ax.alias}="nextYear"]`);
+            this.nextMonthEl = this.mainEl.querySelector(`[${ax.alias}="nextMonth"]`);
             if (this.data.type === 'month' || this.data.type.includes('date')) {
                 this.createYearPanel();
             }
@@ -26529,12 +26197,12 @@ class Datetime extends ModBaseListenCache {
         }
     }
     createMonthPanel(cb) {
-        this.data.month.panelEl = createEl('div', { panel: 'month' }, `<div ${alias}="body"><ul ${alias}="list" class="${prefix}reset ${prefix}grid ${prefix}avg-3">${this.monthStr}</ul></div>`);
-        this.data.month.listEl = this.data.month.panelEl.querySelector(`[${alias}="list"]`);
+        this.data.month.panelEl = createEl('div', { panel: 'month' }, `<div ${ax.alias}="body"><ul ${ax.alias}="list" class="${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}avg-3">${this.monthStr}</ul></div>`);
+        this.data.month.listEl = this.data.month.panelEl.querySelector(`[${ax.alias}="list"]`);
         [...this.data.month.listEl.children].forEach((k, i) => {
             let obj = {
                 wrapEl: k,
-                contEl: k.querySelector(`[${alias}="content"]`),
+                contEl: k.querySelector(`[${ax.alias}="content"]`),
                 value: i,
             };
             this.data.month.list.push(obj);
@@ -26544,18 +26212,18 @@ class Datetime extends ModBaseListenCache {
     }
     createYearPanel(cb) {
         this.data.year.panelEl = createEl('div', { panel: 'year' }, `
-            <div ${alias}="body">
-                                <ul ${alias}="list" class="${prefix}reset ${prefix}grid ${prefix}avg-3"></ul>
-                                <ul ${alias}="pages"  class="${prefix}reset ${prefix}grid ${prefix}avg-3">
-                                    <li><i ${alias}="prev">${this.options.lang.year.prev}</i></li>
-                                    <li><ax-input placeholder="${this.options.lang.year.placeholder}" size="sm" btn="<i class='${prefix}icon-arrow-right'></i>"/></ax-input></li>
-                                    <li><i ${alias}="next">${this.options.lang.year.next}</i></li>
+            <div ${ax.alias}="body">
+                                <ul ${ax.alias}="list" class="${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}avg-3"></ul>
+                                <ul ${ax.alias}="pages"  class="${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}avg-3">
+                                    <li><i ${ax.alias}="prev">${this.options.lang.year.prev}</i></li>
+                                    <li><ax-input placeholder="${this.options.lang.year.placeholder}" size="sm" btn="<i class='${ax.prefix}icon-arrow-right'></i>"/></ax-input></li>
+                                    <li><i ${ax.alias}="next">${this.options.lang.year.next}</i></li>
                                 </ul>
                             </div>
             `);
-        this.data.year.listEl = this.data.year.panelEl.querySelector(`[${alias}="list"]`);
-        this.data.year.prevEl = this.data.year.panelEl.querySelector(`[${alias}="prev"]`);
-        this.data.year.nextEl = this.data.year.panelEl.querySelector(`[${alias}="next"]`);
+        this.data.year.listEl = this.data.year.panelEl.querySelector(`[${ax.alias}="list"]`);
+        this.data.year.prevEl = this.data.year.panelEl.querySelector(`[${ax.alias}="prev"]`);
+        this.data.year.nextEl = this.data.year.panelEl.querySelector(`[${ax.alias}="next"]`);
         this.data.year.searchEl = this.data.year.panelEl.querySelector('ax-input');
         this.data.year.inputEl = this.data.year.searchEl.inputEl;
         this.data.year.btnEl = this.data.year.searchEl.btnEl;
@@ -26568,11 +26236,11 @@ class Datetime extends ModBaseListenCache {
         this.panelIdx = index || 0;
         for (let k = 0; k < 15; k++) {
             let year = start || start === 0 ? start + k : panel.year - 7 + k, obj = {
-                wrapEl: createEl('li', '', `<span ${alias}="content"> <i ${alias}="label">${year}${this.options.lang.unit.Y}</i></span> `),
+                wrapEl: createEl('li', '', `<span ${ax.alias}="content"> <i ${ax.alias}="label">${year}${this.options.lang.unit.Y}</i></span> `),
                 value: year,
             };
-            obj.contEl = obj.wrapEl.querySelector(`[${alias}="content"]`);
-            obj.labelEl = obj.wrapEl.querySelector(`[${alias}="label"]`);
+            obj.contEl = obj.wrapEl.querySelector(`[${ax.alias}="content"]`);
+            obj.labelEl = obj.wrapEl.querySelector(`[${ax.alias}="label"]`);
             this.data.year.listEl.appendChild(obj.wrapEl);
             this.data.year.list.push(obj);
         }
@@ -26949,7 +26617,7 @@ class Datetime extends ModBaseListenCache {
                 this.resultIns.on('updated', () => {
                     this.resultIns.data.forEach((k) => {
                         k.wrapEl.onclick = (e) => {
-                            e.target.getAttribute(alias) !== 'remove' && !this.findFromPanels(k.label).target && this.createPanels(k.label);
+                            e.target.getAttribute(ax.alias) !== 'remove' && !this.findFromPanels(k.label).target && this.createPanels(k.label);
                         };
                     });
                 });
@@ -26989,10 +26657,10 @@ class Datetime extends ModBaseListenCache {
                             el: this.data.year.panelEl,
                             done: {
                                 show: () => {
-                                    k.yearEl.classList.add(`${prefix}opened`);
+                                    k.yearEl.classList.add(`${ax.prefix}opened`);
                                 },
                                 hide: () => {
-                                    k.yearEl.classList.remove(`${prefix}opened`);
+                                    k.yearEl.classList.remove(`${ax.prefix}opened`);
                                 }
                             }
                         });
@@ -27036,10 +26704,10 @@ class Datetime extends ModBaseListenCache {
                             el: this.data.month.panelEl,
                             done: {
                                 show: () => {
-                                    k.monthEl.classList.add(`${prefix}opened`);
+                                    k.monthEl.classList.add(`${ax.prefix}opened`);
                                 },
                                 hide: () => {
-                                    k.monthEl.classList.remove(`${prefix}opened`);
+                                    k.monthEl.classList.remove(`${ax.prefix}opened`);
                                 }
                             }
                         });
@@ -27173,8 +26841,8 @@ class Datetime extends ModBaseListenCache {
         for (let gridIndex = 1; gridIndex <= 42;) {
             let dayObj = {
                 wrapEl: createEl('li'),
-                contEl: createEl('span', { [alias]: 'content' }),
-                labelEl: createEl('i', { [alias]: 'label' }),
+                contEl: createEl('span', { [ax.alias]: 'content' }),
+                labelEl: createEl('i', { [ax.alias]: 'label' }),
             }, label;
             dayObj.wrapEl.appendChild(dayObj.contEl);
             dayObj.contEl.appendChild(dayObj.labelEl);
@@ -27215,12 +26883,12 @@ class Datetime extends ModBaseListenCache {
                         }
                     }
                     dayObj.lunarEl = createEl('u', '', lunarContent);
-                    attr ? dayObj.lunarEl.setAttribute([alias], attr) : null;
+                    attr ? dayObj.lunarEl.setAttribute(ax.alias, attr) : null;
                     dayObj.labelEl.insertAdjacentElement('afterend', dayObj.lunarEl);
                 }
                 if (this.options.lunar.tags.length > 0) {
                     for (let v of this.options.lunar.tags) {
-                        let date = dateTools.getDateObj(v.date, this.data.type), tagEl = createEl('s', v.attr ? { [alias]: v.attr } : {}, v.content);
+                        let date = dateTools.getDateObj(v.date, this.data.type), tagEl = createEl('s', v.attr ? { [ax.alias]: v.attr } : {}, v.content);
                         if (dateTools.isSameDay(date, dayObj.value)) {
                             dayObj.contEl.appendChild(tagEl);
                             break;
@@ -27250,7 +26918,7 @@ class Datetime extends ModBaseListenCache {
         [...elem.children].forEach((k, i) => {
             let obj = {
                 wrapEl: k,
-                contEl: k.querySelector(`[${alias}="content"]`),
+                contEl: k.querySelector(`[${ax.alias}="content"]`),
                 value: { YYYY: dateObj.getFullYear(), MM: i }
             };
             this.setDatespanDisabled(obj);
@@ -27261,11 +26929,11 @@ class Datetime extends ModBaseListenCache {
     createPanelYearList(elem, dateObj) {
         let list = [], fragment = document.createDocumentFragment();
         for (let k = 0; k < 18; k++) {
-            let year = dateObj.getFullYear() + k, wrap = createEl('li', '', `<span ${alias}="content"><i ${alias}="label">${year}${this.options.lang.unit.Y}</i></span>`), obj = {
+            let year = dateObj.getFullYear() + k, wrap = createEl('li', '', `<span ${ax.alias}="content"><i ${ax.alias}="label">${year}${this.options.lang.unit.Y}</i></span>`), obj = {
                 wrapEl: wrap,
                 value: { YYYY: year },
             };
-            obj.contEl = obj.wrapEl.querySelector(`[${alias}="content"]`);
+            obj.contEl = obj.wrapEl.querySelector(`[${ax.alias}="content"]`);
             this.setDatespanDisabled(obj);
             list.push(obj);
             fragment.appendChild(wrap);
@@ -27276,7 +26944,7 @@ class Datetime extends ModBaseListenCache {
     createLoopStr(max) {
         let str = '<li>';
         for (let n = 0; n < max; n++) {
-            str += `<div> <span ${alias}="content"><i ${alias}="label">${dateTools.fillZero(n)}</i></span></div> `;
+            str += `<div> <span ${ax.alias}="content"><i ${ax.alias}="label">${dateTools.fillZero(n)}</i></span></div> `;
         }
         str += '</li>';
         return str;
@@ -27284,17 +26952,17 @@ class Datetime extends ModBaseListenCache {
     createTimeList(label) {
         return `
         <li panel="daytime">
-                            <span ${alias}="tools"><i ${alias}="restore" title='${this.options.lang.toolTip.restore}'></i><i ${alias}="reset" title='${this.options.lang.toolTip.reset}'></i><i ${alias}="now" title='${this.options.lang.toolTip.now}'></i><i ${alias}="close" title='${this.options.lang.toolTip.close}'></i></span>
-                            <div ${alias}="head">
-                                <span ${alias}="time">${label}</span>
+                            <span ${ax.alias}="tools"><i ${ax.alias}="restore" title='${this.options.lang.toolTip.restore}'></i><i ${ax.alias}="reset" title='${this.options.lang.toolTip.reset}'></i><i ${ax.alias}="now" title='${this.options.lang.toolTip.now}'></i><i ${ax.alias}="close" title='${this.options.lang.toolTip.close}'></i></span>
+                            <div ${ax.alias}="head">
+                                <span ${ax.alias}="time">${label}</span>
                             </div>
-                            <div ${alias}="body">
-                                <ul ${alias}="column" class="${prefix}reset ${prefix}grid ${prefix}avg-3">
+                            <div ${ax.alias}="body">
+                                <ul ${ax.alias}="column" class="${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}avg-3">
                                     <li>${this.options.lang.unit.h}</li>
                                     <li>${this.options.lang.unit.m}</li>
                                     <li>${this.options.lang.unit.s}</li>
                                 </ul>
-                                <ul ${alias}="list" class="${prefix}reset ${prefix}grid ${prefix}avg-3">
+                                <ul ${ax.alias}="list" class="${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}avg-3">
                                 ${this.createLoopStr(24)}
                                 ${this.createLoopStr(60)}
                                 ${this.createLoopStr(60)}
@@ -27313,7 +26981,7 @@ class Datetime extends ModBaseListenCache {
         [...children].forEach((k, i) => {
             let obj = {
                 wrapEl: k,
-                contEl: k.querySelector(`[${alias}="content"]`),
+                contEl: k.querySelector(`[${ax.alias}="content"]`),
                 value: i
             };
             if (!this.format.includes(type)) {
@@ -27342,7 +27010,7 @@ class Datetime extends ModBaseListenCache {
         }
     }
     createTimeSelectPanel() {
-        this.timePanelsEl = createEl('UL', { class: `${prefix}reset ${prefix}grid ${prefix}fence ${this.client === 'phone' ? prefix + 'avg-1' : prefix + 'avg-' + this.options.cols}`, panels: 'hms' });
+        this.timePanelsEl = createEl('UL', { class: `${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}fence ${ax.screen === 'xxs' ? ax.prefix + 'avg-1' : ax.prefix + 'avg-' + this.options.cols}`, panels: 'hms' });
         if (this.options.mode === 'range') {
             this.timePanelsEl.innerHTML = this.createTimeList(this.options.lang.daytime.start) + this.createTimeList(this.options.lang.daytime.end);
         }
@@ -27350,13 +27018,13 @@ class Datetime extends ModBaseListenCache {
             this.timePanelsEl.innerHTML = this.createTimeList(this.options.lang.daytime.select);
         }
         [...this.timePanelsEl.querySelectorAll(`[panel]`)].forEach((k) => {
-            let liArr = [...k.querySelectorAll(`[${alias}="list"] li`)], panelObj = {
+            let liArr = [...k.querySelectorAll(`[${ax.alias}="list"] li`)], panelObj = {
                 panelEl: k,
                 colsEl: liArr,
-                restoreEl: k.querySelector(`[${alias}="restore"]`),
-                resetEl: k.querySelector(`[${alias}="reset"]`),
-                nowEl: k.querySelector(`[${alias}="now"]`),
-                closeEl: k.querySelector(`[${alias}="close"]`),
+                restoreEl: k.querySelector(`[${ax.alias}="restore"]`),
+                resetEl: k.querySelector(`[${ax.alias}="reset"]`),
+                nowEl: k.querySelector(`[${ax.alias}="now"]`),
+                closeEl: k.querySelector(`[${ax.alias}="close"]`),
                 value: {},
                 hh: this.getTimeListArr(liArr[0], 'hh'),
                 mm: this.getTimeListArr(liArr[1], 'mm'),
@@ -27814,7 +27482,7 @@ const optRate = [
     {
         attr: 'star',
         prop: 'star',
-        value: `${prefix}icon-star-f`,
+        value: `${ax.prefix}icon-star-f`,
     },
     {
         attr: 'type',
@@ -27901,12 +27569,12 @@ class Rate extends ModBaseListenCache {
         if (tmp.nodeName === 'INPUT') {
             this.inputEl = tmp;
             this.inputEl.type = 'range';
-            host = createEl('div', { class: `${prefix}rate` });
+            host = createEl('div', { class: `${ax.prefix}rate` });
             tmp.insertAdjacentElement('beforebegin', host);
         }
         else {
             host = tmp;
-            host.classList.add(`${prefix}rate`);
+            host.classList.add(`${ax.prefix}rate`);
             this.inputEl = createEl('input', { type: 'range' });
         }
         super.ready({
@@ -27917,7 +27585,7 @@ class Rate extends ModBaseListenCache {
             spread: ['tooltip', 'result', 'lable']
         });
         this.current = { place: 'full', legend: null, value: 0, stars: 0 };
-        this.evtMap = isMobi ? { move: 'ontouchmove', end: 'ontouchend' } : { move: 'onmousemove', end: 'onmouseleave' };
+        this.evtMap = ax.isTouchScr ? { move: 'ontouchmove', end: 'ontouchend' } : { move: 'onmousemove', end: 'onmouseleave' };
         super.listen({ name: 'constructed' });
         initial && this.init();
     }
@@ -27984,7 +27652,7 @@ class Rate extends ModBaseListenCache {
         };
         this.wrapEl[this.evtMap.end] = (e) => {
             this.tooltipIns && this.tooltipIns.hide();
-            if (isMobi) {
+            if (ax.isTouchScr) {
                 this.setVals(this.current);
             }
             else {
@@ -28028,13 +27696,13 @@ class Rate extends ModBaseListenCache {
         }));
     }
     getStarsHtml() {
-        let getStar = (val) => this.options.type === 'image' ? `<i><img src="${val}"/></i>` : `<i class="${val}"></i>`, result = '', tpl = '', data, getHtml = (cont) => this.options.label.enable ? `<span ${alias}="label">${cont}</span>` : '';
+        let getStar = (val) => this.options.type === 'image' ? `<i><img src="${val}"/></i>` : `<i class="${val}"></i>`, result = '', tpl = '', data, getHtml = (cont) => this.options.label.enable ? `<span ${ax.alias}="label">${cont}</span>` : '';
         if (this.useMap) {
             for (let [i, k] of this.options.map.entries()) {
                 data = { id: i + 1, title: k.title, count: this.options.map.length };
                 tpl = this.options.label.format ? renderTpl(this.options.label.format, data) : data.title;
                 result += `<li ${k.title ? 'title="' + k.title + '"' : ''}>
-                <span ${alias}="legend">${getStar(k.on)}${getStar(k.off || k.on)}</span>
+                <span ${ax.alias}="legend">${getStar(k.on)}${getStar(k.off || k.on)}</span>
                 ${getHtml(tpl)}
                 </li>`;
             }
@@ -28044,7 +27712,7 @@ class Rate extends ModBaseListenCache {
                 data = { id: i + 1, title: '', count: this.options.count };
                 tpl = this.options.label.format ? renderTpl(this.options.label.format, data) : data.id + this.options.lang.star;
                 result += `<li>
-                <span ${alias}="legend">${getStar(this.options.star).repeat(2)}</span>
+                <span ${ax.alias}="legend">${getStar(this.options.star).repeat(2)}</span>
                 ${getHtml(tpl)}
                 </li>`;
             }
@@ -28055,13 +27723,13 @@ class Rate extends ModBaseListenCache {
         this.targetEl.innerHTML = '';
         let fragment = document.createDocumentFragment();
         fragment.appendChild(this.inputEl);
-        this.wrapEl = createEl('ul', { class: `${prefix}reset` }, this.getStarsHtml());
-        this.resultEl = createEl('div', { [alias]: 'result' });
-        this.tooltipEl = createEl('div', { [alias]: 'tooltip' });
-        this.clearEl = createEl('i', { class: `${prefix}icon-close-o-f`, [alias]: 'clear', title: this.options.lang.title.clear });
+        this.wrapEl = createEl('ul', { class: `${ax.prefix}reset` }, this.getStarsHtml());
+        this.resultEl = createEl('div', { [ax.alias]: 'result' });
+        this.tooltipEl = createEl('div', { [ax.alias]: 'tooltip' });
+        this.clearEl = createEl('i', { class: `${ax.prefix}icon-close-o-f`, [ax.alias]: 'clear', title: this.options.lang.title.clear });
         this.items = [...this.wrapEl.children];
-        this.legends = this.items.map((k) => getEl(`[${alias}="legend"]`, k));
-        this.headEl = createEl('i', { [alias]: 'head' }, this.options.heading);
+        this.legends = this.items.map((k) => getEl(`[${ax.alias}="legend"]`, k));
+        this.headEl = createEl('i', { [ax.alias]: 'head' }, this.options.heading);
         this.options.heading && fragment.appendChild(this.headEl);
         this.options.clearable && fragment.appendChild(this.clearEl);
         fragment.appendChild(this.wrapEl);
@@ -28119,7 +27787,7 @@ class Rate extends ModBaseListenCache {
         li.toggleAttribute('selected', true);
     }
     updateStarsState(val = 0) {
-        let value = this.correctVal(val), stars = value / this.options.increment, b4Stars = Math.floor(stars), curStar = stars - b4Stars, item, map = [`${prefix}half`, `${prefix}full`];
+        let value = this.correctVal(val), stars = value / this.options.increment, b4Stars = Math.floor(stars), curStar = stars - b4Stars, item, map = [`${ax.prefix}half`, `${ax.prefix}full`];
         curStar = this.getFloatStar(curStar);
         for (let i = 0; i < this.legends.length; i++) {
             let el = this.legends[i].firstElementChild, li = el.closest('li');
@@ -28264,9 +27932,9 @@ const optAccordion = [
         prop: 'arrow',
         value: {
             enable: true,
-            show: `${prefix}icon-down`,
-            hide: `${prefix}icon-down`,
-            anim: `${prefix}rotate180`,
+            show: `${ax.prefix}icon-down`,
+            hide: `${ax.prefix}icon-down`,
+            anim: `${ax.prefix}rotate180`,
             type: 'icon',
             trigger: 'click',
         },
@@ -28614,14 +28282,14 @@ class Accordion extends ModBaseListenCacheNest {
         
         let _this = this;
         this.expandEvt = debounce(function () {
-            let attr = this.getAttribute(alias) === 'arrow' ? 'arrowEl' : 'headEl', item = findItem(this, _this.flatData, attr);
+            let attr = this.getAttribute(ax.alias) === 'arrow' ? 'arrowEl' : 'headEl', item = findItem(this, _this.flatData, attr);
             _this.toggleExpanded(item);
         }, this.options.delay);
         this.lineEvt = debounce(function (e) {
             let item = findItem(this, _this.flatData, 'headEl');
             if (!item)
                 return;
-            if ((['group', 'gap', 'holder'].includes(e.target.getAttribute(alias)) || e.target === item.headEl)) {
+            if ((['group', 'gap', 'holder'].includes(e.target.getAttribute(ax.alias)) || e.target === item.headEl)) {
                 if (_this.options.clickLine === 'expanded') {
                     _this.toggleExpanded(item);
                 }
@@ -28803,7 +28471,7 @@ class Accordion extends ModBaseListenCacheNest {
             this.options.arrow.hide && (item.arrowEl.style.backgroundImage = `url("${this.options.arrow.hide}")`);
         }
         else {
-            item.arrowEl.classList.remove(`${prefix}none`);
+            item.arrowEl.classList.remove(`${ax.prefix}none`);
             this.options.arrow.hide && item.arrowEl.classList.add(this.options.arrow.hide);
         }
     }
@@ -28811,54 +28479,54 @@ class Accordion extends ModBaseListenCacheNest {
     createHeadEl(item) {
         if (item.wrapEl)
             return;
-        item.wrapEl = createEl('section', { class: `${prefix}accordion-wrap` });
+        item.wrapEl = createEl('section', { class: `${ax.prefix}accordion-wrap` });
         if (item.headEl) {
             if (!item.labelEl) {
-                item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [alias]: 'label' }, item.label);
+                item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [ax.alias]: 'label' }, item.label);
                 item.headEl.appendChild(item.labelEl);
             }
         }
         else {
-            item.headEl = createEl('div', { class: `${prefix}accordion-head` });
-            !item.labelEl && (item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [alias]: 'label' }, item.label));
+            item.headEl = createEl('div', { class: `${ax.prefix}accordion-head` });
+            !item.labelEl && (item.labelEl = createEl(item.hasOwnProperty('href') ? 'a' : 'i', { [ax.alias]: 'label' }, item.label));
             item.headEl.appendChild(item.labelEl);
         }
         item.wrapEl.appendChild(item.headEl);
         item.href && (item.labelEl.href = item.href);
         item.target && (item.labelEl.target = item.target);
-        item.groupEl = createEl('div', { [alias]: 'group' });
+        item.groupEl = createEl('div', { [ax.alias]: 'group' });
         super.getArrowEl(item);
         if (!item.iconEl) {
-            item.iconEl = item.hasOwnProperty('icon') ? createEl('i', { [alias]: 'icon', class: item.icon }) : null;
+            item.iconEl = item.hasOwnProperty('icon') ? createEl('i', { [ax.alias]: 'icon', class: item.icon }) : null;
         }
         if (!item.diskEl) {
-            item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [alias]: 'disk', src: item.disk || getImgNone() }) : null;
+            item.diskEl = item.hasOwnProperty('disk') ? createEl('img', { [ax.alias]: 'disk', src: item.disk || ax.images.none }) : null;
         }
         if (!item.cubeEl) {
-            item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [alias]: 'cube', src: item.cube || getImgNone() }) : null;
+            item.cubeEl = item.hasOwnProperty('cube') ? createEl('img', { [ax.alias]: 'cube', src: item.cube || ax.images.none }) : null;
         }
         if (!item.imageEl) {
-            item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [alias]: 'image', src: item.image || getImgNone() }) : null;
+            item.imageEl = item.hasOwnProperty('image') ? createEl('img', { [ax.alias]: 'image', src: item.image || ax.images.none }) : null;
         }
         if (!item.badgeEl) {
-            item.badgeEl = item.badge ? createEl('ax-badge', { [alias]: 'badge', label: item.badge.toString().trim() }) : null;
+            item.badgeEl = item.badge ? createEl('ax-badge', { [ax.alias]: 'badge', label: item.badge.toString().trim() }) : null;
         }
         if (!item.tipsEl) {
-            item.tipsEl = item.tips ? createEl('i', { [alias]: 'tips' }, item.tips) : null;
+            item.tipsEl = item.tips ? createEl('i', { [ax.alias]: 'tips' }, item.tips) : null;
         }
         if (!item.customEl) {
-            item.customEl = item.custom ? createEl('div', { [alias]: 'custom' }, item.custom) : null;
+            item.customEl = item.custom ? createEl('div', { [ax.alias]: 'custom' }, item.custom) : null;
         }
         item.expanded && item.headEl.toggleAttribute('expanded', true);
         item.disabled && item.headEl.toggleAttribute('disabled', true);
         item.readonly && item.headEl.toggleAttribute('readonly', true);
         item.checked && item.headEl.toggleAttribute('checked', true);
         if (this.options.check.enable) {
-            item.checkEl = createEl(`ax-${this.options.check.type}`, { [alias]: 'check' });
+            item.checkEl = createEl(`ax-${this.options.check.type}`, { [ax.alias]: 'check' });
         }
         if (this.options.tools.enable) {
             item.toolsEl = createTools(this.options.tools.children, item.headEl);
-            item.toolsEl.setAttribute(alias, 'tools');
+            item.toolsEl.setAttribute(ax.alias, 'tools');
             item.tools = deepClone(this.options.tools.children);
             for (let k of item.tools) {
                 this.options.lang.title[k.name] && k.wrapEl.setAttribute('title', this.options.lang.title[k.name]);
@@ -28888,18 +28556,18 @@ class Accordion extends ModBaseListenCacheNest {
         });
     }
     createBodyEl(item) {
-        item.bodyEl = createEl('div', { class: `${prefix}accordion-body` });
-        !item.contEl && (item.contEl = createEl('div', { class: `${prefix}accordion-cont` }));
+        item.bodyEl = createEl('div', { class: `${ax.prefix}accordion-body` });
+        !item.contEl && (item.contEl = createEl('div', { class: `${ax.prefix}accordion-cont` }));
         item.bodyEl.appendChild(item.contEl);
         if (!item.extraEl && item.hasOwnProperty('extra')) {
-            item.extraEl = createEl('div', { class: `${prefix}accordion-extra` });
+            item.extraEl = createEl('div', { class: `${ax.prefix}accordion-extra` });
         }
         item.extraEl && item.bodyEl.appendChild(item.extraEl);
         !this.options.deferred && this.setContExtra(item, true);
         item.headEl.insertAdjacentElement('afterend', item.bodyEl);
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}accordion`);
+        this.targetEl.classList.add(`${ax.prefix}accordion`);
         this.options.classes && classes(this.targetEl).add(this.options.classes);
         this.targetEl.toggleAttribute('inert', this.options.passive);
         this.targetEl.setAttribute('tools-trigger', this.options.tools.trigger);
@@ -29581,14 +29249,14 @@ class Editor extends ModBaseListenCache {
             return this;
         if (['TEXTAREA'].includes(tmp.nodeName)) {
             this.inputEl = tmp;
-            this.inputEl.classList.add(`${prefix}editor-source`);
-            host = createEl('div', { class: `${prefix}editor` });
+            this.inputEl.classList.add(`${ax.prefix}editor-source`);
+            host = createEl('div', { class: `${ax.prefix}editor` });
             tmp.insertAdjacentElement('afterend', host);
         }
         else {
             host = tmp;
-            host.classList.add(`${prefix}editor`);
-            this.inputEl = createEl('textarea', { class: `${prefix}editor-source` });
+            host.classList.add(`${ax.prefix}editor`);
+            this.inputEl = createEl('textarea', { class: `${ax.prefix}editor-source` });
         }
         super.ready({
             options,
@@ -29611,7 +29279,7 @@ class Editor extends ModBaseListenCache {
         
         
         this.rawHtml = this.inputEl.value || this.targetEl.innerHTML;
-        this.contEl = createEl('div', { class: `${prefix}editor-cont`, placeholder: this.options.lang.placeholder, contenteditable: true });
+        this.contEl = createEl('div', { class: `${ax.prefix}editor-cont`, placeholder: this.options.lang.placeholder, contenteditable: true });
         let _this = this;
         this.keyupEvt = debounce((e) => {
             let code = e.key;
@@ -29672,10 +29340,10 @@ class Editor extends ModBaseListenCache {
         };
         this.tools = [
             ...this.createToggleItems([
-                { name: 'bold', icon: `${prefix}icon-bold`, key: 'fontWeight', value: 'bold', tips: this.options.lang.tips.bold },
-                { name: 'italic', icon: `${prefix}icon-italic`, key: 'fontStyle', value: 'italic', tips: this.options.lang.tips.italic },
-                { name: 'underline', icon: `${prefix}icon-underline`, key: 'textDecorationLine', value: 'underline', tips: this.options.lang.tips.underline },
-                { name: 'through', icon: `${prefix}icon-through`, key: 'textDecorationLine', value: 'line-through', tips: this.options.lang.tips.through },
+                { name: 'bold', icon: `${ax.prefix}icon-bold`, key: 'fontWeight', value: 'bold', tips: this.options.lang.tips.bold },
+                { name: 'italic', icon: `${ax.prefix}icon-italic`, key: 'fontStyle', value: 'italic', tips: this.options.lang.tips.italic },
+                { name: 'underline', icon: `${ax.prefix}icon-underline`, key: 'textDecorationLine', value: 'underline', tips: this.options.lang.tips.underline },
+                { name: 'through', icon: `${ax.prefix}icon-through`, key: 'textDecorationLine', value: 'line-through', tips: this.options.lang.tips.through },
             ]),
             ...this.createFontsizeItems([
                 { name: 'fontsize-dft', label: this.options.lang.fontsizeDft, value: '' },
@@ -29692,17 +29360,17 @@ class Editor extends ModBaseListenCache {
             ]),
             ...this.createAlignItems([
                 { name: 'align-dft', label: this.options.lang.alignDft, value: '' },
-                { name: 'align-left', icon: `${prefix}icon-align-left`, value: 'left', tips: this.options.lang.tips.alignLeft },
-                { name: 'align-center', icon: `${prefix}icon-align-center`, value: 'center', tips: this.options.lang.tips.alignCenter },
-                { name: 'align-right', icon: `${prefix}icon-align-right`, value: 'right', tips: this.options.lang.tips.alignRight },
-                { name: 'align-justify', icon: `${prefix}icon-align-justify`, value: 'justify', tips: this.options.lang.tips.alignJustify },
+                { name: 'align-left', icon: `${ax.prefix}icon-align-left`, value: 'left', tips: this.options.lang.tips.alignLeft },
+                { name: 'align-center', icon: `${ax.prefix}icon-align-center`, value: 'center', tips: this.options.lang.tips.alignCenter },
+                { name: 'align-right', icon: `${ax.prefix}icon-align-right`, value: 'right', tips: this.options.lang.tips.alignRight },
+                { name: 'align-justify', icon: `${ax.prefix}icon-align-justify`, value: 'justify', tips: this.options.lang.tips.alignJustify },
             ]),
             ...this.createSpanTags([
-                { name: 'sup', icon: `${prefix}icon-superscript`, value: 'sup', tips: this.options.lang.tips.sup },
-                { name: 'sub', icon: `${prefix}icon-subscript`, value: 'sub', tips: this.options.lang.tips.sub },
-                { name: 'highlight', icon: `${prefix}icon-highlight`, value: 'mark', tips: this.options.lang.tips.highlight },
-                { name: 'cite', icon: `${prefix}icon-quote-left`, value: 'cite', tips: this.options.lang.tips.cite },
-                { name: 'code-inline', icon: `${prefix}icon-code-inline`, value: 'code', tips: this.options.lang.tips.codeInline },
+                { name: 'sup', icon: `${ax.prefix}icon-superscript`, value: 'sup', tips: this.options.lang.tips.sup },
+                { name: 'sub', icon: `${ax.prefix}icon-subscript`, value: 'sub', tips: this.options.lang.tips.sub },
+                { name: 'highlight', icon: `${ax.prefix}icon-highlight`, value: 'mark', tips: this.options.lang.tips.highlight },
+                { name: 'cite', icon: `${ax.prefix}icon-quote-left`, value: 'cite', tips: this.options.lang.tips.cite },
+                { name: 'code-inline', icon: `${ax.prefix}icon-code-inline`, value: 'code', tips: this.options.lang.tips.codeInline },
                 { name: 'em', label: this.options.lang.tips.em, value: 'em', },
                 { name: 'address', label: this.options.lang.tips.address, value: 'address', },
                 { name: 'time', label: this.options.lang.tips.time, value: 'time', },
@@ -29710,28 +29378,28 @@ class Editor extends ModBaseListenCache {
                 { name: 'rt', label: this.options.lang.tips.rt, value: 'rt', },
             ]),
             ...this.createLineTags([
-                { name: 'p', icon: `${prefix}icon-article`, value: 'p', tips: this.options.lang.tips.text, },
-                { name: 'h1', icon: `${prefix}icon-heading-1`, value: 'h1', tips: this.options.lang.tips.h1 },
-                { name: 'h2', icon: `${prefix}icon-heading-2`, value: 'h2', tips: this.options.lang.tips.h2 },
-                { name: 'h3', icon: `${prefix}icon-heading-3`, value: 'h3', tips: this.options.lang.tips.h3 },
-                { name: 'h4', icon: `${prefix}icon-heading-4`, value: 'h4', tips: this.options.lang.tips.h4 },
-                { name: 'h5', icon: `${prefix}icon-heading-5`, value: 'h5', tips: this.options.lang.tips.h5 },
-                { name: 'h6', icon: `${prefix}icon-heading-6`, value: 'h6', tips: this.options.lang.tips.h6 },
-                { name: 'blockquote', icon: `${prefix}icon-quote-left-f`, value: 'blockquote', tips: this.options.lang.tips.blockquote },
+                { name: 'p', icon: `${ax.prefix}icon-article`, value: 'p', tips: this.options.lang.tips.text, },
+                { name: 'h1', icon: `${ax.prefix}icon-heading-1`, value: 'h1', tips: this.options.lang.tips.h1 },
+                { name: 'h2', icon: `${ax.prefix}icon-heading-2`, value: 'h2', tips: this.options.lang.tips.h2 },
+                { name: 'h3', icon: `${ax.prefix}icon-heading-3`, value: 'h3', tips: this.options.lang.tips.h3 },
+                { name: 'h4', icon: `${ax.prefix}icon-heading-4`, value: 'h4', tips: this.options.lang.tips.h4 },
+                { name: 'h5', icon: `${ax.prefix}icon-heading-5`, value: 'h5', tips: this.options.lang.tips.h5 },
+                { name: 'h6', icon: `${ax.prefix}icon-heading-6`, value: 'h6', tips: this.options.lang.tips.h6 },
+                { name: 'blockquote', icon: `${ax.prefix}icon-quote-left-f`, value: 'blockquote', tips: this.options.lang.tips.blockquote },
             ]),
             ...this.createCloseTags([
-                { name: 'hr', icon: `${prefix}icon-line-h`, value: 'hr', tips: this.options.lang.tips.hr },
-                { name: 'br', icon: `${prefix}icon-br`, value: 'br', tips: this.options.lang.tips.br },
+                { name: 'hr', icon: `${ax.prefix}icon-line-h`, value: 'hr', tips: this.options.lang.tips.hr },
+                { name: 'br', icon: `${ax.prefix}icon-br`, value: 'br', tips: this.options.lang.tips.br },
             ]),
             ...this.createNestTags([
-                { name: 'code-block', icon: `${prefix}icon-code-block`, value: ['pre', 'code'], tips: this.options.lang.tips.codeBlock, },
-                { name: 'list-ul', icon: `${prefix}icon-list-ul`, value: ['ul', 'li', 'br'], tips: this.options.lang.tips.listUl },
-                { name: 'list-ol', icon: `${prefix}icon-list-ol`, value: ['ol', 'li', 'br'], tips: this.options.lang.tips.listOl },
-                { name: 'paragraph', icon: `${prefix}icon-paragraph`, value: ['div', 'br'], tips: this.options.lang.tips.paragraph, isRoot: true },
+                { name: 'code-block', icon: `${ax.prefix}icon-code-block`, value: ['pre', 'code'], tips: this.options.lang.tips.codeBlock, },
+                { name: 'list-ul', icon: `${ax.prefix}icon-list-ul`, value: ['ul', 'li', 'br'], tips: this.options.lang.tips.listUl },
+                { name: 'list-ol', icon: `${ax.prefix}icon-list-ol`, value: ['ol', 'li', 'br'], tips: this.options.lang.tips.listOl },
+                { name: 'paragraph', icon: `${ax.prefix}icon-paragraph`, value: ['div', 'br'], tips: this.options.lang.tips.paragraph, isRoot: true },
             ]),
             {
                 name: 'indent-more',
-                icon: `${prefix}icon-indent-more`,
+                icon: `${ax.prefix}icon-indent-more`,
                 tips: this.options.lang.tips.indentMore,
                 action: (resp) => {
                     resp.wrapEl.onpointerdown = (e) => {
@@ -29745,7 +29413,7 @@ class Editor extends ModBaseListenCache {
             },
             {
                 name: 'indent-less',
-                icon: `${prefix}icon-indent-less`,
+                icon: `${ax.prefix}icon-indent-less`,
                 tips: this.options.lang.tips.indentLess,
                 action: (resp) => {
                     resp.wrapEl.onpointerdown = (e) => {
@@ -29793,10 +29461,10 @@ class Editor extends ModBaseListenCache {
                 action: (resp) => {
                     let content = [
                         { label: this.options.lang.alignDft, value: '' },
-                        { label: this.options.lang.tips.alignLeft, icon: `${prefix}icon-align-left`, value: 'left' },
-                        { label: this.options.lang.tips.alignCenter, icon: `${prefix}icon-align-center`, value: 'center' },
-                        { label: this.options.lang.tips.alignRight, icon: `${prefix}icon-align-right`, value: 'right' },
-                        { label: this.options.lang.tips.alignJustify, icon: `${prefix}icon-align-justify`, value: 'justify' },
+                        { label: this.options.lang.tips.alignLeft, icon: `${ax.prefix}icon-align-left`, value: 'left' },
+                        { label: this.options.lang.tips.alignCenter, icon: `${ax.prefix}icon-align-center`, value: 'center' },
+                        { label: this.options.lang.tips.alignRight, icon: `${ax.prefix}icon-align-right`, value: 'right' },
+                        { label: this.options.lang.tips.alignJustify, icon: `${ax.prefix}icon-align-justify`, value: 'justify' },
                     ];
                     new Dropdown(resp.wrapEl, {
                         content: content.map((k) => k.label),
@@ -29816,12 +29484,12 @@ class Editor extends ModBaseListenCache {
                 action: (resp) => {
                     let content = [
                         { label: this.options.lang.tips.text, value: 'p' },
-                        { label: this.options.lang.tips.h1, icon: `${prefix}icon-heading-1`, value: 'h1' },
-                        { label: this.options.lang.tips.h2, icon: `${prefix}icon-heading-2`, value: 'h2' },
-                        { label: this.options.lang.tips.h3, icon: `${prefix}icon-heading-3`, value: 'h3' },
-                        { label: this.options.lang.tips.h4, icon: `${prefix}icon-heading-1`, value: 'h4' },
-                        { label: this.options.lang.tips.h5, icon: `${prefix}icon-heading-5`, value: 'h5' },
-                        { label: this.options.lang.tips.h6, icon: `${prefix}icon-heading-6`, value: 'h6' },
+                        { label: this.options.lang.tips.h1, icon: `${ax.prefix}icon-heading-1`, value: 'h1' },
+                        { label: this.options.lang.tips.h2, icon: `${ax.prefix}icon-heading-2`, value: 'h2' },
+                        { label: this.options.lang.tips.h3, icon: `${ax.prefix}icon-heading-3`, value: 'h3' },
+                        { label: this.options.lang.tips.h4, icon: `${ax.prefix}icon-heading-1`, value: 'h4' },
+                        { label: this.options.lang.tips.h5, icon: `${ax.prefix}icon-heading-5`, value: 'h5' },
+                        { label: this.options.lang.tips.h6, icon: `${ax.prefix}icon-heading-6`, value: 'h6' },
                     ];
                     new Dropdown(resp.wrapEl, {
                         content: content.map((k) => k.label),
@@ -29861,8 +29529,8 @@ class Editor extends ModBaseListenCache {
             },
             {
                 name: 'source',
-                icon: `${prefix}icon-code-box`,
-                swap: `${prefix}icon-html-box`,
+                icon: `${ax.prefix}icon-code-box`,
+                swap: `${ax.prefix}icon-html-box`,
                 tips: this.options.lang.tips.source,
                 action: (resp) => {
                     resp.wrapEl.onpointerdown = (e) => {
@@ -29948,16 +29616,16 @@ class Editor extends ModBaseListenCache {
     }
     renderMain() {
         this.targetEl.innerHTML = '';
-        this.headEl = createEl('div', { class: `${prefix}editor-head` });
+        this.headEl = createEl('div', { class: `${ax.prefix}editor-head` });
         this.inputEl.placeholder = this.options.lang.placeholder;
         this.options.name && (this.inputEl.name = this.options.name);
-        this.bodyEl = createEl('div', { class: `${prefix}editor-body` });
+        this.bodyEl = createEl('div', { class: `${ax.prefix}editor-body` });
         this.bodyEl.append(this.contEl, this.inputEl);
-        this.pathEl = createEl('div', { class: `${prefix}editor-path` });
-        this.stateEl = createEl('div', { class: `${prefix}editor-state` });
-        this.footEl = createEl('div', { class: `${prefix}editor-foot` });
+        this.pathEl = createEl('div', { class: `${ax.prefix}editor-path` });
+        this.stateEl = createEl('div', { class: `${ax.prefix}editor-state` });
+        this.footEl = createEl('div', { class: `${ax.prefix}editor-foot` });
         this.footEl.append(this.pathEl, this.stateEl);
-        this.maskEl = createEl('div', { class: `${prefix}editor-mask` }, this.options.lang.defer);
+        this.maskEl = createEl('div', { class: `${ax.prefix}editor-mask` }, this.options.lang.defer);
         if (this.options.header.enable) {
             this.toolsEl = createTools(this.getTools(), this.headEl);
             this.targetEl.appendChild(this.headEl);
@@ -29995,7 +29663,7 @@ class Editor extends ModBaseListenCache {
         super.listen({ name: 'edited', params: [html] });
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}editor`);
+        this.targetEl.classList.add(`${ax.prefix}editor`);
         this.options.classes && classes(this.targetEl).add(this.options.classes);
         this.options.readonly ? this.readonly() : this.enable();
         this.targetEl.toggleAttribute('inert', this.options.disabled);
@@ -30856,13 +30524,13 @@ class Select extends ModBaseListenCache {
             return this;
         if (['SELECT', 'INPUT'].includes(tmp.nodeName)) {
             this.inputEl = tmp;
-            host = createEl('div', { class: `${prefix}select` });
+            host = createEl('div', { class: `${ax.prefix}select` });
             tmp.insertAdjacentElement('afterend', host);
             host.appendChild(this.inputEl);
         }
         else {
             host = tmp;
-            host.classList.add(`${prefix}select`);
+            host.classList.add(`${ax.prefix}select`);
             this.inputEl = createEl('input', { type: 'hidden' });
         }
         super.ready({
@@ -30920,19 +30588,19 @@ class Select extends ModBaseListenCache {
     }
     renderMain() {
         this.targetEl.innerHTML = '';
-        this.inputEl.setAttribute([alias], 'input');
+        this.inputEl.setAttribute(ax.alias, 'input');
         let nameTmp = this.options.name;
         if (this.inputEl.nodeName === 'SELECT' && this.options.multiple)
             nameTmp += `[]`;
         this.options.name && (this.inputEl.name = nameTmp);
         this.targetEl.appendChild(this.inputEl);
-        this.tagsEl = createEl('div', { [alias]: 'tags' });
-        this.arrowEl = createEl('i', { [alias]: 'arrow' });
+        this.tagsEl = createEl('div', { [ax.alias]: 'tags' });
+        this.arrowEl = createEl('i', { [ax.alias]: 'arrow' });
         this.targetEl.appendChild(this.tagsEl);
         if (this.options.tools.enable) {
             this.toolsEl = createTools(this.options.tools.children, null, this);
             this.tagsEl.insertAdjacentElement('afterend', this.toolsEl);
-            this.toolsEl.setAttribute(alias, 'tools');
+            this.toolsEl.setAttribute(ax.alias, 'tools');
             for (let k of this.options.tools.children) {
                 !k.tips && !k.title && this.options.lang.title[k.name] && k.wrapEl.setAttribute('title', this.options.lang.title[k.name]);
                 if (k.name === 'close') {
@@ -30943,23 +30611,23 @@ class Select extends ModBaseListenCache {
             }
         }
         this.options.popup.enable && this.targetEl.appendChild(this.arrowEl);
-        this.listEl = createEl('div', { class: `${prefix}select-list` });
-        this.wrapEl = createEl('div', { class: `${prefix}select-wrap` }, this.listEl);
+        this.listEl = createEl('div', { class: `${ax.prefix}select-list` });
+        this.wrapEl = createEl('div', { class: `${ax.prefix}select-wrap` }, this.listEl);
         if (this.options.popup.enable && this.options.search.enable) {
-            this.searchEl = createEl('div', { class: `${prefix}select-search` });
-            this.resultEl = createEl('div', { [alias]: 'result' }, this.options.lang.search.start);
+            this.searchEl = createEl('div', { class: `${ax.prefix}select-search` });
+            this.resultEl = createEl('div', { [ax.alias]: 'result' }, this.options.lang.search.start);
             if (!this.options.manual) {
-                this.keysEl = createEl('ax-input', { tools: true, placeholder: this.options.lang.search.placeholder, [alias]: 'keys' });
+                this.keysEl = createEl('ax-input', { tools: true, placeholder: this.options.lang.search.placeholder, [ax.alias]: 'keys' });
                 this.searchEl.appendChild(this.keysEl);
             }
             this.options.search.result && this.searchEl.appendChild(this.resultEl);
             this.wrapEl.insertAdjacentElement('afterbegin', this.searchEl);
         }
         if (this.options.popup.enable && this.options.status) {
-            this.checkEl = createEl('ax-checkbox', { label: this.options.lang.check.all, [alias]: 'check' });
+            this.checkEl = createEl('ax-checkbox', { label: this.options.lang.check.all, [ax.alias]: 'check' });
             !this.options.multiple && this.checkEl.toggleAttribute('disabled', true);
-            this.statsEl = createEl('span', { [alias]: 'stats' });
-            this.statusEl = createEl('div', { class: `${prefix}select-status` });
+            this.statsEl = createEl('span', { [ax.alias]: 'stats' });
+            this.statusEl = createEl('div', { class: `${ax.prefix}select-status` });
             this.statusEl.append(this.checkEl, this.statsEl);
             this.wrapEl.appendChild(this.statusEl);
             this.checkEl.on('check', (data) => {
@@ -30975,7 +30643,7 @@ class Select extends ModBaseListenCache {
                     this.checkEl.setAttribute('label', this.options.lang.check.ed);
                 }
             });
-            this.statusHolderEl = createEl('div', { class: `${prefix}select-holder` });
+            this.statusHolderEl = createEl('div', { class: `${ax.prefix}select-holder` });
             this.wrapEl.appendChild(this.statusHolderEl);
         }
     }
@@ -31026,8 +30694,8 @@ class Select extends ModBaseListenCache {
                 return arr.includes(el) ? true : false;
             },
             onInitiated: () => {
-                this.popupIns.mainEl.classList.add(`${prefix}select-popup`);
-                if (this.options.autoWidth && !(this.popupIns.options.adaptive && getClientType() === 'phone')) {
+                this.popupIns.mainEl.classList.add(`${ax.prefix}select-popup`);
+                if (this.options.autoWidth && !(this.popupIns.options.adaptive && ax.screen === 'xxs')) {
                     this.popupIns.positionIns.on('changed', () => {
                         this.popupIns.mainEl.style.width = this.popupIns.positionIns.targetData.width + 'px';
                     });
@@ -31189,7 +30857,7 @@ class Select extends ModBaseListenCache {
         this.options.manual === false && (this.options.popup.enable = true);
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}select`);
+        this.targetEl.classList.add(`${ax.prefix}select`);
         this.targetEl.setAttribute('tabindex', 0);
         this.options.classes && classes(this.targetEl).add(this.options.classes);
         this.targetEl.toggleAttribute('inert', this.options.disabled);
@@ -31392,7 +31060,7 @@ const optUpload = [
         prop: 'chooseBtn',
         value: {
             target: '',
-            icon: `${prefix}icon-plus`,
+            icon: `${ax.prefix}icon-plus`,
             attrs: {},
         },
     },
@@ -31402,7 +31070,7 @@ const optUpload = [
         value: {
             enable: false,
             target: '',
-            icon: `${prefix}icon-upload`,
+            icon: `${ax.prefix}icon-upload`,
             attrs: {},
         },
     },
@@ -31412,7 +31080,7 @@ const optUpload = [
         value: {
             enable: false,
             target: '',
-            icon: `${prefix}icon-trash`,
+            icon: `${ax.prefix}icon-trash`,
             attrs: {},
         },
     },
@@ -31420,7 +31088,7 @@ const optUpload = [
         attr: 'picture-btn',
         prop: 'pictureBtn',
         value: {
-            icon: `${prefix}icon-plus`,
+            icon: `${ax.prefix}icon-plus`,
             attrs: {},
         },
     },
@@ -31428,7 +31096,7 @@ const optUpload = [
         attr: 'gallery-btn',
         prop: 'galleryBtn',
         value: {
-            icon: `${prefix}icon-addpic`,
+            icon: `${ax.prefix}icon-addpic`,
             attrs: {},
         },
     },
@@ -31641,10 +31309,10 @@ class Upload extends ModBaseListenCache {
         
         
         this.dftTypes = {
-            'image': `${prefix}icon-image`,
-            'video': `${prefix}icon-video`,
-            'audio': `${prefix}icon-music`,
-            'file': `${prefix}icon-file-text`,
+            'image': `${ax.prefix}icon-image`,
+            'video': `${ax.prefix}icon-video`,
+            'audio': `${ax.prefix}icon-music`,
+            'file': `${ax.prefix}icon-file-text`,
         };
         let _this = this;
         this.fileChangeEvt = function () {
@@ -31693,23 +31361,23 @@ class Upload extends ModBaseListenCache {
             }
             super.listen({ name: 'dropped', params: [items] });
         };
-        this.tipsEl = createEl('div', { [alias]: 'tips' });
-        this.summaryEl = createEl('div', { [alias]: 'summary' });
-        this.infoEl = createEl('div', { class: `${prefix}upload-info` });
+        this.tipsEl = createEl('div', { [ax.alias]: 'tips' });
+        this.summaryEl = createEl('div', { [ax.alias]: 'summary' });
+        this.infoEl = createEl('div', { class: `${ax.prefix}upload-info` });
         this.createSetList();
         super.listen({ name: 'constructed' });
         initial && this.init();
     }
     createSetList() {
-        let classes = prefix + 'reset';
+        let classes = ax.prefix + 'reset';
         if (this.options.type === 'card') {
-            classes += ` ${prefix}grid ${prefix}g-xs`;
-            this.options.columns && (classes += ` ${prefix}grid-${this.options.columns}`);
+            classes += ` ${ax.prefix}grid ${ax.prefix}g-xs`;
+            this.options.columns && (classes += ` ${ax.prefix}grid-${this.options.columns}`);
         }
-        this.listEl = createEl(this.options.type === 'table' ? 'table' : 'ul', { class: `${this.options.type !== 'table' ? classes : ''} ${prefix}upload-list` });
+        this.listEl = createEl(this.options.type === 'table' ? 'table' : 'ul', { class: `${this.options.type !== 'table' ? classes : ''} ${ax.prefix}upload-list` });
         if (this.options.type === 'table') {
             this.tableEl = createEl('table');
-            this.listEl = createEl('tbody', { class: `${prefix}upload-list` });
+            this.listEl = createEl('tbody', { class: `${ax.prefix}upload-list` });
             if (this.options.table.header) {
                 this.theadEl = createEl('thead', {}, this.options.lang.thead.map((k) => `<th>${k}</th>`).join(''));
                 this.tableEl.appendChild(this.theadEl);
@@ -31717,7 +31385,7 @@ class Upload extends ModBaseListenCache {
             this.tableEl.appendChild(this.listEl);
         }
         else {
-            this.listEl = createEl('ul', { class: `${classes} ${prefix}upload-list` });
+            this.listEl = createEl('ul', { class: `${classes} ${ax.prefix}upload-list` });
         }
     }
     
@@ -31781,11 +31449,11 @@ class Upload extends ModBaseListenCache {
         }
     }
     createBox(type, node = 'li') {
-        let iconStr = this.options[type + 'Btn'].icon ? `<i ${alias}="icon" class="${this.options[type + 'Btn'].icon}"></i>` : '', textStr = this.options.lang.button[type] ? `<div ${alias}="text">${this.options.lang.button[type]}</div>` : '';
-        return createEl(node, Object.assign({ [alias]: ['picture', 'gallery'].includes(type) ? 'choose' : type }, type !== 'gallery' ? { tabindex: 0 } : {}, this.options[type + 'Btn'].attrs), `${iconStr}${textStr}`);
+        let iconStr = this.options[type + 'Btn'].icon ? `<i ${ax.alias}="icon" class="${this.options[type + 'Btn'].icon}"></i>` : '', textStr = this.options.lang.button[type] ? `<div ${ax.alias}="text">${this.options.lang.button[type]}</div>` : '';
+        return createEl(node, Object.assign({ [ax.alias]: ['picture', 'gallery'].includes(type) ? 'choose' : type }, type !== 'gallery' ? { tabindex: 0 } : {}, this.options[type + 'Btn'].attrs), `${iconStr}${textStr}`);
     }
     createBtn(type) {
-        return createEl('ax-btn', Object.assign({ [alias]: type, size: this.options.size, tabindex: 0, icon: this.options[type + 'Btn'].icon, label: this.options.lang.button[type] }, this.options[type + 'Btn'].attrs));
+        return createEl('ax-btn', Object.assign({ [ax.alias]: type, size: this.options.size, tabindex: 0, icon: this.options[type + 'Btn'].icon, label: this.options.lang.button[type] }, this.options[type + 'Btn'].attrs));
     }
     createInput(hasText = true, hasFile = true) {
         if (hasText) {
@@ -31835,7 +31503,7 @@ class Upload extends ModBaseListenCache {
         !this.fileEl.multiple && (this.options.limit.min = 0, this.options.limit.max = 1);
         this.targetEl.append(this.inputEl, this.fileEl);
         this.targetEl.appendChild(this.options.type === 'table' ? this.tableEl : this.listEl);
-        this.footEl = createEl('div', { class: `${prefix}upload-foot` }, this.infoEl);
+        this.footEl = createEl('div', { class: `${ax.prefix}upload-foot` }, this.infoEl);
         if (this.options.status) {
             this.targetEl.setAttribute('status', this.options.status);
             if (this.options.status.includes('tips')) {
@@ -31876,7 +31544,7 @@ class Upload extends ModBaseListenCache {
             }
         }
         else {
-            this.headEl = createEl('div', { class: `${prefix}upload-head` });
+            this.headEl = createEl('div', { class: `${ax.prefix}upload-head` });
             this.listEl.insertAdjacentElement('beforeBegin', this.footEl);
             let btn = getEl(this.options.chooseBtn.target);
             if (btn) {
@@ -31934,7 +31602,7 @@ class Upload extends ModBaseListenCache {
         this.addEvts();
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}upload`);
+        this.targetEl.classList.add(`${ax.prefix}upload`);
         this.options.type ? this.targetEl.setAttribute('type', this.options.type) : this.targetEl.removeAttribute('type');
         this.targetEl.toggleAttribute('pastable', this.options.pastable);
         this.targetEl.toggleAttribute('inert', this.options.disabled);
@@ -31944,7 +31612,7 @@ class Upload extends ModBaseListenCache {
     }
     createCtrlv() {
         if (this.options.pastable) {
-            this.ctrlvEl = createEl('i', { [alias]: 'ctrlv' }, this.options.lang.paste.before);
+            this.ctrlvEl = createEl('i', { [ax.alias]: 'ctrlv' }, this.options.lang.paste.before);
             this.targetEl.appendChild(this.ctrlvEl);
             this.ctrlvEl.onclick = () => {
                 this.ctrlvEl.innerHTML = this.options.lang.paste.ing;
@@ -31979,39 +31647,39 @@ class Upload extends ModBaseListenCache {
     }
     createItem(item) {
         let name = item.file.name, size = item.file.size, passed = item.valid.passed, msg = item.valid.msg, tpl = '', part1 = `
-        <div class="${prefix}upload-mask">
-            ${this.options.manual ? '<i ' + alias + '="upload" class="' + prefix + 'icon-upload"></i>' : ''}
-            <i ${alias}="view" class="${prefix}icon-zoomin"></i>
-            <a ${alias}="download" href="###" class="${prefix}icon-download"></a>
-            <i ${alias}="remove" class="${prefix}icon-trash"></i>
+        <div class="${ax.prefix}upload-mask">
+            ${this.options.manual ? '<i ' + ax.alias + '="upload" class="' + ax.prefix + 'icon-upload"></i>' : ''}
+            <i ${ax.alias}="view" class="${ax.prefix}icon-zoomin"></i>
+            <a ${ax.alias}="download" href="###" class="${ax.prefix}icon-download"></a>
+            <i ${ax.alias}="remove" class="${ax.prefix}icon-trash"></i>
         </div>
-        <ax-progress ${alias}="progress" thk="xs" size="sm" type="circle"></ax-progress>
-        <i ${alias}="state"></i>
-        <i ${alias}="sign" class="${prefix}icon-check"></i>
-        <div ${alias}="message">${passed ? msg : ''}</div>
+        <ax-progress ${ax.alias}="progress" thk="xs" size="sm" type="circle"></ax-progress>
+        <i ${ax.alias}="state"></i>
+        <i ${ax.alias}="sign" class="${ax.prefix}icon-check"></i>
+        <div ${ax.alias}="message">${passed ? msg : ''}</div>
         `, part2 = `
-                <div class="${prefix}upload-info">
-                    <a href="###" ${alias}="title">${name}</a>
-                    ${this.options.type === 'bullet' ? '<div ' + alias + '="size">' + convertByte({ val: size }).str + '</div>' : ''}
+                <div class="${ax.prefix}upload-info">
+                    <a href="###" ${ax.alias}="title">${name}</a>
+                    ${this.options.type === 'bullet' ? '<div ' + ax.alias + '="size">' + convertByte({ val: size }).str + '</div>' : ''}
                 </div>
-                <ax-progress ${alias}="progress" label="false" thk="xs"></ax-progress>
-                <i ${alias}="message">${passed ? msg : ''}</i>
-                <i ${alias}="percent"></i>
-                <i ${alias}="state"></i>
-                <i ${alias}="sign" class="${prefix}icon-check"></i>
-                ${this.options.manual ? '<i ' + alias + '="upload" class="' + prefix + 'icon-upload"></i>' : ''}
-                <i ${alias}="remove" class="${prefix}icon-trash"></i>
+                <ax-progress ${ax.alias}="progress" label="false" thk="xs"></ax-progress>
+                <i ${ax.alias}="message">${passed ? msg : ''}</i>
+                <i ${ax.alias}="percent"></i>
+                <i ${ax.alias}="state"></i>
+                <i ${ax.alias}="sign" class="${ax.prefix}icon-check"></i>
+                ${this.options.manual ? '<i ' + ax.alias + '="upload" class="' + ax.prefix + 'icon-upload"></i>' : ''}
+                <i ${ax.alias}="remove" class="${ax.prefix}icon-trash"></i>
                 `;
         if (this.options.type === 'card') {
             tpl = `
                     <li valid=${passed ? 'success' : 'failed'}>
-                        <div class="${prefix}upload-file">
+                        <div class="${ax.prefix}upload-file">
                             ${part1}
                         </div>
-                        <div class="${prefix}upload-info">
-                            <div ${alias}="title">${name}</div>
-                            <div ${alias}="size">${convertByte({ val: size }).str}</div>
-                            <div ${alias}="url"></div>
+                        <div class="${ax.prefix}upload-info">
+                            <div ${ax.alias}="title">${name}</div>
+                            <div ${ax.alias}="size">${convertByte({ val: size }).str}</div>
+                            <div ${ax.alias}="url"></div>
                         </div>
                     </li>
                     `;
@@ -32019,7 +31687,7 @@ class Upload extends ModBaseListenCache {
         else if (this.options.type === 'cube') {
             tpl = `
                     <li valid=${passed ? 'success' : 'failed'}>
-                        <div class="${prefix}upload-file"></div>
+                        <div class="${ax.prefix}upload-file"></div>
                         ${part1}
                     </li>
                     `;
@@ -32027,24 +31695,24 @@ class Upload extends ModBaseListenCache {
         else if (this.options.type == 'bullet') {
             tpl = `
                     <li valid=${passed ? 'success' : 'failed'}>
-                        <a href="###" class="${prefix}upload-file"></a>
+                        <a href="###" class="${ax.prefix}upload-file"></a>
                         ${part2}
                     </li>
                     `;
         }
         else if (this.options.type === 'table') {
             let btns = `
-                ${this.options.manual ? '<i ' + alias + '="upload" class="' + prefix + 'icon-upload"></i>' : ''}
-                <i ${alias}="remove" class="${prefix}icon-trash"></i>
+                ${this.options.manual ? '<i ' + ax.alias + '="upload" class="' + ax.prefix + 'icon-upload"></i>' : ''}
+                <i ${ax.alias}="remove" class="${ax.prefix}icon-trash"></i>
             `;
             tpl = `
                     <tr valid=${passed ? 'success' : 'failed'}>
-                        <td><div class="${prefix}upload-file"></div></td>
-                        <td><div class="${prefix}upload-info"><a href="###" ${alias}="title">${name}</a></div></td>
+                        <td><div class="${ax.prefix}upload-file"></div></td>
+                        <td><div class="${ax.prefix}upload-info"><a href="###" ${ax.alias}="title">${name}</a></div></td>
                         <td>${convertByte({ val: size }).str}</td>
-                        <td><ax-progress ${alias}="progress" thk="sm"></ax-progress></td>
-                        <td><i ${alias}="message">${passed ? msg : ''}</i></td>
-                        <td><span ${alias}="state">${passed ? this.options.lang.progress.passed : this.options.lang.progress.notPassed}</span></td>
+                        <td><ax-progress ${ax.alias}="progress" thk="sm"></ax-progress></td>
+                        <td><i ${ax.alias}="message">${passed ? msg : ''}</i></td>
+                        <td><span ${ax.alias}="state">${passed ? this.options.lang.progress.passed : this.options.lang.progress.notPassed}</span></td>
                         <td>${btns}</td>
                     </tr>
                     `;
@@ -32052,13 +31720,13 @@ class Upload extends ModBaseListenCache {
         else {
             tpl = `
                     <li valid=${passed ? 'success' : 'failed'}>
-                        <i ${alias}="icon" class="${prefix}icon-attach"></i>
+                        <i ${ax.alias}="icon" class="${ax.prefix}icon-attach"></i>
                         ${part2}
                     </li>
                     `;
         }
         item.wrapEl = tplToEl(tpl);
-        item.fileEl = item.wrapEl.querySelector(`.${prefix}upload-file`);
+        item.fileEl = item.wrapEl.querySelector(`.${ax.prefix}upload-file`);
         item.fileEl && this.fillHeader(item);
         if (this.options.feature === 'picture') {
             this.chooseBtn.insertAdjacentElement('beforeBegin', item.wrapEl);
@@ -32081,10 +31749,10 @@ class Upload extends ModBaseListenCache {
     renderItem(file) {
         let fileValid = this.fileValid(file), item = { file, valid: fileValid };
         this.createItem(item);
-        item.uploadEl = item.wrapEl.querySelector(`[${alias}="upload"]`);
-        item.removeEl = item.wrapEl.querySelector(`[${alias}="remove"]`);
-        item.stateEl = item.wrapEl.querySelector(`[${alias}="state"]`);
-        item.msgEl = item.wrapEl.querySelector(`[${alias}="message"]`);
+        item.uploadEl = item.wrapEl.querySelector(`[${ax.alias}="upload"]`);
+        item.removeEl = item.wrapEl.querySelector(`[${ax.alias}="remove"]`);
+        item.stateEl = item.wrapEl.querySelector(`[${ax.alias}="state"]`);
+        item.msgEl = item.wrapEl.querySelector(`[${ax.alias}="message"]`);
         item.progEl = item.wrapEl.querySelector(`ax-progress`);
         if (item.uploadEl) {
             item.uploadEl.onclick = async () => {
@@ -32177,7 +31845,7 @@ class Upload extends ModBaseListenCache {
         let file = item.file, dom = item.wrapEl, url = item.data.url; item.file.name;
         if (this.options.cloud.enable)
             url = url ? this.options.cloud.domain + url : 'javascript:void(0);';
-        let downloadBtn = dom.querySelector(`[${alias}="download"]`), viewBtn = dom.querySelector(`[${alias}="view"]`);
+        let downloadBtn = dom.querySelector(`[${ax.alias}="download"]`), viewBtn = dom.querySelector(`[${ax.alias}="view"]`);
         if (downloadBtn) {
             if (this.options.cloud.enable) {
                 downloadBtn.onclick = () => fileTools.download(url, file.name);
@@ -32191,7 +31859,7 @@ class Upload extends ModBaseListenCache {
             this.getFileType(file);
         }
         if (['text', 'bullet', 'table'].includes(this.options.type)) {
-            let titleEl = dom.querySelector(`[${alias}="title"]`), fileEl = dom.querySelector(`.${prefix}upload-file`);
+            let titleEl = dom.querySelector(`[${ax.alias}="title"]`), fileEl = dom.querySelector(`.${ax.prefix}upload-file`);
             titleEl.setAttribute('href', url);
             titleEl.setAttribute('target', '_blank');
             if (fileEl) {
@@ -32256,7 +31924,7 @@ class Upload extends ModBaseListenCache {
                 item.abort = resp.abort;
                 item.progEl.setAttribute('value', resp.percent);
                 if (['text', 'bullet'].includes(this.options.type)) {
-                    dom.querySelector(`[${alias}="percent"]`).innerHTML = resp.result;
+                    dom.querySelector(`[${ax.alias}="percent"]`).innerHTML = resp.result;
                 }
                 if (resp.percent >= 100) {
                     this.updateItemProg(item, 'uploaded');
@@ -32371,7 +32039,7 @@ class Upload extends ModBaseListenCache {
             await fileTools.getBase64(file, (data) => elem = createEl(type, { src: data, controls: '' }));
         }
         else {
-            elem = createEl('i', { class: this.fileTypes[type] || this.fileTypes.file, [alias]: 'icon' });
+            elem = createEl('i', { class: this.fileTypes[type] || this.fileTypes.file, [ax.alias]: 'icon' });
         }
         item.fileEl.appendChild(elem);
     }
@@ -32627,9 +32295,9 @@ const optPanel = [
         prop: 'arrow',
         value: {
             enable: false,
-            show: `${prefix}icon-up`,
-            hide: `${prefix}icon-up`,
-            anim: `${prefix}rotate180`,
+            show: `${ax.prefix}icon-up`,
+            hide: `${ax.prefix}icon-up`,
+            anim: `${ax.prefix}rotate180`,
             type: 'icon',
             placement: 'end',
         },
@@ -32909,32 +32577,32 @@ class Panel extends ModBaseListenCache {
             </div>
         `;
         this.headEl = tplToEl(tpl);
-        this.innerEl = this.headEl.querySelector(`.${prefix}panel-inner`);
-        this.captionEl = this.headEl.querySelector(`.${prefix}panel-caption`);
-        this.groupEl = this.headEl.querySelector(`[${alias}="group"]`);
-        this.labelEl = this.headEl.querySelector(`[${alias}="label"]`);
+        this.innerEl = this.headEl.querySelector(`.${ax.prefix}panel-inner`);
+        this.captionEl = this.headEl.querySelector(`.${ax.prefix}panel-caption`);
+        this.groupEl = this.headEl.querySelector(`[${ax.alias}="group"]`);
+        this.labelEl = this.headEl.querySelector(`[${ax.alias}="label"]`);
         if (this.options.icon) {
-            this.iconEl = createEl('i', { [alias]: `icon`, class: this.options.icon });
+            this.iconEl = createEl('i', { [ax.alias]: `icon`, class: this.options.icon });
             (this.options.feature === 'loose' ? this.innerEl : this.groupEl).insertAdjacentElement('beforebegin', this.iconEl);
         }
         if (this.options.disk) {
-            this.diskEl = createEl('img', { [alias]: `disk`, src: this.options.disk });
+            this.diskEl = createEl('img', { [ax.alias]: `disk`, src: this.options.disk });
             (this.options.feature === 'loose' ? this.innerEl : this.groupEl).insertAdjacentElement('beforebegin', this.diskEl);
         }
         if (this.options.cube) {
-            this.cubeEl = createEl('img', { [alias]: `cube`, src: this.options.cube });
+            this.cubeEl = createEl('img', { [ax.alias]: `cube`, src: this.options.cube });
             (this.options.feature === 'loose' ? this.innerEl : this.groupEl).insertAdjacentElement('beforebegin', this.cubeEl);
         }
         if (this.options.image) {
-            this.imageEl = createEl('img', { [alias]: `image`, src: this.options.image });
+            this.imageEl = createEl('img', { [ax.alias]: `image`, src: this.options.image });
             (this.options.feature === 'loose' ? this.innerEl : this.groupEl).insertAdjacentElement('beforebegin', this.imageEl);
         }
         if (this.options.brief) {
-            this.briefEl = createEl('div', { class: `${prefix}panel-brief` }, this.options.brief);
+            this.briefEl = createEl('div', { class: `${ax.prefix}panel-brief` }, this.options.brief);
             this.captionEl.insertAdjacentElement('afterend', this.briefEl);
         }
         if (this.options.annot) {
-            this.annotEl = createEl('span', { [alias]: `annot` }, this.options.annot);
+            this.annotEl = createEl('span', { [ax.alias]: `annot` }, this.options.annot);
             this.labelEl.insertAdjacentElement('afterend', this.annotEl);
         }
         if (!isNull(this.options.badge)) {
@@ -32942,19 +32610,19 @@ class Panel extends ModBaseListenCache {
             this.groupEl.insertAdjacentElement('afterend', this.badgeEl);
         }
         if (this.options.tips) {
-            this.tipsEl = createEl('span', { [alias]: `tips` }, this.options.tips);
+            this.tipsEl = createEl('span', { [ax.alias]: `tips` }, this.options.tips);
             this.groupEl.insertAdjacentElement('afterend', this.tipsEl);
         }
         if (this.options.custom) {
-            this.customEl = createEl('div', { [alias]: `custum` }, this.options.custom);
+            this.customEl = createEl('div', { [ax.alias]: `custum` }, this.options.custom);
             this.groupEl.insertAdjacentElement('afterend', this.customEl);
         }
         if (this.options.tools.enable) {
             this.toolsEl = createTools(this.options.tools.children, this.captionEl);
-            this.toolsEl.setAttribute(alias, 'tools');
+            this.toolsEl.setAttribute(ax.alias, 'tools');
         }
         if (this.options.arrow.enable) {
-            this.arrowEl = createEl('i', { [alias]: `arrow` });
+            this.arrowEl = createEl('i', { [ax.alias]: `arrow` });
             this.setArrow();
             if (this.options.arrow.placement === 'end') {
                 this.captionEl.appendChild(this.arrowEl);
@@ -32967,9 +32635,9 @@ class Panel extends ModBaseListenCache {
         this.options.dividable && this.headEl.insertAdjacentHTML('afterend', `<ax-line ${this.options.theme ? 'theme="' + this.options.theme + '"' : ''}></ax-line>`);
     }
     createBodyEl() {
-        this.bodyEl = createEl('div', { class: `${prefix}panel-body` });
+        this.bodyEl = createEl('div', { class: `${ax.prefix}panel-body` });
         if (this.options.padded) {
-            this.contEl = createEl('div', { class: `${prefix}panel-inner` });
+            this.contEl = createEl('div', { class: `${ax.prefix}panel-inner` });
             this.bodyEl.appendChild(this.contEl);
         }
         else {
@@ -32979,14 +32647,14 @@ class Panel extends ModBaseListenCache {
     }
     renderMain() {
         this.targetEl.innerHTML = '';
-        this.wrapEl = createEl('div', { class: `${prefix}panel-wrap` });
+        this.wrapEl = createEl('div', { class: `${ax.prefix}panel-wrap` });
         this.targetEl.appendChild(this.wrapEl);
         this.createHeadEl();
         this.createBodyEl();
         super.listen({ name: 'rendered' });
     }
     setAttrs() {
-        this.targetEl.classList.add(`${prefix}panel`);
+        this.targetEl.classList.add(`${ax.prefix}panel`);
         this.options.classes && classes(this.targetEl).add(this.options.classes);
         (this.options.collapsed || this.options.deferred) && this.targetEl.toggleAttribute('collapsed', true);
         this.options.headClosable && this.targetEl.toggleAttribute('headclosable', true);
@@ -33017,7 +32685,7 @@ class Panel extends ModBaseListenCache {
                 k.action && k.action.call(this, k);
             }
         }
-        if (this.options.tab.enable && this.headEl.querySelector(`.${prefix}tab-head`) && this.bodyEl.querySelector(`.${prefix}tab-body`)) {
+        if (this.options.tab.enable && this.headEl.querySelector(`.${ax.prefix}tab-head`) && this.bodyEl.querySelector(`.${ax.prefix}tab-body`)) {
             this.tabIns = new Tab(this.targetEl, this.options.tab);
         }
     }
@@ -33092,7 +32760,7 @@ class Panel extends ModBaseListenCache {
     }
 }
 
-const optDrag = [
+const optRouter = [
     {
         attr: 'routes',
         prop: 'routes',
@@ -33144,7 +32812,7 @@ const optDrag = [
         prop: 'arrow',
         value: {
             enable: false,
-            icon: `${prefix}icon-right`,
+            icon: `${ax.prefix}icon-right`,
             placement: 'left',
             selector: '',
         },
@@ -33212,7 +32880,7 @@ class Router extends ModBaseListen {
         super();
         super.ready({
             options,
-            maps: optDrag,
+            maps: optRouter,
         });
         this.routes = this.options.routes || [];
         this.current = this.options.current;
@@ -33451,7 +33119,7 @@ class CompBaseCommField extends CompBaseComm {
     getToolsEl(data) {
         if (!isEmpty(data)) {
             this.toolsEl = createTools(data, null, this);
-            this.toolsEl.setAttribute(alias, 'tools');
+            this.toolsEl.setAttribute(ax.alias, 'tools');
         }
     }
     setFieldProps(props) {
@@ -33467,8 +33135,8 @@ class CompBaseCommField extends CompBaseComm {
     getItemsData(data) {
         let arr;
         if (isEmpty(data)) {
-            let tmp = createEl('div', null, this.rawHtml), script = tmp.querySelector('script[type="content"]');
-            arr = this.getAttribute('content') ? getAttrArr(this.getAttribute('content')) : getAttrArr((script?.innerHTML || this.rawHtml).replace(/\n/g, '').trim());
+            let tmp = createEl('div', null, this.rawHtml), script = tmp.querySelector('script[type="content"]'), attrCont = this.getAttribute('content');
+            arr = attrCont ? getAttrArr(attrCont) : getAttrArr((script?.innerHTML || this.rawHtml).replace(/\n/g, '').trim());
         }
         else {
             arr = Array.isArray(data) ? data : getAttrArr(data);
@@ -33497,6 +33165,64 @@ class CompBaseCommField extends CompBaseComm {
         else if (isNull(data.value) && data.label) {
             el.value = data.label;
         }
+    }
+    changedMultiDisable(opt) {
+        let tmp = getAttrArr(opt.newVal);
+        for (let k of this.inputs) {
+            if (tmp.includes(k.propsProxy.value)) {
+                k.setAttribute('disabled', '');
+            }
+            else {
+                k.removeAttribute('disabled');
+            }
+        }
+    }
+    changedMultiDisabled(opt) {
+        this.toggleAttribute('disabled', this.propsProxy['disabled']);
+        this.disabled = this.propsProxy['disabled'];
+    }
+    changedMultiName(opt) {
+        for (let k of this.inputs)
+            opt.newVal ? k.setAttribute(opt.name, opt.newVal) : k.removeAttribute(opt.name);
+        if (opt.name === 'name') {
+            opt.newVal ? this.name = opt.newVal : this.removeAttribute('name');
+        }
+    }
+    changedMultiCont(opt) {
+        this.updateInputs(opt.newVal);
+    }
+    changedSingleDisabled(opt) {
+        this.inputEl.toggleAttribute('disabled', this.propsProxy.disabled);
+        this.disabled = this.propsProxy.disabled;
+    }
+    changedSingleName(opt) {
+        opt.newVal ? this.inputEl.name = opt.newVal : this.inputEl.removeAttribute('name');
+        this.name = this.inputEl.name;
+    }
+    changedSingleValue(opt) {
+        if (opt.newVal === null && !this.propsProxy.label) {
+            this.propsProxy.value = undefined;
+            this.value = '';
+            this.inputEl.removeAttribute('value');
+        }
+        else {
+            this.propsProxy.value = this.value = opt.newVal;
+            this.inputEl.value = this.value;
+        }
+    }
+    changedSingleLabel(opt) {
+        this.labelEl.innerHTML = opt.newVal;
+        if (opt.newVal && isNull(this.propsProxy.value)) {
+            this.propsProxy.value = this.value = opt.newVal;
+            this.inputEl.value = this.value;
+        }
+    }
+    changedSingleCheck(opt) {
+        let oldChecked = opt.oldVal === 'ed' ? true : false;
+        this.checked = opt.newVal === 'ed' ? true : false;
+        this.inputEl.checked = this.checked;
+        this.listen({ name: 'check', params: [{ value: opt.newVal, checked: this.checked }] });
+        oldChecked !== this.checked && this.listen({ name: 'changed', params: [{ newVal: this.checked, oldVal: !this.checked }] });
     }
 }
 
@@ -33557,7 +33283,7 @@ class MoreElem extends CompBaseComm {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.rawHtml);
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.ins = new More(this.wrapEl);
         setTimeout(() => {
@@ -33594,9 +33320,9 @@ class ResultElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('span', { [alias]: 'wrap' });
-        this.iconEl = createEl('i', { [alias]: 'icon' }, icons.svg.info);
-        this.labelEl = createEl('i', { [alias]: 'label' }, data.label || '');
+        this.wrapEl = createEl('span', { [ax.alias]: 'wrap' });
+        this.iconEl = createEl('i', { [ax.alias]: 'icon' }, icons.svg.info);
+        this.labelEl = createEl('i', { [ax.alias]: 'label' }, data.label || '');
         this.wrapEl.appendChild(this.iconEl);
         data.label && this.wrapEl.appendChild(this.labelEl);
     }
@@ -33662,7 +33388,7 @@ class DeformElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' }, '<i></i>'.repeat(3));
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, '<i></i>'.repeat(3));
     }
     render(data) {
         this.insertSource();
@@ -33722,52 +33448,17 @@ class RadioElem extends CompBaseCommField {
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.saveProps(name, newVal, RadioElem);
-        if (['disabled', 'value', 'name'].includes(name)) {
-            if (name === 'value') {
-                if (newVal === null && !this.propsProxy.label) {
-                    this.propsProxy.value = undefined;
-                    this.value = '';
-                    this.inputEl.removeAttribute('value');
-                }
-                else {
-                    this.propsProxy.value = this.value = newVal;
-                    this.inputEl.value = this.value;
-                }
-            }
-            else if (name === 'name') {
-                newVal ? this.inputEl.name = newVal : this.inputEl.removeAttribute('name');
-                this.name = this.inputEl.name;
-            }
-            else {
-                this.inputEl.toggleAttribute('disabled', this.propsProxy.disabled);
-                this.disabled = this.propsProxy.disabled;
-            }
-        }
-        else if (name === 'label') {
-            this.labelEl.innerHTML = newVal;
-            if (newVal && isNull(this.propsProxy.value)) {
-                this.propsProxy.value = this.value = newVal;
-                this.inputEl.value = this.value;
-            }
-        }
-        else if (name === 'check') {
-            let oldChecked = oldVal === 'ed' ? true : false;
-            this.checked = newVal === 'ed' ? true : false;
-            this.inputEl.checked = this.checked;
-            this.listen({ name: 'check', params: [{ value: newVal, checked: this.checked }] });
-            newVal && this.listen({ name: 'cleared' });
-            oldChecked !== this.checked && this.listen({ name: 'changed', params: [{ newVal: this.checked, oldVal: !this.checked }] });
-        }
+        this.savePropsToListen(name, oldVal, newVal, RadioElem);
     }
     getRawData() {
         this.getRawProps(RadioElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
+        !this.propsRaw.value && (this.propsRaw.value = this.propsRaw.label || '');
         this.getProxyProps();
         this.setFieldProps(['name', 'value', 'disabled', 'check']);
     }
     fillWrap(data) {
-        this.wrapEl = createEl('label', { [alias]: 'wrap' });
+        this.wrapEl = createEl('label', { [ax.alias]: 'wrap' });
         this.inputEl = createEl('input', { type: 'radio', [ax.embedSign]: '' });
         this.setValAttr(data, this.inputEl);
         data.name && (this.inputEl.name = data.name || '');
@@ -33786,6 +33477,13 @@ class RadioElem extends CompBaseCommField {
             });
         }, false);
     }
+    changedMaps = {
+        disabled: this.changedSingleDisabled,
+        name: this.changedSingleName,
+        value: this.changedSingleValue,
+        label: this.changedSingleLabel,
+        check: this.changedSingleCheck,
+    };
 }
 
 class CheckboxElem extends CompBaseCommField {
@@ -33814,42 +33512,7 @@ class CheckboxElem extends CompBaseCommField {
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.saveProps(name, newVal, CheckboxElem);
-        if (['disabled', 'value', 'name'].includes(name)) {
-            if (name === 'value') {
-                if (newVal === null && !this.propsProxy.label) {
-                    this.propsProxy.value = undefined;
-                    this.value = '';
-                    this.inputEl.removeAttribute('value');
-                }
-                else {
-                    this.propsProxy.value = this.value = newVal;
-                    this.inputEl.value = this.value;
-                }
-            }
-            else if (name === 'name') {
-                newVal ? this.inputEl.name = newVal : this.inputEl.removeAttribute('name');
-                this.name = this.inputEl.name;
-            }
-            else {
-                this.inputEl.toggleAttribute('disabled', this.propsProxy.disabled);
-                this.disabled = this.propsProxy.disabled;
-            }
-        }
-        else if (name === 'label') {
-            this.labelEl.innerHTML = newVal;
-            if (newVal && isNull(this.propsProxy.value)) {
-                this.propsProxy.value = this.value = newVal;
-                this.inputEl.value = this.value;
-            }
-        }
-        else if (name === 'check') {
-            let oldChecked = oldVal === 'ed' ? true : false;
-            this.checked = newVal === 'ed' ? true : false;
-            this.inputEl.checked = this.checked;
-            this.listen({ name: 'check', params: [{ value: newVal, checked: this.checked }] });
-            oldChecked !== this.checked && this.listen({ name: 'changed', params: [{ newVal: this.checked, oldVal: !this.checked }] });
-        }
+        this.savePropsToListen(name, oldVal, newVal, CheckboxElem);
     }
     getRawData() {
         [...CheckboxElem.custAttrs, ...CheckboxElem.lazyAttrs].forEach((k) => {
@@ -33859,13 +33522,14 @@ class CheckboxElem extends CompBaseCommField {
             this.propsRaw[k] = getAttrBool(this.getAttribute(k));
         });
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
+        !this.propsRaw.value && (this.propsRaw.value = this.propsRaw.label || '');
         for (let k in this.propsRaw) {
             this.propsProxy[k] = this.propsRaw[k];
         }
         this.setFieldProps(['name', 'value', 'disabled', 'check']);
     }
     fillWrap(data) {
-        this.wrapEl = createEl('label', { [alias]: 'wrap' });
+        this.wrapEl = createEl('label', { [ax.alias]: 'wrap' });
         this.inputEl = createEl('input', { type: 'checkbox', [ax.embedSign]: '' });
         this.setValAttr(data, this.inputEl);
         data.name && (this.inputEl.name = data.name || '');
@@ -33880,6 +33544,19 @@ class CheckboxElem extends CompBaseCommField {
             let val = e.target.checked ? 'ed' : '';
             this.setAttribute('check', val);
         }, false);
+    }
+    changedMaps = {
+        disabled: this.changedSingleDisabled,
+        name: this.changedSingleName,
+        value: this.changedSingleValue,
+        label: this.changedSingleLabel,
+        check: this.changedSingleCheck,
+        lang: this.changedLang,
+    };
+    changedLang(opt) {
+        let trackEl = getEl(':scope > u', this.wrapEl);
+        this.propsProxy.lang.on ? trackEl.setAttribute('on', this.propsProxy.lang.on) : trackEl.removeAttribute('on');
+        this.propsProxy.lang.off ? trackEl.setAttribute('off', this.propsProxy.lang.off) : trackEl.removeAttribute('off');
     }
 }
 
@@ -33932,7 +33609,7 @@ class BtnElem extends CompBaseComm {
         }
     }
     getWrap(data) {
-        let obj = { [alias]: 'wrap' }, node = '';
+        let obj = { [ax.alias]: 'wrap' }, node = '';
         if (!isNull(data.href)) {
             node = 'a';
             obj.href = data.href;
@@ -33945,38 +33622,38 @@ class BtnElem extends CompBaseComm {
         this.wrapEl = createEl(node, obj, this.labelEl);
     }
     insertIcon(val) {
-        this.iconEl = createEl('i', { class: val, [alias]: 'icon' });
+        this.iconEl = createEl('i', { class: val, [ax.alias]: 'icon' });
         this.labelEl.insertAdjacentElement('beforeBegin', this.iconEl);
     }
     insertTail(val) {
-        this.tailEl = createEl('i', { class: val, [alias]: 'tail' });
+        this.tailEl = createEl('i', { class: val, [ax.alias]: 'tail' });
         this.labelEl.insertAdjacentElement('afterEnd', this.tailEl);
     }
     insertMean(val) {
-        this.meanEl = createEl('i', { [alias]: val });
+        this.meanEl = createEl('i', { [ax.alias]: val });
         this.wrapEl.appendChild(this.meanEl);
     }
     insertBadge(val) {
         if (!isNull(val) && val !== '0') {
-            this.badgeEl = createEl('ax-badge', { [alias]: 'badge' }, val?.trim());
+            this.badgeEl = createEl('ax-badge', { [ax.alias]: 'badge' }, val?.trim());
             this.wrapEl.appendChild(this.badgeEl);
         }
     }
     insertDisk(val) {
         if (val) {
-            this.diskEl = createEl('img', { [alias]: 'disk', src: val });
+            this.diskEl = createEl('img', { [ax.alias]: 'disk', src: val });
             this.labelEl.insertAdjacentElement('beforeBegin', this.diskEl);
         }
     }
     insertCube(val) {
         if (val) {
-            this.cubeEl = createEl('img', { [alias]: 'cube', src: val });
+            this.cubeEl = createEl('img', { [ax.alias]: 'cube', src: val });
             this.labelEl.insertAdjacentElement('beforeBegin', this.cubeEl);
         }
     }
     insertImage(val) {
         if (val) {
-            this.imageEl = createEl('img', { [alias]: 'image', src: val });
+            this.imageEl = createEl('img', { [ax.alias]: 'image', src: val });
             this.labelEl.insertAdjacentElement('beforeBegin', this.imageEl);
         }
     }
@@ -33990,7 +33667,7 @@ class BtnElem extends CompBaseComm {
         }
     }
     fillWrap(data) {
-        this.labelEl = createEl('i', { [alias]: 'label' }, data.label);
+        this.labelEl = createEl('i', { [ax.alias]: 'label' }, data.label);
         this.getWrap(data);
         data.icon ? this.insertIcon(data.icon) : null;
         data.tail ? this.insertTail(data.tail) : null;
@@ -34086,7 +33763,7 @@ class BtnElem extends CompBaseComm {
     }
     changedMean(opt) {
         if (this.meanEl) {
-            this.meanEl.setAttribute(alias, opt.newVal);
+            this.meanEl.setAttribute(ax.alias, opt.newVal);
         }
         else {
             this.insertMean(opt.newVal);
@@ -34142,10 +33819,10 @@ class LineElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.labelEl);
-        this.startEl = createEl('i', { [alias]: 'start' });
-        this.endEl = createEl('i', { [alias]: 'end' });
-        this.labelEl = createEl('i', { [alias]: 'label' }, data.label);
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, this.labelEl);
+        this.startEl = createEl('i', { [ax.alias]: 'start' });
+        this.endEl = createEl('i', { [ax.alias]: 'end' });
+        this.labelEl = createEl('i', { [ax.alias]: 'label' }, data.label);
         this.wrapEl.appendChild(this.startEl);
         data.label ? this.wrapEl.append(this.labelEl, this.endEl) : null;
     }
@@ -34189,7 +33866,7 @@ class AvatarElem extends CompBaseComm {
         this.savePropsToListen(name, oldVal, newVal, AvatarElem);
     }
     getMainEl(type, src) {
-        return (type === 'text') ? createEl('i', { [alias]: 'main' }, src || 'null') : createEl('img', { [alias]: 'main', src: src || getImgAvatar() });
+        return (type === 'text') ? createEl('i', { [ax.alias]: 'main' }, src || 'null') : createEl('img', { [ax.alias]: 'main', src: src || ax.images.avatar });
     }
     getRawData() {
         this.getRawProps(AvatarElem);
@@ -34197,9 +33874,9 @@ class AvatarElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('a', { [alias]: 'wrap' });
-        this.badgeEl = createEl('ax-badge', { [alias]: 'badge', shadowed: '', label: data?.badge?.trim() });
-        this.tipsEl = createEl('i', { [alias]: 'tips' }, data.tips || '');
+        this.wrapEl = createEl('a', { [ax.alias]: 'wrap' });
+        this.badgeEl = createEl('ax-badge', { [ax.alias]: 'badge', shadowed: '', label: data?.badge?.trim() });
+        this.tipsEl = createEl('i', { [ax.alias]: 'tips' }, data.tips || '');
         this.mainEl = this.getMainEl(data.type, data.src);
         this.wrapEl.appendChild(this.mainEl);
         this.hasAttribute('badge') && this.wrapEl.appendChild(this.badgeEl);
@@ -34280,7 +33957,7 @@ class FormatElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
         this.fillCont(data);
     }
     fillCont(data) {
@@ -34296,7 +33973,7 @@ class FormatElem extends CompBaseComm {
             }
         }
         else if (data.type === 'prefix' || data.type === 'suffix') {
-            this.infoEl = createEl('i', { [alias]: 'info' }, data.info);
+            this.infoEl = createEl('i', { [ax.alias]: 'info' }, data.info);
             this.wrapEl.innerHTML = data.label;
             data.type === 'prefix' ? this.wrapEl.insertAdjacentElement('afterbegin', this.infoEl) : this.wrapEl.appendChild(this.infoEl);
             this.tipsIns = new Tooltip(this.infoEl, {
@@ -34337,7 +34014,7 @@ class FormatElem extends CompBaseComm {
         if (lines === 1 || !lines) {
             return text;
         }
-        let points = Math.ceil(text.length / lines), fontSize = size ? 'style="font-size:' + size + '"' : '', result = `<i class="${prefix}t-br" ${fontSize}>`, hasBr = text.includes('<br') ? true : false;
+        let points = Math.ceil(text.length / lines), fontSize = size ? 'style="font-size:' + size + '"' : '', result = `<i class="${ax.prefix}t-br" ${fontSize}>`, hasBr = text.includes('<br') ? true : false;
         if (hasBr) {
             result += text;
         }
@@ -34424,8 +34101,8 @@ class FlagElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.labelEl = createEl('i', { [alias]: 'label' }, this.propsProxy.label);
-        this.wrapEl = createEl('span', { [alias]: 'wrap' }, this.labelEl);
+        this.labelEl = createEl('i', { [ax.alias]: 'label' }, this.propsProxy.label);
+        this.wrapEl = createEl('span', { [ax.alias]: 'wrap' }, this.labelEl);
     }
     render() {
         this.insertSource();
@@ -34466,12 +34143,12 @@ class BuoyElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('span', { [alias]: 'wrap' });
-        this.headEl = createEl('span', { [alias]: 'head' });
-        this.labelEl = createEl('i', { [alias]: 'label' }, data.label || '');
-        this.iconEl = createEl('i', { class: data.icon || '', [alias]: 'icon' });
-        this.arrowEl = createEl('i', { class: `${prefix}icon-down`, [alias]: 'arrow' });
-        this.valueEl = createEl('i', { [alias]: 'value' }, data.value || '');
+        this.wrapEl = createEl('span', { [ax.alias]: 'wrap' });
+        this.headEl = createEl('span', { [ax.alias]: 'head' });
+        this.labelEl = createEl('i', { [ax.alias]: 'label' }, data.label || '');
+        this.iconEl = createEl('i', { class: data.icon || '', [ax.alias]: 'icon' });
+        this.arrowEl = createEl('i', { class: `${ax.prefix}icon-down`, [ax.alias]: 'arrow' });
+        this.valueEl = createEl('i', { [ax.alias]: 'value' }, data.value || '');
         data.label ? this.headEl.appendChild(this.labelEl) : null;
         data.icon ? this.headEl.insertAdjacentElement('afterBegin', this.iconEl) : null;
         data.arrow ? this.headEl.insertAdjacentElement('beforeEnd', this.arrowEl) : null;
@@ -34565,11 +34242,11 @@ class GoodElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('span', { [alias]: 'wrap' });
-        this.labelEl = createEl('i', { [alias]: 'label' });
-        this.iconEl = createEl('i', { [alias]: 'icon' });
-        this.valueEl = createEl('i', { [alias]: 'value' }, data.value || '');
-        this.tipsEl = createEl('i', { [alias]: 'tips' });
+        this.wrapEl = createEl('span', { [ax.alias]: 'wrap' });
+        this.labelEl = createEl('i', { [ax.alias]: 'label' });
+        this.iconEl = createEl('i', { [ax.alias]: 'icon' });
+        this.valueEl = createEl('i', { [ax.alias]: 'value' }, data.value || '');
+        this.tipsEl = createEl('i', { [ax.alias]: 'tips' });
         this.wrapEl.appendChild(this.valueEl);
     }
     render(data) {
@@ -34672,30 +34349,30 @@ class AnchorsElem extends CompBaseComm {
         return result;
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
         this.get2FillTreeNodes(data);
     }
     get2FillTreeNodes(data) {
         this.data = this.getData(data.headings);
         let plantTree = (parent, data) => {
-            let ul = createEl('ul', { class: `${prefix}reset` });
+            let ul = createEl('ul', { class: `${ax.prefix}reset` });
             for (let k of data) {
-                k.wrapEl = createEl('li', { [alias]: 'wrap' });
-                k.labelEl = createEl('a', { [alias]: 'label', href: `#${k.label}` }, k.label);
-                k.headEl = createEl('div', { [alias]: 'head', id: k.id }, k.labelEl);
+                k.wrapEl = createEl('li', { [ax.alias]: 'wrap' });
+                k.labelEl = createEl('a', { [ax.alias]: 'label', href: `#${k.label}` }, k.label);
+                k.headEl = createEl('div', { [ax.alias]: 'head', id: k.id }, k.labelEl);
                 k.wrapEl.appendChild(k.headEl);
                 k.labelEl.onclick = () => this.smoothToActive(k, false);
                 k.target.id = k.label;
-                k.target.classList.add(`${prefix}anchor`);
-                let tmp = k.target.querySelector(`${prefix}hash`);
+                k.target.classList.add(`${ax.prefix}anchor`);
+                let tmp = k.target.querySelector(`${ax.prefix}hash`);
                 tmp && tmp.remove();
-                k.hashEl = createEl('a', { href: `#${k.label}`, class: `${prefix}hash` }, '§');
+                k.hashEl = createEl('a', { href: `#${k.label}`, class: `${ax.prefix}hash` }, '§');
                 k.hashEl.onclick = () => this.smoothToActive(k, false);
                 k.target.appendChild(k.hashEl);
                 this.interactIns.observe(k.target);
                 if (k.hasOwnProperty('children')) {
                     k.bodyEl = plantTree(k.wrapEl, k.children);
-                    k.bodyEl.setAttribute(alias, 'body');
+                    k.bodyEl.setAttribute(ax.alias, 'body');
                 }
                 ul.appendChild(k.wrapEl);
             }
@@ -34795,7 +34472,7 @@ class MenuElem extends CompBaseComm {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.rawHtml);
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.ins = new Menu(this.wrapEl);
         setTimeout(() => {
@@ -34849,15 +34526,15 @@ class FileElem extends CompBaseCommField {
         this.setFieldProps(['name', 'value', 'disabled', 'readonly', 'multiple']);
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
         this.inputEl = createEl('input', { type: 'file', [ax.embedSign]: '' });
         this.inputEl.multiple = data.multiple;
-        this.labelEl = createEl('span', { [alias]: 'label' });
+        this.labelEl = createEl('span', { [ax.alias]: 'label' });
         data.name && (this.inputEl.name = (data.name + (this.inputEl.multiple ? `[]` : '')) || '');
         super.getToolsEl(data.tools);
-        this.holderEl = createEl('i', { [alias]: 'placeholder' }, data.placeholder);
-        this.namesEl = createEl('i', { [alias]: 'names' });
-        this.meanEl = createEl('i', { [alias]: 'mean' }, 'file');
+        this.holderEl = createEl('i', { [ax.alias]: 'placeholder' }, data.placeholder);
+        this.namesEl = createEl('i', { [ax.alias]: 'names' });
+        this.meanEl = createEl('i', { [ax.alias]: 'mean' }, 'file');
         this.wrapEl.append(this.inputEl, this.namesEl, this.holderEl, this.meanEl);
     }
     render() {
@@ -34996,6 +34673,18 @@ class InputElem extends CompBaseCommField {
                 this.btnEl.click();
             }
         };
+        this.addEventListener('click', (e) => {
+            let target = getEvtTarget(e);
+            target === this.wrapEl && this.inputEl.focus();
+        }, false);
+        this.inputEl.addEventListener('input', (e) => {
+            let tmp = this.propsProxy.value;
+            this.propsProxy.value = this.value = this.inputEl.value;
+            this.updateLimit();
+            let data = { oldVal: tmp, newVal: this.inputEl.value };
+            this.listen({ name: 'input', params: [data] });
+            (tmp !== this.inputEl.value) && this.listen({ name: 'changed', params: [data] });
+        }, false);
     }
     static custAttrs = ['name', 'placeholder', 'type', 'size', 'limit', 'tools', 'icon', 'cube', 'disk', 'image', 'btn', 'action', 'label', 'unit', 'custom', 'mean', 'task', ...this.evtsArr];
     static boolAttrs = ['disabled', 'readonly', 'blocked', 'full'];
@@ -35015,22 +34704,22 @@ class InputElem extends CompBaseCommField {
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
         this.inputEl = createEl('input', { type: data.type || 'text', placeholder: data.placeholder || config.lang.form.placeholder, [ax.embedSign]: '' });
         data.value && (this.inputEl.value = data.value || '');
         data.name && (this.inputEl.name = data.name || '');
         this.wrapEl.appendChild(this.inputEl);
         super.getToolsEl(data.tools);
-        this.limitEl = createEl('div', { [alias]: 'limit' });
-        this.labelEl = createEl('span', { [alias]: 'label' });
-        this.unitEl = createEl('span', { [alias]: 'unit' });
-        this.diskEl = createEl('img', { [alias]: 'disk' });
-        this.cubeEl = createEl('img', { [alias]: 'cube' });
-        this.imageEl = createEl('img', { [alias]: 'image' });
-        this.iconEl = createEl('i', { [alias]: 'icon' });
-        this.btnEl = createEl('span', { [alias]: 'btn' });
-        this.customEl = createEl('span', { [alias]: 'custom' });
-        this.meanEl = createEl('i', { [alias]: 'mean' });
+        this.limitEl = createEl('div', { [ax.alias]: 'limit' });
+        this.labelEl = createEl('span', { [ax.alias]: 'label' });
+        this.unitEl = createEl('span', { [ax.alias]: 'unit' });
+        this.diskEl = createEl('img', { [ax.alias]: 'disk' });
+        this.cubeEl = createEl('img', { [ax.alias]: 'cube' });
+        this.imageEl = createEl('img', { [ax.alias]: 'image' });
+        this.iconEl = createEl('i', { [ax.alias]: 'icon' });
+        this.btnEl = createEl('span', { [ax.alias]: 'btn' });
+        this.customEl = createEl('span', { [ax.alias]: 'custom' });
+        this.meanEl = createEl('i', { [ax.alias]: 'mean' });
     }
     updateLimit() {
         let total = ~~this.propsProxy.limit, value = this.propsProxy.value, len = value.length, tmp = total - len, remaining = tmp <= 0 ? 0 : tmp;
@@ -35054,14 +34743,6 @@ class InputElem extends CompBaseCommField {
         this.insertSource();
         this.appendChild(this.wrapEl);
         ~~this.propsProxy.limit && this.appendChild(this.limitEl);
-        this.inputEl.addEventListener('input', (e) => {
-            let tmp = this.propsProxy.value;
-            this.propsProxy.value = this.value = this.inputEl.value;
-            this.updateLimit();
-            let data = { oldVal: tmp, newVal: this.inputEl.value };
-            this.listen({ name: 'input', params: [data] });
-            (tmp !== this.inputEl.value) && this.listen({ name: 'changed', params: [data] });
-        }, false);
     }
     changedMaps = {
         disabled: this.changedBool,
@@ -35236,6 +34917,20 @@ class TextareaElem extends CompBaseCommField {
         this.getRawData();
         this.fillWrap(this.propsProxy);
         this.select = () => this.inputEl.select();
+        this.addEventListener('click', (e) => {
+            let target = getEvtTarget(e);
+            target === this.wrapEl && this.inputEl.focus();
+        }, false);
+        this.inputEl.addEventListener('input', (e) => {
+            let tmp = this.propsProxy.value;
+            this.propsProxy.value = this.inputEl.value;
+            this.value = this.inputEl.value;
+            this.updateLimit();
+            this.addScrollable(this.inputEl);
+            let data = { oldVal: tmp, newVal: this.inputEl.value };
+            this.listen({ name: 'input', params: [data] });
+            (tmp !== this.inputEl.value) && this.listen({ name: 'changed', params: [data] });
+        }, false);
     }
     static custAttrs = ['name', 'placeholder', 'size', 'tools', 'limit', 'label', 'mean', 'task', ...this.evtsArr];
     static boolAttrs = ['disabled', 'readonly', 'single', 'full'];
@@ -35255,16 +34950,16 @@ class TextareaElem extends CompBaseCommField {
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
         this.inputEl = createEl('textarea', { placeholder: data.placeholder || config.lang.form.placeholder, [ax.embedSign]: '' });
         data.value && (this.inputEl.value = data.value || '');
         data.name && (this.inputEl.name = data.name || '');
         this.wrapEl.appendChild(this.inputEl);
         this.getToolsEl(data.tools);
-        this.limitEl = createEl('div', { [alias]: 'limit' });
-        this.labelEl = createEl('span', { [alias]: 'label' });
-        this.headEl = createEl('div', { [alias]: 'head' }, this.labelEl);
-        this.meanEl = createEl('i', { [alias]: 'mean' });
+        this.limitEl = createEl('div', { [ax.alias]: 'limit' });
+        this.labelEl = createEl('span', { [ax.alias]: 'label' });
+        this.headEl = createEl('div', { [ax.alias]: 'head' }, this.labelEl);
+        this.meanEl = createEl('i', { [ax.alias]: 'mean' });
     }
     updateLimit() {
         let total = ~~this.propsProxy.limit, value = this.propsProxy.value, len = value.length, tmp = total - len, remaining = tmp <= 0 ? 0 : tmp;
@@ -35288,16 +34983,6 @@ class TextareaElem extends CompBaseCommField {
         this.insertSource();
         this.appendChild(this.wrapEl);
         ~~this.propsProxy.limit && this.appendChild(this.limitEl);
-        this.inputEl.addEventListener('input', (e) => {
-            let tmp = this.propsProxy.value;
-            this.propsProxy.value = this.inputEl.value;
-            this.value = this.inputEl.value;
-            this.updateLimit();
-            this.addScrollable(this.inputEl);
-            let data = { oldVal: tmp, newVal: this.inputEl.value };
-            this.listen({ name: 'input', params: [data] });
-            (tmp !== this.inputEl.value) && this.listen({ name: 'changed', params: [data] });
-        }, false);
     }
     changedMaps = {
         disabled: this.changedBool,
@@ -35469,51 +35154,7 @@ class RadiosElem extends CompBaseCommField {
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.saveProps(name, newVal, RadiosElem);
-        if (name === 'content') {
-            this.updateInputs(newVal);
-        }
-        else if (name === 'disabled') {
-            this.toggleAttribute('disabled', this.propsProxy['disabled']);
-            this.disabled = this.propsProxy['disabled'];
-        }
-        else if (['name', 'type', 'size'].includes(name)) {
-            this.inputs.forEach((k) => {
-                newVal ? k.setAttribute(name, newVal) : k.removeAttribute(name);
-            });
-            if (name === 'name') {
-                newVal ? this.name = newVal : this.removeAttribute('name');
-            }
-        }
-        else if (name === 'checked') {
-            if (newVal === null) {
-                
-                this.inputs.forEach((k) => {
-                    k.check('');
-                });
-            }
-            else {
-                
-                this.inputs.forEach((k) => {
-                    if (k.propsProxy.value === newVal) {
-                        k.check('ed');
-                    }
-                    else {
-                        k.check('');
-                    }
-                });
-            }
-        }
-        else if (name === 'disable') {
-            let value = getAttrArr(newVal);
-            value.forEach((k) => {
-                let tmp = this.inputs.find((i) => i.propsProxy.value === k);
-                tmp && tmp.setAttribute('disabled', '');
-            });
-        }
-    }
-    connectedCallback() {
-        this.connectedRender();
+        this.savePropsToListen(name, oldVal, newVal, RadiosElem);
     }
     getRawData() {
         this.getRawProps(RadiosElem);
@@ -35523,14 +35164,14 @@ class RadiosElem extends CompBaseCommField {
         this.setFieldProps(['name', 'value', 'disabled']);
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
         data['wrap-classes'] && classes(this.wrapEl).add(data['wrap-classes']);
         if (data.layout === 'grid') {
-            this.wrapEl.classList.add(`${prefix}grid`);
-            data.cols && this.wrapEl.classList.add(`${prefix}avg-${data.cols}`);
+            this.wrapEl.classList.add(`${ax.prefix}grid`);
+            data.cols && this.wrapEl.classList.add(`${ax.prefix}avg-${data.cols}`);
         }
         else if (data.layout === 'flex') {
-            this.wrapEl.classList.add(`${prefix}row`);
+            this.wrapEl.classList.add(`${ax.prefix}row`);
         }
         this.updateInputs(data.content, data);
     }
@@ -35547,7 +35188,7 @@ class RadiosElem extends CompBaseCommField {
             host['input-classes'] && classes(input).add(host['input-classes']);
             this.inputs.push(input);
             if (host.layout) {
-                host.layout === 'flex' && parent.classList.add(`${prefix}flex`);
+                host.layout === 'flex' && parent.classList.add(`${ax.prefix}flex`);
                 host['item-classes'] && classes(parent).add(host['item-classes']);
                 parent.appendChild(input);
                 this.wrapEl.appendChild(parent);
@@ -35567,6 +35208,25 @@ class RadiosElem extends CompBaseCommField {
         this.insertSource();
         this.appendChild(this.wrapEl);
     }
+    changedMaps = {
+        content: this.changedMultiCont,
+        disabled: this.changedMultiDisabled,
+        name: this.changedMultiName,
+        type: this.changedMultiName,
+        size: this.changedMultiName,
+        checked: this.changedChecked,
+        disable: this.changedMultiDisable,
+    };
+    changedChecked(opt) {
+        for (let k of this.inputs) {
+            if (opt.newVal === null) {
+                k.check('');
+            }
+            else {
+                k.check(k.propsProxy.value === opt.newVal ? 'ed' : '');
+            }
+        }
+    }
 }
 
 class CheckboxesElem extends CompBaseCommField {
@@ -35579,7 +35239,7 @@ class CheckboxesElem extends CompBaseCommField {
     check;
     setLabels;
     switchType;
-    switchEvent;
+    switchEvt;
     valMap;
     checkedMore;
     checkedLess;
@@ -35607,7 +35267,9 @@ class CheckboxesElem extends CompBaseCommField {
             this.listen({ name: 'cleared' });
         };
         this.checkedAll = () => {
-            let vals = this.inputs.map((k) => !k.propsProxy.checked && k.propsProxy.value);
+            let vals = this.inputs.
+                filter((k) => !k.propsProxy.checked && k.propsProxy.value).
+                map((k) => k.propsProxy.value);
             if (!vals.length)
                 return;
             this.setAttribute('checked', vals);
@@ -35649,8 +35311,8 @@ class CheckboxesElem extends CompBaseCommField {
                 this.listen({ name: 'changed', params: [this.valMap] });
             }
         });
-        this.switchEvent = (e) => {
-            this.switch.value == '1' ? this.checkedAll() : this.clear();
+        this.switchEvt = (e) => {
+            this.switch.value == '1' || this.switch.checked ? this.checkedAll() : this.clear();
         };
     }
     static custAttrs = [
@@ -35663,64 +35325,7 @@ class CheckboxesElem extends CompBaseCommField {
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.saveProps(name, newVal, CheckboxesElem);
-        if (name === 'content') {
-            this.updateInputs(newVal);
-        }
-        else if (name === 'disabled') {
-            this.toggleAttribute('disabled', this.propsProxy['disabled']);
-            this.disabled = this.propsProxy['disabled'];
-        }
-        else if (['name', 'type', 'size'].includes(name)) {
-            this.inputs.forEach((k) => {
-                newVal ? k.setAttribute(name, name === 'name' ? `${newVal}[]` : newVal) : k.removeAttribute(name);
-            });
-            if (name === 'name') {
-                newVal ? this.name = newVal : this.removeAttribute('name');
-            }
-        }
-        else if (name === 'checked') {
-            if (newVal === null) {
-                this.inputs.forEach((k) => {
-                    k.check('');
-                });
-            }
-            else {
-                let tmp = !newVal ? [''] : getAttrArr(newVal);
-                this.inputs.forEach((k) => {
-                    if (tmp.includes(k.propsProxy.value)) {
-                        k.check('ed');
-                    }
-                    else {
-                        k.check('');
-                    }
-                });
-            }
-        }
-        else if (name === 'disable') {
-            let tmp = getAttrArr(newVal);
-            this.inputs.forEach((k) => {
-                if (tmp.includes(k.propsProxy.value)) {
-                    k.setAttribute('disabled', '');
-                }
-                else {
-                    k.removeAttribute('disabled');
-                }
-            });
-        }
-        else if (name === 'switch') {
-            this.switch = getEl(`[name="${newVal}"]`);
-            if (this.switch) {
-                this.switchType = this.switch.nodeName;
-                for (let k of this.switch.inputs) {
-                    this.switch.removeEventListener('change', this.switchEvent);
-                    this.switch.addEventListener('change', this.switchEvent, false);
-                }
-            }
-        }
-    }
-    connectedCallback() {
-        this.connectedRender();
+        this.savePropsToListen(name, oldVal, newVal, CheckboxesElem);
     }
     getRawData() {
         this.getRawProps(CheckboxesElem);
@@ -35730,14 +35335,14 @@ class CheckboxesElem extends CompBaseCommField {
         this.setFieldProps(['name', 'value', 'disabled']);
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
         data['wrap-classes'] && classes(this.wrapEl).add(data['wrap-classes']);
         if (data.layout === 'grid') {
-            this.wrapEl.classList.add(`${prefix}grid`);
-            data.cols && this.wrapEl.classList.add(`${prefix}avg-${data.cols}`);
+            this.wrapEl.classList.add(`${ax.prefix}grid`);
+            data.cols && this.wrapEl.classList.add(`${ax.prefix}avg-${data.cols}`);
         }
         else if (data.layout === 'flex') {
-            this.wrapEl.classList.add(`${prefix}row`);
+            this.wrapEl.classList.add(`${ax.prefix}row`);
         }
         this.updateInputs(data.content, data);
     }
@@ -35754,7 +35359,7 @@ class CheckboxesElem extends CompBaseCommField {
             host['input-classes'] && classes(input).add(host['input-classes']);
             this.inputs.push(input);
             if (host.layout) {
-                host.layout === 'flex' && parent.classList.add(`${prefix}flex`);
+                host.layout === 'flex' && parent.classList.add(`${ax.prefix}flex`);
                 host['item-classes'] && classes(parent).add(host['item-classes']);
                 parent.appendChild(input);
                 this.wrapEl.appendChild(parent);
@@ -35775,25 +35380,64 @@ class CheckboxesElem extends CompBaseCommField {
         if (!this.switch)
             return;
         if (!val) {
-            this.switchType === 'AX-CHECKBOXES' ? this.switch.clear() : this.switch.check('0');
+            ['AX-CHECKBOXES', 'AX-CHECKBOX', 'AX-RADIO'].includes(this.switchType) ? this.switch.clear() : this.switch.check('0');
         }
         else {
             let tmp = val.split(',').length;
             if (tmp > 0 && tmp < this.inputs.length) {
                 this.switch.clear();
                 
-                let tmp = this.switch.inputs.find((k) => k.propsProxy.value == '1');
-                tmp && tmp.setAttribute('check', 'ing');
+                if (['AX-CHECKBOX', 'AX-RADIO'].includes(this.switchType)) {
+                    this.switch.setAttribute('check', 'ing');
+                }
+                else {
+                    let tmp = this.switch.inputs.find((k) => k.propsProxy.value == '1');
+                    tmp && tmp.setAttribute('check', 'ing');
+                }
             }
             else {
                 
-                this.switch.check('1');
+                if (['AX-CHECKBOX', 'AX-RADIO'].includes(this.switchType)) {
+                    this.switch.setAttribute('check', 'ed');
+                }
+                else {
+                    this.switch.check('1');
+                }
             }
         }
     }
     render() {
         this.insertSource();
         this.appendChild(this.wrapEl);
+    }
+    changedMaps = {
+        content: this.changedMultiCont,
+        disabled: this.changedMultiDisabled,
+        name: this.changedMultiName,
+        type: this.changedMultiName,
+        size: this.changedMultiName,
+        checked: this.changedChecked,
+        disable: this.changedMultiDisable,
+        switch: this.changedSwitch,
+    };
+    changedChecked(opt) {
+        for (let k of this.inputs) {
+            if (opt.newVal === null) {
+                k.check('');
+            }
+            else {
+                let tmp = !opt.newVal ? [''] : getAttrArr(opt.newVal);
+                k.check(tmp.includes(k.propsProxy.value) ? 'ed' : '');
+            }
+        }
+    }
+    changedSwitch(opt) {
+        this.switch = getEl(`[name="${opt.newVal}"]`);
+        if (this.switch) {
+            this.switchType = this.switch.nodeName;
+            this.switch.removeEventListener('change', this.switchEvt);
+            this.switch.addEventListener('change', this.switchEvt, false);
+        }
     }
 }
 
@@ -35882,14 +35526,14 @@ class NumberElem extends CompBaseCommField {
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
         this.inputEl = createEl('input', { type: 'number', name: data.name, placeholder: data.placeholder || config.lang.form.placeholder, [ax.embedSign]: '' });
         data.value && (this.inputEl.value = data.value);
-        this.decrEl = createEl('i', { [alias]: 'decrease' }, 'minus');
-        this.incrEl = createEl('i', { [alias]: 'increase' }, 'plus');
-        this.labelEl = createEl('span', { [alias]: 'label' });
+        this.decrEl = createEl('i', { [ax.alias]: 'decrease' }, 'minus');
+        this.incrEl = createEl('i', { [ax.alias]: 'increase' }, 'plus');
+        this.labelEl = createEl('span', { [ax.alias]: 'label' });
         this.wrapEl.append(this.decrEl, this.inputEl, this.incrEl);
-        this.tipsEl = createEl('div', { [alias]: 'tips' });
+        this.tipsEl = createEl('div', { [ax.alias]: 'tips' });
     }
     updateTips() {
         let max = isNull(this.propsProxy.max) ? '+∞' : this.propsProxy.max, min = isNull(this.propsProxy.min) ? '-∞' : this.propsProxy.min, val = this.propsProxy.value, old = ~~val, str = '';
@@ -36099,17 +35743,17 @@ class StatsElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
-        this.mainEl = createEl('div', { [alias]: 'main' });
-        this.iconEl = createEl('i', { [alias]: 'icon', class: data.icon });
-        this.diskEl = createEl('span', { [alias]: 'disk' }, `<img src="${data.disk}"/>`);
-        this.cubeEl = createEl('span', { [alias]: 'cube' }, `<img src="${data.cube}"/>`);
-        this.imageEl = createEl('span', { [alias]: 'image' }, `<img src="${data.image}"/>`);
-        this.labelEl = createEl('i', { [alias]: 'label' }, data.label);
-        this.headEl = createEl('div', { [alias]: 'head' }, this.labelEl);
-        this.tipsEl = createEl('div', { [alias]: 'tips' }, data.tips);
-        this.unitEl = createEl('i', { [alias]: 'unit' }, data.unit);
-        this.badgeEl = createEl('ax-badge', { [alias]: 'badge', label: data?.badge?.trim() });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
+        this.mainEl = createEl('div', { [ax.alias]: 'main' });
+        this.iconEl = createEl('i', { [ax.alias]: 'icon', class: data.icon });
+        this.diskEl = createEl('span', { [ax.alias]: 'disk' }, `<img src="${data.disk}"/>`);
+        this.cubeEl = createEl('span', { [ax.alias]: 'cube' }, `<img src="${data.cube}"/>`);
+        this.imageEl = createEl('span', { [ax.alias]: 'image' }, `<img src="${data.image}"/>`);
+        this.labelEl = createEl('i', { [ax.alias]: 'label' }, data.label);
+        this.headEl = createEl('div', { [ax.alias]: 'head' }, this.labelEl);
+        this.tipsEl = createEl('div', { [ax.alias]: 'tips' }, data.tips);
+        this.unitEl = createEl('i', { [ax.alias]: 'unit' }, data.unit);
+        this.badgeEl = createEl('ax-badge', { [ax.alias]: 'badge', label: data?.badge?.trim() });
         this.mainEl.appendChild(this.headEl);
         this.wrapEl.appendChild(this.mainEl);
     }
@@ -36247,26 +35891,26 @@ class IconElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.headEl = createEl('span', { [alias]: 'head' });
-        this.wrapEl = createEl(data.href ? 'a' : 'div', { [alias]: 'wrap' }, this.headEl);
-        this.iconEl = createEl('i', { [alias]: 'icon', class: data.label });
-        this.diskEl = createEl('span', { [alias]: 'disk' }, `<img src="${data.label}"/>`);
-        this.cubeEl = createEl('span', { [alias]: 'cube' }, `<img src="${data.label}"/>`);
-        this.imageEl = createEl('span', { [alias]: 'image' }, `<img src="${data.label}"/>`);
-        this.tipsEl = createEl('div', { [alias]: 'tips' }, data.tips);
+        this.headEl = createEl('span', { [ax.alias]: 'head' });
+        this.wrapEl = createEl(data.href ? 'a' : 'div', { [ax.alias]: 'wrap' }, this.headEl);
+        this.iconEl = createEl('i', { [ax.alias]: 'icon', class: data.label });
+        this.diskEl = createEl('span', { [ax.alias]: 'disk' }, `<img src="${data.label}"/>`);
+        this.cubeEl = createEl('span', { [ax.alias]: 'cube' }, `<img src="${data.label}"/>`);
+        this.imageEl = createEl('span', { [ax.alias]: 'image' }, `<img src="${data.label}"/>`);
+        this.tipsEl = createEl('div', { [ax.alias]: 'tips' }, data.tips);
         this.toggleLegend('icon');
-        this.badgeEl = createEl('ax-badge', { [alias]: 'badge', label: data?.badge?.trim() });
+        this.badgeEl = createEl('ax-badge', { [ax.alias]: 'badge', label: data?.badge?.trim() });
     }
     setLegendBg(theme, old) {
         if (theme) {
-            classes(this.iconEl).replace(`${prefix}bg-${old}`, `${prefix}bg-${theme}`);
-            classes(this.diskEl).replace(`${prefix}bg-${old}`, `${prefix}bg-${theme}`);
-            classes(this.cubeEl).replace(`${prefix}bg-${old}`, `${prefix}bg-${theme}`);
+            classes(this.iconEl).replace(`${ax.prefix}bg-${old}`, `${ax.prefix}bg-${theme}`);
+            classes(this.diskEl).replace(`${ax.prefix}bg-${old}`, `${ax.prefix}bg-${theme}`);
+            classes(this.cubeEl).replace(`${ax.prefix}bg-${old}`, `${ax.prefix}bg-${theme}`);
         }
         else {
-            this.iconEl.classList.remove(`${prefix}bg-${old}`);
-            this.diskEl.classList.remove(`${prefix}bg-${old}`);
-            this.cubeEl.classList.remove(`${prefix}bg-${old}`);
+            this.iconEl.classList.remove(`${ax.prefix}bg-${old}`);
+            this.diskEl.classList.remove(`${ax.prefix}bg-${old}`);
+            this.cubeEl.classList.remove(`${ax.prefix}bg-${old}`);
         }
     }
     toggleLegend(type) {
@@ -36347,13 +35991,13 @@ class IconElem extends CompBaseComm {
     changedHref(opt) {
         if (opt.newVal === null) {
             let children = this.wrapEl.children;
-            this.wrapEl = createEl('div', { [alias]: 'wrap' });
+            this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
             this.wrapEl.append(...children);
             this.render();
         }
         else {
             if (this.wrapEl.nodeName !== 'A') {
-                this.wrapEl = createEl('a', { [alias]: 'wrap' }, [...this.wrapEl.children]);
+                this.wrapEl = createEl('a', { [ax.alias]: 'wrap' }, [...this.wrapEl.children]);
                 this.render();
             }
             this.wrapEl.setAttribute('href', opt.newVal);
@@ -36401,7 +36045,7 @@ class BadgeElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' }, data.label);
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, data.label);
     }
     render() {
         this.insertSource();
@@ -36445,10 +36089,10 @@ class DividerElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.startEl = createEl('div', { [alias]: 'start' });
-        this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.startEl);
-        this.endEl = createEl('div', { [alias]: 'end' });
-        this.labelEl = createEl('div', { [alias]: 'label' }, this.propsProxy.label);
+        this.startEl = createEl('div', { [ax.alias]: 'start' });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, this.startEl);
+        this.endEl = createEl('div', { [ax.alias]: 'end' });
+        this.labelEl = createEl('div', { [ax.alias]: 'label' }, this.propsProxy.label);
         this.propsProxy.label && this.wrapEl.append(this.labelEl, this.endEl);
     }
     render() {
@@ -36495,10 +36139,10 @@ class AlarmElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('span', { [alias]: 'wrap' });
-        this.labelEl = createEl('i', { [alias]: 'label' }, this.propsProxy.label);
-        this.iconEl = createEl('i', { [alias]: 'icon' });
-        this.imageEl = createEl('img', { [alias]: 'image' });
+        this.wrapEl = createEl('span', { [ax.alias]: 'wrap' });
+        this.labelEl = createEl('i', { [ax.alias]: 'label' }, this.propsProxy.label);
+        this.iconEl = createEl('i', { [ax.alias]: 'icon' });
+        this.imageEl = createEl('img', { [ax.alias]: 'image' });
         this.propsProxy.label && this.wrapEl.appendChild(this.labelEl);
     }
     render(data) {
@@ -36578,7 +36222,7 @@ class ProgressElem extends CompBaseComm {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.rawHtml);
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.ins = new Progress(this.wrapEl);
         setTimeout(() => {
@@ -36662,7 +36306,7 @@ class DatetimeElem extends CompBaseCommFieldMixin {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { class: `${prefix}datetime-wrap` }, this.rawHtml);
+        this.wrapEl = createEl('div', { class: `${ax.prefix}datetime-wrap` }, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.propsObs.on('completed', (data) => {
             let keyArr = [...DatetimeElem.custAttrs, ...DatetimeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
@@ -36719,7 +36363,7 @@ class RateElem extends CompBaseComm {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.rawHtml);
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.ins = new Rate(this.wrapEl);
         setTimeout(() => {
@@ -36831,7 +36475,7 @@ class TreeElem extends CustomElem {
         this.shadowEl.appendChild(this.slotEl);
     }
     render() {
-        this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.innerHTML);
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.innerHTML);
         this.innerHTML = '';
         this.appendChild(this.wrapEl);
         this.ins = new Tree(this.wrapEl, {
@@ -36862,7 +36506,7 @@ class AccordionElem extends CompBaseComm {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.rawHtml);
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.ins = new Accordion(this.wrapEl);
         setTimeout(() => {
@@ -37198,12 +36842,12 @@ class FieldsElem extends CompBaseCommField {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.fieldsEl = createEl('div', { [alias]: 'fields' });
+        this.fieldsEl = createEl('div', { [ax.alias]: 'fields' });
         this.fieldsEl.append(...this.childEls);
-        this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.fieldsEl);
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, this.fieldsEl);
         this.btnEl && this.wrapEl.appendChild(this.btnEl);
-        this.labelEl = createEl('span', { [alias]: 'label' });
-        this.unitEl = createEl('span', { [alias]: 'unit' });
+        this.labelEl = createEl('span', { [ax.alias]: 'label' });
+        this.unitEl = createEl('span', { [ax.alias]: 'unit' });
     }
     render() {
         this.insertSource();
@@ -37250,10 +36894,10 @@ class FieldsElem extends CompBaseCommField {
     changedConn(opt) {
         if (opt.newVal) {
             for (let [i, k] of this.childEls.entries())
-                (i !== this.childEls.length - 1) && k.insertAdjacentHTML('afterend', `<i ${alias}="connector">${opt.newVal}</i>`);
+                (i !== this.childEls.length - 1) && k.insertAdjacentHTML('afterend', `<i ${ax.alias}="connector">${opt.newVal}</i>`);
         }
         else {
-            let conns = getEls(`[${alias}="connector"]`, this.fieldsEl);
+            let conns = getEls(`[${ax.alias}="connector"]`, this.fieldsEl);
             for (let k of conns)
                 k.remove();
         }
@@ -37388,20 +37032,20 @@ class CalloutElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
         this.resultEl = createEl('ax-result');
-        this.iconEl = createEl('i', { [alias]: 'icon' });
-        this.diskEl = createEl('i', { [alias]: 'disk' });
-        this.cubeEl = createEl('i', { [alias]: 'cube' });
-        this.imageEl = createEl('i', { [alias]: 'image' });
-        this.closeEl = createEl('span', { [alias]: 'close' }, `<i class="${prefix}icon-close"></i>`);
-        this.linkEl = createEl('a', { [alias]: 'link' }, `<i class="${prefix}icon-right-up"></i>`);
-        this.maskEl = createEl('a', { [alias]: 'mask' });
-        this.toolsEl = createEl('span', { [alias]: 'tools', class: `${prefix}box-tools` });
-        this.captEl = createEl('div', { [alias]: 'caption' });
-        this.contEl = createEl('div', { [alias]: 'content' }, this.propsProxy.content);
-        this.bodyEl = createEl('div', { [alias]: 'body' }, this.contEl);
-        this.progEl = createEl('ax-progress', { [alias]: 'prog', linecap: 'square', thk: 'xs', theme: 'warn', value: '100', label: false });
+        this.iconEl = createEl('i', { [ax.alias]: 'icon' });
+        this.diskEl = createEl('i', { [ax.alias]: 'disk' });
+        this.cubeEl = createEl('i', { [ax.alias]: 'cube' });
+        this.imageEl = createEl('i', { [ax.alias]: 'image' });
+        this.closeEl = createEl('span', { [ax.alias]: 'close' }, `<i class="${ax.prefix}icon-close"></i>`);
+        this.linkEl = createEl('a', { [ax.alias]: 'link' }, `<i class="${ax.prefix}icon-right-up"></i>`);
+        this.maskEl = createEl('a', { [ax.alias]: 'mask' });
+        this.toolsEl = createEl('span', { [ax.alias]: 'tools', class: `${ax.prefix}box-tools` });
+        this.captEl = createEl('div', { [ax.alias]: 'caption' });
+        this.contEl = createEl('div', { [ax.alias]: 'content' }, this.propsProxy.content);
+        this.bodyEl = createEl('div', { [ax.alias]: 'body' }, this.contEl);
+        this.progEl = createEl('ax-progress', { [ax.alias]: 'prog', linecap: 'square', thk: 'xs', theme: 'warn', value: '100', label: false });
         this.wrapEl.append(this.bodyEl, this.toolsEl);
     }
     render() {
@@ -37522,12 +37166,12 @@ class CalloutElem extends CompBaseComm {
     }
     changedFeature(opt) {
         if (opt.newVal === 'alert') {
-            this.setAttribute('icon', `${prefix}icon-warn-o-f`);
+            this.setAttribute('icon', `${ax.prefix}icon-warn-o-f`);
             this.setAttribute('theme', 'warn');
             this.toggleAttribute('notable', true);
         }
         else if (opt.newVal === 'note') {
-            this.setAttribute('icon', `${prefix}icon-info-o-f`);
+            this.setAttribute('icon', `${ax.prefix}icon-info-o-f`);
             this.setAttribute('theme', 'info');
             this.toggleAttribute('notable', true);
         }
@@ -37581,17 +37225,17 @@ class TwilightElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' });
-        this.labelEl = createEl('i', { [alias]: 'label' }, this.labels[0]);
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
+        this.labelEl = createEl('i', { [ax.alias]: 'label' }, this.labels[0]);
         let now = Date.now();
-        this.legendEl = createEl('i', { [alias]: 'legend' }, `
+        this.legendEl = createEl('i', { [ax.alias]: 'legend' }, `
                 <svg viewBox="0 0 24 24">
                     <mask id="mask-${now}">
                         <rect x="0" y="0" width="100%" height="100%" fill="white" />
-                        <circle cx="25" cy="13" r="6" stroke="none" class="${prefix}twilight-mask" fill="dark" />
+                        <circle cx="25" cy="13" r="6" stroke="none" class="${ax.prefix}twilight-mask" fill="dark" />
                     </mask>
-                    <circle fill="currentColor" cx="12" cy="12" r="6" class="${prefix}twilight-main" mask="url(#mask-${now})" />
-                    <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="${prefix}twilight-rays">
+                    <circle fill="currentColor" cx="12" cy="12" r="6" class="${ax.prefix}twilight-main" mask="url(#mask-${now})" />
+                    <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="${ax.prefix}twilight-rays">
                         <line x1="12" y1="1" x2="12" y2="3" />
                         <line x1="12" y1="21" x2="12" y2="23" />
                         <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
@@ -37660,7 +37304,7 @@ class PaginationElem extends CompBaseComm {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [alias]: 'slot-host' }, this.rawHtml);
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.ins = new Pagination(this.wrapEl);
         setTimeout(() => {
@@ -37687,7 +37331,7 @@ class StepElem extends CompBaseComm {
         <{{name}} {{href}} {{target}} {{rel}} {{active}} class="_step-item _reset">
             <div class="_step-track">
                 <div></div>
-                <span ${alias}="node"></span>
+                <span ${ax.alias}="node"></span>
                 <div></div>
             </div>
         </{{name}}>
@@ -37716,14 +37360,14 @@ class StepElem extends CompBaseComm {
         for (let k of this.content) {
             let node = tplToEl(renderTpl(this.template, k));
             k.wrapEl = node;
-            k.wrapEl.querySelector(`[${alias}="node"]`).innerHTML = this.getLegend(k);
-            k.headEl = createEl('div', { class: `${prefix}step-head` }, k.tips);
-            k.labelEl = createEl('div', { [alias]: 'label' }, k.label);
-            k.briefEl = createEl('div', { [alias]: 'brief' }, k.brief);
-            k.bodyEl = createEl('div', { class: `${prefix}step-body` }, [k.labelEl, k.briefEl]);
+            k.wrapEl.querySelector(`[${ax.alias}="node"]`).innerHTML = this.getLegend(k);
+            k.headEl = createEl('div', { class: `${ax.prefix}step-head` }, k.tips);
+            k.labelEl = createEl('div', { [ax.alias]: 'label' }, k.label);
+            k.briefEl = createEl('div', { [ax.alias]: 'brief' }, k.brief);
+            k.bodyEl = createEl('div', { class: `${ax.prefix}step-body` }, [k.labelEl, k.briefEl]);
             fragment.appendChild(node);
         }
-        this.wrapEl = createEl('div', { [alias]: 'wrap' }, data.label);
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, data.label);
         this.wrapEl.appendChild(fragment);
     }
     getArrContent(content = this.propsProxy.content) {
@@ -37797,7 +37441,7 @@ class StepElem extends CompBaseComm {
     setLegendType() {
         for (let k of this.content) {
             let tmp = this.getLegend(k);
-            k.wrapEl.querySelector(`[${alias}="node"]`).innerHTML = tmp;
+            k.wrapEl.querySelector(`[${ax.alias}="node"]`).innerHTML = tmp;
         }
     }
     render() {
@@ -37880,9 +37524,9 @@ class StatusElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.lampEl = createEl('i', { [alias]: 'lamp' });
-        this.labelEl = createEl('i', { [alias]: 'label' }, this.propsProxy.lang?.info || config.lang.status.info);
-        this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.lampEl);
+        this.lampEl = createEl('i', { [ax.alias]: 'lamp' });
+        this.labelEl = createEl('i', { [ax.alias]: 'label' }, this.propsProxy.lang?.info || config.lang.status.info);
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, this.lampEl);
         this.propsRaw.label && this.wrapEl.appendChild(this.labelEl);
     }
     render() {
@@ -37945,15 +37589,15 @@ class HeadingElem extends CompBaseComm {
         this.getProxyProps();
     }
     fillWrap(data) {
-        this.labelEl = createEl('i', { [alias]: 'label' }, data.label);
-        this.headEl = createEl('div', { [alias]: 'head' }, this.labelEl);
-        this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.headEl);
-        this.arrowEl = createEl('i', { [alias]: 'arrow', class: `${prefix}icon-right` });
-        this.tipsEl = createEl('i', { [alias]: 'tips' }, data.tips);
-        this.iconEl = createEl('i', { [alias]: 'icon', class: data.label });
-        this.diskEl = createEl('img', { [alias]: 'disk', src: data.disk });
-        this.cubeEl = createEl('img', { [alias]: 'cube', src: data.cube });
-        this.imageEl = createEl('img', { [alias]: 'image', src: data.image });
+        this.labelEl = createEl('i', { [ax.alias]: 'label' }, data.label);
+        this.headEl = createEl('div', { [ax.alias]: 'head' }, this.labelEl);
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, this.headEl);
+        this.arrowEl = createEl('i', { [ax.alias]: 'arrow', class: `${ax.prefix}icon-right` });
+        this.tipsEl = createEl('i', { [ax.alias]: 'tips' }, data.tips);
+        this.iconEl = createEl('i', { [ax.alias]: 'icon', class: data.label });
+        this.diskEl = createEl('img', { [ax.alias]: 'disk', src: data.disk });
+        this.cubeEl = createEl('img', { [ax.alias]: 'cube', src: data.cube });
+        this.imageEl = createEl('img', { [ax.alias]: 'image', src: data.image });
         this.legends = [
             { name: 'icon', el: this.iconEl, attr: 'class' },
             { name: 'disk', el: this.diskEl, attr: 'src' },
@@ -37991,7 +37635,7 @@ class HeadingElem extends CompBaseComm {
             this.arrowEl.remove();
         }
         else {
-            this.arrowEl.setAttribute('class', opt.newVal ? opt.newVal : `${prefix}icon-right`);
+            this.arrowEl.setAttribute('class', opt.newVal ? opt.newVal : `${ax.prefix}icon-right`);
             this.wrapEl.appendChild(this.arrowEl);
         }
     }
@@ -38044,7 +37688,7 @@ class SkeletonElem extends CompBaseComm {
         this.rows = this.getRows();
     }
     fillWrap(data) {
-        this.wrapEl = createEl('div', { [alias]: 'wrap' }, this.getSkelStr());
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, this.getSkelStr());
     }
     getRows(str = this.propsProxy.rows) {
         return ~~this.propsProxy.rows || 1;
@@ -38178,7 +37822,7 @@ const init = (type, parent) => {
             count: 4,
             type: 'idle',
             done: () => {
-                console.info(`Initialization finished, all tasks are done!`);
+                console.info(`Initialization finished, all tasks of axui are done!`);
             },
             run: (task) => activeFun(task),
         });
@@ -38208,10 +37852,8 @@ const init = (type, parent) => {
 
 var ax_comm = {
     ax,
-    alias,
     config,
     fieldTypes,
-    prefix,
     getDataType,
     renderTpl,
     getScreenSize,
@@ -38220,10 +37862,8 @@ var ax_comm = {
     toNumber,
     toPixel,
     preventDft,
-    isMobi,
     events,
     icons,
-    getFullGap,
     propsMap,
     augment,
     privacy,
@@ -38365,11 +38005,6 @@ var ax_comm = {
     addStyles,
     regElem,
     getComputedVar,
-    getImgSpin,
-    getImgSpinDk,
-    getImgNone,
-    getImgEmpty,
-    getImgAvatar,
     select2Tree,
     ul2Tree,
     parseStr,
@@ -38472,4 +38107,4 @@ var ax_comm = {
     init,
 };
 
-export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, HeadingElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, SkeletonElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, alias, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax_comm as default, delay, dl2Tree, ease, easeHeight, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getAutoDur, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtClient, getEvtTarget, getExpiration, getFullGap, getHeights, getHypotenuse, getImgAvatar, getImgEmpty, getImgNone, getImgSpin, getImgSpinDk, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getRtl, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isMobi, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, prefix, preventDft, privacy, promiseRaf, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setRtl, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, storeNode, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };
+export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, HeadingElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, SkeletonElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, ax_comm as default, delay, dl2Tree, ease, easeHeight, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getAutoDur, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtClient, getEvtTarget, getExpiration, getHeights, getHypotenuse, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getRtl, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, preventDft, privacy, promiseRaf, prompt, propsMap, purifyHtml, regElem, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setRtl, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, storeNode, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };
