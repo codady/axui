@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-11 0:37:22
+ * @since Last modified: 2025-5-11 0:47:27
  * @name AXUI front-end framework.
- * @version 3.1.6
+ * @version 3.1.7
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -10090,7 +10090,7 @@ class Dialog extends ModBaseListenCacheBubble {
             }
             else {
                 this.options.duration && (this.wrapEl.style.animationDuration = `${this.options.duration}ms`);
-                this.aniIn && (this.wrapEl.style.animationName = prefix + this.aniIn);
+                this.aniIn && (this.wrapEl.style.animationName = ax.prefix + this.aniIn);
             }
             this.lastShowTime = Date.now();
             this.mainEl.setAttribute('show', '');
@@ -10120,7 +10120,7 @@ class Dialog extends ModBaseListenCacheBubble {
                 easeHeight({ el: this.wrapEl, height: this.wrapHeight, type: 'up', duration: this.duration, unaware: false });
             }
             else {
-                this.aniOut && (this.wrapEl.style.animationName = prefix + this.aniOut);
+                this.aniOut && (this.wrapEl.style.animationName = ax.prefix + this.aniOut);
             }
             this.mainEl.querySelectorAll('video,audio').forEach((k) => {
                 k.pause();
