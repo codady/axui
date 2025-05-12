@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-11 0:47:27
+ * @since Last modified: 2025-5-13 5:39:14
  * @name AXUI front-end framework.
- * @version 3.1.7
+ * @version 3.1.8
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -84,7 +84,7 @@ const ax = {
     tasks: [],
 };
 
-const fieldTypes = ['input', 'file', 'textarea', 'range', 'number', 'datetime', 'upload', 'select', 'radio', 'checkbox', 'radios', 'checkboxes'];
+const fieldTypes = ['input', 'file', 'textarea', 'range', 'number', 'datetime', 'upload', 'select', 'radio', 'checkbox', 'radios', 'checkboxes', 'editor'];
 
 const lang = {
     name: 'zh-CN',
@@ -1091,7 +1091,7 @@ const createEl = (name, attrs, content) => {
     };
     if (attrs && attrsType === 'Object') {
         for (let k in attrs) {
-            attrs.hasOwnProperty(k) && rootEl.setAttribute(k, attrs[k]);
+            attrs.hasOwnProperty(k) && rootEl.setAttribute(k, typeof attrs[k] === 'string' ? attrs[k] : JSON.stringify(attrs[k]));
         }
     }
     loop(rootEl, content);
@@ -1654,7 +1654,7 @@ const getContent = async function (opts) {
             });
         }
         else if (fieldTypes.includes(opts.contType)) {
-            let attrs = opts.contType === 'datetime' ? { feature: 'flat', full: true } : opts.contType === 'upload' ? { 'feature': 'gallery' } : ['radios', 'checkboxes', 'checkbox'].includes(opts.contType) ? { type: 'text' } : { full: true }, valProp = ['checkboxes', 'radios', 'select'].includes(opts.contType) ? 'content' :
+            let attrs = opts.contType === 'select' ? { popup: { multiple: true } } : opts.contType === 'datetime' ? { feature: 'flat', full: true } : opts.contType === 'upload' ? { 'feature': 'gallery' } : ['radios', 'checkboxes', 'checkbox'].includes(opts.contType) ? { type: 'text' } : { full: true }, valProp = ['checkboxes', 'radios', 'select'].includes(opts.contType) ? 'content' :
                 ['checkbox', 'radio'].includes(opts.contType) ? 'label' :
                     opts.contType === 'upload' ? 'url' :
                         opts.contType === 'file' ? 'placeholder' : 'value', dft = { [valProp]: opts.content, ...attrs, ...Object.assign({ name: ax.namePfx + Date.now() }, opts.contData) };
@@ -1819,6 +1819,11 @@ const optBase = [
         attr: 'breakpoints',
         prop: 'breakpoints',
         value: {},
+    },
+    {
+        attr: 'rtl',
+        prop: 'rtl',
+        value: false,
     },
     {
         attr: 'lang',
@@ -3011,6 +3016,8 @@ class ModBase {
             this.isRtl = true;
             return;
         }
+        if (!this.targetEl)
+            return;
         let rtlAttr = this.targetEl.getAttribute('dir');
         if (rtlAttr === 'rtl') {
             this.isRtl = true;
@@ -4713,7 +4720,7 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
                                 this.options.b4Confirm && await this.options.b4Confirm.call(this, k);
                                 let inputEl = getEl(this.options.autoFill.inputSel) || this.targetEl, childEl = getEl(this.options.autoFill.childSel, inputEl), vals;
                                 if (isCompField(this.options.contType)) {
-                                    let value = this.data.value;
+                                    let value = ['checkbox', 'radio'].includes(this.options.contType) && !this.data.checked ? '' : this.data.value;
                                     this.options.autoFill.enable && inputEl && this.setTargetVals(value, inputEl, childEl);
                                     !this.options.keepShow && this.hide();
                                     vals = value;
@@ -4855,7 +4862,7 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
         return result;
     }
     async renderContent(data) {
-        isEmpty(data) && console.warn('No insertable content!');
+        isEmpty(data) && console.info('No content to insert, proceeding without blocking.');
         this.data = this.handleData(data);
         if (this.options.b4Fill) {
             let resp = await this.options.b4Fill.call(this, this.data, this.contEl);
@@ -7697,6 +7704,11 @@ class CompBase extends HTMLElement {
     createPropsObs() {
         this.propsObs = new Observe(this.properties, { deep: true });
         this.propsProxy = this.propsObs.proxy;
+        if (this.ins) {
+            this.propsObs.on('completed', (resp) => {
+                this.completedEvt(resp);
+            });
+        }
     }
     updateProxy(name, newVal, map) {
         let value;
@@ -7758,6 +7770,12 @@ class CompBaseComm extends CompBase {
         this.propsObs.on('set', (data) => {
             this.connected && this.updateCache({ [data.key]: data.value });
         });
+    }
+    completedEvt(data) {
+        if (!this.ins || !data.keys.set.length)
+            return;
+        this.ins.update(this.properties);
+        this.listen({ name: 'updated', params: [this.properties] });
     }
     listen({ name, params = [], cb } = {}) {
         name && this.plans.hasOwnProperty(name) ? this.emit(name, ...params) : null;
@@ -9924,6 +9942,9 @@ class Dialog extends ModBaseListenCacheBubble {
         if (['alert', 'prompt', 'notice'].includes(this.options.feature)) {
             this.options.footer.layout = 'right';
         }
+        if (['prompt', 'notice'].includes(this.options.feature)) {
+            this.options.mask.enable = false;
+        }
         if (['confirm', 'alert', 'prompt'].includes(this.options.feature)) {
             this.options.mask.closable = false;
             this.options.placement = 'center-top';
@@ -9931,15 +9952,15 @@ class Dialog extends ModBaseListenCacheBubble {
             this.options.in = 'fadeInDown';
             this.options.out = 'fadeOutDown';
             this.options.tools.enable = false;
+            let footer = Dialog.optMaps.find((k) => k.prop === 'footer'), isSame = footer.value.children.toString() == this.options.footer.children.toString();
             if (this.options.feature === 'alert') {
-                this.options.footer.children = ['confirm'];
+                isSame && (this.options.footer.children = ['confirm']);
             }
             else if (this.options.feature === 'prompt') {
-                this.options.footer.children = ['close', 'clear', 'confirm'];
+                isSame && (this.options.footer.children = ['close', 'clear', 'confirm']);
             }
         }
-        else if (this.options.feature === 'notice') {
-            this.options.mask.enable = false;
+        if (this.options.feature === 'notice') {
             this.options.placement = 'left-bottom';
         }
     }
@@ -10170,11 +10191,11 @@ const confirm = ({ content, contType, contData, tplStr, tplEng, heading, yes, no
     });
 };
 
-const alert = ({ content, contType, contData, heading, tplStr, tplEng, yes }) => {
+const alert = ({ content, contType, contData, heading, tplStr, tplEng, yes, dialog = {} }) => {
     if (isEmpty(content))
         return;
     return new Promise((resolve) => {
-        new Dialog(null, {
+        new Dialog(null, deepMerge({
             content,
             contType,
             contData,
@@ -10186,15 +10207,15 @@ const alert = ({ content, contType, contData, heading, tplStr, tplEng, yes }) =>
                 yes && yes();
                 resolve(true);
             },
-        }).show();
+        }, dialog)).show();
     });
 };
 
-const notice = ({ content, contType = '', contData = {}, heading = '', label = '', tplStr, tplEng, yes }) => {
+const notice = ({ content, contType = '', contData = {}, heading = '', label = '', tplStr, tplEng, yes, dialog = {} }) => {
     if (isEmpty(content))
         return;
     return new Promise((resolve) => {
-        new Dialog(null, {
+        new Dialog(null, deepMerge({
             content,
             contType,
             contData,
@@ -10212,12 +10233,25 @@ const notice = ({ content, contType = '', contData = {}, heading = '', label = '
                 yes && yes();
                 resolve(true);
             },
-        }).show();
+        }, dialog)).show();
     });
 };
 
 const prompt = (options) => {
-    let opts = Object.assign({ fields: [{ type: 'input' }] }, options), data = Array.isArray(opts.fields) ? opts.fields : [opts.fields], frags = document.createDocumentFragment();
+    let opts = Object.assign({ fields: [{ type: 'input' }] }, options), data = Array.isArray(opts.fields) ? opts.fields : [opts.fields], frags = document.createDocumentFragment(), ins = !opts.insName ? null : instance.find(opts.insName, 'dialog'), getParams = (data) => {
+        let maps = data.map((k) => { return { type: k.type, label: k.label, value: k.field.value }; }), vals = maps.map((k) => k.value), params = { value: vals, fields: maps };
+        return params;
+    };
+    if (ins) {
+        return new Promise((resolve) => {
+            ins.off('confirmed');
+            ins.on('confirmed', () => {
+                let params = getParams(ins.promptData);
+                resolve(params);
+            });
+            ins.show();
+        });
+    }
     for (let k of data) {
         let label = k.label ? `<div class="${ax.prefix}field-label">${k.label}</div>` : '', note = k.note ? `<div  class="${ax.prefix}field-note">${k.note}</div>` : '', attrs = Object.assign(k.type === 'upload' ? { feature: 'gallery' } : k.type === 'datetime' ? { display: 'inline', footer: false, 'auto-fill': true, } : {}, k.attrs), input = createEl(`ax-${k.type || 'input'}`, { ...attrs }), tpl = `
             <section class="${ax.prefix}field ${ax.prefix}field-apart">
@@ -10233,25 +10267,29 @@ const prompt = (options) => {
         k.field = input;
     }
     return new Promise((resolve) => {
-        new Dialog(null, {
+        ins = new Dialog(null, deepMerge({
+            insName: opts.insName,
             heading: opts.heading,
             size: 'lg',
             feature: 'prompt',
             onInitiated: function () {
                 this.contEl.appendChild(frags);
+                this.promptData = data;
             },
-            onConfirmed: () => {
-                let maps = data.map((k) => { return { type: k.type, label: k.label, value: k.field.value }; }), vals = maps.map((k) => k.value), params = { value: vals, fields: maps };
+            onConfirmed: function () {
+                let params = getParams(this.promptData);
                 opts.yes && opts.yes(params);
                 resolve(params);
+                !opts.insName && (ins = null);
             },
             onCleared: () => {
                 for (let k of data)
                     k.field.clear();
             },
             onClosed: () => {
+                !opts.insName && (ins = null);
             }
-        }).show();
+        }, opts.dialog)).show();
     });
 };
 
@@ -11314,7 +11352,6 @@ class Position extends ModBaseListen {
     }
     
     resetPlacement(cb) {
-        (this.placement);
         if (this.destroyed || !this.places.includes(this.placement) || this.unsettable()) {
             return this;
         }
@@ -11693,9 +11730,8 @@ class Popup extends ModBaseListenCacheBubble {
                     _this.show();
                     if (!_this.options.multiple) {
                         let items = instance.data.filter((i) => i.type === _this.constructor.name.toLowerCase() && i.ins !== _this && i.ins.state === 'shown');
-                        items.forEach((i) => {
-                            i.ins.hide();
-                        });
+                        for (let k of items)
+                            k.ins.hide();
                     }
                     else {
                         _this.options.wing.actClass && _this.wings.includes(this) && this.classList.add(_this.options.wing.actClass);
@@ -12687,7 +12723,6 @@ class Valid extends ModBaseListenCache {
             this.msgIcon = this.options.iconShow ? icons.font["error-f"] : '';
             this.msgText = msg.fail;
         }
-        (this.msgText, this.msgEl.innerHTML);
         this.msgEl.innerHTML = this.msgIcon + this.msgText;
         if (this.otherBox) {
             elState(this.msgEl).isVirtual && this.otherBox.appendChild(this.msgEl);
@@ -25862,7 +25897,7 @@ class Datetime extends ModBaseListenCache {
         this.options.mode === 'range' && this.setRangeAttr(curItems);
         let nowObj = dateTools.getDateObj(new Date(), this.data.type), nowItem = curItems.find((k) => JSON.stringify(k.value) == JSON.stringify(nowObj));
         nowItem && nowItem.wrapEl.setAttribute('now', '');
-        this.renderFinish();
+        this.afterCreatePanels();
         super.listen({ name: 'createPanels', cb });
         return this;
     }
@@ -26235,6 +26270,8 @@ class Datetime extends ModBaseListenCache {
         cb && cb();
     }
     createYearList(panel, start, index) {
+        if (!panel)
+            return;
         this.data.year.listEl.innerHTML = '';
         this.data.year.list = [];
         this.panelIdx = index || 0;
@@ -26576,7 +26613,7 @@ class Datetime extends ModBaseListenCache {
         let value = this.getDateVal(dateObj, this.data.type), curItems = grids || this.getCurGrids(), curItem = grid || curItems.find((k) => JSON.stringify(k.value) == JSON.stringify(value));
         return { target: curItem, list: curItems };
     }
-    renderFinish() {
+    afterCreatePanels() {
         if (this.data.type !== 'daytime') {
             let curGrids = this.getCurGrids();
             this.data.panels.forEach((o) => {
@@ -26612,44 +26649,6 @@ class Datetime extends ModBaseListenCache {
                     }
                 });
             });
-            if (this.resultIns) {
-                this.resultIns.on('removed', (items) => {
-                    for (let k of items) {
-                        this.deselect(k.source);
-                    }
-                });
-                this.resultIns.on('updated', () => {
-                    this.resultIns.data.forEach((k) => {
-                        k.wrapEl.onclick = (e) => {
-                            e.target.getAttribute(ax.alias) !== 'remove' && !this.findFromPanels(k.label).target && this.createPanels(k.label);
-                        };
-                    });
-                });
-            }
-            if (this.prevYearEl) {
-                this.prevYearEl.onclick = () => {
-                    let years = (this.data.type === 'year') ? -18 * this.options.cols * this.options.rows :
-                        (this.data.type === 'month') ? -this.options.cols * this.options.rows : -1;
-                    this.createPanels(dateTools.getOffsetDate(this.data.startDate, { YYYY: years }), true);
-                    this.data.year.panelEl && this.createYearList(this.data.panels[this.panelIdx], null, this.panelIdx);
-                };
-            }
-            if (this.nextYearEl) {
-                this.nextYearEl.onclick = () => {
-                    let years = (this.data.type === 'year') ? 18 * this.options.cols * this.options.rows :
-                        (this.data.type === 'month') ? this.options.cols * this.options.rows : 1;
-                    this.createPanels(dateTools.getOffsetDate(this.data.startDate, { YYYY: years }), true);
-                    this.data.year.panelEl && this.createYearList(this.data.panels[this.panelIdx], null, this.panelIdx);
-                };
-            }
-            if (this.data.type.includes('date')) {
-                this.prevMonthEl.onclick = () => {
-                    this.createPanels(dateTools.getOffsetDate(this.data.startDate, { MM: -1 }), true);
-                };
-                this.nextMonthEl.onclick = () => {
-                    this.createPanels(dateTools.getOffsetDate(this.data.startDate, { MM: 1 }), true);
-                };
-            }
             this.data.panels.forEach((k, i) => {
                 if (k.yearEl) {
                     k.yearEl.onclick = () => {
@@ -26725,6 +26724,48 @@ class Datetime extends ModBaseListenCache {
                     (i === 0 && this.options.events.enable) && this.showEvent(item);
                 }
             });
+        }
+    }
+    renderFinish() {
+        if (this.data.type !== 'daytime') {
+            if (this.resultIns) {
+                this.resultIns.on('removed', (items) => {
+                    for (let k of items) {
+                        this.deselect(k.source);
+                    }
+                });
+                this.resultIns.on('updated', () => {
+                    this.resultIns.data.forEach((k) => {
+                        k.wrapEl.onclick = (e) => {
+                            e.target.getAttribute(ax.alias) !== 'remove' && !this.findFromPanels(k.label).target && this.createPanels(k.label);
+                        };
+                    });
+                });
+            }
+            if (this.prevYearEl) {
+                this.prevYearEl.onclick = () => {
+                    let years = (this.data.type === 'year') ? -18 * this.options.cols * this.options.rows :
+                        (this.data.type === 'month') ? -this.options.cols * this.options.rows : -1;
+                    this.createPanels(dateTools.getOffsetDate(this.data.startDate, { YYYY: years }), true);
+                    this.data.year.panelEl && this.createYearList(this.data.panels[this.panelIdx], null, this.panelIdx);
+                };
+            }
+            if (this.nextYearEl) {
+                this.nextYearEl.onclick = () => {
+                    let years = (this.data.type === 'year') ? 18 * this.options.cols * this.options.rows :
+                        (this.data.type === 'month') ? this.options.cols * this.options.rows : 1;
+                    this.createPanels(dateTools.getOffsetDate(this.data.startDate, { YYYY: years }), true);
+                    this.data.year.panelEl && this.createYearList(this.data.panels[this.panelIdx], null, this.panelIdx);
+                };
+            }
+            if (this.data.type.includes('date')) {
+                this.prevMonthEl.onclick = () => {
+                    this.createPanels(dateTools.getOffsetDate(this.data.startDate, { MM: -1 }), true);
+                };
+                this.nextMonthEl.onclick = () => {
+                    this.createPanels(dateTools.getOffsetDate(this.data.startDate, { MM: 1 }), true);
+                };
+            }
             if (this.yearSearchEl) {
                 this.yearSearchEl.btnEl.onclick = () => {
                     this.searchYear2Update(this.yearSearchEl.inputEl, false);
@@ -27443,11 +27484,6 @@ const optRate = [
         attr: 'increment',
         prop: 'increment',
         value: 1,
-    },
-    {
-        attr: 'rtl',
-        prop: 'rtl',
-        value: false,
     },
     {
         attr: 'tooltip',
@@ -33232,18 +33268,14 @@ class CompBaseCommField extends CompBaseComm {
 
 class CompBaseCommFieldMixin extends CompBaseCommField {
     modsOpts;
+    canListenkeys;
     static custAttrs;
     static boolAttrs;
     constructor() {
         super();
         this.createShadow();
         this.modsOpts = {};
-        this.on('disconnected', () => {
-            this.ins && this.ins.destroy();
-        });
-        this.on('adopted', () => {
-            this.ins && this.ins.destroy();
-        });
+        this.fillWrap(this.propsProxy);
     }
     static get observedAttributes() {
         return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.evtsArr];
@@ -33271,6 +33303,15 @@ class CompBaseCommFieldMixin extends CompBaseCommField {
             this.modsOpts[module][item.prop] = tmp;
         }
     }
+    fillWrap(data) {
+        this.wrapEl = createEl('div', {}, this.rawHtml);
+    }
+    completedEvt(data) {
+        if (!this.ins || !data.keys.set.length)
+            return;
+        let intArr = getIntArr([this.canListenkeys, data.keys.set]);
+        intArr.length && this.ins.update(this.modsOpts['module']);
+    }
 }
 
 class MoreElem extends CompBaseComm {
@@ -33278,24 +33319,23 @@ class MoreElem extends CompBaseComm {
         super();
         this.createShadow();
         super.createPropsObs();
+        this.fillWrap(this.propsProxy);
     }
     static get observedAttributes() {
         return [...optMore.map((k) => k.attr), 'options'];
     }
     attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
         super.updateProxy(name, newVal, optMore);
+    }
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
-        this.ins = new More(this.wrapEl);
-        setTimeout(() => {
-            this.propsObs.on('completed', (data) => {
-                this.ins.update(this.properties);
-                this.listen({ name: 'updated', params: [this.properties] });
-            });
-        }, 500);
+        requestIdleCallback(() => !this.ins && (this.ins = new More(this.wrapEl)));
     }
 }
 
@@ -33457,7 +33497,6 @@ class RadioElem extends CompBaseCommField {
     getRawData() {
         this.getRawProps(RadioElem);
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        !this.propsRaw.value && (this.propsRaw.value = this.propsRaw.label || '');
         this.getProxyProps();
         this.setFieldProps(['name', 'value', 'disabled', 'check']);
     }
@@ -33526,10 +33565,7 @@ class CheckboxElem extends CompBaseCommField {
             this.propsRaw[k] = getAttrBool(this.getAttribute(k));
         });
         this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-        !this.propsRaw.value && (this.propsRaw.value = this.propsRaw.label || '');
-        for (let k in this.propsRaw) {
-            this.propsProxy[k] = this.propsRaw[k];
-        }
+        this.getProxyProps();
         this.setFieldProps(['name', 'value', 'disabled', 'check']);
     }
     fillWrap(data) {
@@ -34459,11 +34495,14 @@ class MenuElem extends CompBaseComm {
         super();
         this.createShadow();
         super.createPropsObs();
+        this.fillWrap(this.propsProxy);
     }
     static get observedAttributes() {
         return [...optMenu$1.map((k) => k.attr), 'options'];
     }
     attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
         if (name === 'active') {
             this.ins && newVal && this.ins.activate(newVal);
         }
@@ -34474,17 +34513,14 @@ class MenuElem extends CompBaseComm {
             super.updateProxy(name, newVal, optMenu$1);
         }
     }
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
+    }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
         this.ins = new Menu(this.wrapEl);
-        setTimeout(() => {
-            this.propsObs.on('completed', (data) => {
-                this.ins.update(this.properties);
-                this.listen({ name: 'updated', params: [this.properties] });
-            });
-        }, 500);
+        requestIdleCallback(() => !this.ins && (this.ins = new Menu(this.wrapEl)));
     }
 }
 
@@ -35622,7 +35658,7 @@ class RangeElem extends CompBaseCommFieldMixin {
         this.getRawData();
     }
     static custAttrs = ['name', 'step', 'max', 'min', 'axis', 'size', 'classes', 'separator', 'hyphen', 'fence', 'button', 'ruler', 'result'];
-    static boolAttrs = ['disabled', 'full', 'limit-show', 'tip-show', 'multiple', 'locked'];
+    static boolAttrs = ['disabled', 'full', 'limit-show', 'tip-show', 'multiple', 'locked', 'rtl'];
     
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
@@ -35658,6 +35694,7 @@ class RangeElem extends CompBaseCommFieldMixin {
         for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optRange);
         this.setFieldProps(['name', 'value', 'disabled']);
+        this.canListenkeys = [...RangeElem.custAttrs, ...RangeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k));
     }
     newIns() {
         let params = Object.assign({
@@ -35705,13 +35742,8 @@ class RangeElem extends CompBaseCommFieldMixin {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', {}, this.rawHtml);
         this.appendChild(this.wrapEl);
-        this.propsObs.on('completed', (data) => {
-            let keyArr = [...RangeElem.custAttrs, ...RangeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
-            intArr.length && this.ins && this.ins.update(this.modsOpts['module']);
-            intArr.length && (this.connCount <= 1 ? this.newIns() : this.ins.update(this.modsOpts['module']));
-        });
+        requestIdleCallback(() => !this.ins && this.newIns());
     }
 }
 
@@ -36204,11 +36236,14 @@ class ProgressElem extends CompBaseComm {
         super();
         this.createShadow();
         super.createPropsObs();
+        this.fillWrap(this.propsProxy);
     }
     static get observedAttributes() {
         return [...optProgress.map((k) => k.attr), 'options'];
     }
     attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
         if (name === 'value') {
             if (!this.connected)
                 return;
@@ -36224,17 +36259,13 @@ class ProgressElem extends CompBaseComm {
             super.updateProxy(name, newVal, optProgress);
         }
     }
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
+    }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
-        this.ins = new Progress(this.wrapEl);
-        setTimeout(() => {
-            this.propsObs.on('completed', (data) => {
-                this.ins.update(this.properties);
-                this.listen({ name: 'updated', params: [this.properties] });
-            });
-        }, 500);
+        requestIdleCallback(() => !this.ins && (this.ins = new Progress(this.wrapEl)));
     }
     getVal(val) {
         return val == 0 ? 0 : ~~val === 0 ? val : parseFloat(val);
@@ -36256,7 +36287,7 @@ class DatetimeElem extends CompBaseCommFieldMixin {
     }
     static custAttrs = ['name', 'value', 'size', 'format', 'classes', 'mode', 'feature', 'display', 'placeholder', 'label', 'tools',
         'max-selection', 'min-date', 'max-date', 'datespan', 'timespan', 'rows', 'cols', 'week-start', 'separator', 'btn-sel', 'pos-sel', 'input-sel', 'child-sel', 'lunar', 'events', 'menu', 'bubble', 'footer'];
-    static boolAttrs = ['disabled', 'to-drawer', 'full', 'multiline', 'now-hide', 'now-show', 'clear-show', 'close-show', 'cancel-show', 'confirm-hide', 'auto-fill', 'manual', 'auto-correct', 'required', 'fill-now'];
+    static boolAttrs = ['disabled', 'to-drawer', 'full', 'multiline', 'now-hide', 'now-show', 'clear-show', 'close-show', 'cancel-show', 'confirm-hide', 'auto-fill', 'manual', 'auto-correct', 'required', 'fill-now', 'rtl'];
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
@@ -36272,6 +36303,10 @@ class DatetimeElem extends CompBaseCommFieldMixin {
         for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optDatetime);
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
+        this.canListenkeys = [...DatetimeElem.custAttrs, ...DatetimeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k));
+    }
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { class: `${ax.prefix}datetime-wrap` }, this.rawHtml);
     }
     newIns() {
         let params = Object.assign(this.modsOpts['module'], {
@@ -36310,12 +36345,8 @@ class DatetimeElem extends CompBaseCommFieldMixin {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { class: `${ax.prefix}datetime-wrap` }, this.rawHtml);
         this.appendChild(this.wrapEl);
-        this.propsObs.on('completed', (data) => {
-            let keyArr = [...DatetimeElem.custAttrs, ...DatetimeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
-            intArr.length && (this.connCount <= 1 ? this.newIns() : this.ins.update(this.modsOpts['module']));
-        });
+        requestIdleCallback(() => !this.ins && this.newIns());
     }
     changedMaps = {
         disabled: this.changedBool,
@@ -36353,11 +36384,14 @@ class RateElem extends CompBaseComm {
         super();
         this.createShadow();
         super.createPropsObs();
+        this.fillWrap(this.propsProxy);
     }
     static get observedAttributes() {
-        return [...optRate.map((k) => k.attr), 'options', 'dir'];
+        return [...optRate.map((k) => k.attr), 'options'];
     }
     attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
         if (name === 'value') {
             this.ins && newVal && this.ins.setVals(newVal);
         }
@@ -36365,129 +36399,54 @@ class RateElem extends CompBaseComm {
             super.updateProxy(name, newVal, optRate);
         }
     }
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
+    }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
-        this.ins = new Rate(this.wrapEl);
-        setTimeout(() => {
-            this.propsObs.on('completed', (data) => {
-                this.ins.update(this.properties);
-                this.listen({ name: 'updated', params: [this.properties] });
-            });
-        }, 500);
+        requestIdleCallback(() => !this.ins && (this.ins = new Rate(this.wrapEl)));
     }
 }
 
-class CustomElem extends HTMLElement {
-    shadowEl;
-    slotEl;
-    wrapEl;
-    ins;
-    properties;
-    propsObs;
-    propsProxy;
-    connected;
-    reset;
-    clear;
-    timestamp;
-    plans;
-    constructor() {
-        super();
-        this[ax.compSign] = true;
-        this.plans = {};
-        this.timestamp = Date.now();
-        this.reset = () => {
-            this.ins && this.ins.reset();
-        };
-        this.clear = () => {
-            this.ins && this.ins.clear();
-        };
-        this.on('connected', () => {
-            this.setAttribute(ax.compSign, '');
-        });
-    }
-    createPropsObs() {
-        this.properties = {};
-        this.propsObs = new Observe(this.properties);
-        this.propsProxy = this.propsObs.proxy;
-        this.propsObs.on('completed', () => {
-            this.ins && this.ins.update(this.properties);
-        });
-    }
-    updateProxy(name, newVal, map) {
-        let value;
-        if (newVal === null) {
-            this.propsProxy[name] = this.ins.rawOpts[name];
-        }
-        else {
-            if (name === 'options') {
-                value = strToJson(newVal);
-            }
-            else {
-                value = attrJoinVal(name, newVal, map);
-            }
-            deepMerge(this.propsProxy, value, {});
-        }
-    }
-    listen({ name, params = [], cb } = {}) {
-        name && this.plans.hasOwnProperty(name) ? this.emit(name, ...params) : null;
-        if (name && this.propsProxy[`on-${name.toLowerCase()}`]) {
-            let fn = new Function('"use strict";return' + this.propsProxy[`on-${name.toLowerCase()}`])();
-            fn && fn.call(this, ...params);
-        }
-        cb && cb.call(this, ...params);
-    }
-    on(type, handler) {
-        plan.add(type, this, handler);
-        return this;
-    }
-    emit(type, ...params) {
-        plan.do(type, this, ...params);
-        return this;
-    }
-    off(type, handler) {
-        plan.remove(type, this, handler);
-        return this;
-    }
-}
-
-class TreeElem extends CustomElem {
+class TreeElem extends CompBaseComm {
     name;
     value;
     constructor() {
         super();
         this.createShadow();
         super.createPropsObs();
+        this.fillWrap(this.propsProxy);
     }
     static get observedAttributes() {
         return [...optTree.map((k) => k.attr), 'options'];
     }
     attributeChangedCallback(name, oldVal, newVal) {
-        super.updateProxy(name, newVal, optTree);
+        if (!this.canListen)
+            return;
         if (name === 'name') {
             this.name = newVal;
         }
+        else {
+            super.updateProxy(name, newVal, optTree);
+        }
     }
-    connectedCallback() {
-        this.render();
-        this.connected = true;
-    }
-    createShadow() {
-        this.shadowEl = this.attachShadow({ mode: "open" });
-        this.slotEl = createEl('slot');
-        this.shadowEl.appendChild(this.slotEl);
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
     }
     render() {
-        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.innerHTML);
-        this.innerHTML = '';
+        this.insertSource();
         this.appendChild(this.wrapEl);
-        this.ins = new Tree(this.wrapEl, {
-            onOutput: (data) => {
-                this.value = data.value;
-            }
+        requestIdleCallback(() => {
+            !this.ins && (this.ins = new Tree(this.wrapEl, {
+                onInitiated: function () {
+                    this.inputEl && this.inputEl.setAttribute(ax.embedSign, '');
+                },
+                onOutput: (data) => {
+                    this.value = data.value;
+                }
+            }));
         });
-        this.ins.inputEl.setAttribute(ax.embedSign, '');
     }
 }
 
@@ -36496,11 +36455,14 @@ class AccordionElem extends CompBaseComm {
         super();
         this.createShadow();
         super.createPropsObs();
+        this.fillWrap(this.propsProxy);
     }
     static get observedAttributes() {
         return [...optAccordion.map((k) => k.attr), 'options'];
     }
     attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
         if (name === 'value') {
             this.ins && newVal && this.ins.setVals(newVal);
         }
@@ -36508,17 +36470,13 @@ class AccordionElem extends CompBaseComm {
             super.updateProxy(name, newVal, optAccordion);
         }
     }
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
+    }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
-        this.ins = new Accordion(this.wrapEl);
-        setTimeout(() => {
-            this.propsObs.on('completed', (data) => {
-                this.ins.update(this.properties);
-                this.listen({ name: 'updated', params: [this.properties] });
-            });
-        }, 500);
+        requestIdleCallback(() => !this.ins && (this.ins = new Accordion(this.wrapEl)));
     }
 }
 
@@ -36568,6 +36526,7 @@ class EditorElem extends CompBaseCommFieldMixin {
         for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optEditor);
         this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
+        this.canListenkeys = [...EditorElem.custAttrs, ...EditorElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'readonly'].includes(k));
     }
     newIns() {
         let params = Object.assign(this.modsOpts['module'], {
@@ -36620,12 +36579,8 @@ class EditorElem extends CompBaseCommFieldMixin {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', {}, this.rawHtml);
         this.appendChild(this.wrapEl);
-        this.propsObs.on('completed', (data) => {
-            let keyArr = [...EditorElem.custAttrs, ...EditorElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'readonly'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
-            intArr.length && (this.connCount <= 1 ? this.newIns() : this.ins.update(this.modsOpts['module']));
-        });
+        requestIdleCallback(() => !this.ins && this.newIns());
     }
 }
 
@@ -36636,7 +36591,7 @@ class SelectElem extends CompBaseCommFieldMixin {
         this.type = 'select-comp';
         this.getRawData();
     }
-    static custAttrs = ['name', 'value', 'field', 'type', 'exclude', 'min', 'max', 'span', 'content', 'cont-type', 'cont-Data', 'ajax', 'size', 'max-height', 'search', 'tools'];
+    static custAttrs = ['name', 'value', 'field', 'type', 'exclude', 'min', 'max', 'span', 'content', 'cont-type', 'cont-Data', 'ajax', 'size', 'max-height', 'search', 'tools', 'popup'];
     static boolAttrs = ['manual', 'disabled', 'readonly', 'full', 'multiple', 'sliced', 'removable', 'unique', 'collapse', 'status', 'auto-width'];
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
@@ -36672,6 +36627,7 @@ class SelectElem extends CompBaseCommFieldMixin {
             this.saveModsOpts(k, optSelect);
         this.setFieldProps(['name', 'disabled']);
         this.value = '';
+        this.canListenkeys = [...SelectElem.custAttrs, ...SelectElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k));
     }
     newIns() {
         let params = Object.assign(this.modsOpts['module'], {
@@ -36709,12 +36665,8 @@ class SelectElem extends CompBaseCommFieldMixin {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', {}, this.rawHtml);
         this.appendChild(this.wrapEl);
-        this.propsObs.on('completed', (data) => {
-            let keyArr = [...SelectElem.custAttrs, ...SelectElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
-            intArr.length && (this.connCount <= 1 ? this.newIns() : this.ins.update(this.modsOpts['module']));
-        });
+        requestIdleCallback(() => !this.ins && this.newIns());
     }
 }
 
@@ -36762,6 +36714,7 @@ class UploadElem extends CompBaseCommFieldMixin {
         for (let k of Object.keys(this.properties).filter(keyCond))
             this.saveModsOpts(k, optUpload);
         this.setFieldProps(['name', 'value', 'disabled']);
+        this.canListenkeys = [...UploadElem.custAttrs, ...UploadElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k));
     }
     newIns() {
         let params = Object.assign(this.modsOpts['module'], {
@@ -36800,12 +36753,8 @@ class UploadElem extends CompBaseCommFieldMixin {
     }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', {}, this.rawHtml);
         this.appendChild(this.wrapEl);
-        this.propsObs.on('completed', (data) => {
-            let keyArr = [...UploadElem.custAttrs, ...UploadElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k)), intArr = getIntArr([keyArr, data.keys.set]);
-            intArr.length && (this.connCount <= 1 ? this.newIns() : this.ins.update(this.modsOpts['module']));
-        });
+        requestIdleCallback(() => !this.ins && this.newIns());
     }
 }
 
@@ -37294,11 +37243,14 @@ class PaginationElem extends CompBaseComm {
         super();
         this.createShadow();
         super.createPropsObs();
+        this.fillWrap(this.propsProxy);
     }
     static get observedAttributes() {
         return [...optPagination.map((k) => k.attr), 'options'];
     }
     attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
         if (name === 'current') {
             this.ins && newVal && this.ins.locate(newVal);
         }
@@ -37306,17 +37258,13 @@ class PaginationElem extends CompBaseComm {
             super.updateProxy(name, newVal, optPagination);
         }
     }
+    fillWrap(data) {
+        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
+    }
     render() {
         this.insertSource();
-        this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         this.appendChild(this.wrapEl);
-        this.ins = new Pagination(this.wrapEl);
-        setTimeout(() => {
-            this.propsObs.on('completed', (data) => {
-                this.ins.update(this.properties);
-                this.listen({ name: 'updated', params: [this.properties] });
-            });
-        }, 500);
+        requestIdleCallback(() => !this.ins && (this.ins = new Pagination(this.wrapEl)));
     }
 }
 
@@ -37462,7 +37410,6 @@ class StepElem extends CompBaseComm {
     };
     changedHeadshow(opt) {
         for (let k of this.content) {
-            (this.propsProxy['head-show']);
             this.propsProxy['head-show'] ? k.wrapEl.insertAdjacentElement('afterbegin', k.headEl) : k.headEl.remove();
         }
     }
@@ -37704,7 +37651,6 @@ class SkeletonElem extends CompBaseComm {
         if (str?.includes(',')) {
             obj = strToJson(str);
             val = ~~obj[getScreenSize()];
-            (getScreenSize());
         }
         else {
             val = ~~str;

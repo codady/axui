@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-11 0:48:1
+ * @since Last modified: 2025-5-13 5:39:41
  * @name AXUI front-end framework.
- * @version 3.1.7
+ * @version 3.1.8
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-05-11 00:37:05
+ * @since Last modified: 2025-05-11 18:34:43
  */
 /*
  *Last modified: 2025-05-04 13:02:10
@@ -15679,8 +15679,7 @@ AX-MENU {
   z-index: 4;
 }
 ._dialog[feature=confirm] ._dialog-mask,
-._dialog[feature=alert] ._dialog-mask,
-._dialog[feature=prompt] ._dialog-mask {
+._dialog[feature=alert] ._dialog-mask {
   opacity: 0;
 }
 ._dialog ._dialog-wrap {
@@ -18816,7 +18815,9 @@ AX-ACCORDION {
 /*Accordion*/
 AX-EDITOR {
   --_editor-r: 0;
+  --_editor-w: 100%;
   display: block;
+  width: var(--_editor-w);
   content-visibility: auto;
   border-radius: var(--_editor-r);
 }
@@ -18824,8 +18825,10 @@ AX-EDITOR {
   --_editor-row: 20;
   --_editor-h: calc(var(--_rem-title) * var(--_editor-row));
   --_editor-bg: var(--_c-stage);
+  width: 100%;
   border-radius: inherit;
   background-color: var(--_editor-bg);
+  box-sizing: border-box;
 }
 ._editor[bordered] {
   border: 1px solid var(--_c-text-bd);
