@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-13 5:39:14
+ * @since Last modified: 2025-5-13 6:52:55
  * @name AXUI front-end framework.
- * @version 3.1.8
+ * @version 3.1.9
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -7704,11 +7704,10 @@ class CompBase extends HTMLElement {
     createPropsObs() {
         this.propsObs = new Observe(this.properties, { deep: true });
         this.propsProxy = this.propsObs.proxy;
-        if (this.ins) {
-            this.propsObs.on('completed', (resp) => {
-                this.completedEvt(resp);
-            });
-        }
+        this.propsObs.on('completed', (resp) => {
+            (this.ins);
+            this.ins && this.completedEvt(resp);
+        });
     }
     updateProxy(name, newVal, map) {
         let value;
@@ -33335,7 +33334,7 @@ class MoreElem extends CompBaseComm {
     render() {
         this.insertSource();
         this.appendChild(this.wrapEl);
-        requestIdleCallback(() => !this.ins && (this.ins = new More(this.wrapEl)));
+        !this.ins && (this.ins = new More(this.wrapEl));
     }
 }
 
@@ -34520,7 +34519,7 @@ class MenuElem extends CompBaseComm {
         this.insertSource();
         this.appendChild(this.wrapEl);
         this.ins = new Menu(this.wrapEl);
-        requestIdleCallback(() => !this.ins && (this.ins = new Menu(this.wrapEl)));
+        !this.ins && (this.ins = new Menu(this.wrapEl));
     }
 }
 
@@ -36265,7 +36264,7 @@ class ProgressElem extends CompBaseComm {
     render() {
         this.insertSource();
         this.appendChild(this.wrapEl);
-        requestIdleCallback(() => !this.ins && (this.ins = new Progress(this.wrapEl)));
+        !this.ins && (this.ins = new Progress(this.wrapEl));
     }
     getVal(val) {
         return val == 0 ? 0 : ~~val === 0 ? val : parseFloat(val);
@@ -36405,7 +36404,7 @@ class RateElem extends CompBaseComm {
     render() {
         this.insertSource();
         this.appendChild(this.wrapEl);
-        requestIdleCallback(() => !this.ins && (this.ins = new Rate(this.wrapEl)));
+        !this.ins && (this.ins = new Rate(this.wrapEl));
     }
 }
 
@@ -36437,16 +36436,14 @@ class TreeElem extends CompBaseComm {
     render() {
         this.insertSource();
         this.appendChild(this.wrapEl);
-        requestIdleCallback(() => {
-            !this.ins && (this.ins = new Tree(this.wrapEl, {
-                onInitiated: function () {
-                    this.inputEl && this.inputEl.setAttribute(ax.embedSign, '');
-                },
-                onOutput: (data) => {
-                    this.value = data.value;
-                }
-            }));
-        });
+        !this.ins && (this.ins = new Tree(this.wrapEl, {
+            onInitiated: function () {
+                this.inputEl && this.inputEl.setAttribute(ax.embedSign, '');
+            },
+            onOutput: (data) => {
+                this.value = data.value;
+            }
+        }));
     }
 }
 
@@ -36476,7 +36473,7 @@ class AccordionElem extends CompBaseComm {
     render() {
         this.insertSource();
         this.appendChild(this.wrapEl);
-        requestIdleCallback(() => !this.ins && (this.ins = new Accordion(this.wrapEl)));
+        !this.ins && (this.ins = new Accordion(this.wrapEl));
     }
 }
 
@@ -37264,7 +37261,7 @@ class PaginationElem extends CompBaseComm {
     render() {
         this.insertSource();
         this.appendChild(this.wrapEl);
-        requestIdleCallback(() => !this.ins && (this.ins = new Pagination(this.wrapEl)));
+        !this.ins && (this.ins = new Pagination(this.wrapEl));
     }
 }
 
