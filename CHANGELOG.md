@@ -3,10 +3,10 @@
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
 ## 2025-05-13更新
-### 发布v3.1.10版本
-* 核心js：https://unpkg.com/@codady/axui@3.1.10/dist/js/ax.js
-* 核心css：https://unpkg.com/@codady/axui@3.1.10/dist/css/ax.css
-* 打包文件：https://unpkg.com/@codady/axui@3.1.10/dist.zip
+### 发布v3.1.11版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.11/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.11/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.11/dist.zip
 ### 更新内容
 * 将函数`regElem`修改为`regComp`，以区别于其他组件命名方式。
 * 对有依赖的组件增加`dependences`静态变量。

@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-14 5:51:16
+ * @since Last modified: 2025-5-14 6:3:0
  * @name AXUI front-end framework.
- * @version 3.1.10
+ * @version 3.1.11
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -53,12 +53,12 @@ const ax = {
     fullGap: axCssVar(`--${axPrefix}g-full`),
     fsRoot: axCssVar(`--${axPrefix}fs-root`),
     images: {
-        spin: axCssVar(`--${axPrefix}spin`),
-        spinDk: axCssVar(`--${axPrefix}spin-dk`),
-        blank: axCssVar(`--${axPrefix}blank`),
-        avatar: axCssVar(`--${axPrefix}avatar`),
-        empty: axCssVar(`--${axPrefix}empty`),
-        none: axCssVar(`--${axPrefix}none`),
+        spin: axCssVar(`--${axPrefix}spin`).split('"')[1],
+        spinDk: axCssVar(`--${axPrefix}spin-dk`).split('"')[1],
+        blank: axCssVar(`--${axPrefix}blank`).split('"')[1],
+        avatar: axCssVar(`--${axPrefix}avatar`).split('"')[1],
+        empty: axCssVar(`--${axPrefix}empty`).split('"')[1],
+        none: axCssVar(`--${axPrefix}none`).split('"')[1],
     },
     curves: {
         linear: axCssVar(`--${axPrefix}bez-linear`),
