@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-13 6:52:55
+ * @since Last modified: 2025-5-14 5:51:16
  * @name AXUI front-end framework.
- * @version 3.1.9
+ * @version 3.1.10
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -259,6 +259,7 @@
             },
         },
         tree: {
+            empty: '没有树形数据',
             label: '新分支',
             title: {
                 folder: '新增枝干分支',
@@ -470,6 +471,7 @@
             }
         },
         select: {
+            empty: '没有可选择的数据',
             placeholder: '请选择...',
             title: {
                 close: '清空'
@@ -7642,7 +7644,7 @@
             }
             this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
         }
-        getRawProps(comp) {
+        getRawProps(comp, opts) {
             for (let k of [...comp.custAttrs, ...comp.lazyAttrs])
                 this.propsRaw[k] = this.getAttribute(k);
             for (let k of comp.boolAttrs)
@@ -7707,8 +7709,7 @@
             this.propsObs = new Observe(this.properties, { deep: true });
             this.propsProxy = this.propsObs.proxy;
             this.propsObs.on('completed', (resp) => {
-                (this.ins);
-                this.ins && this.completedEvt(resp);
+                this.ins && this.ins.initiated && resp.keys.set.length && this.completedEvt(resp);
             });
         }
         updateProxy(name, newVal, map) {
@@ -7719,6 +7720,9 @@
             else {
                 if (name === 'options') {
                     value = strToJson(newVal);
+                }
+                else if (name === 'async') {
+                    value = getAttrBool(newVal);
                 }
                 else {
                     if (!map)
@@ -7773,8 +7777,6 @@
             });
         }
         completedEvt(data) {
-            if (!this.ins || !data.keys.set.length)
-                return;
             this.ins.update(this.properties);
             this.listen({ name: 'updated', params: [this.properties] });
         }
@@ -10311,10 +10313,23 @@
         }
     };
 
-    const regElem = (comp) => {
+    const regComp = (comp) => {
         if (!comp || getDataType(comp) !== 'Class')
             return;
-        window.customElements.define(`ax-${comp.name.replace('Elem', '').toLowerCase()}`, comp);
+        let reg = (comp) => window.customElements.define(`ax-${comp.name.replace('Elem', '').toLowerCase()}`, comp);
+        if (comp.dependencies && comp.dependencies?.length) {
+            for (let i of comp.dependencies) {
+                try {
+                    reg(i.comp);
+                }
+                catch { }
+            }
+        }
+        try {
+            reg(comp);
+        }
+        catch {
+        }
     };
 
     const promiseRaf = (cb) => {
@@ -16012,6 +16027,10 @@
             }
         }
         async renderData(data) {
+            if (!data.length) {
+                this.targetEl.innerHTML = `<div class="${ax.prefix}tree-empty">${this.options.lang.empty}</div>`;
+                return;
+            }
             let outer = createEl('ul');
             let plantTree = async (parent, data) => {
                 let ul = createEl('ul', { class: `${ax.prefix}reset ${ax.prefix}tree-children` });
@@ -26256,7 +26275,7 @@
                                 <ul ${ax.alias}="list" class="${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}avg-3"></ul>
                                 <ul ${ax.alias}="pages"  class="${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}avg-3">
                                     <li><i ${ax.alias}="prev">${this.options.lang.year.prev}</i></li>
-                                    <li><ax-input placeholder="${this.options.lang.year.placeholder}" size="sm" btn="<i class='${ax.prefix}icon-arrow-right'></i>"/></ax-input></li>
+                                    <li><ax-input placeholder="${this.options.lang.year.placeholder}" size="sm" btn="<i class='${ax.prefix}icon-arrow-right'></i>"></ax-input></li>
                                     <li><i ${ax.alias}="next">${this.options.lang.year.next}</i></li>
                                 </ul>
                             </div>
@@ -26267,6 +26286,7 @@
             this.data.year.searchEl = this.data.year.panelEl.querySelector('ax-input');
             this.data.year.inputEl = this.data.year.searchEl.inputEl;
             this.data.year.btnEl = this.data.year.searchEl.btnEl;
+            console.dir(this.data.year.searchEl);
             this.panelsEl.insertAdjacentElement('afterend', this.data.year.panelEl);
             cb && cb();
         }
@@ -30816,6 +30836,9 @@
                 contData: this.options.contData,
                 ajax: this.options.ajax,
                 passive: this.options.disabled,
+                lang: {
+                    empty: this.options.lang.empty,
+                },
                 search: {
                     target: this.options.search.enable ? (this.options.manual ? this.tagsIns.editEl : this.keysEl) : null,
                     trigger: this.options.manual ? 'input' : 'changed',
@@ -33274,8 +33297,9 @@
         static boolAttrs;
         constructor() {
             super();
-            this.createShadow();
             this.modsOpts = {};
+            this.createShadow();
+            this.getRawData();
             this.fillWrap(this.propsProxy);
         }
         static get observedAttributes() {
@@ -33285,12 +33309,12 @@
             this.addEvts(['blur', 'focus', 'input', 'change']);
             this.connectedRender();
         }
-        mapVals(name, newVal, module, opts) {
+        mapVals(name, newVal, module, opts = []) {
             return module.evtsArr.includes(name) ? newVal :
                 module.boolAttrs.includes(name) ? Object.values(attrJoinVal(name, newVal, opts))[0] :
                     isNull(newVal) ? null : Object.values(attrJoinVal(name, newVal, opts))[0];
         }
-        saveModsOpts(name, opts, module = 'module') {
+        saveModsOpts(name, opts = [], module = 'module') {
             if (!name || !module)
                 return;
             let tmp = this.propsProxy[name], item = opts.find((k) => k.attr === name);
@@ -33304,12 +33328,37 @@
                 this.modsOpts[module][item.prop] = tmp;
             }
         }
+        getRawProps(comp, opts = []) {
+            for (let k of [...comp.custAttrs, ...comp.lazyAttrs, ...comp.boolAttrs, ...comp.evtsArr]) {
+                this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), comp, opts);
+            }
+        }
+        filterModsOpts(opts = []) {
+            for (let k of Object.keys(this.properties).filter(keyCond))
+                this.saveModsOpts(k, opts);
+        }
+        getListenKeys(comp, exclude = []) {
+            this.canListenkeys = [...comp.custAttrs, ...comp.boolAttrs].filter((k) => !exclude.includes(k));
+        }
         fillWrap(data) {
             this.wrapEl = createEl('div', {}, this.rawHtml);
         }
+        updateProxyOpts(comp, opts = [], name, newVal, oldVal) {
+            this.propsProxy[name] = name === 'async' ? getAttrBool(newVal) : this.mapVals(name, newVal, comp, opts);
+            !comp.evtsArr.includes(name) && this.saveModsOpts(name, opts);
+            this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+        }
+        render() {
+            this.insertSource();
+            this.appendChild(this.wrapEl);
+            this.propsProxy.async ? requestIdleCallback(() => this.createIns()) : this.createIns();
+        }
+        getRawPropsOpts(comp, opts) {
+            this.getRawProps(comp, opts);
+            this.getProxyProps();
+            this.filterModsOpts(opts);
+        }
         completedEvt(data) {
-            if (!this.ins || !data.keys.set.length)
-                return;
             let intArr = getIntArr([this.canListenkeys, data.keys.set]);
             intArr.length && this.ins.update(this.modsOpts['module']);
         }
@@ -33323,7 +33372,7 @@
             this.fillWrap(this.propsProxy);
         }
         static get observedAttributes() {
-            return [...optMore.map((k) => k.attr), 'options'];
+            return [...optMore.map((k) => k.attr), 'options', 'async'];
         }
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
@@ -33333,10 +33382,15 @@
         fillWrap(data) {
             this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         }
+        createIns() {
+            if (this.ins)
+                return;
+            this.ins = new More(this.wrapEl);
+        }
         render() {
             this.insertSource();
             this.appendChild(this.wrapEl);
-            !this.ins && (this.ins = new More(this.wrapEl));
+            this.propsProxy.async ? requestIdleCallback(() => this.createIns()) : this.createIns();
         }
     }
 
@@ -33601,6 +33655,47 @@
         }
     }
 
+    class BadgeElem extends CompBaseComm {
+        constructor() {
+            super();
+            this.getRawData();
+            this.fillWrap(this.propsProxy);
+        }
+        static custAttrs = ['theme', 'type', 'shape', ...this.baseAttrs];
+        static boolAttrs = ['glassy'];
+        static get observedAttributes() {
+            return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
+        }
+        attributeChangedCallback(name, oldVal, newVal) {
+            if (!this.canListen)
+                return;
+            this.savePropsToListen(name, oldVal, newVal, BadgeElem);
+        }
+        getRawData() {
+            this.getRawProps(BadgeElem);
+            this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
+            this.getProxyProps();
+        }
+        fillWrap(data) {
+            this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, data.label);
+        }
+        render() {
+            this.insertSource();
+            this.appendChild(this.wrapEl);
+        }
+        changedMaps = {
+            label: this.changedLabel,
+        };
+        changedLabel(opt) {
+            if (opt.newVal === null) {
+                this.wrapEl.innerHTML = '';
+            }
+            else {
+                this.wrapEl.innerHTML = opt.newVal;
+            }
+        }
+    }
+
     class BtnElem extends CompBaseComm {
         labelEl;
         iconEl;
@@ -33616,6 +33711,7 @@
             this.getRawData();
             this.fillWrap(this.propsProxy);
         }
+        static dependencies = [{ tag: 'ax-badge', comp: BadgeElem }];
         static custAttrs = ['type', 'theme', 'href', 'tab', 'target', 'rel', 'download', 'shape', 'size', 'width', 'check', 'icon', 'tail', 'disk', 'cube', 'image', 'tips', 'badge', 'mean', ...this.baseAttrs];
         static boolAttrs = ['disabled', 'shaded', 'grad'];
         static get observedAttributes() {
@@ -33896,6 +33992,7 @@
             this.getRawData();
             this.fillWrap(this.propsProxy);
         }
+        static dependencies = [{ tag: 'ax-badge', comp: BadgeElem }];
         static custAttrs = ['type', 'theme', 'tips', 'size', 'src', 'shape', 'badge', 'href', 'target', 'rel', ...this.baseAttrs];
         static boolAttrs = ['disabled'];
         static get observedAttributes() {
@@ -34499,7 +34596,7 @@
             this.fillWrap(this.propsProxy);
         }
         static get observedAttributes() {
-            return [...optMenu$1.map((k) => k.attr), 'options'];
+            return [...optMenu$1.map((k) => k.attr), 'options', 'async'];
         }
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
@@ -34517,11 +34614,15 @@
         fillWrap(data) {
             this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         }
+        createIns() {
+            if (this.ins)
+                return;
+            this.ins = new Menu(this.wrapEl);
+        }
         render() {
             this.insertSource();
             this.appendChild(this.wrapEl);
-            this.ins = new Menu(this.wrapEl);
-            !this.ins && (this.ins = new Menu(this.wrapEl));
+            this.propsProxy.async ? requestIdleCallback(() => this.createIns()) : this.createIns();
         }
     }
 
@@ -35187,6 +35288,7 @@
                 }
             });
         }
+        static dependencies = [{ tag: 'ax-radio', comp: RadioElem }];
         static custAttrs = ['size', 'name', 'type', 'layout', 'cols', 'checked', 'disable', 'content', 'wrap-classes', 'item-classes', 'input-classes', 'on-checked', ...this.evtsArr];
         static boolAttrs = ['disabled'];
         static get observedAttributes() {
@@ -35356,6 +35458,7 @@
                 this.switch.value == '1' || this.switch.checked ? this.checkedAll() : this.clear();
             };
         }
+        static dependencies = [{ tag: 'ax-checkbox', comp: CheckboxElem }];
         static custAttrs = [
             'size', 'name', 'type', 'layout', 'cols', 'checked', 'disable', 'content', 'switch', 'wrap-classes', 'item-classes', 'input-classes', 'on-checkedall', ...this.evtsArr
         ];
@@ -35656,48 +35759,23 @@
         constructor() {
             super();
             this.type = 'range-comp';
-            this.getRawData();
         }
         static custAttrs = ['name', 'step', 'max', 'min', 'axis', 'size', 'classes', 'separator', 'hyphen', 'fence', 'button', 'ruler', 'result'];
-        static boolAttrs = ['disabled', 'full', 'limit-show', 'tip-show', 'multiple', 'locked', 'rtl'];
+        static boolAttrs = ['async', 'disabled', 'full', 'limit-show', 'tip-show', 'multiple', 'locked', 'rtl'];
         
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
-            this.propsProxy[name] = this.mapVals(name, newVal, RangeElem, optRange);
-            !RangeElem.evtsArr.includes(name) && this.saveModsOpts(name, optRange);
-            if (name === 'name') {
-                let tmp = newVal || '';
-                this.ins && (this.ins.inputEl.name = tmp);
-                this.name = tmp;
-            }
-            else if (name === 'value') {
-                this.ins && this.ins.setVals(newVal);
-                this.value = this.ins ? this.ins.output.value : newVal;
-            }
-            else if (name === 'disabled') {
-                this.disabled = this.propsProxy[name];
-                if (this.ins) {
-                    this.disabled ? this.ins.disable() : this.ins.enable();
-                }
-            }
-            else if (name === 'size') {
-                if (this.ins) {
-                    newVal ? this.ins.targetEl.setAttribute('size', newVal) : this.ins.targetEl.removeAttribute('size');
-                }
-            }
+            this.updateProxyOpts(RangeElem, optRange, name, newVal, oldVal);
         }
         getRawData() {
-            for (let k of [...RangeElem.custAttrs, ...RangeElem.lazyAttrs, ...RangeElem.boolAttrs, ...RangeElem.evtsArr]) {
-                this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), RangeElem, optRange);
-            }
-            this.getProxyProps();
-            for (let k of Object.keys(this.properties).filter(keyCond))
-                this.saveModsOpts(k, optRange);
+            this.getRawPropsOpts(RangeElem, optRange);
             this.setFieldProps(['name', 'value', 'disabled']);
-            this.canListenkeys = [...RangeElem.custAttrs, ...RangeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k));
+            this.getListenKeys(RangeElem, ['name', 'disabled', 'value', 'size']);
         }
-        newIns() {
+        createIns() {
+            if (this.ins)
+                return;
             let params = Object.assign({
                 onSet: (data) => {
                     this.modsOpts['module'].value = this.propsProxy.value = this.value = data.value;
@@ -35741,10 +35819,31 @@
                 }
             }
         }
-        render() {
-            this.insertSource();
-            this.appendChild(this.wrapEl);
-            requestIdleCallback(() => !this.ins && this.newIns());
+        changedMaps = {
+            size: this.changedSize,
+            disabled: this.changedDisabled,
+            name: this.changedName,
+            value: this.changedValue,
+        };
+        changedName(opt) {
+            let tmp = opt.newVal || '';
+            this.ins && (this.ins.inputEl.name = tmp);
+            this.name = tmp;
+        }
+        changedValue(opt) {
+            this.ins && this.ins.setVals(opt.newVal);
+            this.value = this.ins ? this.ins.output.value : opt.newVal;
+        }
+        changedDisabled(opt) {
+            this.disabled = this.propsProxy[opt.name];
+            if (this.ins) {
+                this.disabled ? this.ins.disable() : this.ins.enable();
+            }
+        }
+        changedSize(opt) {
+            if (this.ins) {
+                opt.newVal ? this.ins.targetEl.setAttribute('size', opt.newVal) : this.ins.targetEl.removeAttribute('size');
+            }
         }
     }
 
@@ -35764,6 +35863,7 @@
             this.getRawData();
             this.fillWrap(this.propsProxy);
         }
+        static dependencies = [{ tag: 'ax-badge', comp: BadgeElem }];
         static custAttrs = ['unit', 'tips', 'icon', 'disk', 'cube', 'image', 'badge', 'dir', ...this.baseAttrs];
         static boolAttrs = ['inverted', 'disabled'];
         static get observedAttributes() {
@@ -35912,6 +36012,7 @@
             this.getRawData();
             this.fillWrap(this.propsProxy);
         }
+        static dependencies = [{ tag: 'ax-badge', comp: BadgeElem }];
         static custAttrs = ['tips', 'type', 'badge', 'dir', 'bg', 'href', 'target', 'rel', 'download', ...this.baseAttrs];
         static boolAttrs = ['disabled'];
         static get observedAttributes() {
@@ -36060,47 +36161,6 @@
         }
     }
 
-    class BadgeElem extends CompBaseComm {
-        constructor() {
-            super();
-            this.getRawData();
-            this.fillWrap(this.propsProxy);
-        }
-        static custAttrs = ['theme', 'type', 'shape', ...this.baseAttrs];
-        static boolAttrs = ['glassy'];
-        static get observedAttributes() {
-            return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
-        }
-        attributeChangedCallback(name, oldVal, newVal) {
-            if (!this.canListen)
-                return;
-            this.savePropsToListen(name, oldVal, newVal, BadgeElem);
-        }
-        getRawData() {
-            this.getRawProps(BadgeElem);
-            this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
-            this.getProxyProps();
-        }
-        fillWrap(data) {
-            this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, data.label);
-        }
-        render() {
-            this.insertSource();
-            this.appendChild(this.wrapEl);
-        }
-        changedMaps = {
-            label: this.changedLabel,
-        };
-        changedLabel(opt) {
-            if (opt.newVal === null) {
-                this.wrapEl.innerHTML = '';
-            }
-            else {
-                this.wrapEl.innerHTML = opt.newVal;
-            }
-        }
-    }
-
     class DividerElem extends CompBaseComm {
         startEl;
         endEl;
@@ -36240,13 +36300,13 @@
             this.fillWrap(this.propsProxy);
         }
         static get observedAttributes() {
-            return [...optProgress.map((k) => k.attr), 'options'];
+            return [...optProgress.map((k) => k.attr), 'options', 'async'];
         }
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
             if (name === 'value') {
-                if (!this.connected)
+                if (!this.connected || !this.ins)
                     return;
                 let duration = this.getAttribute('duration'), value = this.getVal(newVal);
                 if (duration == 0) {
@@ -36263,10 +36323,15 @@
         fillWrap(data) {
             this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         }
+        createIns() {
+            if (this.ins)
+                return;
+            this.ins = new Progress(this.wrapEl);
+        }
         render() {
             this.insertSource();
             this.appendChild(this.wrapEl);
-            !this.ins && (this.ins = new Progress(this.wrapEl));
+            this.propsProxy.async ? requestIdleCallback(() => this.createIns()) : this.createIns();
         }
         getVal(val) {
             return val == 0 ? 0 : ~~val === 0 ? val : parseFloat(val);
@@ -36283,33 +36348,33 @@
         constructor() {
             super();
             this.type = 'datetime-comp';
-            this.getRawData();
             this.select = () => this.ins.inputEl.select();
         }
+        static dependencies = [
+            { tag: 'ax-input', comp: InputElem },
+            { tag: 'ax-btn', comp: BtnElem },
+            { tag: 'ax-textarea', comp: TextareaElem },
+            { tag: 'ax-checkbox', comp: CheckboxElem }
+        ];
         static custAttrs = ['name', 'value', 'size', 'format', 'classes', 'mode', 'feature', 'display', 'placeholder', 'label', 'tools',
             'max-selection', 'min-date', 'max-date', 'datespan', 'timespan', 'rows', 'cols', 'week-start', 'separator', 'btn-sel', 'pos-sel', 'input-sel', 'child-sel', 'lunar', 'events', 'menu', 'bubble', 'footer'];
-        static boolAttrs = ['disabled', 'to-drawer', 'full', 'multiline', 'now-hide', 'now-show', 'clear-show', 'close-show', 'cancel-show', 'confirm-hide', 'auto-fill', 'manual', 'auto-correct', 'required', 'fill-now', 'rtl'];
+        static boolAttrs = ['async', 'disabled', 'to-drawer', 'full', 'multiline', 'now-hide', 'now-show', 'clear-show', 'close-show', 'cancel-show', 'confirm-hide', 'auto-fill', 'manual', 'auto-correct', 'required', 'fill-now', 'rtl'];
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
-            this.propsProxy[name] = this.mapVals(name, newVal, DatetimeElem, optDatetime);
-            !DatetimeElem.evtsArr.includes(name) && this.saveModsOpts(name, optDatetime);
-            this.changedMaps[name] && this.changedMaps[name].call(this, { name, newVal, oldVal, proxy: this.propsProxy });
+            this.updateProxyOpts(DatetimeElem, optDatetime, name, newVal, oldVal);
         }
         getRawData() {
-            for (let k of [...DatetimeElem.custAttrs, ...DatetimeElem.lazyAttrs, ...DatetimeElem.boolAttrs, ...DatetimeElem.evtsArr]) {
-                this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), DatetimeElem, optDatetime);
-            }
-            this.getProxyProps();
-            for (let k of Object.keys(this.properties).filter(keyCond))
-                this.saveModsOpts(k, optDatetime);
+            this.getRawPropsOpts(DatetimeElem, optDatetime);
             this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
-            this.canListenkeys = [...DatetimeElem.custAttrs, ...DatetimeElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k));
+            this.getListenKeys(DatetimeElem, ['name', 'disabled', 'value', 'size']);
         }
         fillWrap(data) {
             this.wrapEl = createEl('div', { class: `${ax.prefix}datetime-wrap` }, this.rawHtml);
         }
-        newIns() {
+        createIns() {
+            if (this.ins)
+                return;
             let params = Object.assign(this.modsOpts['module'], {
                 onOutput: (data) => {
                     this.modsOpts['module'].value = this.propsProxy.value = this.value = data.value;
@@ -36344,18 +36409,13 @@
                 this.dispatchEvent(this.events['blur'].event);
             }, false);
         }
-        render() {
-            this.insertSource();
-            this.appendChild(this.wrapEl);
-            requestIdleCallback(() => !this.ins && this.newIns());
-        }
         changedMaps = {
-            disabled: this.changedBool,
+            disabled: this.changedDisabled,
             size: this.changedSize,
             name: this.changedName,
             value: this.changedValue,
         };
-        changedBool(opt) {
+        changedDisabled(opt) {
             this.disabled = this.propsProxy[opt.name];
             if (this.ins) {
                 this.disabled ? this.ins.disable() : this.ins.enable();
@@ -36388,7 +36448,7 @@
             this.fillWrap(this.propsProxy);
         }
         static get observedAttributes() {
-            return [...optRate.map((k) => k.attr), 'options'];
+            return [...optRate.map((k) => k.attr), 'options', 'async'];
         }
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
@@ -36403,10 +36463,15 @@
         fillWrap(data) {
             this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         }
+        createIns() {
+            if (this.ins)
+                return;
+            this.ins = new Rate(this.wrapEl);
+        }
         render() {
             this.insertSource();
             this.appendChild(this.wrapEl);
-            !this.ins && (this.ins = new Rate(this.wrapEl));
+            this.propsProxy.async ? requestIdleCallback(() => this.createIns()) : this.createIns();
         }
     }
 
@@ -36420,7 +36485,7 @@
             this.fillWrap(this.propsProxy);
         }
         static get observedAttributes() {
-            return [...optTree.map((k) => k.attr), 'options'];
+            return [...optTree.map((k) => k.attr), 'options', 'async'];
         }
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
@@ -36432,20 +36497,25 @@
                 super.updateProxy(name, newVal, optTree);
             }
         }
-        fillWrap(data) {
-            this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
-        }
-        render() {
-            this.insertSource();
-            this.appendChild(this.wrapEl);
-            !this.ins && (this.ins = new Tree(this.wrapEl, {
+        createIns() {
+            if (this.ins)
+                return;
+            this.ins = this.ins = new Tree(this.wrapEl, {
                 onInitiated: function () {
                     this.inputEl && this.inputEl.setAttribute(ax.embedSign, '');
                 },
                 onOutput: (data) => {
                     this.value = data.value;
                 }
-            }));
+            });
+        }
+        fillWrap(data) {
+            this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
+        }
+        render() {
+            this.insertSource();
+            this.appendChild(this.wrapEl);
+            this.propsProxy.async ? requestIdleCallback(() => this.createIns()) : this.createIns();
         }
     }
 
@@ -36457,7 +36527,7 @@
             this.fillWrap(this.propsProxy);
         }
         static get observedAttributes() {
-            return [...optAccordion.map((k) => k.attr), 'options'];
+            return [...optAccordion.map((k) => k.attr), 'options', 'async'];
         }
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
@@ -36472,10 +36542,15 @@
         fillWrap(data) {
             this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         }
+        createIns() {
+            if (this.ins)
+                return;
+            this.ins = new Accordion(this.wrapEl);
+        }
         render() {
             this.insertSource();
             this.appendChild(this.wrapEl);
-            !this.ins && (this.ins = new Accordion(this.wrapEl));
+            this.propsProxy.async ? requestIdleCallback(() => this.createIns()) : this.createIns();
         }
     }
 
@@ -36485,49 +36560,25 @@
         constructor() {
             super();
             this.type = 'editor-comp';
-            this.getRawData();
             this.select = () => this.ins.inputEl.select();
         }
-        static custAttrs = ['name', 'value', 'delay', 'classes', 'content', 'cont-type', 'cont-data', 'ajax', 'appear', 'header', 'mode', 'min-height', 'max-height', 'feature'];
-        static boolAttrs = ['disabled', 'readonly', 'deferred'];
+        static custAttrs = ['name', 'value', 'delay', 'classes', 'content', 'cont-type',
+            'cont-data', 'ajax', 'appear', 'header', 'mode', 'min-height', 'max-height', 'feature'];
+        static boolAttrs = ['async', 'disabled', 'readonly', 'deferred'];
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
-            this.propsProxy[name] = this.mapVals(name, newVal, EditorElem, optEditor);
-            !EditorElem.evtsArr.includes(name) && this.saveModsOpts(name, optEditor);
-            if (name === 'name') {
-                let tmp = newVal || '';
-                this.ins && (this.ins.inputEl.name = tmp);
-                this.name = tmp;
-            }
-            else if (name === 'value') {
-                this.ins && this.ins.setVals(newVal);
-            }
-            else if (name === 'disabled') {
-                this.disabled = this.propsProxy[name];
-                if (this.ins) {
-                    this.disabled ? this.ins.disable() : this.ins.enable();
-                }
-            }
-            else if (name === 'readonly') {
-                this.readOnly = this.propsProxy[name];
-                if (this.ins) {
-                    this.readOnly ? this.ins.readonly() : this.ins.enable();
-                }
-            }
+            this.updateProxyOpts(EditorElem, optEditor, name, newVal, oldVal);
         }
         getRawData() {
-            for (let k of [...EditorElem.custAttrs, ...EditorElem.lazyAttrs, ...EditorElem.boolAttrs, ...EditorElem.evtsArr]) {
-                this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), EditorElem, optEditor);
-            }
-            this.getProxyProps();
+            this.getRawPropsOpts(EditorElem, optEditor);
             this.propsRaw.value = this.rawHtml || this.propsRaw.value || '';
-            for (let k of Object.keys(this.properties).filter(keyCond))
-                this.saveModsOpts(k, optEditor);
             this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
-            this.canListenkeys = [...EditorElem.custAttrs, ...EditorElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'readonly'].includes(k));
+            this.getListenKeys(EditorElem, ['name', 'disabled', 'value', 'readonly']);
         }
-        newIns() {
+        createIns() {
+            if (this.ins)
+                return;
             let params = Object.assign(this.modsOpts['module'], {
                 onOutput: (data) => {
                     this.modsOpts['module'].value = this.propsProxy.value = this.value = data.value;
@@ -36576,10 +36627,37 @@
                 e.stopPropagation();
             }, false);
         }
-        render() {
-            this.insertSource();
-            this.appendChild(this.wrapEl);
-            requestIdleCallback(() => !this.ins && this.newIns());
+        changedMaps = {
+            readOnly: this.changedReadOnly,
+            disabled: this.changedDisabled,
+            name: this.changedName,
+            value: this.changedValue,
+        };
+        changedBool(opt) {
+            this.disabled = this.propsProxy[opt.name];
+            if (this.ins) {
+                this.disabled ? this.ins.disable() : this.ins.enable();
+            }
+        }
+        changedName(opt) {
+            let tmp = opt.newVal || '';
+            this.ins && (this.ins.inputEl.name = tmp);
+            this.name = tmp;
+        }
+        changedValue(opt) {
+            this.ins && this.ins.setVals(opt.newVal);
+        }
+        changedDisabled(opt) {
+            this.disabled = this.propsProxy[opt.name];
+            if (this.ins) {
+                this.disabled ? this.ins.disable() : this.ins.enable();
+            }
+        }
+        changedReadOnly(opt) {
+            this.readOnly = this.propsProxy[opt.name];
+            if (this.ins) {
+                this.readOnly ? this.ins.readonly() : this.ins.enable();
+            }
         }
     }
 
@@ -36588,47 +36666,23 @@
         constructor() {
             super();
             this.type = 'select-comp';
-            this.getRawData();
         }
         static custAttrs = ['name', 'value', 'field', 'type', 'exclude', 'min', 'max', 'span', 'content', 'cont-type', 'cont-Data', 'ajax', 'size', 'max-height', 'search', 'tools', 'popup'];
-        static boolAttrs = ['manual', 'disabled', 'readonly', 'full', 'multiple', 'sliced', 'removable', 'unique', 'collapse', 'status', 'auto-width'];
+        static boolAttrs = ['async', 'manual', 'disabled', 'readonly', 'full', 'multiple', 'sliced', 'removable', 'unique', 'collapse', 'status', 'auto-width'];
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
-            this.propsProxy[name] = this.mapVals(name, newVal, SelectElem, optSelect);
-            !SelectElem.evtsArr.includes(name) && this.saveModsOpts(name, optSelect);
-            if (name === 'name') {
-                let tmp = newVal || '';
-                this.ins && (this.ins.inputEl.name = tmp);
-                this.name = tmp;
-            }
-            else if (name === 'value') {
-                this.ins && this.ins.select(newVal);
-            }
-            else if (name === 'disabled') {
-                this.disabled = this.propsProxy[name];
-                if (this.ins) {
-                    this.disabled ? this.ins.disable() : this.ins.enable();
-                }
-            }
-            else if (name === 'size') {
-                if (this.ins) {
-                    newVal ? this.ins.targetEl.setAttribute('size', newVal) : this.ins.targetEl.removeAttribute('size');
-                }
-            }
+            this.updateProxyOpts(SelectElem, optSelect, name, newVal, oldVal);
         }
         getRawData() {
-            for (let k of [...SelectElem.custAttrs, ...SelectElem.lazyAttrs, ...SelectElem.boolAttrs, ...SelectElem.evtsArr]) {
-                this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), SelectElem, optSelect);
-            }
-            this.getProxyProps();
-            for (let k of Object.keys(this.properties).filter(keyCond))
-                this.saveModsOpts(k, optSelect);
+            this.getRawPropsOpts(SelectElem, optSelect);
             this.setFieldProps(['name', 'disabled']);
             this.value = '';
-            this.canListenkeys = [...SelectElem.custAttrs, ...SelectElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k));
+            this.getListenKeys(SelectElem, ['name', 'disabled', 'value', 'size']);
         }
-        newIns() {
+        createIns() {
+            if (this.ins)
+                return;
             let params = Object.assign(this.modsOpts['module'], {
                 onOutput: (data) => {
                     this.modsOpts['module'].value = this.propsProxy.value = this.value = data.value;
@@ -36662,10 +36716,30 @@
                 this.dispatchEvent(this.events['blur'].event);
             }, false);
         }
-        render() {
-            this.insertSource();
-            this.appendChild(this.wrapEl);
-            requestIdleCallback(() => !this.ins && this.newIns());
+        changedMaps = {
+            size: this.changedSize,
+            disabled: this.changedDisabled,
+            name: this.changedName,
+            value: this.changedValue,
+        };
+        changedName(opt) {
+            let tmp = opt.newVal || '';
+            this.ins && (this.ins.inputEl.name = tmp);
+            this.name = tmp;
+        }
+        changedValue(opt) {
+            this.ins && this.ins.select(opt.newVal);
+        }
+        changedDisabled(opt) {
+            this.disabled = this.propsProxy[opt.name];
+            if (this.ins) {
+                this.disabled ? this.ins.disable() : this.ins.enable();
+            }
+        }
+        changedSize(opt) {
+            if (this.ins) {
+                opt.newVal ? this.ins.targetEl.setAttribute('size', opt.newVal) : this.ins.targetEl.removeAttribute('size');
+            }
         }
     }
 
@@ -36675,47 +36749,22 @@
         constructor() {
             super();
             this.type = 'upload-comp';
-            this.getRawData();
         }
         static custAttrs = ['name', 'value', 'url', 'content', 'cont-type', 'cont-data', 'ajax', 'limit', 'accept', 'type', 'feature', 'size', 'table', 'classes', 'status', 'choose-btn', 'upload-btn', 'clear-btn', 'cloud'];
-        static boolAttrs = ['disabled', 'readonly', 'multiple', 'manual', 'pastable'];
+        static boolAttrs = ['async', 'disabled', 'readonly', 'multiple', 'manual', 'pastable'];
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
-            this.propsProxy[name] = this.mapVals(name, newVal, UploadElem, optUpload);
-            !UploadElem.evtsArr.includes(name) && this.saveModsOpts(name, optUpload);
-            if (name === 'name') {
-                let tmp = newVal || '';
-                this.ins && (this.ins.inputEl.name = tmp);
-                this.name = tmp;
-            }
-            else if (name === 'value') {
-                this.ins && this.ins.add(newVal);
-                this.value = this.ins ? this.ins.output.value : newVal;
-            }
-            else if (name === 'disabled') {
-                this.disabled = this.propsProxy[name];
-                if (this.ins) {
-                    this.disabled ? this.ins.lock() : this.ins.unlock();
-                }
-            }
-            else if (name === 'size') {
-                if (this.ins) {
-                    newVal ? this.ins.targetEl.setAttribute('size', newVal) : this.ins.targetEl.removeAttribute('size');
-                }
-            }
+            this.updateProxyOpts(UploadElem, optUpload, name, newVal, oldVal);
         }
         getRawData() {
-            for (let k of [...UploadElem.custAttrs, ...UploadElem.lazyAttrs, ...UploadElem.boolAttrs, ...UploadElem.evtsArr]) {
-                this.propsRaw[k] = this.mapVals(k, this.getAttribute(k), UploadElem, optUpload);
-            }
-            this.getProxyProps();
-            for (let k of Object.keys(this.properties).filter(keyCond))
-                this.saveModsOpts(k, optUpload);
+            this.getRawPropsOpts(UploadElem, optUpload);
             this.setFieldProps(['name', 'value', 'disabled']);
-            this.canListenkeys = [...UploadElem.custAttrs, ...UploadElem.boolAttrs].filter((k) => !['name', 'disabled', 'value', 'size'].includes(k));
+            this.getListenKeys(UploadElem, ['name', 'disabled', 'value', 'size']);
         }
-        newIns() {
+        createIns() {
+            if (this.ins)
+                return;
             let params = Object.assign(this.modsOpts['module'], {
                 onOutput: (data) => {
                     this.modsOpts['module'].value = this.propsProxy.value = this.value = data.value;
@@ -36750,10 +36799,31 @@
                 this.dispatchEvent(this.events['blur'].event);
             }, false);
         }
-        render() {
-            this.insertSource();
-            this.appendChild(this.wrapEl);
-            requestIdleCallback(() => !this.ins && this.newIns());
+        changedMaps = {
+            size: this.changedSize,
+            disabled: this.changedDisabled,
+            name: this.changedName,
+            value: this.changedValue,
+        };
+        changedName(opt) {
+            let tmp = opt.newVal || '';
+            this.ins && (this.ins.inputEl.name = tmp);
+            this.name = tmp;
+        }
+        changedValue(opt) {
+            this.ins && this.ins.add(opt.newVal);
+            this.value = this.ins ? this.ins.output.value : opt.newVal;
+        }
+        changedDisabled(opt) {
+            this.disabled = this.propsProxy[opt.name];
+            if (this.ins) {
+                this.disabled ? this.ins.lock() : this.ins.unlock();
+            }
+        }
+        changedSize(opt) {
+            if (this.ins) {
+                opt.newVal ? this.ins.targetEl.setAttribute('size', opt.newVal) : this.ins.targetEl.removeAttribute('size');
+            }
         }
     }
 
@@ -36880,6 +36950,7 @@
             this.getRawData();
             this.fillWrap(this.propsProxy);
         }
+        static dependencies = [{ tag: 'ax-fields', comp: FieldsElem }];
         static custAttrs = ['size', 'label', 'feature', 'shape'];
         static boolAttrs = ['disabled', 'full', 'notable'];
         static get observedAttributes() {
@@ -36968,6 +37039,7 @@
             this.getRawData();
             this.fillWrap(this.propsProxy);
         }
+        static dependencies = [{ tag: 'ax-result', comp: ResultElem }, { tag: 'ax-progress', comp: ProgressElem }];
         static custAttrs = ['theme', 'caption', 'icon', 'disk', 'cube', 'image', 'href', 'target', 'rel', 'feature', 'autoclose', 'size', ...this.baseAttrs];
         static boolAttrs = ['closable', 'square', 'opaque', 'notable', 'hidden', 'result'];
         static get observedAttributes() {
@@ -37245,7 +37317,7 @@
             this.fillWrap(this.propsProxy);
         }
         static get observedAttributes() {
-            return [...optPagination.map((k) => k.attr), 'options'];
+            return [...optPagination.map((k) => k.attr), 'options', 'async'];
         }
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
@@ -37260,10 +37332,15 @@
         fillWrap(data) {
             this.wrapEl = createEl('div', { [ax.alias]: 'slot-host' }, this.rawHtml);
         }
+        createIns() {
+            if (this.ins)
+                return;
+            this.ins = new Pagination(this.wrapEl);
+        }
         render() {
             this.insertSource();
             this.appendChild(this.wrapEl);
-            !this.ins && (this.ins = new Pagination(this.wrapEl));
+            this.propsProxy.async ? requestIdleCallback(() => this.createIns()) : this.createIns();
         }
     }
 
@@ -37659,7 +37736,6 @@
         getSkelStr() {
             if (!this.propsProxy.type) {
                 if (this.propsProxy.content) {
-                    (this.propsProxy.content, this.cols, this.rows, (this.cols || 1) * this.rows);
                     return this.propsProxy.content.repeat((this.cols || 1) * this.rows);
                 }
                 else {
@@ -37952,7 +38028,7 @@
         removeStyles,
         addStyle,
         addStyles,
-        regElem,
+        regComp,
         getComputedVar,
         select2Tree,
         ul2Tree,
@@ -38266,7 +38342,7 @@
         prompt: prompt,
         propsMap: propsMap,
         purifyHtml: purifyHtml,
-        regElem: regElem,
+        regComp: regComp,
         regExps: regExps,
         removeItem: removeItem,
         removeStyle: removeStyle,
@@ -38317,7 +38393,10 @@
 
     const _tmp = { ...tmp };
     for (let k in _tmp) {
-        typeof _tmp[k] === 'function' && _tmp[k]?.name?.endsWith(`Elem`) && _tmp.regElem(_tmp[k]);
+        let comp = _tmp[k];
+        if (typeof comp !== 'function' || !comp?.name?.endsWith(`Elem`))
+            continue;
+        _tmp.regComp(comp);
     }
     document.addEventListener("DOMContentLoaded", () => {
         for (let k of ax.tasks)

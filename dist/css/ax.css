@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-13 6:53:19
+ * @since Last modified: 2025-5-14 5:51:50
  * @name AXUI front-end framework.
- * @version 3.1.9
+ * @version 3.1.10
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-05-11 18:34:43
+ * @since Last modified: 2025-05-13 11:07:39
  */
 /*
  *Last modified: 2025-05-04 13:02:10
@@ -14054,6 +14054,9 @@ AX-TREE {
 ._tree > * ._tree-children {
   display: none;
 }
+._tree ._tree-empty {
+  color: var(--_c-ignore);
+}
 ._tree ._tree-head {
   display: flex;
   justify-content: flex-start;
@@ -19163,6 +19166,9 @@ AX-SELECT > ._select:focus-within {
 ._select-wrap > ._select-list:where(:not([feature=button])) > ._tree-children > li > ._tree-head,
 ._select-wrap > ._select-list:where(:not([feature=button])) > ._tree-children > li li > ._tree-head {
   border-block-start: 1px solid var(--_c-text-bd);
+}
+._select-wrap > ._select-list > ._tree-empty {
+  padding: 0 var(--_rem-root);
 }
 ._select-wrap:where(:not(:has(._select-search))) > ._select-list:where(:not([feature=button])) > ._tree-children > li:first-child > ._tree-head {
   border-block-start-width: 0;
