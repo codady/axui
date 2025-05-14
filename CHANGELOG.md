@@ -2,6 +2,19 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-05-14更新
+### 发布v3.1.12版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.12/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.12/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.12/dist.zip
+### 更新内容
+* 修复`Dialog`模块在可拖拽的时候，位置飘忽不定的问题。
+* 修正`Popup`和`Dialog`气泡窗口的默认宽度，设置为与文本域input的宽度相同。
+* 修正`Datetime`模块，在其填值时，对原生input使用el.value方法。
+* 修改`Drawer`和`Dialog`模块，增加`multiple`参数，默认true。
+* 修复`Datetime`模块在链式赋值时，使用`drawer`窗口无法切换弹出的问题。
+
+
 ## 2025-05-13更新
 ### 发布v3.1.11版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.11/dist/js/ax.js
@@ -11,7 +24,6 @@
 * 将函数`regElem`修改为`regComp`，以区别于其他组件命名方式。
 * 对有依赖的组件增加`dependences`静态变量。
 * 修改`regComp`函数，以支持对组件的依赖优先注册。
-
 
 ## 2025-05-12更新
 ### 发布v3.1.8版本

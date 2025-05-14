@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-14 6:3:0
+ * @since Last modified: 2025-5-14 18:51:21
  * @name AXUI front-end framework.
- * @version 3.1.11
+ * @version 3.1.12
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -41,34 +41,34 @@ const augment = function (arg) {
     }
 };
 
-const axStyles = getComputedStyle(document.documentElement), axCssVar = (prop) => axStyles.getPropertyValue(prop).trim(), axPrefix = axCssVar(`--PREFIX`).trim();
+const _style = getComputedStyle(document.documentElement), _getCssVar = (prop) => _style.getPropertyValue(prop).trim(), _prefix = _getCssVar(`--PREFIX`).trim();
 const ax = {
     frame: 0,
     ajaxStor: [],
-    styles: axStyles,
-    cssVar: axCssVar,
-    prefix: axPrefix,
-    alias: axCssVar(`--${axPrefix}alias`),
-    screen: axCssVar(`--${axPrefix}screen`),
-    fullGap: axCssVar(`--${axPrefix}g-full`),
-    fsRoot: axCssVar(`--${axPrefix}fs-root`),
+    styles: _style,
+    cssVar: _getCssVar,
+    prefix: _prefix,
+    alias: _getCssVar(`--${_prefix}alias`),
+    screen: _getCssVar(`--${_prefix}screen`),
+    fullGap: _getCssVar(`--${_prefix}g-full`),
+    fsRoot: _getCssVar(`--${_prefix}fs-root`),
     images: {
-        spin: axCssVar(`--${axPrefix}spin`).split('"')[1],
-        spinDk: axCssVar(`--${axPrefix}spin-dk`).split('"')[1],
-        blank: axCssVar(`--${axPrefix}blank`).split('"')[1],
-        avatar: axCssVar(`--${axPrefix}avatar`).split('"')[1],
-        empty: axCssVar(`--${axPrefix}empty`).split('"')[1],
-        none: axCssVar(`--${axPrefix}none`).split('"')[1],
+        spin: _getCssVar(`--${_prefix}spin`).split('"')[1],
+        spinDk: _getCssVar(`--${_prefix}spin-dk`).split('"')[1],
+        blank: _getCssVar(`--${_prefix}blank`).split('"')[1],
+        avatar: _getCssVar(`--${_prefix}avatar`).split('"')[1],
+        empty: _getCssVar(`--${_prefix}empty`).split('"')[1],
+        none: _getCssVar(`--${_prefix}none`).split('"')[1],
     },
     curves: {
-        linear: axCssVar(`--${axPrefix}bez-linear`),
-        ease: axCssVar(`--${axPrefix}bez-ease`),
-        easeOut: axCssVar(`--${axPrefix}bez-eo`),
-        easeIn: axCssVar(`--${axPrefix}bez-ei`),
-        easeInOut: axCssVar(`--${axPrefix}bez-eio`),
-        easeOutIn: axCssVar(`--${axPrefix}bez-eoi`)
+        linear: _getCssVar(`--${_prefix}bez-linear`),
+        ease: _getCssVar(`--${_prefix}bez-ease`),
+        easeOut: _getCssVar(`--${_prefix}bez-eo`),
+        easeIn: _getCssVar(`--${_prefix}bez-ei`),
+        easeInOut: _getCssVar(`--${_prefix}bez-eio`),
+        easeOutIn: _getCssVar(`--${_prefix}bez-eoi`)
     },
-    isNarrowScr: ~~(axCssVar(`--${axPrefix}isnarrow`)),
+    isNarrowScr: ~~(_getCssVar(`--${_prefix}isnarrow`)),
     isTouchScr: ('ontouchstart' in document.documentElement),
     dragNode: null,
     compSign: 'comp',
@@ -926,7 +926,7 @@ const getEl = (obj, wrap) => {
 const instance = {
     
     data: [],
-    destroyFun: (item) => {
+    destroyFn: (item) => {
         if (!item) {
             return false;
         }
@@ -935,7 +935,7 @@ const instance = {
             item.destTime = Date.now();
         }
     },
-    initFun: (item) => {
+    initFn: (item) => {
         if (!item) {
             return false;
         }
@@ -987,7 +987,7 @@ const instance = {
         }
         let item = type ? (this.data.find((i) => i.name === name && i.type === type)) : (this.data.find((i) => i.name === name));
         if (item) {
-            this.destroyFun(item);
+            this.destroyFn(item);
         }
         return this;
     },
@@ -995,14 +995,14 @@ const instance = {
     destroyAll: function (type) {
         let items = !type ? this.data : this.data.filter((i) => i.type === type);
         items.forEach((i) => {
-            this.destroyFun(i);
+            this.destroyFn(i);
         });
         return this;
     },
     
     clear: function () {
         this.data.forEach((i) => {
-            this.destroyFun(i);
+            this.destroyFn(i);
         });
         this.data.length = 0;
         return this;
@@ -1014,7 +1014,7 @@ const instance = {
         }
         let item = type ? (this.data.find((i) => i.name === name && i.type === type)) : (this.data.find((i) => i.name === name));
         if (item) {
-            this.initFun(item);
+            this.initFn(item);
         }
         return this;
     },
@@ -1022,7 +1022,7 @@ const instance = {
     initAll: function (type) {
         let items = !type ? this.data : this.data.filter((i) => i.type === type);
         items.forEach((i) => {
-            this.initFun(i);
+            this.initFn(i);
         });
         return this;
     }
@@ -2186,6 +2186,11 @@ const optDrawer = [
         attr: 'size',
         prop: 'size',
         value: 'sm',
+    },
+    {
+        attr: 'multiple',
+        prop: 'multiple',
+        value: true,
     },
     {
         attr: 'parent',
@@ -4679,7 +4684,7 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
     bodyEl;
     headEl;
     maskEl;
-    toggleShow;
+    clickOutHideEvt;
     triggerClose;
     contXhr;
     triggerShow;
@@ -5168,7 +5173,7 @@ class ModBaseListenCacheBubble extends ModBaseListenCache {
         if (this.bubbleType === 'popup') {
             this.positionIns && this.positionIns.destroy();
             this.hoverIns && this.hoverIns.destroy();
-            this.toggleShow && document.removeEventListener('click', this.toggleShow);
+            this.clickOutHideEvt && document.removeEventListener('click', this.clickOutHideEvt);
         }
         if (this.options.trigger === 'click' || this.options.trigger === 'input') {
             this.targetEl.removeEventListener(this.options.trigger, this.triggerShow);
@@ -5213,6 +5218,7 @@ class Drawer extends ModBaseListenCacheBubble {
     wrapSize;
     sequenceShow;
     sequenceHide;
+    sequenceToggle;
     static optMaps = optDrawer;
     constructor(elem, options = {}, initial = true) {
         super();
@@ -5255,6 +5261,11 @@ class Drawer extends ModBaseListenCacheBubble {
         };
         this.triggerClose = () => {
             !this.options.keepShow && this.hide();
+        };
+        this.sequenceToggle = () => {
+            this.mainEl.toggleAttribute('show', true);
+            for (let k of this.getToggleItems())
+                k.ins.hide();
         };
         this.sequenceShow = (el, placement) => {
             let size = (!el.style[placement]) ? this.options.offset : (parseInt(el.style[placement]) * 0.6 + parseInt(this.options.offset) + 'px');
@@ -5320,11 +5331,8 @@ class Drawer extends ModBaseListenCacheBubble {
     handleTools() {
         if (this.options.tools.enable) {
             this.options.tools.children.forEach((k) => {
-                k.wrapEl.querySelector(`[${ax.alias}="icon"]`);
                 if (k.name === 'close') {
-                    k.wrapEl.onclick = () => {
-                        this.hide();
-                    };
+                    k.wrapEl.onclick = () => this.hide();
                 }
                 else if (['widen', 'heighten', 'enlarge'].includes(k.name)) {
                     k.wrapEl.onclick = () => {
@@ -5372,6 +5380,13 @@ class Drawer extends ModBaseListenCacheBubble {
             k.ins.options.placement === this.options.placement &&
             k.ins.lastShowTime < this.lastShowTime);
     }
+    getToggleItems() {
+        return instance.data.filter((k) => k.ins !== this &&
+            k.type === 'drawer' &&
+            !k.ins.destroyed &&
+            k.ins.state === 'shown' &&
+            k.ins.parentEl === this.parentEl);
+    }
     getIngItems() {
         return instance.data.filter((k) => k.ins !== this &&
             k.type === 'drawer' &&
@@ -5418,8 +5433,10 @@ class Drawer extends ModBaseListenCacheBubble {
     }
     
     async show(cb) {
-        if (this.destroyed || this.state !== 'hidden' || this.getIngItems().length > 0 || this.options.asleep)
+        if (this.destroyed || this.state !== 'hidden' || this.options.asleep)
             return;
+        if (this.options.multiple && this.getIngItems().length)
+            return this;
         this.state = 'ing';
         this.options.b4Show && await this.options.b4Show.call(this);
         elState(this.mainEl).isVirtual && this.parentEl.appendChild(this.mainEl);
@@ -5430,10 +5447,15 @@ class Drawer extends ModBaseListenCacheBubble {
             this.wrapEl.style.transitionDuration = `${this.duration}ms`;
             this.targetEl && this.targetEl.classList.add(this.options.actClass);
             this.lastShowTime = Date.now();
-            for (let k of this.getBeforeItems()) {
-                this.sequenceShow(k.ins.wrapEl, this.options.placement);
+            if (this.options.multiple) {
+                for (let k of this.getBeforeItems()) {
+                    this.sequenceShow(k.ins.wrapEl, this.options.placement);
+                }
             }
-            this.mainEl.setAttribute('show', '');
+            else {
+                this.sequenceToggle();
+            }
+            this.mainEl.toggleAttribute('show', true);
             await delay({
                 duration: this.duration,
                 done: () => {
@@ -5446,29 +5468,28 @@ class Drawer extends ModBaseListenCacheBubble {
     }
     
     async hide(cb) {
-        if (this.destroyed || this.state !== 'shown' || this.getIngItems().length > 0) {
+        if (this.destroyed || this.state !== 'shown')
             return this;
-        }
+        if (this.options.multiple && this.getIngItems().length)
+            return this;
         this.state = 'ing';
         if (!this.options.deadShow) {
             this.options.b4Hide && await this.options.b4Hide.call(this);
             super.listen({ name: 'hide', cb });
-            this.targetEl ? this.targetEl.classList.remove(this.options.actClass) : null;
+            this.targetEl && this.targetEl.classList.remove(this.options.actClass);
             this.options.wing.actClass && this.wings.map((k) => { k.classList.remove(this.options.wing.actClass); });
             this.maskEl && (this.maskEl.style.opacity = 0);
             this.wrapEl.style[this.options.placement] = '-' + style(this.wrapEl)[this.sizeProp];
-            this.getBeforeItems().forEach((k) => {
+            for (let k of this.getBeforeItems())
                 this.sequenceHide(k.ins.wrapEl, this.options.placement);
-            });
-            this.mainEl.querySelectorAll('video,audio').forEach((k) => {
+            for (let k of getEls('video,audio', this.mainEl))
                 k.pause();
-            });
             await delay({
                 duration: this.duration,
                 done: () => {
                     this.state = 'hidden';
                     this.mainEl.removeAttribute('show');
-                    this.maskEl ? this.maskEl.removeAttribute("style") : null;
+                    this.maskEl && this.maskEl.removeAttribute("style");
                     this.wrapEl.removeAttribute("style");
                     this.mainEl.remove();
                     super.listen({ name: 'hidden', cb });
@@ -8049,6 +8070,11 @@ const optPopup$1 = [
         value: 'fadeOut',
     },
     {
+        attr: 'multiple',
+        prop: 'multiple',
+        value: true,
+    },
+    {
         attr: 'draggable',
         prop: 'draggable',
         value: true,
@@ -9359,6 +9385,8 @@ class Gesture extends ModBaseListen {
             super.listen({ name: 'finished', params: [e] });
         };
         this.transitionendFn = (e) => {
+            if (e.propertyName !== 'transform')
+                return;
             e.stopPropagation();
             if (this.options.viewport.enable) {
                 this.getSizeDiff(this.nowVals.translate);
@@ -9754,23 +9782,29 @@ class Gesture extends ModBaseListen {
         return Math.abs(val1 - val2) / 3 + 200;
     }
     rebound(val) {
-        let tmp = val || this.nowVals.translate, dur;
+        let tmp = val || this.nowVals.translate, dur, condition = false;
         if (tmp.x < this.viewRange.x[0]) {
             dur = this.getAutoDur(this.viewRange.x[0], tmp.x);
             tmp.x = this.viewRange.x[0];
+            condition = true;
         }
         else if (tmp.x > this.viewRange.x[1]) {
             dur = this.getAutoDur(this.viewRange.x[1], tmp.x);
             tmp.x = this.viewRange.x[1];
+            condition = true;
         }
         if (tmp.y < this.viewRange.y[0]) {
             dur = this.getAutoDur(this.viewRange.y[0], tmp.y);
             tmp.y = this.viewRange.y[0];
+            condition = true;
         }
         else if (tmp.y > this.viewRange.y[1]) {
             dur = this.getAutoDur(this.viewRange.y[1], tmp.y);
             tmp.y = this.viewRange.y[1];
+            condition = true;
         }
+        if (!condition)
+            return;
         this.targetEl.style.transitionDuration = `${this.options.viewport.duration || dur}ms`;
         transformTools.set({
             el: this.targetEl,
@@ -10047,6 +10081,9 @@ class Dialog extends ModBaseListenCacheBubble {
                 translate: {
                     target: this.headEl,
                 },
+                onTranslate: () => {
+                    this.wrapEl.style.animationName = 'none';
+                },
                 onTranslating: (data) => {
                     transformTools.set({
                         el: this.wrapEl,
@@ -10093,6 +10130,15 @@ class Dialog extends ModBaseListenCacheBubble {
             this.maskEl.removeEventListener('click', this.triggerShow);
         }
     }
+    toggleHide() {
+        let other = instance.data.filter((k) => k.ins !== this &&
+            k.type === 'dialog' &&
+            !k.ins.destroyed &&
+            k.ins.state === 'shown' &&
+            k.ins.parentEl === this.parentEl);
+        for (let k of other)
+            k.ins.hide();
+    }
     
     async show(cb) {
         if (this.destroyed || this.state !== 'hidden' || this.options.asleep) {
@@ -10114,8 +10160,9 @@ class Dialog extends ModBaseListenCacheBubble {
                 this.options.duration && (this.wrapEl.style.animationDuration = `${this.options.duration}ms`);
                 this.aniIn && (this.wrapEl.style.animationName = ax.prefix + this.aniIn);
             }
+            !this.options.multiple && this.toggleHide();
             this.lastShowTime = Date.now();
-            this.mainEl.setAttribute('show', '');
+            this.mainEl.toggleAttribute('show', true);
             await delay({
                 duration: this.duration,
                 done: () => {
@@ -10144,19 +10191,21 @@ class Dialog extends ModBaseListenCacheBubble {
             else {
                 this.aniOut && (this.wrapEl.style.animationName = ax.prefix + this.aniOut);
             }
-            this.mainEl.querySelectorAll('video,audio').forEach((k) => {
+            for (let k of getEls('video,audio', this.mainEl))
                 k.pause();
-            });
             await delay({
                 duration: this.duration,
                 done: () => {
                     this.state = 'hidden';
                     this.mainEl.removeAttribute('show');
                     this.maskEl && this.maskEl.removeAttribute("style");
-                    this.wrapEl.removeAttribute("style");
+                    this.wrapEl.style.height = null;
+                    this.wrapEl.style.animationName = null;
                     this.mainEl.remove();
                     super.listen({ name: 'hidden', cb });
-                    this.aniOut === 'slideUp' && (this.wrapEl.style.height = 'auto');
+                    if (this.options.heading && !['fadeIn', 'slideDown'].includes(this.aniIn)) {
+                        this.options.heading && (transformTools.remove({ el: this.wrapEl, prop: 'translate' }));
+                    }
                 }
             });
         }
@@ -11696,7 +11745,7 @@ class Popup extends ModBaseListenCacheBubble {
     cancelEl;
     closeEl;
     triggerShow;
-    toggleShow;
+    clickOutHideEvt;
     content;
     bubbleType;
     aniIn;
@@ -11761,7 +11810,7 @@ class Popup extends ModBaseListenCacheBubble {
                 }
             }
         };
-        this.toggleShow = (e) => {
+        this.clickOutHideEvt = (e) => {
             !contains(e.target, [this.mainEl, this.targetEl, ...this.wings]) &&
                 this.state === 'shown' &&
                 !this.options.keepShow &&
@@ -11979,7 +12028,7 @@ class Popup extends ModBaseListenCacheBubble {
             this.show();
         }
         if (this.options.pageClose && !this.options.multiple) {
-            !this.canTrigger && document.addEventListener('click', this.toggleShow, false);
+            !this.canTrigger && document.addEventListener('click', this.clickOutHideEvt, false);
         }
         this.canTrigger = true;
     }
@@ -11998,7 +12047,7 @@ class Popup extends ModBaseListenCacheBubble {
             this.hoverIns.destroy();
         }
         if (this.options.pageClose && !this.options.multiple && mode === 'all') {
-            document.removeEventListener('click', this.toggleShow, false);
+            document.removeEventListener('click', this.clickOutHideEvt, false);
         }
     }
     
@@ -25720,6 +25769,7 @@ class Datetime extends ModBaseListenCache {
                         size: '',
                         padding: false,
                         tools: true,
+                        multiple: false,
                         footer: { enable: false },
                         wing: { selector: this.options.btnSel },
                         canClick: this.canClick,
@@ -25735,6 +25785,7 @@ class Datetime extends ModBaseListenCache {
                         size: '',
                         padding: false,
                         tools: true,
+                        multiple: false,
                         footer: { enable: false },
                         placement: 'bottom',
                         wing: { selector: this.options.btnSel },
@@ -25961,7 +26012,7 @@ class Datetime extends ModBaseListenCache {
     setValFromTgt(value) {
         value = value || '';
         if ('value' in this.inputEl) {
-            this.inputEl.nodeName === 'TEXTAREA' ? this.inputEl.value = value : this.inputEl.setAttribute('value', value);
+            ['INPUT', 'TEXTAREA'].includes(this.inputEl.nodeName) ? this.inputEl.value = value : this.inputEl.setAttribute('value', value);
         }
         else {
             this.childEl ? this.childEl.innerHTML = value : this.inputEl.innerHTML = value;
@@ -27197,6 +27248,7 @@ class Datetime extends ModBaseListenCache {
         });
     }
     show(cb) {
+        (this.bubbleIns);
         this.bubbleIns && this.bubbleIns.show(() => {
             super.listen({ name: 'shown', cb });
         });
