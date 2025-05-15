@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-14 18:51:59
+ * @since Last modified: 2025-5-15 20:1:16
  * @name AXUI front-end framework.
- * @version 3.1.12
+ * @version 3.1.13
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-05-14 12:38:36
+ * @since Last modified: 2025-05-15 19:35:27
  */
 /*
  *Last modified: 2025-05-14 11:27:51
@@ -11650,7 +11650,7 @@ Last modified: 2025-04-27 09:14:41
 }
 /*Masonry layout*/
 ._masonry {
-  --_masonry-cols: 4;
+  --_masonry-cols: 1;
   display: grid;
   grid-template-columns: repeat(var(--_masonry-cols), 1fr);
   align-items: start;
@@ -12015,6 +12015,7 @@ AX-ALARM {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  vertical-align: middle;
 }
 AX-ALARM [rep=wrap] {
   color: var(--_alarm-c);
@@ -16387,7 +16388,6 @@ AX-TEXTAREA {
   --_area-rows: 5;
   --_area-g-tools: calc((var(--_rem-title) - var(--_rem-list))/2);
   flex-direction: column;
-  width: var(--_area-w);
   box-sizing: border-box;
   vertical-align: middle;
   position: relative;
@@ -17951,7 +17951,7 @@ AX-PROGRESS {
   scale: -1 1;
 }
 /*
-Last modified: 2025-05-11 00:26:46
+Last modified: 2025-05-15 19:35:21
 */
 /*Date and datetime picker*/
 ._datetime {
@@ -18460,6 +18460,10 @@ AX-DATETIME {
   display: inline-flex;
   flex-direction: column;
   vertical-align: middle;
+}
+AX-DATETIME[full] {
+  --_date-w: 100%;
+  display: flex;
 }
 AX-DATETIME ._datetime-wrap,
 AX-DATETIME AX-TEXTAREA {
@@ -20008,10 +20012,14 @@ AX-SEARCH[full] {
 AX-SEARCH:where(:not([full])) {
   width: var(--_search-w);
 }
-AX-SEARCH > AX-FIELDS {
+AX-SEARCH > [rep=wrap] {
+  flex: auto;
+}
+AX-SEARCH AX-FIELDS {
   --_fields-w: 100%;
   --_fields-bd: var(--_search-w-bd);
   --_fields-c-foc: var(--_search-c-foc);
+  display: flex;
 }
 AX-SEARCH [rep=fields] > ._box-tools {
   --_tools-fs: var(--_rem-ignore);
@@ -20019,31 +20027,31 @@ AX-SEARCH [rep=fields] > ._box-tools {
   --_tools-c-hov: var(--_search-c-foc);
   margin: 0 var(--_rem-min);
 }
-AX-SEARCH[notable] > AX-FIELDS {
+AX-SEARCH[notable] AX-FIELDS {
   border-radius: var(--_fields-r);
   box-shadow: 0 0 0 2px var(--_search-c-foc) inset;
   background-color: var(--_c-stage);
 }
-AX-SEARCH[notable] > AX-FIELDS > [rep=wrap] > [rep=label],
-AX-SEARCH[notable] > AX-FIELDS > [rep=wrap] > [rep=unit] {
+AX-SEARCH[notable] AX-FIELDS > [rep=wrap] > [rep=label],
+AX-SEARCH[notable] AX-FIELDS > [rep=wrap] > [rep=unit] {
   background-color: transparent;
   background: transparent;
   border-color: transparent;
 }
-AX-SEARCH[notable] > AX-FIELDS [rep=fields] {
+AX-SEARCH[notable] AX-FIELDS [rep=fields] {
   border-color: var(--_search-c-foc);
   background-color: transparent;
 }
-AX-SEARCH[notable] > AX-FIELDS [rep=fields] > [comp]:where(:not(:first-child)) {
+AX-SEARCH[notable] AX-FIELDS [rep=fields] > [comp]:where(:not(:first-child)) {
   border-inline-start-color: var(--_search-c-foc);
 }
-AX-SEARCH[notable] > AX-FIELDS [rep=fields] > [comp]:where(:not(:first-child)) {
+AX-SEARCH[notable] AX-FIELDS [rep=fields] > [comp]:where(:not(:first-child)) {
   border-inline-start-color: var(--_search-c-foc);
 }
-AX-SEARCH[notable] > AX-FIELDS [rep=fields]:where(:not(:only-child):focus-within) {
+AX-SEARCH[notable] AX-FIELDS [rep=fields]:where(:not(:only-child):focus-within) {
   box-shadow: none;
 }
-AX-SEARCH[notable] > AX-FIELDS [rep=fields]:focus-within + AX-BTN > [rep=wrap] {
+AX-SEARCH[notable] AX-FIELDS [rep=fields]:focus-within + AX-BTN > [rep=wrap] {
   border-inline-start-color: transparent;
 }
 /*Twilight*/
@@ -21754,6 +21762,78 @@ AX-SKELETON[shape=square] {
   ._col:where([class*="_hh-"]) > *:is([class*="_own-"]) {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
+  ._masonry:where(._hh-1) {
+    --_masonry-cols: 1;
+  }
+  ._masonry:where(._hh-2) {
+    --_masonry-cols: 2;
+  }
+  ._masonry:where(._hh-3) {
+    --_masonry-cols: 3;
+  }
+  ._masonry:where(._hh-4) {
+    --_masonry-cols: 4;
+  }
+  ._masonry:where(._hh-5) {
+    --_masonry-cols: 5;
+  }
+  ._masonry:where(._hh-6) {
+    --_masonry-cols: 6;
+  }
+  ._masonry:where(._hh-7) {
+    --_masonry-cols: 7;
+  }
+  ._masonry:where(._hh-8) {
+    --_masonry-cols: 8;
+  }
+  ._masonry:where(._hh-9) {
+    --_masonry-cols: 9;
+  }
+  ._masonry:where(._hh-10) {
+    --_masonry-cols: 10;
+  }
+  ._masonry:where(._hh-11) {
+    --_masonry-cols: 11;
+  }
+  ._masonry:where(._hh-12) {
+    --_masonry-cols: 12;
+  }
+  ._masonry:where(._hh-13) {
+    --_masonry-cols: 13;
+  }
+  ._masonry:where(._hh-14) {
+    --_masonry-cols: 14;
+  }
+  ._masonry:where(._hh-15) {
+    --_masonry-cols: 15;
+  }
+  ._masonry:where(._hh-16) {
+    --_masonry-cols: 16;
+  }
+  ._masonry:where(._hh-17) {
+    --_masonry-cols: 17;
+  }
+  ._masonry:where(._hh-18) {
+    --_masonry-cols: 18;
+  }
+  ._masonry:where(._hh-19) {
+    --_masonry-cols: 19;
+  }
+  ._masonry:where(._hh-20) {
+    --_masonry-cols: 20;
+  }
+  ._masonry:where(._hh-21) {
+    --_masonry-cols: 21;
+  }
+  ._masonry:where(._hh-22) {
+    --_masonry-cols: 22;
+  }
+  ._masonry:where(._hh-23) {
+    --_masonry-cols: 23;
+  }
+  ._masonry:where(._hh-24) {
+    --_masonry-cols: 24;
+  }
 }
 /* Tablet device (xs+sm+md) */
 @media (min-width: 600px) and (max-width: 899px) and (orientation: portrait), (min-width: 900px) and (max-width: 1199px), (min-width: 1200px) and (max-width: 1535px) and (hover: none) {
@@ -22399,6 +22479,78 @@ AX-SKELETON[shape=square] {
   ._col:where([class*="_tb-"]):is([class*="_avg-"]) > *,
   ._col:where([class*="_tb-"]) > *:is([class*="_own-"]) {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._masonry:where(._tb-1) {
+    --_masonry-cols: 1;
+  }
+  ._masonry:where(._tb-2) {
+    --_masonry-cols: 2;
+  }
+  ._masonry:where(._tb-3) {
+    --_masonry-cols: 3;
+  }
+  ._masonry:where(._tb-4) {
+    --_masonry-cols: 4;
+  }
+  ._masonry:where(._tb-5) {
+    --_masonry-cols: 5;
+  }
+  ._masonry:where(._tb-6) {
+    --_masonry-cols: 6;
+  }
+  ._masonry:where(._tb-7) {
+    --_masonry-cols: 7;
+  }
+  ._masonry:where(._tb-8) {
+    --_masonry-cols: 8;
+  }
+  ._masonry:where(._tb-9) {
+    --_masonry-cols: 9;
+  }
+  ._masonry:where(._tb-10) {
+    --_masonry-cols: 10;
+  }
+  ._masonry:where(._tb-11) {
+    --_masonry-cols: 11;
+  }
+  ._masonry:where(._tb-12) {
+    --_masonry-cols: 12;
+  }
+  ._masonry:where(._tb-13) {
+    --_masonry-cols: 13;
+  }
+  ._masonry:where(._tb-14) {
+    --_masonry-cols: 14;
+  }
+  ._masonry:where(._tb-15) {
+    --_masonry-cols: 15;
+  }
+  ._masonry:where(._tb-16) {
+    --_masonry-cols: 16;
+  }
+  ._masonry:where(._tb-17) {
+    --_masonry-cols: 17;
+  }
+  ._masonry:where(._tb-18) {
+    --_masonry-cols: 18;
+  }
+  ._masonry:where(._tb-19) {
+    --_masonry-cols: 19;
+  }
+  ._masonry:where(._tb-20) {
+    --_masonry-cols: 20;
+  }
+  ._masonry:where(._tb-21) {
+    --_masonry-cols: 21;
+  }
+  ._masonry:where(._tb-22) {
+    --_masonry-cols: 22;
+  }
+  ._masonry:where(._tb-23) {
+    --_masonry-cols: 23;
+  }
+  ._masonry:where(._tb-24) {
+    --_masonry-cols: 24;
   }
 }
 /*Destop device(lg+xl+xxl) */
@@ -23143,11 +23295,86 @@ AX-SKELETON[shape=square] {
   ._col:where([class*="_dt-"]) > *:is([class*="_own-"]) {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
+  ._masonry {
+    --_masonry-cols: 4;
+  }
+  ._masonry:where(._dt-1) {
+    --_masonry-cols: 1;
+  }
+  ._masonry:where(._dt-2) {
+    --_masonry-cols: 2;
+  }
+  ._masonry:where(._dt-3) {
+    --_masonry-cols: 3;
+  }
+  ._masonry:where(._dt-4) {
+    --_masonry-cols: 4;
+  }
+  ._masonry:where(._dt-5) {
+    --_masonry-cols: 5;
+  }
+  ._masonry:where(._dt-6) {
+    --_masonry-cols: 6;
+  }
+  ._masonry:where(._dt-7) {
+    --_masonry-cols: 7;
+  }
+  ._masonry:where(._dt-8) {
+    --_masonry-cols: 8;
+  }
+  ._masonry:where(._dt-9) {
+    --_masonry-cols: 9;
+  }
+  ._masonry:where(._dt-10) {
+    --_masonry-cols: 10;
+  }
+  ._masonry:where(._dt-11) {
+    --_masonry-cols: 11;
+  }
+  ._masonry:where(._dt-12) {
+    --_masonry-cols: 12;
+  }
+  ._masonry:where(._dt-13) {
+    --_masonry-cols: 13;
+  }
+  ._masonry:where(._dt-14) {
+    --_masonry-cols: 14;
+  }
+  ._masonry:where(._dt-15) {
+    --_masonry-cols: 15;
+  }
+  ._masonry:where(._dt-16) {
+    --_masonry-cols: 16;
+  }
+  ._masonry:where(._dt-17) {
+    --_masonry-cols: 17;
+  }
+  ._masonry:where(._dt-18) {
+    --_masonry-cols: 18;
+  }
+  ._masonry:where(._dt-19) {
+    --_masonry-cols: 19;
+  }
+  ._masonry:where(._dt-20) {
+    --_masonry-cols: 20;
+  }
+  ._masonry:where(._dt-21) {
+    --_masonry-cols: 21;
+  }
+  ._masonry:where(._dt-22) {
+    --_masonry-cols: 22;
+  }
+  ._masonry:where(._dt-23) {
+    --_masonry-cols: 23;
+  }
+  ._masonry:where(._dt-24) {
+    --_masonry-cols: 24;
+  }
 }
 /* Phone+iPad rotate+iPad*/
 /* xxs->Phone (<600 | <900) */
 /*
- *Last modified: 2025-05-11 00:30:54
+ *Last modified: 2025-05-15 05:10:02
  */
 @media (max-width: 599px), (min-width: 600px) and (max-width: 899px) and (orientation: landscape) {
   :root {
@@ -24522,6 +24749,81 @@ AX-SKELETON[shape=square] {
   ._col:where([class*="_xs-"]) > *:is([class*="_own-"]) {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
+  ._masonry {
+    --_masonry-cols: 2;
+  }
+  ._masonry:where(._xs-1) {
+    --_masonry-cols: 1;
+  }
+  ._masonry:where(._xs-2) {
+    --_masonry-cols: 2;
+  }
+  ._masonry:where(._xs-3) {
+    --_masonry-cols: 3;
+  }
+  ._masonry:where(._xs-4) {
+    --_masonry-cols: 4;
+  }
+  ._masonry:where(._xs-5) {
+    --_masonry-cols: 5;
+  }
+  ._masonry:where(._xs-6) {
+    --_masonry-cols: 6;
+  }
+  ._masonry:where(._xs-7) {
+    --_masonry-cols: 7;
+  }
+  ._masonry:where(._xs-8) {
+    --_masonry-cols: 8;
+  }
+  ._masonry:where(._xs-9) {
+    --_masonry-cols: 9;
+  }
+  ._masonry:where(._xs-10) {
+    --_masonry-cols: 10;
+  }
+  ._masonry:where(._xs-11) {
+    --_masonry-cols: 11;
+  }
+  ._masonry:where(._xs-12) {
+    --_masonry-cols: 12;
+  }
+  ._masonry:where(._xs-13) {
+    --_masonry-cols: 13;
+  }
+  ._masonry:where(._xs-14) {
+    --_masonry-cols: 14;
+  }
+  ._masonry:where(._xs-15) {
+    --_masonry-cols: 15;
+  }
+  ._masonry:where(._xs-16) {
+    --_masonry-cols: 16;
+  }
+  ._masonry:where(._xs-17) {
+    --_masonry-cols: 17;
+  }
+  ._masonry:where(._xs-18) {
+    --_masonry-cols: 18;
+  }
+  ._masonry:where(._xs-19) {
+    --_masonry-cols: 19;
+  }
+  ._masonry:where(._xs-20) {
+    --_masonry-cols: 20;
+  }
+  ._masonry:where(._xs-21) {
+    --_masonry-cols: 21;
+  }
+  ._masonry:where(._xs-22) {
+    --_masonry-cols: 22;
+  }
+  ._masonry:where(._xs-23) {
+    --_masonry-cols: 23;
+  }
+  ._masonry:where(._xs-24) {
+    --_masonry-cols: 24;
+  }
 }
 /* sm->Tablet & flip */
 @media (min-width: 900px) and (max-width: 1199px) {
@@ -25174,6 +25476,81 @@ AX-SKELETON[shape=square] {
   ._col:where([class*="_sm-"]) > *:is([class*="_own-"]) {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
+  ._masonry {
+    --_masonry-cols: 3;
+  }
+  ._masonry:where(._sm-1) {
+    --_masonry-cols: 1;
+  }
+  ._masonry:where(._sm-2) {
+    --_masonry-cols: 2;
+  }
+  ._masonry:where(._sm-3) {
+    --_masonry-cols: 3;
+  }
+  ._masonry:where(._sm-4) {
+    --_masonry-cols: 4;
+  }
+  ._masonry:where(._sm-5) {
+    --_masonry-cols: 5;
+  }
+  ._masonry:where(._sm-6) {
+    --_masonry-cols: 6;
+  }
+  ._masonry:where(._sm-7) {
+    --_masonry-cols: 7;
+  }
+  ._masonry:where(._sm-8) {
+    --_masonry-cols: 8;
+  }
+  ._masonry:where(._sm-9) {
+    --_masonry-cols: 9;
+  }
+  ._masonry:where(._sm-10) {
+    --_masonry-cols: 10;
+  }
+  ._masonry:where(._sm-11) {
+    --_masonry-cols: 11;
+  }
+  ._masonry:where(._sm-12) {
+    --_masonry-cols: 12;
+  }
+  ._masonry:where(._sm-13) {
+    --_masonry-cols: 13;
+  }
+  ._masonry:where(._sm-14) {
+    --_masonry-cols: 14;
+  }
+  ._masonry:where(._sm-15) {
+    --_masonry-cols: 15;
+  }
+  ._masonry:where(._sm-16) {
+    --_masonry-cols: 16;
+  }
+  ._masonry:where(._sm-17) {
+    --_masonry-cols: 17;
+  }
+  ._masonry:where(._sm-18) {
+    --_masonry-cols: 18;
+  }
+  ._masonry:where(._sm-19) {
+    --_masonry-cols: 19;
+  }
+  ._masonry:where(._sm-20) {
+    --_masonry-cols: 20;
+  }
+  ._masonry:where(._sm-21) {
+    --_masonry-cols: 21;
+  }
+  ._masonry:where(._sm-22) {
+    --_masonry-cols: 22;
+  }
+  ._masonry:where(._sm-23) {
+    --_masonry-cols: 23;
+  }
+  ._masonry:where(._sm-24) {
+    --_masonry-cols: 24;
+  }
 }
 /* md->Tablet flip */
 @media (min-width: 1200px) and (max-width: 1535px) and (hover: none) {
@@ -25825,6 +26202,81 @@ AX-SKELETON[shape=square] {
   ._col:where([class*="_md-"]):is([class*="_avg-"]) > *,
   ._col:where([class*="_md-"]) > *:is([class*="_own-"]) {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._masonry {
+    --_masonry-cols: 3;
+  }
+  ._masonry:where(._md-1) {
+    --_masonry-cols: 1;
+  }
+  ._masonry:where(._md-2) {
+    --_masonry-cols: 2;
+  }
+  ._masonry:where(._md-3) {
+    --_masonry-cols: 3;
+  }
+  ._masonry:where(._md-4) {
+    --_masonry-cols: 4;
+  }
+  ._masonry:where(._md-5) {
+    --_masonry-cols: 5;
+  }
+  ._masonry:where(._md-6) {
+    --_masonry-cols: 6;
+  }
+  ._masonry:where(._md-7) {
+    --_masonry-cols: 7;
+  }
+  ._masonry:where(._md-8) {
+    --_masonry-cols: 8;
+  }
+  ._masonry:where(._md-9) {
+    --_masonry-cols: 9;
+  }
+  ._masonry:where(._md-10) {
+    --_masonry-cols: 10;
+  }
+  ._masonry:where(._md-11) {
+    --_masonry-cols: 11;
+  }
+  ._masonry:where(._md-12) {
+    --_masonry-cols: 12;
+  }
+  ._masonry:where(._md-13) {
+    --_masonry-cols: 13;
+  }
+  ._masonry:where(._md-14) {
+    --_masonry-cols: 14;
+  }
+  ._masonry:where(._md-15) {
+    --_masonry-cols: 15;
+  }
+  ._masonry:where(._md-16) {
+    --_masonry-cols: 16;
+  }
+  ._masonry:where(._md-17) {
+    --_masonry-cols: 17;
+  }
+  ._masonry:where(._md-18) {
+    --_masonry-cols: 18;
+  }
+  ._masonry:where(._md-19) {
+    --_masonry-cols: 19;
+  }
+  ._masonry:where(._md-20) {
+    --_masonry-cols: 20;
+  }
+  ._masonry:where(._md-21) {
+    --_masonry-cols: 21;
+  }
+  ._masonry:where(._md-22) {
+    --_masonry-cols: 22;
+  }
+  ._masonry:where(._md-23) {
+    --_masonry-cols: 23;
+  }
+  ._masonry:where(._md-24) {
+    --_masonry-cols: 24;
   }
 }
 /* lg->Desktop >=1560 (1920*1080) */
@@ -26479,6 +26931,78 @@ AX-SKELETON[shape=square] {
   ._col:where([class*="_lg-"]) > *:is([class*="_own-"]) {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
+  ._masonry:where(._lg-1) {
+    --_masonry-cols: 1;
+  }
+  ._masonry:where(._lg-2) {
+    --_masonry-cols: 2;
+  }
+  ._masonry:where(._lg-3) {
+    --_masonry-cols: 3;
+  }
+  ._masonry:where(._lg-4) {
+    --_masonry-cols: 4;
+  }
+  ._masonry:where(._lg-5) {
+    --_masonry-cols: 5;
+  }
+  ._masonry:where(._lg-6) {
+    --_masonry-cols: 6;
+  }
+  ._masonry:where(._lg-7) {
+    --_masonry-cols: 7;
+  }
+  ._masonry:where(._lg-8) {
+    --_masonry-cols: 8;
+  }
+  ._masonry:where(._lg-9) {
+    --_masonry-cols: 9;
+  }
+  ._masonry:where(._lg-10) {
+    --_masonry-cols: 10;
+  }
+  ._masonry:where(._lg-11) {
+    --_masonry-cols: 11;
+  }
+  ._masonry:where(._lg-12) {
+    --_masonry-cols: 12;
+  }
+  ._masonry:where(._lg-13) {
+    --_masonry-cols: 13;
+  }
+  ._masonry:where(._lg-14) {
+    --_masonry-cols: 14;
+  }
+  ._masonry:where(._lg-15) {
+    --_masonry-cols: 15;
+  }
+  ._masonry:where(._lg-16) {
+    --_masonry-cols: 16;
+  }
+  ._masonry:where(._lg-17) {
+    --_masonry-cols: 17;
+  }
+  ._masonry:where(._lg-18) {
+    --_masonry-cols: 18;
+  }
+  ._masonry:where(._lg-19) {
+    --_masonry-cols: 19;
+  }
+  ._masonry:where(._lg-20) {
+    --_masonry-cols: 20;
+  }
+  ._masonry:where(._lg-21) {
+    --_masonry-cols: 21;
+  }
+  ._masonry:where(._lg-22) {
+    --_masonry-cols: 22;
+  }
+  ._masonry:where(._lg-23) {
+    --_masonry-cols: 23;
+  }
+  ._masonry:where(._lg-24) {
+    --_masonry-cols: 24;
+  }
 }
 /* xl->2k screen (2560*1440) */
 @media (min-width: 2500px) and (max-width: 3799px) {
@@ -27119,6 +27643,78 @@ AX-SKELETON[shape=square] {
   ._col:where([class*="_xl-"]) > *:is([class*="_own-"]) {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
   }
+  ._masonry:where(._xl-1) {
+    --_masonry-cols: 1;
+  }
+  ._masonry:where(._xl-2) {
+    --_masonry-cols: 2;
+  }
+  ._masonry:where(._xl-3) {
+    --_masonry-cols: 3;
+  }
+  ._masonry:where(._xl-4) {
+    --_masonry-cols: 4;
+  }
+  ._masonry:where(._xl-5) {
+    --_masonry-cols: 5;
+  }
+  ._masonry:where(._xl-6) {
+    --_masonry-cols: 6;
+  }
+  ._masonry:where(._xl-7) {
+    --_masonry-cols: 7;
+  }
+  ._masonry:where(._xl-8) {
+    --_masonry-cols: 8;
+  }
+  ._masonry:where(._xl-9) {
+    --_masonry-cols: 9;
+  }
+  ._masonry:where(._xl-10) {
+    --_masonry-cols: 10;
+  }
+  ._masonry:where(._xl-11) {
+    --_masonry-cols: 11;
+  }
+  ._masonry:where(._xl-12) {
+    --_masonry-cols: 12;
+  }
+  ._masonry:where(._xl-13) {
+    --_masonry-cols: 13;
+  }
+  ._masonry:where(._xl-14) {
+    --_masonry-cols: 14;
+  }
+  ._masonry:where(._xl-15) {
+    --_masonry-cols: 15;
+  }
+  ._masonry:where(._xl-16) {
+    --_masonry-cols: 16;
+  }
+  ._masonry:where(._xl-17) {
+    --_masonry-cols: 17;
+  }
+  ._masonry:where(._xl-18) {
+    --_masonry-cols: 18;
+  }
+  ._masonry:where(._xl-19) {
+    --_masonry-cols: 19;
+  }
+  ._masonry:where(._xl-20) {
+    --_masonry-cols: 20;
+  }
+  ._masonry:where(._xl-21) {
+    --_masonry-cols: 21;
+  }
+  ._masonry:where(._xl-22) {
+    --_masonry-cols: 22;
+  }
+  ._masonry:where(._xl-23) {
+    --_masonry-cols: 23;
+  }
+  ._masonry:where(._xl-24) {
+    --_masonry-cols: 24;
+  }
 }
 /* xxl->4k screen (3840*2160) */
 @media (min-width: 3800px) {
@@ -27758,6 +28354,78 @@ AX-SKELETON[shape=square] {
   ._col:where([class*="_xxl-"]):is([class*="_avg-"]) > *,
   ._col:where([class*="_xxl-"]) > *:is([class*="_own-"]) {
     height: calc(100%/var(--_layout-group) - var(--_layout-gap)*(var(--_layout-group) - 1)/var(--_layout-group));
+  }
+  ._masonry._xxl-1 {
+    --_masonry-cols: 1;
+  }
+  ._masonry._xxl-2 {
+    --_masonry-cols: 2;
+  }
+  ._masonry._xxl-3 {
+    --_masonry-cols: 3;
+  }
+  ._masonry._xxl-4 {
+    --_masonry-cols: 4;
+  }
+  ._masonry._xxl-5 {
+    --_masonry-cols: 5;
+  }
+  ._masonry._xxl-6 {
+    --_masonry-cols: 6;
+  }
+  ._masonry._xxl-7 {
+    --_masonry-cols: 7;
+  }
+  ._masonry._xxl-8 {
+    --_masonry-cols: 8;
+  }
+  ._masonry._xxl-9 {
+    --_masonry-cols: 9;
+  }
+  ._masonry._xxl-10 {
+    --_masonry-cols: 10;
+  }
+  ._masonry._xxl-11 {
+    --_masonry-cols: 11;
+  }
+  ._masonry._xxl-12 {
+    --_masonry-cols: 12;
+  }
+  ._masonry._xxl-13 {
+    --_masonry-cols: 13;
+  }
+  ._masonry._xxl-14 {
+    --_masonry-cols: 14;
+  }
+  ._masonry._xxl-15 {
+    --_masonry-cols: 15;
+  }
+  ._masonry._xxl-16 {
+    --_masonry-cols: 16;
+  }
+  ._masonry._xxl-17 {
+    --_masonry-cols: 17;
+  }
+  ._masonry._xxl-18 {
+    --_masonry-cols: 18;
+  }
+  ._masonry._xxl-19 {
+    --_masonry-cols: 19;
+  }
+  ._masonry._xxl-20 {
+    --_masonry-cols: 20;
+  }
+  ._masonry._xxl-21 {
+    --_masonry-cols: 21;
+  }
+  ._masonry._xxl-22 {
+    --_masonry-cols: 22;
+  }
+  ._masonry._xxl-23 {
+    --_masonry-cols: 23;
+  }
+  ._masonry._xxl-24 {
+    --_masonry-cols: 24;
   }
 }
 /* Other device except phone */

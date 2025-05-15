@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-14 18:51:21
+ * @since Last modified: 2025-5-15 20:0:29
  * @name AXUI front-end framework.
- * @version 3.1.12
+ * @version 3.1.13
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -747,7 +747,7 @@
 
     const getComputedVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
-    const getScreenSize = () => getComputedVar(`--SCREEN`);
+    const getScreenSize = () => getComputedVar(`--${ax.prefix}screen`);
 
     const startUpper = (str) => {
         str = str.trim();
@@ -2603,10 +2603,10 @@
             if (_key === 0) {
                 let tmp = key.split('-')[1];
                 if (key.startsWith('screen')) {
-                    let screenSize = getScreenSize(), cond = (screenSize === tmp) ||
-                        (tmp === 'dt' && ['lg', 'xl', 'xxl', 'dt'].includes(screenSize)) ||
-                        (tmp === 'hh' && ['xxs', 'xs', 'sm', 'md', 'hh'].includes(screenSize)) ||
-                        (tmp === 'tb' && ['xs', 'sm', 'md', 'tb'].includes(screenSize)) ? true : false;
+                    let cond = (ax.screen === tmp) ||
+                        (tmp === 'dt' && ['lg', 'xl', 'xxl', 'dt'].includes(ax.screen)) ||
+                        (tmp === 'hh' && ['xxs', 'xs', 'sm', 'md', 'hh'].includes(ax.screen)) ||
+                        (tmp === 'tb' && ['xs', 'sm', 'md', 'tb'].includes(ax.screen)) ? true : false;
                     cond && valids.push(value);
                 }
                 else if (key.startsWith('width')) {
@@ -7724,13 +7724,13 @@
         }
         insertSource() {
             let tmpSourceEl = this.sourceEl || this.querySelector(`:scope>[${ax.alias}="source"]`);
-            this.innerHTML = tmpSourceEl.outerHTML || '';
+            this.innerHTML = tmpSourceEl?.outerHTML || '';
         }
         createPropsObs() {
             this.propsObs = new Observe(this.properties, { deep: true });
             this.propsProxy = this.propsObs.proxy;
             this.propsObs.on('completed', (resp) => {
-                this.ins && this.ins.initiated && resp.keys.set.length && this.completedEvt(resp);
+                this.ins && this.ins.initialized && resp.keys.set.length && this.completedEvt(resp);
             });
         }
         updateProxy(name, newVal, map) {
@@ -20517,6 +20517,7 @@
         items;
         itemSizeObs;
         gap;
+        canListen;
         static hostType = 'node';
         static optMaps = optMasonry;
         constructor(elem, options = {}, initial = true) {
@@ -20564,9 +20565,7 @@
             }
             else if (this.targetEl.innerHTML.trim()) {
                 this.items.push(...this.targetEl.children);
-            }
-            else {
-                return this;
+                
             }
             super.listen({ name: 'initiated', cb });
             return this;
@@ -25762,7 +25761,8 @@
             (this.data.type !== 'daytime') ? this.createPanels() : this.handleTimeCont();
             if (this.options.display === 'inline') {
                 if (this.targetEl) {
-                    this.targetEl.insertAdjacentElement('afterend', this.bubbleEl);
+                    
+                    this.targetEl.insertAdjacentElement(this.targetEl.classList.contains(`${ax.prefix}datetime-wrap`) ? 'beforeend' : 'afterend', this.bubbleEl);
                     this.bubbleEl.insertAdjacentHTML('beforebegin', `<div class="${ax.prefix}datetime-br"></div>`);
                     this.bubbleEl.insertAdjacentHTML('afterend', `<div class="${ax.prefix}datetime-br"></div>`);
                 }
@@ -27254,7 +27254,6 @@
             });
         }
         show(cb) {
-            (this.bubbleIns);
             this.bubbleIns && this.bubbleIns.show(() => {
                 super.listen({ name: 'shown', cb });
             });
@@ -33412,6 +33411,7 @@
         }
         completedEvt(data) {
             let intArr = getIntArr([this.canListenkeys, data.keys.set]);
+            (this.modsOpts['module']);
             intArr.length && this.ins.update(this.modsOpts['module']);
         }
     }
@@ -37000,6 +37000,7 @@
             super();
             this.type = 'search-comp';
             this.getRawData();
+            this.fieldsEl = getEl(':scope > AX-FIELDS', this);
             this.fillWrap(this.propsProxy);
         }
         static dependencies = [{ tag: 'ax-fields', comp: FieldsElem }];
@@ -37022,8 +37023,11 @@
             this.getProxyProps();
         }
         fillWrap(data) {
+            this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, this.fieldsEl);
         }
         render() {
+            this.insertSource();
+            this.appendChild(this.wrapEl);
         }
         changedMaps = {
             full: this.changedFull,
@@ -37279,11 +37283,25 @@
         targetEl;
         labels;
         isDay;
+        toggleEvt;
         constructor() {
             super();
             this.getRawData();
             this.labels = [config.lang.twilight.day, config.lang.twilight.night];
             this.isDay = true;
+            this.toggleEvt = () => {
+                let target = this.targetEl || document.body;
+                if (target.hasAttribute('scheme')) {
+                    this.labelEl.innerHTML = this.labels[0];
+                    target.removeAttribute('scheme');
+                    this.isDay = true;
+                }
+                else {
+                    this.labelEl.innerHTML = this.labels[1];
+                    target.setAttribute('scheme', 'dark');
+                    this.isDay = false;
+                }
+            };
             this.fillWrap(this.propsProxy);
         }
         static custAttrs = ['labels', 'target', 'feature', ...this.baseAttrs];
@@ -37328,19 +37346,8 @@
         render() {
             this.insertSource();
             this.appendChild(this.wrapEl);
-            this.addEventListener('click', () => {
-                let target = this.targetEl || document.body;
-                if (target.hasAttribute('scheme')) {
-                    this.labelEl.innerHTML = this.labels[0];
-                    target.removeAttribute('scheme');
-                    this.isDay = true;
-                }
-                else {
-                    this.labelEl.innerHTML = this.labels[1];
-                    target.setAttribute('scheme', 'dark');
-                    this.isDay = false;
-                }
-            }, false);
+            this.removeEventListener('click', this.toggleEvt);
+            this.addEventListener('click', this.toggleEvt, false);
         }
         changedMaps = {
             feature: this.changedFeature,
