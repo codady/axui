@@ -2,6 +2,76 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-05-19更新
+### 发布v3.1.16版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.16/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.16/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.16/dist.zip
+### 更新内容
+* 修改`css`文件，对选择器进行简化处理以缩小文件体积。
+* 修改`css`文件，增强对第三方图标库的支持。
+* 修改`css`文件的`grid`部分，默认列数设为1，而不是4。
+* 修改`css`文件，如果`flex`和`grid`布局同时使用了`_split-*`和`_g-*`样式类，则保持子节点之间的间隙。
+* 修改`css`文件，重新调整flex、grid、m、p、br、bc、line、divider的间隙值。
+* 修改`css`文件，将rem-caption、em-caption、px-caption变量改成*-lead；将rem-subject、em-subject、px-subject变量改成*-subtitle；将rem-title、em-title、px-title变量改成*-display；改了之后更符合语义化，避免歧义
+* 修改`css`文件，调整基准字号，使之有规律可循：16(lead)-24(list)-32(display)-40(input)-48(hitbox)-56(max)。
+* 修改`css`文件，将_ell-xxs~xxl的命名方式改成_ell-h[1~6]，更加直观。
+* 修改`css`文件，增加`_lh-*`样式类。
+* 修改`css`文件，将`masonry`的默认列改为2。
+* 修改`Masonry`模块的css和js代码，允许通过css预设`column-gap`。
+* 修改`topPixel`函数，增加对css变量的支持。
+* 将`ax-heading`组件改成`ax-category`以避免混淆h1、h2这种真正的标题，同时修改相关样式。
+* 修改`css`文件，增加`fs-display`和`lh-display`样式类。
+* 修改`css`文件，将样式中的`ignore`改为`caption`，表示小型的、不引起注意的意义。
+* 修改`css`文件，将`--_lh-h*`变量`em`单位去掉，使用数字表示相对单位以便于子元素继承相对行高。
+* 修改`css`文件，修改`accordion`节点的圆角为`r-input`。
+* 修改`css`文件，增加`_lh-sm`、`_lh-md`和`_lh-lg`样式类（可能不能对齐像素）。
+* 修改`css`文件，增加`_fw-*`字重样式类。
+* 全局修改，将`rep=caption`改成`rep=title`。
+* 修改`callout`组件，将`caption`属性改成`label`。
+* 修改`css`文件，将`-lit`替换为`-lt`。
+
+## 2025-05-17更新
+### 发布v3.1.15版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.15/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.15/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.15/dist.zip
+### 更新内容
+* 修改`css`文件字体部分，增加`rtl`和`ltr`图标字体。
+* 修改`css`文件字体部分，更换`twitter`的图标字体。
+* 修改`css`文件字体部分，增加若干国际社交平台图标字体。
+* 修改`css`文件字体部分，增加跨境支付图标字体。
+* 修改`format`组件，增加对数字格式化的支持。
+* 修改`format`组件，删除info和tips属性，改用`prefix`和`suffix`属性，增加`localenum`、`plainnum`、`padstart`和`padend`类型，并增加`places`和`locale`属性。
+
+## 2025-05-16更新
+### 发布v3.1.14版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.14/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.14/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.14/dist.zip
+### 更新内容
+* 修复多个表单域组件，使其`full`属性在flex布局的父节点下也可以100%铺满。
+* 将`Tab`组件设为`position:relative`定位方式，允许切换头可以绝对定位。
+* 修改`AXUI`官网首页，替换实时代码展示，新增组件示例演示。
+
+
+## 2025-05-15更新
+### 发布v3.1.13版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.13/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.13/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.13/dist.zip
+### 更新内容
+* 修复`alarm`组件的css，使行垂直居中。
+* 修复`textarea`组件，使`full`属性生效。
+* 修改`masonry`模块的`cols`参数，使之支持终端自适应。
+* 修复`getScreenSize`函数获取css变量的错误。
+* 修复`search`组件在使用append方法时内容为空的问题。
+* 修复`menu`组件在使用append方法时badge为空的问题。
+* 修改了`display=inline`的`Datetime`模块的节点结构，将表单域和面板放在同一个节点中。
+* 修复`Datetime`组件的`full`属性无效问题。
+* 修复`Twilight`组件在append操作后失效的问题。
+
+
 ## 2025-05-14更新
 ### 发布v3.1.12版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.12/dist/js/ax.js

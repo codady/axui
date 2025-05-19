@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#000">
+    <meta name="format-detection" content="telephone=no, email=no, address=no">
+    <meta charset="utf-8">
+    <title>AXUI前端框架组件/模块演示合集</title>
+    <meta name="keywords" content="UI框架,前端框架,国产框架,html,css,JavaScript,vue,react,AXUI,前端开发,前端工程师" />
+    <meta name="description" content="AXUI前端框架是面向设计，满足设计多样化需求的前端解决方案，减少或剔除JS文件资源和API。" />
+    <link href="https://unpkg.com/@codady/axui@3.1.13/dist/css/ax.css" rel="stylesheet" type="text/css">
+    <style>
+        html {
+            height: 100%;
+            background-color: var(--_c-ignore-bg);
+        }
+
+        .btns {
+            text-align: center;
+            margin: auto;
+            padding: var(--_rem-title) 0;
+        }
+        .note{
+            font-size: var(--_rem-ignore);
+            color:var(--_c-ignore);
+        }
+
+        .examples {}
+
+        .examples>* {
+            border: 1px solid var(--_c-text-bd);
+            border-radius: var(--_r-input-lg);
+            background-color: var(--_c-stage);
+            position: relative;
+        }
+
+        .examples>*:hover ._icon-copy {
+            opacity: 1;
+            position: auto;
+
+        }
+
+        .box {
+            padding: var(--_rem-title);
+        }
+
+        ._icon-copy {
+            color: var(--_c-brief);
+            height: var(--_rem-title);
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            position: none;
+            transition: 200ms;
+            position: absolute;
+            inset-inline-end: 0;
+            inset-block-start: 0;
+        }
+
+        ._icon-copy:hover {
+            color: var(--_c-prim);
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            padding: var(--_rem-title) 0;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <header></header>
+    <div class="btns">
+        <button id="schemeBtn">切换“白天/黑夜”模式</button>
+        <button id="dirBtn">切换“RTL/LTR”模式</button>
+        <div class="note">适配版本为AXUI v3.1.13，可去<a href="https://www.axui.cn" target="_blank">官网</a>下载</div>
+    </div>
+    </header>
+    <main>
+
+        <div class="_container-xl">
+            <div class="examples _dt-3" ax-masonry="gap:'1.4rem'">
+                
+                <section>
+                    <div class="box">
+                        <ax-status current="succ" label></ax-status>
+                        <ax-bc></ax-bc>
+                        <ax-status current="error" label></ax-status>
+                        <ax-bc></ax-bc>
+                        <ax-status current="warn" label></ax-status>
+                        <ax-bc></ax-bc>
+                        <ax-status current="info" label></ax-status>
+                        <ax-bc></ax-bc>
+                        <ax-status current="issue" label></ax-status>
+                        <ax-bc></ax-bc>
+                        <ax-status current="confirm" label></ax-status>
+                        <ax-bc></ax-bc>
+                        <ax-status current="cancel" label></ax-status>
+                        <ax-bc></ax-bc>
+                        <ax-status current="forbid" label></ax-status>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-step body-show head-show active="1">
+                            <a href="https://www.axui.cn" target="_blank" label="第一步" tips="2024/5/6"></a>
+                            <a href="https://www.axui.cn" target="_blank" label="第二步" tips="2024/6/8"></a>
+                            <span label="第三步" tips="2024/9/12"></span>
+                        </ax-step>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-pagination></ax-pagination>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-rate value="2"></ax-rate>
+                        <ax-br></ax-br>
+                        <ax-rate size="lg"></ax-rate>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-br size="md"></ax-br>
+                        <ax-range full>20~60</ax-range>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-spin theme="prim"></ax-spin>
+                        <ax-bc></ax-bc>
+                        <ax-spin theme="error"></ax-spin>
+                        <ax-bc></ax-bc>
+                        <ax-spin theme="succ" style="width:3.8rem"></ax-spin>
+                        <ax-bc></ax-bc>
+                        <ax-spin theme="info" style="width:4.4rem"></ax-spin>
+                        <ax-bc></ax-bc>
+                        <ax-spin theme="warn" style="width:6rem"></ax-spin>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-number full>10</ax-number>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-radio name="person" check="ed" type="chera">军事类</ax-radio>
+                        <ax-radio name="person" check="ing" type="chera">人物志类</ax-radio>
+                        <ax-radio name="person" check type="chera">娱乐类</ax-radio>
+                        <ax-radio name="person" type="chera">财经类</ax-radio>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-radios name="demo04" content="['军事类','人物志类','娱乐类']" checked="人物志类"></ax-radios>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-cc">
+                        <ax-good label="给我点赞" icon="_icon-good-f">136</ax-good>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-deform type="menu" shape="radius" onclick="this.classList.toggle('_opened')"></ax-deform>
+                        <ax-deform type="menuStart" shape="radius" onclick="this.classList.toggle('_opened')"></ax-deform>
+                        <ax-deform type="menuEnd" shape="radius" onclick="this.classList.toggle('_opened')"></ax-deform>
+                        <ax-deform type="info" shape="radius" onclick="this.classList.toggle('_opened')"></ax-deform>
+                        <ax-deform type="add" shape="radius" onclick="this.classList.toggle('_opened')"></ax-deform>
+                        <ax-deform type="left" shape="radius" onclick="this.classList.toggle('_opened')"></ax-deform>
+                        <ax-deform type="right" shape="radius" onclick="this.classList.toggle('_opened')"></ax-deform>
+                        <ax-deform type="up" shape="radius" onclick="this.classList.toggle('_opened')"></ax-deform>
+                        <ax-deform type="down" shape="radius" onclick="this.classList.toggle('_opened')"></ax-deform>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-checkbox name="apple" check="ed">军事类</ax-checkbox>
+                        <ax-checkbox name="apple" check="ing">人物志类</ax-checkbox>
+                        <ax-checkbox name="apple" check>娱乐类</ax-checkbox>
+                        <ax-checkbox name="apple">财经类</ax-checkbox>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-checkbox check="ed" type="switch">军事类</ax-checkbox>
+                        <ax-bc></ax-bc>
+                        <ax-checkbox check="ed" type="switch" lang="{on:'开',off:'关'}"></ax-checkbox>
+                        <ax-bc></ax-bc>
+                        <ax-checkbox type="switch" lang="{on:'ON',off:'OFF'}"></ax-checkbox>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-btn theme="prim">确认</ax-btn>
+                        <ax-btn width="1" theme="error"><i class="_icon-star"></i></ax-btn>
+                        <ax-btn theme="info" grad>渐变按钮</ax-btn>
+                        <ax-btn disk="https://unpkg.com/@codady/resource/image/avatar04.jpg">我知道了</ax-btn>
+                        <ax-btn check="ing">请稍后</ax-btn>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-buoy>136</ax-buoy>
+                        <ax-buoy theme="prim">65</ax-buoy>
+                        <ax-buoy theme="error">84</ax-buoy>
+                        <ax-buoy theme="warn" value="54" label="点击"></ax-buoy>
+                        <ax-buoy theme="issue" value="13" label="点击"></ax-buoy>
+                        <ax-buoy theme="text" value="98" label="点击" icon="_icon-star-f" arrow></ax-buoy>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-avatar type="text" theme="warn">WA</ax-avatar>
+                        <ax-avatar type="text" theme="info">CH</ax-avatar>
+                        <ax-avatar></ax-avatar>
+                        <ax-avatar class="_r-6">https://unpkg.com/@codady/resource/image/avatar07.jpg</ax-avatar>
+                        <ax-avatar class="_r-7" size="lg" badge="12">https://unpkg.com/@codady/resource/image/avatar08.jpg</ax-avatar>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-callout icon="_icon-issue-o-f" theme="error">中国的原始社会，起自大约170万年前的元谋人</ax-callout>
+                        <ax-br></ax-br>
+                        <ax-callout icon="_icon-issue-o-f" notable>中国的原始社会，起自大约170万年前的元谋人</ax-callout>
+                        <ax-br></ax-br>
+                        <ax-callout icon="_icon-issue-o-f" theme="issue" size="lg" notable>中国的原始社会，起自大约170万年前的元谋人</ax-callout>
+                        <ax-br></ax-br>
+                        <ax-callout disk="https://unpkg.com/@codady/resource/image/avatar02.jpg" theme="issue" notable>中国的原始社会，起自大约170万年前的元谋人</ax-callout>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-select full>
+                            [
+                            {
+                            "label": "自然环境",
+                            "tips":"风光旖旎",
+                            "checked":true,
+                            "icon":"_icon-earth-f",
+                            },
+                            {
+                            "label": "行政区划",
+                            "tips":"地大物博",
+                            "icon":"_icon-nav-v-f",
+                            },
+                            {
+                            "label": "人口",
+                            "tips":"14亿左右",
+                            "disabled":true,
+                            "icon":"_icon-widgets-f",
+                            },
+                            {
+                            "label": "饮食",
+                            "tips":"美食天堂",
+                            "icon":"_icon-heart-f",
+                            }
+                            ]
+                        </ax-select>
+                        <ax-br></ax-br>
+                        <ax-select full content="https://req.axui.cn/v3/json/tab_china_demo.json" cont-type="async" value="人口" multiple status></ax-select>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ul class="_wall _grid _xxs-2 _g-2">
+                            <li><img src="https://unpkg.com/@codady/resource/image/news01.jpg">
+                                <div rep="more">+15</div>
+                            </li>
+                            <li><img src="https://unpkg.com/@codady/resource/image/news02.jpg">
+                                <div rep="tips">已上传15张图<br>点击继续上传</div>
+                            </li>
+                            <li><img src="https://unpkg.com/@codady/resource/image/news03.jpg">
+                                <i rep="count">6图</i>
+                            </li>
+                            <li><img src="https://unpkg.com/@codady/resource/image/news04.jpg">
+                                <div rep="text">
+                                    <h1>Hi</h1>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ul class="_grid _xxs-2 _xx-2">
+                            <li><ax-stats tips="本科生(人)">824</ax-stats></li>
+                            <li><ax-stats tips="硕士生(人)">154</ax-stats></li>
+                            <li><ax-stats tips="博士生(人)">69</ax-stats></li>
+                            <li><ax-stats badge="2" tips="教授(人)">26</ax-stats></li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-menu full>
+                            <ul>
+                                <li>
+                                    <div expanded><i class="_icon-global" rep="icon"></i><i rep="label">河北</i><ax-badge></ax-badge><i rep="arrow"></i></div>
+                                    <ul>
+                                        <li>
+                                            <div><i rep="label">石家庄</i><i rep="arrow"></i></div>
+                                            <ul>
+                                                <li>
+                                                    <div><img rep="cube" src="https://unpkg.com/@codady/resource/image/avatar01.jpg"><i rep="label">长安区</i></div>
+                                                </li>
+                                                <li>
+                                                    <div><img rep="cube" src="https://unpkg.com/@codady/resource/image/avatar02.jpg"><i rep="label">桥西区</i></div>
+                                                </li>
+                                                <li>
+                                                    <div><img rep="cube" src="https://unpkg.com/@codady/resource/image/avatar03.jpg"><i rep="label">新华区</i></div>
+                                                </li>
+                                                <li>
+                                                    <div><i rep="label">裕华区</i></div>
+                                                </li>
+                                                <li>
+                                                    <div><i rep="label">井陉矿区</i></div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div disabled><img rep="disk" src="https://unpkg.com/@codady/resource/image/avatar04.jpg"><i rep="label">邢台</i><i rep="tips">708万人</i></div>
+                                        </li>
+                                        <li>
+                                            <div selected><img rep="disk" src="https://unpkg.com/@codady/resource/image/avatar05.jpg"><i rep="label">邯郸</i><i rep="tips">936万人</i></div>
+                                        </li>
+                                        <li>
+                                            <div><img rep="disk" src="https://unpkg.com/@codady/resource/image/avatar06.jpg"><i rep="label">保定</i><i rep="tips">919万人</i></div>
+                                        </li>
+                                        <li>
+                                            <div><i rep="label">衡水</i><i rep="tips">418万人</i></div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <div><i class="_icon-edit" rep="icon"></i><img rep="disk" src="https://unpkg.com/@codady/resource/image/avatar07.jpg"><i rep="label">四川</i><ax-badge label="13"></ax-badge><i rep="arrow"></i></div>
+                                    <ul>
+                                        <li>
+                                            <div><i rep="label">成都</i><i rep="tips">2119万人</i></div>
+                                        </li>
+                                        <li>
+                                            <div><i rep="label">南充</i><i rep="tips">556万人</i></div>
+                                        </li>
+                                        <li>
+                                            <div><i rep="label">绵阳</i><i rep="tips">488万人</i></div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <div><i class="_icon-search" rep="icon"></i><img rep="disk" src="https://unpkg.com/@codady/resource/image/avatar08.jpg"><i rep="label">广西</i><ax-badge theme="warn" label="2"></ax-badge><i rep="arrow"></i></div>
+                                    <ul>
+                                        <li>
+                                            <div><i rep="label">南宁</i><i rep="tips">883万人</i></div>
+                                        </li>
+                                        <li>
+                                            <div><i rep="label">柳州</i><i rep="tips">417万人</i></div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <div><i rep="label">江西</i><i rep="tips">883万人</i></div>
+                                </li>
+                            </ul>
+                        </ax-menu>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-icon dir="v" bg="prim">_icon-check</ax-icon>
+                        <ax-bc size="lg"></ax-bc>
+                        <ax-icon dir="v" badge="">_icon-global</ax-icon>
+                        <ax-bc size="lg"></ax-bc>
+                        <ax-icon type="disk" label="https://unpkg.com/@codady/resource/image/avatar06.jpg" dir="v"></ax-icon>
+                        <ax-bc size="lg"></ax-bc>
+                        <ax-icon type="cube" label="https://unpkg.com/@codady/resource/image/icon07.svg" dir="v" badge="21"></ax-icon>
+                        <ax-bc size="lg"></ax-bc>
+                        <ax-icon type="disk" tips="营销网络" label="https://unpkg.com/@codady/resource/image/avatar04.jpg" style="font-size:18px"></ax-icon>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <p>中国是世界四大文明古国之一，有着悠久的历史，距今约5000年前，以中原地区为中心开始出现聚落组织进而形成国家，后历经多次民族交融和朝代更迭，直至形成多民族国家的大一统局面。</p>
+                        <ax-line align="start">分割线</ax-line>
+                        <p>20世纪初辛亥革命后，君主政体退出历史舞台，共和政体建立。1949年中华人民共和国成立后，在中国大陆建立了人民代表大会制度的政体。</p>
+                        <ax-line align="end">分割线</ax-line>
+                        <p>中国疆域辽阔、民族众多，先秦时期的华夏族在中原地区繁衍生息，到了汉代通过文化交融使汉族正式成型，奠定了中国主体民族的基础。</p>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <div class="_post _split">
+                            <div rep="posters">
+                                <ul class="_grid _avg-4 _ratio-43 _g-xs _xxs-3 _wall">
+                                    <li><img src="https://unpkg.com/@codady/resource/image/news01.jpg"></li>
+                                    <li><img src="https://unpkg.com/@codady/resource/image/news02.jpg"></li>
+                                    <li><img src="https://unpkg.com/@codady/resource/image/news03.jpg"></li>
+                                    <li><img src="https://unpkg.com/@codady/resource/image/news04.jpg"></li>
+                                    <li><img src="https://unpkg.com/@codady/resource/image/news05.jpg"></li>
+                                    <li><img src="https://unpkg.com/@codady/resource/image/news06.jpg"></li>
+                                    <li><img src="https://unpkg.com/@codady/resource/image/news07.jpg"></li>
+                                    <li><img src="https://unpkg.com/@codady/resource/image/news08.jpg"></li>
+                                </ul>
+                            </div>
+                            <div class="_post-body">
+                                <div rep="caption"><a href="###" class="_ell-2 _ell-md">“水城”威尼斯遇水灾恐损失惨重，圣马可广场被淹</a></div>
+                                <div rep="brief">
+                                    <div class="_ell-2 _ell-xs">意大利“水城”威尼斯12日遭遇有记录以来严重程度排第二的水灾，市长路易吉·布鲁尼亚罗有意宣布紧急状态，说这场水灾恐致惨重损失。路透社报道，受暴雨和潮汐影响，威尼斯遭洪水侵袭，不少古老的广场和街道遭水淹没。当地官员说，12日22时50分，潮水最高水位达到187厘米，仅次于1966年创下的194厘米最高纪录。</div>
+                                </div>
+                                <div rep="byline">
+                                    <span><i class="_icon-message-o"></i> 362</span>
+                                    <span><i class="_icon-edit"></i> 张春阳</span>
+                                    <span>2019年1月2日</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-datetime display="inline" full></ax-datetime>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-accordion content="https://req.axui.cn/v3/json/tab_china_demo.json" cont-type="async"></ax-accordion>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <div class="_card" unpadded>
+                            <a href="###" rep="poster"><img src="https://unpkg.com/@codady/resource/image/news08.jpg"></a>
+                            <div class="_card-body">
+                                <div rep="caption"><a href="###">“水城”威尼斯遇水灾恐损失惨重，圣马可广场被淹</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <a href="###" class="_bullet" unpadded>
+                            <i rep="rank" data-value="1"></i>
+                            <span class="_bullet-body">南航与英航签署联营合作协议代码共享</span>
+                        </a>
+                        <a href="###" class="_bullet" unpadded><i rep="rank" data-value="2"></i>
+                            <span class="_bullet-body"><i rep="label">12月，到英国大城小镇看“亮灯”</i></span>
+                        </a>
+                        <div class="_bullet" unpadded><i rep="rank" data-value="3"></i>
+                            <div class="_bullet-body"><a href="###" rep="label">英国人喝茶不再流行贵族范</a></div>
+                        </div>
+                        <div class="_bullet" unpadded><i rep="rank" data-value="4"></i>
+                            <div class="_bullet-body"><a href="###" rep="label">西班牙斗牛与逗牛，精彩各不同</a></div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <div class="_bullet" multiline unpadded>
+                            <span rep="cube"><img src="https://unpkg.com/@codady/resource/image/avatar01.jpg"></span>
+                            <div class="_bullet-body"><span rep="label">
+                                    中国，是以华夏文明为源泉、中华文化为基础，并以汉族为主体民族的多民族国家，通用汉语、汉字，汉族与少数民族被统称为“中华民族”。</span>
+                                <span rep="tips">又自称为炎黄子孙、龙的传人</span>
+                            </div>
+                        </div>
+                        <hr class="_m-lr">
+                        <div class="_bullet" multiline unpadded>
+                            <span rep="cube"><img src="https://unpkg.com/@codady/resource/image/avatar02.jpg"></span>
+                            <div class="_bullet-body"><span rep="label">中国是世界四大文明古国之一，有着悠久的历史，距今约5000年前，以中原地区为中心开始出现聚落组织进而形成国家，后历经多次民族交融和朝代更迭，直至形成多民族国家的大一统局面。</span>
+                                <span rep="tips">1949年中华人民共和国</span>
+                            </div>
+                        </div>
+                        <hr class="_m-lr">
+                        <div class="_bullet" multiline unpadded>
+                            <span rep="cube"><img src="https://unpkg.com/@codady/resource/image/avatar03.jpg"></span>
+                            <div class="_bullet-body"><span rep="label">中国疆域辽阔、民族众多，先秦时期的华夏族在中原地区繁衍生息，到了汉代通过文化交融使汉族正式成型，奠定了中国主体民族的基础。</span>
+                                <span rep="tips">到2005年中国人口已突破十三亿</span>
+                            </div>
+                        </div>
+                        <hr class="_m-lr">
+                        <div class="_bullet" multiline unpadded>
+                            <span rep="cube"><img src="https://unpkg.com/@codady/resource/image/avatar04.jpg"></span>
+                            <div class="_bullet-body"><span rep="label">中国文化渊远流长、博大精深、绚烂多彩，是东亚文化圈的文化宗主国。</span>
+                                <span rep="tips">在世界文化体系内占有重要地位</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-upload url="https://req.axui.cn/v3/php/upload.php" feature="gallery"></ax-upload>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-editor deferred content="https://req.axui.cn/v3/html/his01.html" cont-type="async"></ax-editor>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <section class="_field _field-full">
+                            <div class="_field-label">姓名：</div>
+                            <div class="_field-cont">
+                                <div class="_field-input">
+                                    <input type="text" placeholder="请输入...">
+                                </div>
+                                <div class="_field-note"><ax-callout>注意：最多10个汉字</ax-callout></div>
+                            </div>
+                            <div class="_field-help"><i class="_c-error">必填</i></div>
+                        </section>
+                        <section class="_field _field-full">
+                            <div class="_field-label">户型：</div>
+                            <div class="_field-cont">
+                                <div class="_field-input">
+                                    <div class="_row">
+                                        <div class="_flex"><input type="text" placeholder="请输入..."><i class="_field-unit">室</i></div>
+                                        <ax-bc></ax-bc>
+                                        <div class="_flex"><input type="text" placeholder="请输入..."><i class="_field-unit">厅</i></div>
+                                        <ax-bc></ax-bc>
+                                        <div class="_flex"><input type="text" placeholder="请输入..."><i class="_field-unit">卫</i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="_field _field-full">
+                            <div class="_field-label">头像：</div>
+                            <div class="_field-cont">
+                                <div class="_field-input">
+                                    <input type="text" placeholder="请输入...">
+                                </div>
+                            </div>
+                            <span class="_field-help"><a href="###" rep="disk"><img src="https://unpkg.com/@codady/resource/image/avatar02.jpg"></a><i rep="text">李勋</i></span>
+                        </section>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <p>中国是世界四大文明古国之一，有着悠久的历史，距今约5000年前，以中原地区为中心开始出现聚落组织进而形成国家，后历经多次民族交融和朝代更迭，直至形成多民族国家的大一统局面。</p>
+                        <ax-divider fs="sm">分隔线</ax-divider>
+                        <p>20世纪初辛亥革命后，君主政体退出历史舞台，共和政体建立。1949年中华人民共和国成立后，在中国大陆建立了人民代表大会制度的政体。</p>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-tree chain content="https://req.axui.cn/v3/json/cities_tree_demo.json" cont-type="async"></ax-tree>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <span class="_tag">中国<i rep="remove"></i></span>
+                        <span class="_tag" theme="prim">新加坡<i rep="remove"></i></span>
+                        <a href="###" class="_tag" theme="error">澳大利亚<i rep="remove"></i></a>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <div class="_row">
+                            <div class="_flex"><ax-progress value="32" type="semicircle"></ax-progress></div>
+                            <div class="_flex"><ax-progress value="52" type="semicircle" theme="issue"></ax-progress></div>
+                            <div class="_flex"><ax-progress value="72" type="semicircle" theme="error" gradient></ax-progress></div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-search full>
+                            <ax-fields>
+                                <span class="_box-tools"><span><i rep="disk"><img src="https://unpkg.com/@codady/resource/image/avatar01.jpg"></i></span></span>
+                                <ax-input></ax-input>
+                                <span class="_box-tools"><span disabled><i rep="icon" class="_icon-mic"></i></span><span><i rep="icon" class="_icon-close"></i></span><span><i rep="icon" class="_icon-down"></i></span></span>
+                                <ax-btn label="搜索"></ax-btn>
+                            </ax-fields>
+                        </ax-search>
+                        <ax-br></ax-br>
+                        <ax-search full>
+                            <ax-fields>
+                                <ax-input icon="_icon-search"></ax-input>
+                                <span class="_box-tools"><span><i rep="disk"><img src="https://unpkg.com/@codady/resource/image/avatar02.jpg"></i></span><span><i rep="icon" class="_icon-down"></i></span></span>
+                                <ax-btn label="搜索"></ax-btn>
+                            </ax-fields>
+                        </ax-search>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-twilight feature="plain"></ax-twilight>
+                        <ax-bc size="lg"></ax-bc>
+                        <ax-twilight feature="icon"></ax-twilight>
+                        <ax-bc size="lg"></ax-bc>
+                        <ax-twilight labels="Day,Night"></ax-twilight>
+                    </div>
+                </section>
+                <section>
+                    <div class="box _a-c">
+                        <ax-result onclick="this.setAttribute('to','succ');"></ax-result>
+                        <ax-br></ax-br>
+                        <ax-result to="succ" type="font"></ax-result>
+                        <ax-result to="error" type="font"></ax-result>
+                        <ax-result to="info" type="font"></ax-result>
+                        <ax-result to="warn" type="font"></ax-result>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-input full icon="_icon-phone" cube="https://unpkg.com/@codady/resource/image/avatar06.jpg"></ax-input>
+                        <ax-br></ax-br>
+                        <ax-input full custom="<ax-badge label='输入有误' theme='error' shape='radius'></ax-badge>"></ax-input>
+                        <ax-br></ax-br>
+                        <ax-input full btn="<i class='_icon-search'></i> 搜索"></ax-input>
+                        <ax-br></ax-br>
+                        <ax-input full label="相距" unit="米" feature="plain"></ax-input>
+                    </div>
+                </section>
+                <section style="overflow: hidden;">
+                    <div class="box _a-c">
+                        <ax-alarm theme="prim"></ax-alarm>
+                        <ax-bc size="lg"></ax-bc>
+                        <ax-alarm label="有火情"></ax-alarm>
+                        <ax-bc size="lg"></ax-bc>
+                        <ax-alarm icon="_icon-pin-f"></ax-alarm>
+                        <ax-bc size="lg"></ax-bc>
+                        <ax-alarm image="https://unpkg.com/@codady/resource/image/avatar01.jpg"></ax-alarm>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-textarea tools="['update','close']" full></ax-textarea>
+                    </div>
+                </section>
+                <section>
+                    <div class="box">
+                        <ax-file tools="[{name:'test',icon:'_icon-global'},'close']" full></ax-file>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </main>
+    <footer>
+        AXUI版权所有，详情请访问AXUI官网：<a href="https//www.axui.cn" target="_blank">https//www.axui.cn</a>
+    </footer>
+    <script type='text/javascript'>
+        let sections = [...document.querySelectorAll('.examples > section')];
+        for (let k of sections) {
+            k.insertAdjacentHTML('beforeend', `<i class="_icon-copy"></i>`);
+            let box = k.querySelector('.box'),
+                boxHtml = box.innerHTML,
+                copyBtn = k.querySelector('._icon-copy');
+            copyBtn.onclick = () => {
+                navigator.clipboard.writeText(boxHtml).
+                    then(() => new ax.Message({ content: '已复制到剪切板' }).show());
+            }
+        }
+
+    </script>
+    <script src="https://unpkg.com/@codady/axui@3.1.13/dist/js/ax.js" type="text/javascript" charset="utf-8" onload="ax.init()"></script>
+    <script type='text/javascript'>
+        document.addEventListener("DOMContentLoaded", function () {
+            //暗黑风格切换
+            schemeBtn.onclick = () => {
+                let tmp = document.body.getAttribute('scheme');
+                tmp ? document.body.removeAttribute('scheme') : document.body.setAttribute('scheme', 'dark');
+            }
+            //RTL切换
+            dirBtn.onclick = () => {
+                let tmp = document.documentElement.getAttribute('dir');
+                ax.setRtl(!tmp);
+            }
+        });
+    </script>
+</body>
+
+</html>

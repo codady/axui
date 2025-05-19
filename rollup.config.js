@@ -48,7 +48,7 @@ export default [
   },
   {
     //打包入口文件，esm格式
-    input: './src/scripts/ax.comm.js',
+    input: './src/scripts/modules.js',
     output:
     {
       //esm格式，网页终端可通过import方式引用，也可用于node环境
@@ -63,7 +63,7 @@ export default [
   },
   {
     //打包入口文件，esm格式
-    input: './src/scripts/ax.comm.js',
+    input: './src/scripts/modules.js',
     output:
     {
       //cjs格式，必须在node环境下以require方式引用

@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-15 20:0:29
+ * @since Last modified: 2025-5-19 22:22:42
  * @name AXUI front-end framework.
- * @version 3.1.13
+ * @version 3.1.16
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -861,6 +861,10 @@
             }
             else if (data.endsWith('px') || data.endsWith('PX')) {
                 result = ~~toNumber(data.replace('px', '').replace('PX', ''));
+            }
+            else if (data.startsWith('var(')) {
+                let tmp = ax.getCssVar(data);
+                result = toPixel(tmp);
             }
             else {
                 result = ~~data;
@@ -1996,7 +2000,7 @@
             attr: 'media',
             prop: 'media',
             value: {
-                caption: '',
+                title: '',
                 brief: '',
             },
         },
@@ -4061,7 +4065,7 @@
         ${this.options.iconShow ? 'result' : ''}
         ${this.options.closable ? 'closable' : ''}
         ${this.options.status ? 'theme="' + (this.options.status || 'info') + '"' : ''}
-        ${this.options.heading ? 'caption="' + (this.options.heading === true ? this.options.lang.heading[this.options.status] : this.options.heading) + '"' : ''}
+        ${this.options.heading ? 'label="' + (this.options.heading === true ? this.options.lang.heading[this.options.status] : this.options.heading) + '"' : ''}
         ${!this.options.progress ? 'noprogress' : ''}
         >
         </ax-callout>
@@ -4880,7 +4884,7 @@
             this.listen({ name: 'render', params: [this.data] });
             let dataType = getDataType(this.data), tplEl = getEl(this.options.tplStr), template = tplEl?.innerHTML || this.options.tplStr || this.getBulletsTpl();
             if (dataType.includes('HTML') && ['image', 'iframe', 'audio', 'video'].includes(this.options.contType)) {
-                this.options.media.caption && this.data.insertAdjacentHTML('afterbegin', `<div ${ax.alias}="caption">${this.options.media.caption}</div>`);
+                this.options.media.title && this.data.insertAdjacentHTML('afterbegin', `<div ${ax.alias}="title">${this.options.media.title}</div>`);
                 this.options.media.brief && this.data.insertAdjacentHTML('beforeend', `<div ${ax.alias}="brief">${this.options.media.brief}</div>`);
             }
             setContent({
@@ -20422,7 +20426,7 @@
         {
             attr: 'gap',
             prop: 'gap',
-            value: '0.8rem',
+            value: 0,
         },
         {
             attr: 'cols',
@@ -20468,7 +20472,7 @@
             attr: 'media',
             prop: 'media',
             value: {
-                caption: '',
+                title: '',
                 brief: '',
             },
         },
@@ -20558,8 +20562,9 @@
                 console.warn(config.warn.init);
                 return this;
             }
-            this.gap = Math.ceil(toPixel(this.options.gap));
             this.setAttrs();
+            this.gap = this.getGap();
+            this.targetEl.style.columnGap = `${this.gap}px`;
             if (Array.isArray(this.options.content) && this.options.content.length > 0) {
                 this.items.push(...this.options.content);
             }
@@ -20570,10 +20575,12 @@
             super.listen({ name: 'initiated', cb });
             return this;
         }
+        getGap() {
+            return Math.ceil(toPixel(this.options.gap || style(this.targetEl).columnGap));
+        }
         setAttrs() {
             this.targetEl.classList.add(`${ax.prefix}masonry`);
             classes(this.targetEl).add(this.options.classes);
-            this.targetEl.style.columnGap = `${this.gap}px`;
             this.options.cols ? addStyle(this.targetEl, 'grid-template-columns', `repeat(${this.options.cols}, 1fr)`) : removeStyle(this.targetEl, 'grid-template-columns');
         }
         updateItemStyle(el) {
@@ -20841,7 +20848,7 @@
             attr: 'media',
             prop: 'media',
             value: {
-                caption: '',
+                title: '',
                 brief: '',
             },
         },
@@ -22833,7 +22840,7 @@
             attr: 'media',
             prop: 'media',
             value: {
-                caption: '',
+                title: '',
                 brief: '',
             },
         },
@@ -32532,7 +32539,7 @@
         wrapEl;
         headEl;
         innerEl;
-        captionEl;
+        titleEl;
         groupEl;
         labelEl;
         iconEl;
@@ -32683,7 +32690,7 @@
             let tpl = `
         <div class="_panel-head">
                 <div class="_panel-inner">
-                    <div class="_panel-caption">
+                    <div class="_panel-title">
                         <div rep="group">
                             <i rep="label">${this.options.label}</i>
                         </div>
@@ -32693,7 +32700,7 @@
         `;
             this.headEl = tplToEl(tpl);
             this.innerEl = this.headEl.querySelector(`.${ax.prefix}panel-inner`);
-            this.captionEl = this.headEl.querySelector(`.${ax.prefix}panel-caption`);
+            this.titleEl = this.headEl.querySelector(`.${ax.prefix}panel-title`);
             this.groupEl = this.headEl.querySelector(`[${ax.alias}="group"]`);
             this.labelEl = this.headEl.querySelector(`[${ax.alias}="label"]`);
             if (this.options.icon) {
@@ -32714,7 +32721,7 @@
             }
             if (this.options.brief) {
                 this.briefEl = createEl('div', { class: `${ax.prefix}panel-brief` }, this.options.brief);
-                this.captionEl.insertAdjacentElement('afterend', this.briefEl);
+                this.titleEl.insertAdjacentElement('afterend', this.briefEl);
             }
             if (this.options.annot) {
                 this.annotEl = createEl('span', { [ax.alias]: `annot` }, this.options.annot);
@@ -32733,17 +32740,17 @@
                 this.groupEl.insertAdjacentElement('afterend', this.customEl);
             }
             if (this.options.tools.enable) {
-                this.toolsEl = createTools(this.options.tools.children, this.captionEl);
+                this.toolsEl = createTools(this.options.tools.children, this.titleEl);
                 this.toolsEl.setAttribute(ax.alias, 'tools');
             }
             if (this.options.arrow.enable) {
                 this.arrowEl = createEl('i', { [ax.alias]: `arrow` });
                 this.setArrow();
                 if (this.options.arrow.placement === 'end') {
-                    this.captionEl.appendChild(this.arrowEl);
+                    this.titleEl.appendChild(this.arrowEl);
                 }
                 else {
-                    (this.options.feature === 'loose' ? this.headEl : this.captionEl).insertAdjacentElement('afterbegin', this.arrowEl);
+                    (this.options.feature === 'loose' ? this.headEl : this.titleEl).insertAdjacentElement('afterbegin', this.arrowEl);
                 }
             }
             this.wrapEl.insertAdjacentElement('afterbegin', this.headEl);
@@ -34126,13 +34133,25 @@
     class FormatElem extends CompBaseComm {
         tipsIns;
         infoEl;
+        separator;
+        locale;
+        prefixEl;
+        suffixEl;
+        prefixTips;
+        suffixTips;
+        labelEl;
+        places;
         constructor() {
             super();
             this.getRawData();
+            this.locale = navigator.language || 'en-US';
+            this.getSeparator();
+            this.places = 2;
             this.fillWrap(this.propsProxy);
         }
-        static custAttrs = ['type', 'rts', 'info', 'tips', 'lines', 'size', 'width', ...this.baseAttrs];
+        static custAttrs = ['type', 'rts', 'info', 'tips', 'lines', 'size', 'width', 'locale', 'places', ...this.baseAttrs];
         static boolAttrs = [];
+        static jsonAttrs = ['lang', 'prefix', 'suffix'];
         static get observedAttributes() {
             return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
         }
@@ -34144,38 +34163,42 @@
         getRawData() {
             this.getRawProps(FormatElem);
             this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
+            let sfxStr = this.getAttribute('suffix')?.trim(), preStr = this.getAttribute('prefix')?.trim();
+            this.propsRaw.prefix = { content: !preStr?.startsWith('{') && !preStr?.endsWith('}') ? preStr : '', tips: {} };
+            this.propsRaw.suffix = { content: !sfxStr?.startsWith('{') && !sfxStr?.endsWith('}') ? sfxStr : '', tips: {} };
             this.getProxyProps();
         }
         fillWrap(data) {
-            this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
+            this.labelEl = createEl('span', { [ax.alias]: 'label' }, data.label);
+            this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, this.labelEl);
             this.fillCont(data);
         }
         fillCont(data) {
             if (data.type === 'ruby') {
-                this.wrapEl.innerHTML = `<ruby>${this.getRuby(data.label, data.rts)}</ruby>`;
+                this.labelEl.innerHTML = `<ruby>${this.getRuby(data.label, data.rts)}</ruby>`;
             }
             else if (data.type === 'latex') {
                 try {
-                    new Function(`label`, `el`, `"use strict";${data.engin || 'katex.render(label, el)'}`)(data.label, this.wrapEl);
+                    new Function(`label`, `el`, `"use strict";${data.engin || 'katex.render(label, el)'}`)(data.label, this.labelEl);
                 }
                 catch {
                     console.error('Please introduce a math formula parsing plugin(katex)!');
                 }
             }
-            else if (data.type === 'prefix' || data.type === 'suffix') {
-                this.infoEl = createEl('i', { [ax.alias]: 'info' }, data.info);
-                this.wrapEl.innerHTML = data.label;
-                data.type === 'prefix' ? this.wrapEl.insertAdjacentElement('afterbegin', this.infoEl) : this.wrapEl.appendChild(this.infoEl);
-                this.tipsIns = new Tooltip(this.infoEl, {
-                    content: data.tips,
-                    asleep: true,
-                });
-            }
             else if (data.type === 'break') {
-                this.wrapEl.innerHTML = this.getBrText(data.label, data.lines, data.size);
+                this.labelEl.innerHTML = this.getBrText(data.label, data.lines, data.size);
+            }
+            else if (data.type === 'localenum') {
+                this.labelEl.innerHTML = this.getLocaleNum(data.label);
+            }
+            else if (data.type === 'plainnum') {
+                this.labelEl.innerHTML = this.getPlainNum(data.label);
+            }
+            else if (data.type === 'padstart' || data.type === 'padend') {
+                this.labelEl.innerHTML = this.getPadstr(data.label, data.type);
             }
             else {
-                this.wrapEl.innerHTML = data.label;
+                this.labelEl.innerHTML = data.label;
             }
         }
         render(data) {
@@ -34220,51 +34243,115 @@
             }
             return result + '</i>';
         }
+        getLocaleNum(text) {
+            let localeObj = new Intl.NumberFormat(this.locale).formatToParts(text.trim()), localeStr = localeObj.map(k => k.value).join('');
+            return localeStr;
+        }
+        getPlainNum(text) {
+            return text.trim().replaceAll(this.separator[0], '').replaceAll(this.separator[1], '.');
+        }
+        getSeparator() {
+            this.separator = this.locale == 'de-DE' ? ['.', ','] :
+                this.locale == 'fr-FR' ? [' ', ','] :
+                    this.locale == 'de-CH' ? [`’`, '.'] :
+                        this.locale == 'sv-SE' ? [` `, ','] : [',', '.'];
+        }
+        getPadstr(text, placement = 'padend') {
+            let tmp = text.replaceAll(this.separator[0], ''), split = tmp.split(this.separator[1]), int = split[0], dec = split[1] || '', dot = dec ? this.separator[1] : '';
+            if (placement === 'padstart') {
+                return int.length > this.places ? tmp : int.padStart(this.places, '0') + dot + dec;
+            }
+            else {
+                return dec.length > this.places ? tmp : int + dot + dec.padEnd(this.places, '0');
+            }
+        }
         changedMaps = {
             label: this.changedLabel,
             type: this.changedLabel,
             rts: this.changedRts,
-            info: this.changedInfo,
-            tips: this.changedTips,
+            prefix: this.changedEnds,
+            suffix: this.changedEnds,
             lines: this.changedLines,
             size: this.changedSize,
             width: this.changedWidth,
+            locale: this.changedLocale,
+            places: this.changedPlaces,
         };
         changedLabel(opt) {
-            this.wrapEl.innerHTML = '';
+            this.labelEl.innerHTML = '';
             this.fillCont(this.propsProxy);
         }
         changedRts(opt) {
             if (this.propsProxy.type === 'ruby') {
-                this.wrapEl.innerHTML = `<ruby>${this.getRuby(this.propsProxy.label, opt.newVal)}</ruby>`;
+                this.labelEl.innerHTML = `<ruby>${this.getRuby(this.propsProxy.label, opt.newVal)}</ruby>`;
             }
         }
-        changedInfo(opt) {
-            if (this.propsProxy.type === 'prefix' || this.propsProxy.type === 'suffix') {
-                this.infoEl.innerHTML = opt.newVal;
+        changedEnds(opt) {
+            if (opt.newVal === null) {
+                this[`${opt.name}El`].remove();
+                return;
             }
-        }
-        changedTips(opt) {
-            if (this.propsProxy.type === 'prefix' || this.propsProxy.type === 'suffix') {
-                this.tipsIns.update(!opt.newVal ? { asleep: true } : { asleep: false, content: opt.newVal });
+            let el = this[`${opt.name}El`], tips = this[`${opt.name}Tips`], data = this.propsProxy[opt.name], content = isNull(data.content) ? this.propsRaw[opt.name].content : data.content;
+            if (content) {
+                if (el) {
+                    el.innerHTML = content;
+                }
+                else {
+                    this[`${opt.name}El`] = createEl('i', { [ax.alias]: opt.name }, content);
+                    el = this[`${opt.name}El`];
+                    this.wrapEl.insertAdjacentElement(opt.name === 'suffix' ? 'beforeend' : 'afterbegin', el);
+                }
+                if (!isEmpty(data.tips)) {
+                    if (typeof data.tips === 'string') {
+                        this.propsProxy[opt.name].tips = { content: data.tips };
+                    }
+                    if (tips) {
+                        tips.update(this.propsProxy[opt.name].tips);
+                    }
+                    else {
+                        this[`${opt.name}Tips`] = new Tooltip(el, this.propsProxy[opt.name].tips);
+                    }
+                }
+                else {
+                    tips && tips.update({ asleep: true });
+                }
+            }
+            else {
+                el && el.remove();
             }
         }
         changedLines(opt) {
             if (this.propsProxy.type === 'break') {
-                this.wrapEl.innerHTML = this.getBrText(this.propsProxy.label, ~~opt.newVal, this.propsProxy.size);
+                this.labelEl.innerHTML = this.getBrText(this.propsProxy.label, ~~opt.newVal, this.propsProxy.size);
             }
         }
         changedSize(opt) {
             if (this.propsProxy.type === 'break') {
-                let tmp = this.wrapEl.firstElementChild;
+                let tmp = this.labelEl.firstElementChild;
                 tmp ? tmp.style.fontSize = opt.newVal : null;
             }
         }
         changedWidth(opt) {
             if (this.propsProxy.type === 'break') {
-                let tmp = this.wrapEl.firstElementChild;
+                let tmp = this.labelEl.firstElementChild;
                 tmp ? tmp.style.width = opt.newVal : null;
             }
+        }
+        changedLocale(opt) {
+            this.locale = !opt.newVal ? navigator.language || 'en-US' : opt.newVal;
+            this.getSeparator();
+            if (['localenum', 'plainnum'].includes(this.propsProxy.type)) {
+                this.labelEl.innerHTML = '';
+                this.fillCont(this.propsProxy);
+            }
+        }
+        changedPlaces(opt) {
+            if (!['padstart', 'padend'].includes(this.propsProxy.type))
+                return;
+            if (opt.newVal !== null) {
+                this.places = ~~opt.newVal;
+            }
+            this.labelEl.innerHTML = this.getPadstr(this.propsProxy.label, this.propsProxy.type);
         }
     }
 
@@ -37096,7 +37183,7 @@
             this.fillWrap(this.propsProxy);
         }
         static dependencies = [{ tag: 'ax-result', comp: ResultElem }, { tag: 'ax-progress', comp: ProgressElem }];
-        static custAttrs = ['theme', 'caption', 'icon', 'disk', 'cube', 'image', 'href', 'target', 'rel', 'feature', 'autoclose', 'size', ...this.baseAttrs];
+        static custAttrs = ['theme', 'label', 'icon', 'disk', 'cube', 'image', 'href', 'target', 'rel', 'feature', 'autoclose', 'size', ...this.baseAttrs];
         static boolAttrs = ['closable', 'square', 'opaque', 'notable', 'hidden', 'result'];
         static get observedAttributes() {
             return ['content', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
@@ -37122,7 +37209,7 @@
             this.linkEl = createEl('a', { [ax.alias]: 'link' }, `<i class="${ax.prefix}icon-right-up"></i>`);
             this.maskEl = createEl('a', { [ax.alias]: 'mask' });
             this.toolsEl = createEl('span', { [ax.alias]: 'tools', class: `${ax.prefix}box-tools` });
-            this.captEl = createEl('div', { [ax.alias]: 'caption' });
+            this.captEl = createEl('div', { [ax.alias]: 'title' });
             this.contEl = createEl('div', { [ax.alias]: 'content' }, this.propsProxy.content);
             this.bodyEl = createEl('div', { [ax.alias]: 'body' }, this.contEl);
             this.progEl = createEl('ax-progress', { [ax.alias]: 'prog', linecap: 'square', thk: 'xs', theme: 'warn', value: '100', label: false });
@@ -37138,7 +37225,7 @@
         }
         changedMaps = {
             theme: this.changedTheme,
-            caption: this.changedCapt,
+            title: this.changedCapt,
             content: this.changedCont,
             icon: this.changedIcon,
             disk: this.changedDisk,
@@ -37645,7 +37732,7 @@
         }
     }
 
-    class HeadingElem extends CompBaseComm {
+    class CategoryElem extends CompBaseComm {
         headEl;
         iconEl;
         diskEl;
@@ -37667,10 +37754,10 @@
         attributeChangedCallback(name, oldVal, newVal) {
             if (!this.canListen)
                 return;
-            this.savePropsToListen(name, oldVal, newVal, HeadingElem);
+            this.savePropsToListen(name, oldVal, newVal, CategoryElem);
         }
         getRawData() {
-            this.getRawProps(HeadingElem);
+            this.getRawProps(CategoryElem);
             this.propsRaw.label = this.getAttribute('label') || this.rawHtml;
             this.getProxyProps();
         }
@@ -37934,7 +38021,7 @@
         return ax;
     };
 
-    var ax_comm = {
+    var modules = {
         ax,
         config,
         fieldTypes,
@@ -38186,7 +38273,7 @@
         PaginationElem,
         StepElem,
         StatusElem,
-        HeadingElem,
+        CategoryElem,
         SkeletonElem,
         init,
     };
@@ -38203,6 +38290,7 @@
         BtnElem: BtnElem,
         BuoyElem: BuoyElem,
         CalloutElem: CalloutElem,
+        CategoryElem: CategoryElem,
         CheckboxElem: CheckboxElem,
         CheckboxesElem: CheckboxesElem,
         CompBase: CompBase,
@@ -38227,7 +38315,6 @@
         FormatElem: FormatElem,
         Gesture: Gesture,
         GoodElem: GoodElem,
-        HeadingElem: HeadingElem,
         Hover: Hover,
         IconElem: IconElem,
         Infinite: Infinite,
@@ -38322,7 +38409,7 @@
         deepClone: deepClone,
         deepEqual: deepEqual,
         deepMerge: deepMerge,
-        default: ax_comm,
+        default: modules,
         delay: delay,
         dl2Tree: dl2Tree,
         ease: ease,
