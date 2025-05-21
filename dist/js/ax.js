@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-19 22:22:42
+ * @since Last modified: 2025-5-21 21:56:32
  * @name AXUI front-end framework.
- * @version 3.1.16
+ * @version 3.1.17
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -22950,7 +22950,7 @@
             return this;
         }
         setAttrs() {
-            this.targetEl.classList.add(`${ax.prefix}inf`);
+            this.targetEl.classList.add(`${ax.prefix}infinite`);
             classes(this.targetEl).add(this.options.classes);
             this.targetEl.setAttribute('trigger', this.options.trigger);
         }
@@ -22989,7 +22989,7 @@
                 this.tipsEl.innerHTML = this.options.lang.loaded;
                 let fragment = document.createDocumentFragment();
                 for (let k of data) {
-                    k.classList.add(`${ax.prefix}inf-item`);
+                    k.classList.add(`${ax.prefix}infinite-item`);
                     fragment.appendChild(k);
                 }
                 this.targetEl.insertBefore(fragment, this.statusEl);
@@ -23000,7 +23000,7 @@
             });
         }
         getStatusEl() {
-            this.statusEl = this.targetEl.querySelector(`.${ax.prefix}inf-status`) || createEl('div', { class: `${ax.prefix}inf-status`, status: 'preload' });
+            this.statusEl = this.targetEl.querySelector(`.${ax.prefix}infinite-status`) || createEl('div', { class: `${ax.prefix}infinite-status`, status: 'preload' });
             this.spinEl = createEl('div', { [ax.alias]: 'spin' }, this.options.spin);
             this.statusEl.appendChild(this.spinEl);
             let nextTmp = this.targetEl.querySelector(`[${ax.alias}="next"]`);
@@ -31136,6 +31136,11 @@
             value: {},
         },
         {
+            attr: 'cols',
+            prop: 'cols',
+            value: 4,
+        },
+        {
             attr: 'type-getter',
             prop: 'typeGetter',
             value: null,
@@ -31494,7 +31499,7 @@
             let classes = ax.prefix + 'reset';
             if (this.options.type === 'card') {
                 classes += ` ${ax.prefix}grid ${ax.prefix}g-xs`;
-                this.options.columns && (classes += ` ${ax.prefix}grid-${this.options.columns}`);
+                this.options.cols && (classes += ` ${ax.prefix}avg-${this.options.cols}`);
             }
             this.listEl = createEl(this.options.type === 'table' ? 'table' : 'ul', { class: `${this.options.type !== 'table' ? classes : ''} ${ax.prefix}upload-list` });
             if (this.options.type === 'table') {
@@ -37225,7 +37230,7 @@
         }
         changedMaps = {
             theme: this.changedTheme,
-            title: this.changedCapt,
+            label: this.changedLabel,
             content: this.changedCont,
             icon: this.changedIcon,
             disk: this.changedDisk,
@@ -37261,7 +37266,7 @@
                 });
             }
         }
-        changedCapt(opt) {
+        changedLabel(opt) {
             if (opt.newVal) {
                 this.captEl.innerHTML = opt.newVal;
                 elState(this.captEl).isVirtual && this.contEl.insertAdjacentElement('beforebegin', this.captEl);

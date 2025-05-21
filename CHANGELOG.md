@@ -2,6 +2,23 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-05-21更新
+### 发布v3.1.17版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.17/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.17/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.17/dist.zip
+### 更新内容
+* 修改`css`文件，增加`r-full`样式类，用来创建全圆角容器。
+* 修改`css`文件，修改`--_dur-*`变量和`_dur-*`样式类，取值`0~100`，使之有规律可循。
+* 修改`css`文件，增加`--_num-step`变量，用于逐级放大页面。
+* 修改`css`文件，将btn组件中的`[grad]`改为`[gradient]`。
+* 修改`css`文件，规范css变量命名，将c-bd和bd改为bc，将bd-w改为bw。
+* 修改`css`文件，将`_inf`样式类改为全称`_infinite`，并修改对应的js文件。
+* 修改`css`文件，将`_text`样式类改为`_t`。
+* 修改`upload`模块，将参数`columns`改为`cols`，并设默认值为4。
+* 修正上一次更新时遗留的错误。
+
+
 ## 2025-05-19更新
 ### 发布v3.1.16版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.16/dist/js/ax.js
