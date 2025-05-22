@@ -2,6 +2,16 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-05-22更新
+### 发布v3.1.18版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.18/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.18/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.18/dist.zip
+### 更新内容
+* 修改`type=switch`的复选组件，增加`contained`属性，可使用switch的另一种形态。
+* 新增`Pill`组件，用来丰富`tab`切换。
+
+
 ## 2025-05-21更新
 ### 发布v3.1.17版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.17/dist/js/ax.js

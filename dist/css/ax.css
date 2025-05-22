@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-21 21:57:9
+ * @since Last modified: 2025-5-22 23:56:28
  * @name AXUI front-end framework.
- * @version 3.1.17
+ * @version 3.1.18
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-05-21 21:31:00
+ * @since Last modified: 2025-05-22 23:55:39
  */
 /*
  *Last modified: 2025-05-20 16:23:53
@@ -8222,6 +8222,11 @@ AX-RADIO[type=btn][size=lg] {
 AX-CHECKBOX[type=switch] {
   --_switch-w: calc(var(--_rem-subtitle)*2);
   --_switch-h: var(--_rem-subtitle);
+  --_switch-r: var(--_switch-h);
+  --_switch-btn-h: calc(var(--_switch-h) - 2px);
+  --_switch-btn-w: var(--_switch-btn-h);
+  --_switch-btn-r: var(--_switch-btn-h);
+  --_switch-btn-inset: calc(var(--_switch-w) - var(--_switch-btn-w) - 2px);
 }
 AX-CHECKBOX[type=switch] label {
   display: inline-flex;
@@ -8237,7 +8242,7 @@ AX-CHECKBOX[type=switch] u {
   height: var(--_switch-h);
   box-sizing: border-box;
   border: 1px solid var(--_c-text-bd);
-  border-radius: var(--_switch-h);
+  border-radius: var(--_switch-r);
   margin: calc((var(--_chk-h) - var(--_switch-h))/2) 0;
   background-color: var(--_c-text-bg);
   transition: all var(--_dur-2) linear;
@@ -8245,12 +8250,12 @@ AX-CHECKBOX[type=switch] u {
 }
 AX-CHECKBOX[type=switch] u:before {
   content: '';
-  font-size: var(--_rem-caption);
-  font-family: var(--_ff-icon);
+  font-size: var(--_rem-space);
   color: var(--_c-brief);
-  height: calc(var(--_switch-h) - 2px);
-  aspect-ratio: 1/1;
-  border-radius: 100%;
+  height: var(--_switch-btn-h);
+  width: var(--_switch-btn-w);
+  line-height: var(--_switch-btn-h);
+  border-radius: var(--_switch-btn-r);
   background-color: var(--_c-white);
   box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.4);
   transition: all var(--_dur-2) var(--_bez-eo);
@@ -8258,9 +8263,20 @@ AX-CHECKBOX[type=switch] u:before {
   justify-content: center;
   align-items: center;
   position: absolute;
-  inset-inline-end: calc(var(--_switch-w) - var(--_switch-h));
+  inset-inline-end: var(--_switch-btn-inset);
 }
-AX-CHECKBOX[type=switch] u:after {
+AX-CHECKBOX[type=switch]:where([contained]) {
+  --_switch-r: calc(var(--_r) + 1px);
+  --_switch-btn-r: var(--_r);
+}
+AX-CHECKBOX[type=switch]:where([contained]:has(u[on][off])) {
+  --_switch-w: var(--_rem-hitbox);
+  --_switch-btn-w: calc(var(--_rem-lead)*2);
+}
+AX-CHECKBOX[type=switch]:where([contained]) u:before {
+  content: attr(off);
+}
+AX-CHECKBOX[type=switch]:where(:not([contained])) u:after {
   content: attr(off);
   color: var(--_c-caption);
   font-size: var(--_rem-space);
@@ -8282,9 +8298,12 @@ AX-CHECKBOX[type=switch] input:where(:checked) ~ u {
   background-color: var(--_c-prim);
 }
 AX-CHECKBOX[type=switch] input:where(:checked) ~ u:before {
-  inset-inline-end: 0;
+  --_switch-btn-inset: 0;
 }
-AX-CHECKBOX[type=switch] input:where(:checked) ~ u:after {
+AX-CHECKBOX[type=switch]:where([contained]) input:where(:checked) ~ u:before {
+  content: attr(on);
+}
+AX-CHECKBOX[type=switch]:where(:not([contained])) input:where(:checked) ~ u:after {
   content: attr(on);
   color: var(--_c-white);
   inset-inline-end: auto;
@@ -14303,6 +14322,115 @@ ol:where(._group-flex) li:before {
 }
 ._group-input [rep=content] ._box-tools [rep=icon] {
   font-size: var(--_px-caption);
+}
+/*Pill*/
+AX-PILL {
+  --_pill-fs: var(--_fs-body);
+  --_pill-h: var(--_rem-display);
+  --_pill-r: var(--_r-input);
+  --_pill-bw: 1px;
+  --_pill-bc: var(--_c-text-bd);
+  --_pill-bg: var(--_pill-bc);
+  --_pill-thumb-w: 0;
+  --_pill-thumb-offset: 0;
+  --_pill-thumb-bg: var(--_c-white);
+  --_pill-thumb-bw: 0;
+  --_pill-thumb-bc: var(--_pill-thumb-bg);
+  --_pill-item-c: var(--_c-text);
+  --_pill-item-c-sel: var(--_c-text);
+  --_pill-item-c-hov: var(--_c-text);
+  --_pill-item-p: var(--_rem-body);
+  font-size: var(--_pill-fs);
+  text-align: center;
+  height: var(--_pill-h);
+  border-radius: var(--_pill-r);
+  border: var(--_pill-bw) solid var(--_pill-bc);
+  background-color: var(--_pill-bg);
+  box-sizing: border-box;
+  display: inline-flex;
+  vertical-align: middle;
+  max-width: 100%;
+  transition: all var(--_dur-2) linear;
+}
+AX-PILL[full] {
+  display: flex;
+  width: 100%;
+}
+AX-PILL[disabled] {
+  opacity: 0.5;
+}
+AX-PILL input {
+  position: fixed;
+  inset-inline-start: -100000px;
+}
+AX-PILL [rep=wrap] {
+  border-radius: inherit;
+  position: relative;
+  width: 100%;
+}
+AX-PILL [rep=items] {
+  height: calc(var(--_pill-h) - var(--_pill-bw)*2);
+  line-height: calc(var(--_pill-h) - var(--_pill-bw)*2);
+  display: flex;
+  position: relative;
+  z-index: 2;
+}
+AX-PILL [rep=items] > * {
+  color: var(--_pill-item-c);
+  padding: 0 var(--_pill-item-p);
+  flex: auto;
+  transition: all var(--_dur-2) linear;
+}
+AX-PILL [rep=items] > *:hover {
+  cursor: pointer;
+}
+AX-PILL [rep=items] > *:hover [rep=label] {
+  color: var(--_pill-item-c-hov);
+}
+AX-PILL [rep=items] > *[selected] [rep=label] {
+  color: var(--_pill-item-c-sel);
+}
+AX-PILL [rep=items] > *[disabled] {
+  opacity: 0.5;
+}
+AX-PILL [rep=items] > * [rep=label] {
+  transition: all var(--_dur-2) linear;
+}
+AX-PILL [rep=items] [rep=disk],
+AX-PILL [rep=items] [rep=cube],
+AX-PILL [rep=items] [rep=image] {
+  --_legend-h: var(--_rem-subtitle);
+  margin-inline-end: var(--_rem-space);
+}
+AX-PILL [rep=thumb] {
+  border-radius: calc(var(--_pill-r) - var(--_pill-bw));
+  transform: translateX(var(--_pill-thumb-offset));
+  width: var(--_pill-thumb-w);
+  height: calc(var(--_pill-h) - var(--_pill-bw)*2);
+  border: var(--_pill-thumb-bw) solid var(--_pill-thumb-bc);
+  background-color: var(--_pill-thumb-bg);
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  inset-block-start: 0;
+  pointer-events: none;
+  transition: all var(--_dur-2) var(--_bez-eo);
+}
+AX-PILL[size=sm] {
+  --_pill-fs: var(--_fs-caption);
+  --_pill-h: var(--_rem-list);
+  --_pill-r: var(--_r-input-sm);
+  --_pill-item-p: var(--_rem-space);
+}
+AX-PILL[size=lg] {
+  --_pill-h: var(--_rem-input);
+  --_pill-r: var(--_r-input-lg);
+  --_pill-item-p: var(--_rem-subtitle);
+}
+._pill-body > :where(:not([selected])) {
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
 }
 /*tree*/
 AX-TREE {

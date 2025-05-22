@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-21 21:56:32
+ * @since Last modified: 2025-5-22 23:56:3
  * @name AXUI front-end framework.
- * @version 3.1.17
+ * @version 3.1.18
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -7750,6 +7750,20 @@ class CompBase extends HTMLElement {
             }
             deepMerge(this.propsProxy, value, {});
         }
+    }
+    getAttrHtmlData(data) {
+        let arr, getStr = (str) => {
+            let tmp = createEl('div', null, str), script = tmp.querySelector('script[type="content"]');
+            return (script?.innerHTML || str).replace(/\n/g, '').trim();
+        };
+        if (isEmpty(data)) {
+            let attrCont = this.getAttribute('content');
+            arr = attrCont ? getAttrArr(attrCont) : getAttrArr(getStr(this.rawHtml));
+        }
+        else {
+            arr = Array.isArray(data) ? data : getAttrArr(getStr(data));
+        }
+        return arr;
     }
     changedMaps = {};
 }
@@ -33254,14 +33268,7 @@ class CompBaseCommField extends CompBaseComm {
         }
     }
     getItemsData(data) {
-        let arr;
-        if (isEmpty(data)) {
-            let tmp = createEl('div', null, this.rawHtml), script = tmp.querySelector('script[type="content"]'), attrCont = this.getAttribute('content');
-            arr = attrCont ? getAttrArr(attrCont) : getAttrArr((script?.innerHTML || this.rawHtml).replace(/\n/g, '').trim());
-        }
-        else {
-            arr = Array.isArray(data) ? data : getAttrArr(data);
-        }
+        let arr = super.getAttrHtmlData(data);
         return this.formatData(arr);
     }
     formatData(data) {
@@ -33707,6 +33714,8 @@ class CheckboxElem extends CompBaseCommField {
         lang: this.changedLang,
     };
     changedLang(opt) {
+        if (this.propsProxy.type !== 'switch')
+            return;
         let trackEl = getEl(':scope > u', this.wrapEl);
         this.propsProxy.lang.on ? trackEl.setAttribute('on', this.propsProxy.lang.on) : trackEl.removeAttribute('on');
         this.propsProxy.lang.off ? trackEl.setAttribute('off', this.propsProxy.lang.off) : trackEl.removeAttribute('off');
@@ -37643,7 +37652,9 @@ class StepElem extends CompBaseComm {
         if (opt.newVal) {
             let tmp = Math.min(~~opt.newVal, this.content.length - 1);
             for (let [i, k] of this.content.entries()) {
-                k.wrapEl.toggleAttribute('active', i === tmp ? true : false);
+                let bool = i === tmp ? true : false;
+                k.wrapEl.toggleAttribute('active', bool);
+                k.active = bool;
             }
         }
     }
@@ -37935,6 +37946,161 @@ class SkeletonElem extends CompBaseComm {
     changedRows(opt) {
         this.rows = this.getRows(opt.newVal);
         this.wrapEl.innerHTML = this.getSkelStr();
+    }
+}
+
+class PillElem extends CompBaseComm {
+    content;
+    itemsEl;
+    thumbEl;
+    activeItem;
+    bodyEl;
+    inputEl;
+    value;
+    name;
+    constructor() {
+        super();
+        this.getRawData();
+        this.fillWrap(this.propsProxy);
+    }
+    static custAttrs = ['active', 'disable', 'refer', 'name', 'on-changed', ...this.baseAttrs];
+    static boolAttrs = ['disabled'];
+    static get observedAttributes() {
+        return ['content', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
+    }
+    attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
+        this.savePropsToListen(name, oldVal, newVal, PillElem);
+    }
+    getRawData() {
+        this.getRawProps(PillElem);
+        this.propsRaw.content = this.getAttribute('content') || this.rawHtml;
+        this.propsRaw.active = ~~this.propsRaw.active || 0;
+        this.getProxyProps();
+    }
+    getLegend(data) {
+        let tmp = (data.disk || data.cube || data.image);
+        return data.icon ? `<i class="${data.icon}" rep="icon"></i>` : tmp ? `<img src="${tmp}" rep="${tmp}" />` : '';
+    }
+    getItemsData(data) {
+        let content = super.getAttrHtmlData(data);
+        if (!Array.isArray(content)) {
+            console.warn(`The obtained data is not an array, an empty array has been returned!`);
+            return [];
+        }
+        return content.map((k, i) => {
+            return (typeof k === 'string' || typeof k === 'number') ? { label: k, index: i } : Object.assign(k, { index: i });
+        });
+    }
+    getItems(data = this.propsProxy) {
+        this.content = this.getItemsData(data.content);
+        let fragment = document.createDocumentFragment();
+        for (let [i, k] of this.content.entries()) {
+            let legend = this.getLegend(k), node = tplToEl(renderTpl(`<span ${ax.alias}="item" {{this.selected?'selected':''}}  {{this.disabled?'disabled':''}}>${legend}<i rep=label>{{this.label}}</i></span>`, k));
+            k.wrapEl = node;
+            fragment.appendChild(node);
+            k.wrapEl.onclick = () => {
+                !k.selected && !k.disabled && this.active(i);
+            };
+        }
+        return fragment;
+    }
+    active(val = 0) {
+        let oldVal = this.content.find((k) => k.selected);
+        let tmp = Math.min(~~val, this.content.length - 1);
+        for (let [i, k] of this.content.entries()) {
+            let bool = i === tmp ? true : false;
+            k.wrapEl.toggleAttribute('selected', bool);
+            k.selected = bool;
+            if (bool) {
+                this.setTranslate(k.wrapEl);
+                this.activeItem = k;
+                this.value = k.label;
+                this.inputEl && (this.inputEl.value = k.label);
+                this.listen({ name: 'changed', params: [{ oldVal, newVal: k }] });
+            }
+        }
+        if (this.bodyEl) {
+            for (let [i, k] of [...this.bodyEl.children].entries()) {
+                let bool = i === tmp ? true : false;
+                k.toggleAttribute('selected', bool);
+            }
+        }
+        this.updateCache({ active: val });
+    }
+    disable(val) {
+        let arr = valToArr(val);
+        if (!arr.length)
+            return;
+        for (let k of arr) {
+            let tmp = Math.min(~~k, this.content.length - 1);
+            for (let [i, o] of this.content.entries()) {
+                let bool = i === tmp ? true : false;
+                o.wrapEl.toggleAttribute('disabled', bool);
+                o.disabled = bool;
+            }
+        }
+        this.updateCache({ disable: val });
+        this.listen({ name: 'disabled', params: [arr.map((k) => this.content[k])] });
+    }
+    setTranslate(el) {
+        this.style.setProperty(`--${ax.prefix}pill-thumb-offset`, el.offsetLeft + 'px');
+        this.style.setProperty(`--${ax.prefix}pill-thumb-w`, el.offsetWidth + 'px');
+    }
+    fillWrap(data = this.propsProxy) {
+        this.itemsEl = createEl('div', { [ax.alias]: 'items' });
+        this.thumbEl = createEl('span', { [ax.alias]: 'thumb' });
+        this.bodyEl = getEl(data.refer);
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, [this.itemsEl, this.thumbEl]);
+        this.itemsEl.appendChild(this.getItems(data));
+    }
+    render(data = this.propsProxy) {
+        this.insertSource();
+        this.appendChild(this.wrapEl);
+        this.active(data.active);
+    }
+    changedMaps = {
+        active: this.changedActive,
+        disable: this.changedDisable,
+        content: this.changedContent,
+        refer: this.changedRefer,
+        name: this.changedName,
+    };
+    changedActive(opt) {
+        opt.newVal && this.active(opt.newVal);
+    }
+    changedContent(opt) {
+        if (opt.newVal) {
+            this.itemsEl.innerHTML = '';
+            this.itemsEl.appendChild(this.getItems());
+            this.propsProxy.active && this.active(this.propsProxy.active);
+            this.propsProxy.disable && this.disable(this.propsProxy.disable);
+        }
+    }
+    changedDisable(opt) {
+        opt.newVal && this.disable(opt.newVal);
+    }
+    changedRefer(opt) {
+        if (opt.newVal) {
+            this.bodyEl = getEl(opt.newVal);
+            this.bodyEl && this.bodyEl.classList.add(`${ax.prefix}pill-body`);
+        }
+    }
+    changedName(opt) {
+        this.name = opt.newVal || '';
+        if (opt.newVal) {
+            if (this.inputEl) {
+                this.inputEl.setAttribute(opt.name, opt.newVal);
+            }
+            else {
+                this.inputEl = createEl('input', { type: 'text', name: opt.newVal, [ax.embedSign]: '' });
+                this.wrapEl.appendChild(this.inputEl);
+            }
+        }
+        else {
+            this.inputEl && this.inputEl.remove();
+        }
     }
 }
 
@@ -38274,7 +38440,8 @@ var modules = {
     StatusElem,
     CategoryElem,
     SkeletonElem,
+    PillElem,
     init,
 };
 
-export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CategoryElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, SkeletonElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, modules as default, delay, dl2Tree, ease, easeHeight, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getAutoDur, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtClient, getEvtTarget, getExpiration, getHeights, getHypotenuse, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getRtl, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, preventDft, privacy, promiseRaf, prompt, propsMap, purifyHtml, regComp, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setRtl, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, storeNode, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };
+export { Accordion, AccordionElem, AlarmElem, AnchorsElem, Autocomplete, AvatarElem, BadgeElem, BtnElem, BuoyElem, CalloutElem, CategoryElem, CheckboxElem, CheckboxesElem, CompBase, CompBaseComm, CompBaseCommField, CompBaseCommFieldMixin, Datetime, DatetimeElem, DeformElem, Dialog, DividerElem, Dodge, Drag, Drawer, Dropdown, Editor, EditorElem, FieldsElem, FileElem, FlagElem, Flip, FormatElem, Gesture, GoodElem, Hover, IconElem, Infinite, InputElem, Lazy, LineElem, Masonry, Menu, MenuElem, Message, ModBase, ModBaseListen, ModBaseListenCache, ModBaseListenCacheBubble, ModBaseListenCacheNest, More, MoreElem, NumberElem, Observe, Pagination, PaginationElem, Panel, PillElem, Popup, Position, Progress, ProgressElem, RadioElem, RadiosElem, Range, RangeElem, Rate, RateElem, ResultElem, Retrieval, Router, Scroll, SearchElem, Select, SelectElem, SkeletonElem, Spy, StatsElem, StatusElem, StepElem, Swipe, Tab, Tags, TextareaElem, Tooltip, Tree, TreeElem, TwilightElem, Upload, UploadElem, Valid, Virtualize, addStyle, addStyles, ajax, alert, allToEls, appendEls, arrSearch, arrSort, attrJoinVal, attrToJson, attrValBool, augment, ax, breakpoints, bulletTools, capStart, clampVal, classes, clearRegx, combineArr, config, confirm, contains, convertByte, createBtns, createComp, createEl, createEvt, createFooter, createModule, createTools, curveFns, dateTools, debounce, decompTask, deepClone, deepEqual, deepMerge, modules as default, delay, dl2Tree, ease, easeHeight, elState, elsSort, eventMap, events, extend, fadeIn, fadeOut, fadeToggle, fieldTools, fieldTypes, fileTools, filterPrims, findItem, findItems, formTools, getArrMap, getAttrArr, getAttrBool, getAutoDur, getBetweenEls, getClasses, getClientObj, getComputedVar, getContent, getDataType, getEl, getElSpace, getEls, getEvtClient, getEvtTarget, getExpiration, getHeights, getHypotenuse, getIntArr, getLast, getNestProp, getPlaces, getRectPoints, getRtl, getScreenSize, getScrollObj, getSelectorType, getStrFromTpl, getUTCTimestamp, getValsFromAttrs, getWidths, hide, icons, includes, increaseId, init, instance, isDateStr, isEmpty, isNull, isOutside, isProxy, isScrollUp, isSubset, keyCond, moveItem, notice, offset, paramToJson, parseStr, parseUrlArr, pipe, plan, preventDft, privacy, promiseRaf, prompt, propsMap, purifyHtml, regComp, regExps, removeItem, removeStyle, removeStyles, renderTpl, repeatStr, replaceFrag, requireTypes, scrollTo, select2Tree, setAttr, setAttrs, setContent, setRtl, setSingleSel, show, sliceFrags, sliceStrEnd, slideDown, slideToggle, slideUp, splice, splitNum, spreadBool, startUpper, stdParam, storage, storeNode, strToJson, style, support, theme, throttle, toLocalTime, toNumber, toPixel, toggle, tplToEl, tplToEls, transformTools, treeTools, trim, ul2Tree, unique, valToArr, validTools };
