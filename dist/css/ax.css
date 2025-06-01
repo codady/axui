@@ -1,6 +1,6 @@
 
 /*!
- * @since Last modified: 2025-6-1 8:17:53
+ * @since Last modified: 2025-6-1 22:49:44
  * @name AXUI front-end framework.
  * @version 3.1.21
  * @author AXUI development team <3217728223@qq.com>
@@ -15,10 +15,10 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-06-01 08:12:54
+ * @since Last modified: 2025-06-01 22:47:28
  */
 /*
- *Last modified: 2025-05-20 16:23:53
+ *Last modified: 2025-06-01 17:23:53
  */
 :root {
   /*Stage colors*/
@@ -421,6 +421,7 @@
   --_r-full: 99999px;
   /*Other*/
   --_dir-coef: 1;
+  --_dir-coef-alt: 0;
   --_device-coef: 0;
 }
 /*
@@ -3839,12 +3840,13 @@ AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ
   content: 'left';
 }
 /*
- *Last modified: 2025-05-21 11:59:42
+ *Last modified: 2025-06-01 17:25:15
  */
 /*rtl & ltr*/
 [dir=rtl],
 ._rtl {
   --_dir-coef: -1;
+  --_dir-coef-alt: 1;
 }
 ._rtl,
 ._ltr {
@@ -7387,6 +7389,174 @@ img[rep=image] {
   animation-duration: var(--_dur-3);
   animation-fill-mode: both;
   animation-name: _fadeOutEnd;
+}
+@keyframes _easeIn {
+  0% {
+    transform: scale(1, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+@keyframes _easeInTop {
+  from,
+  to {
+    transform-origin: center 100%;
+  }
+  0% {
+    transform: scale(1, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+@keyframes _easeInBtm {
+  from,
+  to {
+    transform-origin: center 0%;
+  }
+  0% {
+    transform: scale(1, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+@keyframes _easeInStart {
+  from,
+  to {
+    transform-origin: calc(100% - 100% * var(--_dir-coef-alt)) center;
+  }
+  0% {
+    transform: scale(0, 1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+@keyframes _easeInEnd {
+  from,
+  to {
+    transform-origin: calc(100% * var(--_dir-coef-alt)) center;
+  }
+  0% {
+    transform: scale(0, 1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+@keyframes _easeOut {
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1, 0);
+    opacity: 0;
+  }
+}
+@keyframes _easeOutTop {
+  from,
+  to {
+    transform-origin: center 100%;
+  }
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1, 0);
+    opacity: 0;
+  }
+}
+@keyframes _easeOutBtm {
+  from,
+  to {
+    transform-origin: center 0%;
+  }
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1, 0);
+    opacity: 0;
+  }
+}
+@keyframes _easeOutStart {
+  from,
+  to {
+    transform-origin: calc(100% - 100% * var(--_dir-coef-alt)) center;
+  }
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0, 1);
+    opacity: 0;
+  }
+}
+@keyframes _easeOutEnd {
+  from,
+  to {
+    transform-origin: calc(100% * var(--_dir-coef-alt)) center;
+  }
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0, 1);
+    opacity: 0;
+  }
+}
+[class*=_easeIn],
+[class*=_easeOut] {
+  animation-timing-function: var(--_bez-ease);
+  animation-duration: var(--_dur-5);
+  animation-fill-mode: both;
+}
+._easeIn {
+  animation-name: _easeIn;
+}
+._easeInBtm {
+  animation-name: _easeInBtm;
+}
+._easeInTop {
+  animation-name: _easeInTop;
+}
+._easeInStart {
+  animation-name: _easeInStart;
+}
+._easeInEnd {
+  animation-name: _easeInEnd;
+}
+._easeOut {
+  animation-name: _easeOut;
+}
+._easeOutBtm {
+  animation-name: _easeOutBtm;
+}
+._easeOutTop {
+  animation-name: _easeOutTop;
+}
+._easeOutStart {
+  animation-name: _easeOutStart;
+}
+._easeOutEnd {
+  animation-name: _easeOutEnd;
 }
 @keyframes _springIn {
   from,

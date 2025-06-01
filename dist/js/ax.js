@@ -1,6 +1,6 @@
 
 /*!
- * @since Last modified: 2025-6-1 8:17:17
+ * @since Last modified: 2025-6-1 22:49:15
  * @name AXUI front-end framework.
  * @version 3.1.21
  * @author AXUI development team <3217728223@qq.com>
@@ -11903,6 +11903,7 @@
         fixAni(placement) {
             this.aniIn = placement.includes('max') && this.options.in === 'slideDown' ? 'fadeIn' : this.options.in;
             this.aniOut = placement.includes('max') && this.options.out === 'slideUp' ? 'fadeOut' : this.options.out;
+            this.fixEaseAni(placement);
         }
         handleTools() {
             if (this.options.tools.enable) {
@@ -12074,6 +12075,20 @@
                 document.removeEventListener('click', this.clickOutHideEvt, false);
             }
         }
+        fixEaseAni(placement) {
+            if (this.aniIn === 'easeIn') {
+                this.aniIn = placement.includes('left') ? 'easeInStart' :
+                    placement.includes('right') ? 'easeInEnd' :
+                        placement.includes('top') ? 'easeInTop' :
+                            placement.includes('bottom') ? 'easeInBtm' : 'easeIn';
+            }
+            if (this.aniOut === 'easeOut') {
+                this.aniOut = placement.includes('left') ? 'easeOutStart' :
+                    placement.includes('right') ? 'easeOutEnd' :
+                        placement.includes('top') ? 'easeOutTop' :
+                            placement.includes('bottom') ? 'easeOutBtm' : 'easeOut';
+            }
+        }
         
         reposition(placement, cb) {
             if (this.destroyed || !placement) {
@@ -12147,6 +12162,7 @@
                 else {
                     this.aniOut && (this.mainEl.style.animationName = ax.prefix + this.aniOut);
                 }
+                (this.aniOut);
                 this.mainEl.querySelectorAll('video,audio').forEach((k) => {
                     k.pause();
                 });

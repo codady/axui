@@ -2,6 +2,17 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-06-01更新
+### 发布v3.1.22版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.22/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.22/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.22/dist.zip
+### 更新内容
+* 新增`ease`系列的动画，可用来替代`slideDown`和`slideUp`动画。
+* 新增`--_dir-coef-alt`变量用于详细控制RTL行文布局。
+* 修改气泡模块，增加`easeIn`进场动画和`easeOut`出场动画。
+
+
 ## 2025-05-31更新
 ### 发布v3.1.21版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.21/dist/js/ax.js
