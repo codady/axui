@@ -2,6 +2,16 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-05-31更新
+### 发布v3.1.21版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.21/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.21/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.21/dist.zip
+### 更新内容
+* 调整`avatar`的尺寸，确保其高度尽量与行对齐。
+* 修复`twilight`组件，图标不能切换为月亮的问题。
+
+
 ## 2025-05-24更新
 ### 发布v3.1.20版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.20/dist/js/ax.js

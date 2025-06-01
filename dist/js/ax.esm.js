@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-5-24 21:18:40
+ * @since Last modified: 2025-6-1 8:17:17
  * @name AXUI front-end framework.
- * @version 3.1.20
+ * @version 3.1.21
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -335,7 +335,7 @@ const lang = {
     infinite: {
         finish: '没有更多内容了',
         error: '请求终止，已停止加载',
-        next: '<ax-btn width="x5">查看更多</ax-btn>',
+        next: '<ax-btn width="5">查看更多</ax-btn>',
         preload: '等待加载数据',
         loading: '正在加载数据',
         loaded: '单页数据加载完成!',
@@ -390,13 +390,13 @@ const lang = {
             now: '设为当前时间',
             close: '关闭时间选择器',
         },
-        empty: `<i class="${ax.prefix}c-ignore">还未选择日期!</i>`,
+        empty: `<i class="${ax.prefix}c-caption">还未选择日期!</i>`,
         message: {
             requireTwoValue: '区间模式至少需要选择两个日期！',
             requireYearFormat: '请填入正确的年份格式!',
             requireOneSelected: '请至少选择一个日期!',
         },
-        noEvent: `<i class="${ax.prefix}c-ignore">今天没有需要安排的事项!</i>`,
+        noEvent: `<i class="${ax.prefix}c-caption">今天没有需要安排的事项!</i>`,
     },
     rate: {
         title: {
@@ -1252,7 +1252,7 @@ const ajax = (options) => {
             params = dft.data;
         }
         else if (dataType === 'Object') {
-            if (dft.contType?.includes('json')) {
+            if (dft.contType?.includes('json') || dft.headers['Content-Type']?.includes('json')) {
                 params = JSON.stringify(dft.data);
             }
             else {
@@ -5973,7 +5973,7 @@ const regExps = {
     locale: /^[\u0391-\uFFE5]+$/,
     letter: /^[a-zA-Z]+$/,
     string: /^[a-zA-Z0-9]+$/,
-    password: `^[a-zA-Z0-9${ax.regChars}]+$`,
+    password: `^[a-zA-Z0-9${ax.config.valid.regChars}]+$`,
     ymdhms: /^(\d{4})(-|\/)(\d{1,2})\2(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/,
     ymd: /^(\d{4})(-|\/)(\d{1,2})\2(\d{1,2})$/,
     hms: /^((20|21|22|23|[0-1]\d)\:[0-5][0-9])(\:[0-5][0-9])?$/,
@@ -37421,7 +37421,7 @@ class TwilightElem extends CompBaseComm {
                 <svg viewBox="0 0 24 24">
                     <mask id="mask-${now}">
                         <rect x="0" y="0" width="100%" height="100%" fill="white" />
-                        <circle cx="25" cy="13" r="6" stroke="none" class="${ax.prefix}twilight-mask" fill="dark" />
+                        <circle  cy="13" r="6" stroke="none" class="${ax.prefix}twilight-mask" fill="dark" />
                     </mask>
                     <circle fill="currentColor" cx="12" cy="12" r="6" class="${ax.prefix}twilight-main" mask="url(#mask-${now})" />
                     <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="${ax.prefix}twilight-rays">
