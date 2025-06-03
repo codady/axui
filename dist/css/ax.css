@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-6-1 22:49:44
+ * @since Last modified: 2025-6-3 16:13:16
  * @name AXUI front-end framework.
- * @version 3.1.21
+ * @version 3.1.23
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-06-01 22:47:28
+ * @since Last modified: 2025-06-03 16:11:22
  */
 /*
  *Last modified: 2025-06-01 17:23:53
@@ -224,8 +224,61 @@
   --_c-issue-fg: hsla(var(--_h-issue), var(--_s-issue), var(--_l-issue), 0.8);
   /*Other colors*/
   --_c-divide: rgba(0, 0, 0, 0.12);
-  --_c-black: hsl(0, 0%, 20%);
+  --_c-text-static: hsl(var(--_h-text), var(--_s-text), var(--_l-text));
+  --_c-black: hsl(0, 0%, 0%);
+  --_c-black-0: hsla(0, 0%, 0%, 0);
+  --_c-black-4: hsla(0, 0%, 0%, 0.04);
+  --_c-black-8: hsla(0, 0%, 0%, 0.08);
+  --_c-black-12: hsla(0, 0%, 0%, 0.12);
+  --_c-black-16: hsla(0, 0%, 0%, 0.16);
+  --_c-black-20: hsla(0, 0%, 0%, 0.2);
+  --_c-black-24: hsla(0, 0%, 0%, 0.24);
+  --_c-black-28: hsla(0, 0%, 0%, 0.28);
+  --_c-black-32: hsla(0, 0%, 0%, 0.32);
+  --_c-black-36: hsla(0, 0%, 0%, 0.36);
+  --_c-black-40: hsla(0, 0%, 0%, 0.4);
+  --_c-black-44: hsla(0, 0%, 0%, 0.44);
+  --_c-black-48: hsla(0, 0%, 0%, 0.48);
+  --_c-black-52: hsla(0, 0%, 0%, 0.52);
+  --_c-black-56: hsla(0, 0%, 0%, 0.56);
+  --_c-black-60: hsla(0, 0%, 0%, 0.6);
+  --_c-black-64: hsla(0, 0%, 0%, 0.64);
+  --_c-black-68: hsla(0, 0%, 0%, 0.68);
+  --_c-black-72: hsla(0, 0%, 0%, 0.72);
+  --_c-black-66: hsla(0, 0%, 0%, 0.76);
+  --_c-black-80: hsla(0, 0%, 0%, 0.8);
+  --_c-black-84: hsla(0, 0%, 0%, 0.84);
+  --_c-black-88: hsla(0, 0%, 0%, 0.88);
+  --_c-black-92: hsla(0, 0%, 0%, 0.92);
+  --_c-black-96: hsla(0, 0%, 0%, 0.96);
+  --_c-black-100: hsl(0, 0%, 0%);
   --_c-white: hsl(0, 0%, 100%);
+  --_c-white-0: hsla(0, 0%, 100%, 0);
+  --_c-white-4: hsla(0, 0%, 100%, 0.04);
+  --_c-white-8: hsla(0, 0%, 100%, 0.08);
+  --_c-white-12: hsla(0, 0%, 100%, 0.12);
+  --_c-white-16: hsla(0, 0%, 100%, 0.16);
+  --_c-white-20: hsla(0, 0%, 100%, 0.2);
+  --_c-white-24: hsla(0, 0%, 100%, 0.24);
+  --_c-white-28: hsla(0, 0%, 100%, 0.28);
+  --_c-white-32: hsla(0, 0%, 100%, 0.32);
+  --_c-white-36: hsla(0, 0%, 100%, 0.36);
+  --_c-white-40: hsla(0, 0%, 100%, 0.4);
+  --_c-white-44: hsla(0, 0%, 100%, 0.44);
+  --_c-white-48: hsla(0, 0%, 100%, 0.48);
+  --_c-white-52: hsla(0, 0%, 100%, 0.52);
+  --_c-white-56: hsla(0, 0%, 100%, 0.56);
+  --_c-white-60: hsla(0, 0%, 100%, 0.6);
+  --_c-white-64: hsla(0, 0%, 100%, 0.64);
+  --_c-white-68: hsla(0, 0%, 100%, 0.68);
+  --_c-white-72: hsla(0, 0%, 100%, 0.72);
+  --_c-white-66: hsla(0, 0%, 100%, 0.76);
+  --_c-white-80: hsla(0, 0%, 100%, 0.8);
+  --_c-white-84: hsla(0, 0%, 100%, 0.84);
+  --_c-white-88: hsla(0, 0%, 100%, 0.88);
+  --_c-white-92: hsla(0, 0%, 100%, 0.92);
+  --_c-white-96: hsla(0, 0%, 100%, 0.96);
+  --_c-white-100: hsl(0, 0%, 100%);
   /*Images*/
   --_spin: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 28 28' xmlns='http://www.w3.org/2000/svg' stroke='%23198cff'%3E %3Cg fill='none' fill-rule='evenodd'%3E %3Cg transform='translate(1 1)' stroke-width='1'%3E %3Ccircle stroke-opacity='.2' cx='14' cy='14' r='12'/%3E %3Cpath d='M14,26C7.372,26,2,20.629,2,14'%3E %3CanimateTransform attributeName='transform' type='rotate' from='0 14 14' to='360 14 14' dur='1s' repeatCount='indefinite'/%3E %3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E");
   --_spin-dk: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 28 28' xmlns='http://www.w3.org/2000/svg' stroke='%23ffffff'%3E %3Cg fill='none' fill-rule='evenodd'%3E %3Cg transform='translate(1 1)' stroke-width='1'%3E %3Ccircle stroke-opacity='.2' cx='14' cy='14' r='12'/%3E %3Cpath d='M14,26C7.372,26,2,20.629,2,14'%3E %3CanimateTransform attributeName='transform' type='rotate' from='0 14 14' to='360 14 14' dur='1s' repeatCount='indefinite'/%3E %3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E");
@@ -3231,15 +3284,26 @@ table [class*=_ell-] {
   max-width: var(--_table-ell);
 }
 /*
-Last modified: 2025-05-21 10:11:16
+Last modified: 2025-06-03 16:10:23
 */
 /*Button*/
 AX-BTN {
-  --_btn-sd: var(--_c-prim-sd);
-  --_btn-bg: var(--_c-prim-bg);
+  --_btn-bg: var(--_c-stage);
+  --_btn-bg-hov: var(--_btn-bg);
+  --_btn-bg-act: var(--_btn-bg);
+  --_btn-bg-foc: var(--_btn-bg);
+  --_btn-bg-dis: var(--_btn-bg);
   --_btn-c: var(--_c-text);
-  --_btn-bc: var(--_c-text-bd);
+  --_btn-c-hov: var(--_c-prim);
   --_btn-c-act: var(--_c-prim-tl);
+  --_btn-c-foc: var(--_c-prim);
+  --_btn-c-dis: var(--_btn-c);
+  --_btn-bc: var(--_c-text-bd);
+  --_btn-bc-hov: var(--_c-prim);
+  --_btn-bc-foc: var(--_btn-bc-hov);
+  --_btn-bc-act: var(--_btn-bc-hov);
+  --_btn-bc-dis: var(--_btn-bc);
+  --_btn-sd: var(--_c-prim-sd);
   --_btn-p-se: var(--_em-body);
   --_btn-fs: var(--_rem-body);
   --_btn-r: var(--_r-input);
@@ -3256,7 +3320,7 @@ AX-BTN {
 }
 AX-BTN > [rep=wrap] {
   color: var(--_btn-c);
-  background-color: var(--_c-stage);
+  background-color: var(--_btn-bg);
   border: var(--_btn-bw) solid var(--_btn-bc);
   height: var(--_btn-h);
   padding: 0 var(--_btn-p-se);
@@ -3278,321 +3342,282 @@ AX-BTN:where(:not([disabled])) > [rep=wrap]:visited {
   color: var(--_btn-c);
 }
 AX-BTN:where(:not([disabled])) > [rep=wrap]:hover {
-  color: var(--_c-prim);
-  border-color: var(--_c-prim);
+  color: var(--_btn-c-hov);
+  background-color: var(--_btn-bg-hov);
+  border-color: var(--_btn-bc-hov);
   box-shadow: 0.2rem 0.2rem 1rem 0 var(--_btn-sd);
 }
 AX-BTN:where(:not([disabled])) > [rep=wrap]:focus {
-  color: var(--_c-prim);
-  border-color: var(--_c-prim);
+  color: var(--_btn-c-foc);
+  background-color: var(--_btn-bg-foc);
+  border-color: var(--_btn-bc-foc);
   outline-color: var(--_btn-sd);
 }
 AX-BTN:where(:not([disabled])) > [rep=wrap]:active {
   color: var(--_btn-c-act);
+  background-color: var(--_btn-bg-act);
+  border-color: var(--_btn-bc-act);
   opacity: 1;
 }
 AX-BTN:where([disabled]) > [rep=wrap] {
-  color: var(--_c-caption);
+  color: var(--_btn-c-dis);
+  background-color: var(--_btn-bg-dis);
+  border-color: var(--_btn-bc-dis);
   cursor: not-allowed;
   user-select: none;
   pointer-events: none;
 }
 AX-BTN[type=plain] {
   --_btn-bw: 0;
+  --_btn-bc: transparent;
+  --_btn-bc-hov: transparent;
+  --_btn-bg: transparent;
 }
-AX-BTN[type=plain] > [rep=wrap] {
-  background-color: transparent;
+AX-BTN[type=plain]:where(:not([theme])) {
+  --_btn-c-hov: var(--_c-prim);
 }
-AX-BTN[type=plain][theme=prim] > [rep=wrap] {
+AX-BTN[type=plain]:where([theme=brief],[theme=caption]) {
+  --_btn-c-hov: var(--_c-text);
+}
+AX-BTN[type=plain]:where([theme=prim],[theme=succ],[theme=error],[theme=warn],[theme=info],[theme=issue],[theme=text]) {
+  --_btn-c-hov: var(--_btn-c);
+}
+AX-BTN[type=plain][theme=prim] {
   --_btn-c: var(--_c-prim);
+  --_btn-c-act: var(--_c-prim-tl);
 }
-AX-BTN[type=plain][theme=succ] > [rep=wrap] {
+AX-BTN[type=plain][theme=succ] {
   --_btn-c: var(--_c-succ);
+  --_btn-c-act: var(--_c-succ-tl);
 }
-AX-BTN[type=plain][theme=error] > [rep=wrap] {
+AX-BTN[type=plain][theme=error] {
   --_btn-c: var(--_c-error);
+  --_btn-c-act: var(--_c-error-tl);
 }
-AX-BTN[type=plain][theme=warn] > [rep=wrap] {
+AX-BTN[type=plain][theme=warn] {
   --_btn-c: var(--_c-warn);
+  --_btn-c-act: var(--_c-warn-tl);
 }
-AX-BTN[type=plain][theme=info] > [rep=wrap] {
+AX-BTN[type=plain][theme=info] {
   --_btn-c: var(--_c-info);
+  --_btn-c-act: var(--_c-info-tl);
 }
-AX-BTN[type=plain][theme=issue] > [rep=wrap] {
+AX-BTN[type=plain][theme=issue] {
   --_btn-c: var(--_c-issue);
+  --_btn-c-act: var(--_c-issue-tl);
 }
-AX-BTN[type=plain][theme=text] > [rep=wrap] {
+AX-BTN[type=plain][theme=text] {
   --_btn-c: var(--_c-text);
+  --_btn-c-act: var(--_c-text-tl);
 }
-AX-BTN[type=plain][theme=brief] > [rep=wrap] {
+AX-BTN[type=plain][theme=brief] {
   --_btn-c: var(--_c-brief);
+  --_btn-c-act: var(--_c-brief-tl);
 }
-AX-BTN[type=plain][theme=caption] > [rep=wrap] {
+AX-BTN[type=plain][theme=caption] {
   --_btn-c: var(--_c-caption);
+  --_btn-c-act: var(--_c-caption-tl);
 }
 AX-BTN[type=plain] > [rep=wrap]:hover {
-  background-color: transparent;
-  color: var(--_btn-c);
   box-shadow: none;
 }
-AX-BTN[type=plain]:where(:not([theme=prim], [theme=succ], [theme=error], [theme=warn], [theme=info], [theme=issue], [theme=brief], [theme=caption])) > [rep=wrap]:hover {
-  color: var(--_c-prim);
-}
 AX-BTN[type=plain] > [rep=wrap]:focus {
-  color: var(--_btn-c);
   outline-color: transparent;
 }
-AX-BTN[type=plain]:where(:not([theme=prim], [theme=succ], [theme=error], [theme=warn], [theme=info], [theme=issue], [theme=brief], [theme=caption])) > [rep=wrap]:focus {
-  color: var(--_c-prim);
-}
 AX-BTN[type=plain] > [rep=wrap]:active {
-  color: var(--_btn-c);
   opacity: var(--_o-active);
 }
-AX-BTN[type=plain]:where(:not([theme=prim], [theme=succ], [theme=error], [theme=warn], [theme=info], [theme=issue], [theme=brief], [theme=caption])) > [rep=wrap]:active {
-  color: var(--_c-prim);
-}
 AX-BTN[type=plain]:where([disabled]) {
-  color: var(--_btn-c);
   opacity: var(--_o-disabled);
 }
 AX-BTN[type=seal] {
-  --_btn-sd: var(--_c-text-sd);
-  --_btn-bg: var(--_c-text-bg);
   --_btn-c: var(--_c-text);
-}
-AX-BTN[type=seal] > [rep=wrap] {
-  border-color: var(--_btn-c);
-  background-color: transparent;
+  --_btn-c-foc: var(--_btn-c);
+  --_btn-c-hov: var(--_btn-c);
+  --_btn-c-act: var(--_btn-c);
+  --_btn-c-dis: var(--_btn-c);
+  --_btn-bg: transparent;
+  --_btn-bg-hov: var(--_c-text-bg);
+  --_btn-bg-foc: var(--_btn-bg-hov);
+  --_btn-bg-act: var(--_btn-bg-hov);
+  --_btn-bg-dis: var(--_btn-bg-hov);
+  --_btn-bc: var(--_btn-c);
+  --_btn-bc-hov: var(--_btn-c);
+  --_btn-bc-foc: var(--_btn-c);
+  --_btn-bc-act: var(--_btn-c);
+  --_btn-bc-dis: var(--_btn-c);
+  --_btn-sd: var(--_c-text-sd);
 }
 AX-BTN[type=seal][theme=prim] {
   --_btn-sd: var(--_c-prim-sd);
-  --_btn-bg: var(--_c-prim-bg);
+  --_btn-bg-hov: var(--_c-prim-bg);
   --_btn-c: var(--_c-prim);
 }
 AX-BTN[type=seal][theme=succ] {
   --_btn-sd: var(--_c-succ-sd);
-  --_btn-bg: var(--_c-succ-bg);
+  --_btn-bg-hov: var(--_c-succ-bg);
   --_btn-c: var(--_c-succ);
 }
 AX-BTN[type=seal][theme=error] {
   --_btn-sd: var(--_c-error-sd);
-  --_btn-bg: var(--_c-error-bg);
+  --_btn-bg-hov: var(--_c-error-bg);
   --_btn-c: var(--_c-error);
 }
 AX-BTN[type=seal][theme=warn] {
   --_btn-sd: var(--_c-warn-sd);
-  --_btn-bg: var(--_c-warn-bg);
+  --_btn-bg-hov: var(--_c-warn-bg);
   --_btn-c: var(--_c-warn);
 }
 AX-BTN[type=seal][theme=info] {
   --_btn-sd: var(--_c-info-sd);
-  --_btn-bg: var(--_c-info-bg);
+  --_btn-bg-hov: var(--_c-info-bg);
   --_btn-c: var(--_c-info);
 }
 AX-BTN[type=seal][theme=issue] {
   --_btn-sd: var(--_c-issue-sd);
-  --_btn-bg: var(--_c-issue-bg);
+  --_btn-bg-hov: var(--_c-issue-bg);
   --_btn-c: var(--_c-issue);
 }
 AX-BTN[type=seal][theme=text] {
   --_btn-sd: var(--_c-text-sd);
-  --_btn-bg: var(--_c-text-bg);
+  --_btn-bg-hov: var(--_c-text-bg);
   --_btn-c: var(--_c-text);
 }
 AX-BTN[type=seal][theme=brief] {
   --_btn-sd: var(--_c-brief-sd);
-  --_btn-bg: var(--_c-brief-bg);
+  --_btn-bg-hov: var(--_c-brief-bg);
   --_btn-c: var(--_c-brief);
 }
 AX-BTN[type=seal][theme=caption] {
   --_btn-sd: var(--_c-caption-sd);
-  --_btn-bg: var(--_c-caption-bg);
+  --_btn-bg-hov: var(--_c-caption-bg);
   --_btn-c: var(--_c-caption);
 }
-AX-BTN[type=seal] > [rep=wrap]:hover {
-  color: var(--_btn-c);
-  background-color: var(--_btn-bg);
-}
 AX-BTN[type=seal] > [rep=wrap]:focus {
-  color: var(--_btn-c);
-  border-color: var(--_btn-c);
-  background-color: var(--_btn-bg);
   outline-color: transparent;
 }
 AX-BTN[type=seal] > [rep=wrap]:active {
   opacity: var(--_o-active);
 }
 AX-BTN[type=seal]:where([disabled]) > [rep=wrap] {
-  color: var(--_btn-c);
   opacity: var(--_o-disabled);
 }
-AX-BTN[theme=prim]:where(:not([type=seal], [type=plain])) {
-  --_btn-bg: var(--_c-prim);
-  --_btn-sd: var(--_c-prim-sd);
-  --_c-lt: var(--_c-prim-lt);
-  --_c-dp: var(--_c-prim-dp);
+AX-BTN:where(:not([type=seal], [type=plain])) {
+  /* --_btn-bg: var(--_c-prim);
+    --_btn-sd: var(--_c-prim-sd);
+    --_c-tl: var(--_c-prim-tl);
+    --_c-dp: var(--_c-prim-dp);
+ */
+  /*  --_btn-c: var(--_c-text);
+    --_btn-c-foc: var(--_btn-c);
+    --_btn-c-hov: var(--_btn-c);
+    --_btn-c-act: var(--_btn-c);
+    --_btn-c-dis: var(--_btn-c);
+    --_btn-bg: var(--_c-prim);
+    --_btn-bg-hov: var(--_c-prim-tl);
+    --_btn-bg-foc: var(--_btn-bg-hov);
+    --_btn-bg-act: var(--_c-prim-dp);
+    --_btn-bg-dis: var(--_btn-bg);
+    --_btn-bc:var(--_c-text-bd);
+    --_btn-bc-hov: var(--_c-prim);
+    --_btn-bc-foc: var(--_c-prim);
+    --_btn-bc-act:var(--_c-prim);
+    --_btn-bc-dis: var(--_c-text-bd);
+    --_btn-sd: var(--_c-prim-sd); */
 }
 AX-BTN[theme=prim]:where(:not([type=seal], [type=plain])) {
   --_btn-bg: var(--_c-prim);
+  --_btn-bg-hov: var(--_c-prim-lt);
+  --_btn-bg-act: var(--_c-prim-dp);
   --_btn-sd: var(--_c-prim-sd);
-  --_c-lt: var(--_c-prim-lt);
-  --_c-dp: var(--_c-prim-dp);
 }
 AX-BTN[theme=error]:where(:not([type=seal], [type=plain])) {
   --_btn-bg: var(--_c-error);
+  --_btn-bg-hov: var(--_c-error-lt);
+  --_btn-bg-act: var(--_c-error-dp);
   --_btn-sd: var(--_c-error-sd);
-  --_c-lt: var(--_c-error-lt);
-  --_c-dp: var(--_c-error-dp);
 }
 AX-BTN[theme=succ]:where(:not([type=seal], [type=plain])) {
   --_btn-bg: var(--_c-succ);
+  --_btn-bg-hov: var(--_c-succ-lt);
+  --_btn-bg-act: var(--_c-succ-dp);
   --_btn-sd: var(--_c-succ-sd);
-  --_c-lt: var(--_c-succ-lt);
-  --_c-dp: var(--_c-succ-dp);
 }
 AX-BTN[theme=info]:where(:not([type=seal], [type=plain])) {
   --_btn-bg: var(--_c-info);
+  --_btn-bg-hov: var(--_c-info-lt);
+  --_btn-bg-act: var(--_c-info-dp);
   --_btn-sd: var(--_c-info-sd);
-  --_c-lt: var(--_c-info-lt);
-  --_c-dp: var(--_c-info-dp);
 }
 AX-BTN[theme=issue]:where(:not([type=seal], [type=plain])) {
   --_btn-bg: var(--_c-issue);
+  --_btn-bg-hov: var(--_c-issue-lt);
+  --_btn-bg-act: var(--_c-issue-dp);
   --_btn-sd: var(--_c-issue-sd);
-  --_c-lt: var(--_c-issue-lt);
-  --_c-dp: var(--_c-issue-dp);
 }
 AX-BTN[theme=warn]:where(:not([type=seal], [type=plain])) {
   --_btn-bg: var(--_c-warn);
+  --_btn-bg-hov: var(--_c-warn-lt);
+  --_btn-bg-act: var(--_c-warn-dp);
   --_btn-sd: var(--_c-warn-sd);
-  --_c-lt: var(--_c-warn-lt);
-  --_c-dp: var(--_c-warn-dp);
 }
 AX-BTN[theme=text]:where(:not([type=seal], [type=plain])) {
   --_btn-bg: hsl(var(--_h-text), var(--_s-text), 20%);
-  --_btn-sd: var(--_c-text-sd);
-  --_c-lt: var(--_c-text-lt);
-  --_c-dp: var(--_c-text-dp);
+  --_btn-bg-hov: var(--_c-text-lt);
+  --_btn-bg-act: var(--_c-text-dp);
+  --_btn-sd: var(--_c-brief-sd);
 }
 AX-BTN[theme=brief]:where(:not([type=seal], [type=plain])) {
   --_btn-bg: var(--_c-brief-bg);
   --_btn-sd: var(--_c-brief-sd);
-  --_c-lt: var(--_c-brief-lt);
-  --_c-dp: var(--_c-brief-dp);
 }
 AX-BTN[theme=caption]:where(:not([type=seal], [type=plain])) {
   --_btn-bg: var(--_c-caption-bg);
   --_btn-sd: var(--_c-caption-sd);
-  --_c-lt: var(--_c-caption-lt);
-  --_c-dp: var(--_c-caption-dp);
 }
-AX-BTN:is([theme=prim],
-    [theme=error],
-    [theme=succ],
-    [theme=info],
-    [theme=issue],
-    [theme=warn],
-    [theme=text],
-    [theme=brief],
-    [theme=caption],
-  ):where(:not([type=seal], [type=plain])) {
+AX-BTN:is([theme]):where(:not([type=seal], [type=plain])) {
   --_btn-c: var(--_c-white);
+  --_btn-c-hov: var(--_btn-c);
+  --_btn-c-foc: var(--_btn-c);
+  --_btn-c-act: var(--_c-white-60);
+  --_btn-bg-foc: var(--_btn-bg);
+  --_btn-bg-dis: var(--_btn-bg);
   --_btn-bw: 0;
 }
-AX-BTN:is([theme=prim],
-    [theme=error],
-    [theme=succ],
-    [theme=info],
-    [theme=issue],
-    [theme=warn],
-    [theme=text],
-    [theme=brief],
-    [theme=caption],
-  ):where(:not([type=seal], [type=plain])) > [rep=wrap] {
-  background-color: var(--_btn-bg);
-}
-AX-BTN:is([theme=prim],
-    [theme=error],
-    [theme=succ],
-    [theme=info],
-    [theme=issue],
-    [theme=warn],
-    [theme=text],
-    [theme=brief],
-    [theme=caption],
-  ):where(:not([type=seal], [type=plain])) > [rep=wrap]:hover {
-  color: var(--_btn-c);
-  background-color: var(--_c-lt);
-}
-AX-BTN:is([theme=prim],
-    [theme=error],
-    [theme=succ],
-    [theme=info],
-    [theme=issue],
-    [theme=warn],
-    [theme=text],
-    [theme=brief],
-    [theme=caption],
-  ):where(:not([type=seal], [type=plain])) > [rep=wrap]:focus {
-  color: var(--_btn-c);
-}
-AX-BTN:is([theme=prim],
-    [theme=error],
-    [theme=succ],
-    [theme=info],
-    [theme=issue],
-    [theme=warn],
-    [theme=text],
-    [theme=brief],
-    [theme=caption],
-  ):where(:not([type=seal], [type=plain])) > [rep=wrap]:active {
+AX-BTN:is([theme]):where(:not([type=seal], [type=plain])) > [rep=wrap]:active {
   opacity: 1;
-  color: rgba(255, 255, 255, var(--_o-active));
-  background-color: var(--_c-dp);
 }
-AX-BTN:is([theme=prim],
-    [theme=error],
-    [theme=succ],
-    [theme=info],
-    [theme=issue],
-    [theme=warn],
-    [theme=text],
-    [theme=brief],
-    [theme=caption],
-  ):where(:not([type=seal], [type=plain])):where([disabled]) > [rep=wrap] {
-  color: var(--_btn-c);
+AX-BTN:is([theme]):where(:not([type=seal], [type=plain])):where([disabled]) > [rep=wrap] {
   opacity: var(--_o-disabled);
 }
 AX-BTN[theme=warn]:where(:not([type=seal], [type=plain])) {
-  --_btn-c: hsl(var(--_h-text), var(--_s-text), 20%);
+  --_btn-c: var(--_c-text-static);
+  --_btn-c-act: var(--_c-text-aj);
 }
-AX-BTN[theme=warn]:where(:not([type=seal], [type=plain])) > [rep=wrap]:active {
-  color: var(--_c-text-aj);
-}
-AX-BTN[theme=brief]:where(:not([type=seal], [type=plain])) > [rep=wrap]:hover,
-AX-BTN[theme=caption]:where(:not([type=seal], [type=plain])) > [rep=wrap]:hover {
-  background-color: var(--_btn-bg);
-}
-AX-BTN[theme=brief]:where(:not([type=seal], [type=plain])) > [rep=wrap]:focus,
-AX-BTN[theme=caption]:where(:not([type=seal], [type=plain])) > [rep=wrap]:focus {
-  outline-width: 1px;
+AX-BTN[theme=brief]:where(:not([type=seal], [type=plain])),
+AX-BTN[theme=caption]:where(:not([type=seal], [type=plain])) {
+  --_btn-c-hov: var(--_btn-c);
+  --_btn-c-act: var(--_btn-c);
+  --_btn-c-foc: var(--_btn-c);
+  --_btn-bg-hov: var(--_btn-bg);
+  --_btn-bg-act: var(--_btn-bg);
+  --_btn-bg-foc: var(--_btn-bg);
+  /*  >[rep=wrap]:focus {
+      outline-width: 1px;
+    } */
 }
 AX-BTN[theme=brief]:where(:not([type=seal], [type=plain])) > [rep=wrap]:active,
 AX-BTN[theme=caption]:where(:not([type=seal], [type=plain])) > [rep=wrap]:active {
-  color: var(--_btn-c);
-  background-color: var(--_btn-bg);
   opacity: var(--_o-active);
 }
 AX-BTN[theme=brief]:where(:not([type=seal], [type=plain])):where([disabled]) > [rep=wrap],
 AX-BTN[theme=caption]:where(:not([type=seal], [type=plain])):where([disabled]) > [rep=wrap] {
-  color: var(--_btn-c);
   opacity: 1;
 }
 AX-BTN[theme=brief]:where(:not([type=seal], [type=plain])) {
   --_btn-c: var(--_c-brief);
 }
-AX-BTN[e]:where(:not([type=seal], [type=plain])) {
+AX-BTN[theme=caption]:where(:not([type=seal], [type=plain])) {
   --_btn-c: var(--_c-caption);
 }
 AX-BTN[shape=square] {
@@ -3685,10 +3710,10 @@ AX-BTN[theme=issue]:where([gradient]:not([type=seal], [type=plain])) > [rep=wrap
   background: linear-gradient(45deg, var(--_c-issue), var(--_c-issue-aj));
 }
 AX-BTN[theme=text]:where([gradient]:not([type=seal], [type=plain])) > [rep=wrap] {
-  background: linear-gradient(45deg, hsl(var(--_h-text), var(--_s-text), 20%), var(--_c-text-aj));
+  background: linear-gradient(45deg, var(--_c-text-static), var(--_c-text-aj));
 }
 AX-BTN[shaded]:where(:not([type=seal], [type=plain])) {
-  --_btn-sd: rgba(0, 0, 0, 0.1);
+  --_btn-sd: var(--_c-black-12);
 }
 AX-BTN[shaded]:where(:not([type=seal], [type=plain])) > [rep=wrap] {
   outline-color: transparent;
@@ -3830,11 +3855,123 @@ AX-BTN:where([check=ing]:not([type=seal], [type=plain])):where([theme=prim], [th
   --_spin-c: var(--_c-white);
 }
 AX-BTN:where([check=ing]:not([type=seal], [type=plain])):where([theme=warn]) > [rep=wrap]:before {
-  --_spin-c: var(--_btn-c);
-  --_spin-bg: hsl(var(--_h-text), var(--_s-text), 20%, 0.2);
+  --_spin-c: var(--_c-text-static);
+  --_spin-bg: var(--_c-black-20);
 }
 AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ], [theme=error], [theme=info], [theme=warn], [theme=issue])) > [rep=wrap]:before {
   color: var(--_c-prim);
+}
+AX-BTN[inverted] {
+  --_btn-bg-hov: var(--_btn-bg);
+  --_btn-bg-act: var(--_btn-bg);
+  --_btn-bg-foc: var(--_btn-bg);
+  --_btn-bg-dis: var(--_btn-bg);
+  --_btn-c: var(--_c-white);
+  --_btn-c-hov: var(--_btn-c);
+  --_btn-c-act: var(--_btn-c);
+  --_btn-c-foc: var(--_btn-c);
+  --_btn-c-dis: var(--_btn-c);
+  --_btn-bc: var(--_btn-c);
+  --_btn-bc-hov: var(--_btn-bc);
+  --_btn-bc-foc: var(--_btn-bc);
+  --_btn-bc-act: var(--_btn-bc);
+  --_btn-bc-dis: var(--_btn-bc);
+}
+AX-BTN[inverted]:where(:not([type=seal],[type=plain])) {
+  --_btn-bg: var(--_c-white-4);
+  --_btn-sd: var(--_c-black-12);
+}
+AX-BTN[inverted]:where(:not([type=seal],[type=plain]))[theme=prim] {
+  --_btn-c: var(--_c-prim-fc);
+}
+AX-BTN[inverted]:where(:not([type=seal],[type=plain]))[theme=succ] {
+  --_btn-c: var(--_c-succ-fc);
+}
+AX-BTN[inverted]:where(:not([type=seal],[type=plain]))[theme=warn] {
+  --_btn-c: var(--_c-warn-fc);
+}
+AX-BTN[inverted]:where(:not([type=seal],[type=plain]))[theme=error] {
+  --_btn-c: var(--_c-error-fc);
+}
+AX-BTN[inverted]:where(:not([type=seal],[type=plain]))[theme=info] {
+  --_btn-c: var(--_c-info-fc);
+}
+AX-BTN[inverted]:where(:not([type=seal],[type=plain]))[theme=issue] {
+  --_btn-c: var(--_c-issue-fc);
+}
+AX-BTN[inverted]:where(:not([type=seal],[type=plain]))[theme=text] {
+  --_btn-c: var(--_c-white-80);
+}
+AX-BTN[inverted]:where(:not([type=seal],[type=plain]))[theme=brief] {
+  --_btn-c: var(--_c-white-60);
+}
+AX-BTN[inverted]:where(:not([type=seal],[type=plain]))[theme=caption] {
+  --_btn-c: var(--_c-white-40);
+}
+AX-BTN[inverted][type=plain] {
+  --_btn-bg: transparent;
+  --_btn-sd: transparent;
+}
+AX-BTN[inverted][type=plain][theme] {
+  --_btn-c-act: var(--_btn-c);
+}
+AX-BTN[inverted][type=plain]:where([theme=prim]) {
+  --_btn-c: var(--_c-prim-fc);
+}
+AX-BTN[inverted][type=plain]:where([theme=succ]) {
+  --_btn-c: var(--_c-succ-fc);
+}
+AX-BTN[inverted][type=plain]:where([theme=warn]) {
+  --_btn-c: var(--_c-warn-fc);
+}
+AX-BTN[inverted][type=plain]:where([theme=error]) {
+  --_btn-c: var(--_c-error-fc);
+}
+AX-BTN[inverted][type=plain]:where([theme=info]) {
+  --_btn-c: var(--_c-info-fc);
+}
+AX-BTN[inverted][type=plain]:where([theme=issue]) {
+  --_btn-c: var(--_c-issue-fc);
+}
+AX-BTN[inverted][type=plain][theme=text] {
+  --_btn-c: var(--_c-white-80);
+}
+AX-BTN[inverted][type=plain][theme=brief] {
+  --_btn-c: var(--_c-white-60);
+}
+AX-BTN[inverted][type=plain][theme=caption] {
+  --_btn-c: var(--_c-white-40);
+}
+AX-BTN[inverted][type=seal] {
+  --_btn-bg: transparent;
+  --_btn-sd: var(--_c-black-12);
+}
+AX-BTN[inverted][type=seal]:where([theme=prim]) {
+  --_btn-c: var(--_c-prim-fc);
+}
+AX-BTN[inverted][type=seal]:where([theme=succ]) {
+  --_btn-c: var(--_c-prim-fc);
+}
+AX-BTN[inverted][type=seal]:where([theme=warn]) {
+  --_btn-c: var(--_c-warn-fc);
+}
+AX-BTN[inverted][type=seal]:where([theme=error]) {
+  --_btn-c: var(--_c-error-fc);
+}
+AX-BTN[inverted][type=seal]:where([theme=info]) {
+  --_btn-c: var(--_c-info-fc);
+}
+AX-BTN[inverted][type=seal]:where([theme=issue]) {
+  --_btn-c: var(--_c-issue-fc);
+}
+AX-BTN[inverted][type=seal]:where([theme=text]) {
+  --_btn-c: var(--_c-stage-80);
+}
+AX-BTN[inverted][type=seal]:where([theme=brief]) {
+  --_btn-c: var(--_c-stage-60);
+}
+AX-BTN[inverted][type=seal]:where([theme=caption]) {
+  --_btn-c: var(--_c-stage-40);
 }
 [dir=rtl] AX-BTN [rep=more]:before {
   content: 'left';

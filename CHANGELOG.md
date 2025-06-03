@@ -2,6 +2,16 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-06-03更新
+### 发布v3.1.23版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.23/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.23/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.23/dist.zip
+### 更新内容
+* 将增加`--_white-*`系列样式和`--_black-*`系列样式变量，用于黑白透明度场景。
+* 增加与`--_c-text`同源的颜色变量`--_c-text-static`，用来固定显示文本颜色，不受`dark`模式影响。
+* 修改`btn`相关样式，增加`inverted`属性，用于深底反色。
+
 ## 2025-06-01更新
 ### 发布v3.1.22版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.22/dist/js/ax.js
