@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-6-3 16:12:47
+ * @since Last modified: 2025-6-17 17:13:37
  * @name AXUI front-end framework.
- * @version 3.1.23
+ * @version 3.1.24
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -670,10 +670,9 @@ const config = {
     warn: {
         init: 'The initialization process of the instance has been stopped. You will need to manually initialize it using the init() method later!',
         emptyCont: 'Data was not obtained, but execution was not halted!',
-    },
-    error: {
         parse: 'Getting data from HTML resulted in an error, an empty array was returned, but execution was not interrupted!',
     },
+    error: {},
     message: {},
     valid: {
         regChars: '~!@#$%^&*',
@@ -1108,6 +1107,7 @@ const parseStr = ({ content = '', type = 'object', method = config.parser, catch
     let trim = content.trim();
     
     try {
+        (trim, 452);
         let tmp = typeof method === 'function' ? method(trim) : method === 'JSON.parse' ? JSON.parse(trim) : new Function(`"use strict"; return ${trim}`)();
         result = tmp;
     }
@@ -6314,6 +6314,8 @@ const dl2Tree = (el) => {
     return result;
 };
 
+const attrValBool = (value) => ![false, 0, null, undefined, 'false', '0'].includes(value);
+
 const treeTools = {
     
     find: function (arr, val, key) {
@@ -6326,7 +6328,10 @@ const treeTools = {
         return null;
     },
     getBoolItems: (data, prop, negative = false) => {
-        return data.filter((k) => negative ? !k[prop] : k[prop]);
+        return data.filter((k) => {
+            let tmp = attrValBool(k[prop]);
+            return negative ? !tmp : tmp;
+        });
     },
     
     toFlat: function (data) {
@@ -6585,7 +6590,7 @@ const treeTools = {
                     content: node.textContent,
                     type: 'array',
                     error: (err) => {
-                        console.error(config.error.parse, err);
+                        console.info(config.warn.parse);
                     }
                 }));
             }
@@ -6637,7 +6642,7 @@ const treeTools = {
                                     content: resp,
                                     type,
                                     error: (err) => {
-                                        console.error(config.error.parse, err);
+                                        console.info(config.warn.parse);
                                     }
                                 })));
                             }
@@ -6900,8 +6905,6 @@ let theme = {
         this.set(themeRaw);
     }
 };
-
-const attrValBool = (value) => ![null, 'false', '0', false, 0, undefined].includes(value);
 
 const getBetweenEls = ({ selector, start, end, root, exclude }) => {
     let rootEl = getEl(root) || document.body, startEl = getEl(start, rootEl), endEl = getEl(end, rootEl), excEls = getEls(exclude, rootEl), els = getEls(selector, rootEl), result = [];
@@ -10431,7 +10434,7 @@ class ModBaseListenCacheNest extends ModBaseListenCache {
     initCheckeds() {
         if (!this.options.check.enable)
             return;
-        let vals = valToArr(this.options.check.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => k.checked);
+        let vals = valToArr(this.options.check.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => attrValBool(k.checked));
         for (let k of items)
             k.checked = false;
         this.check([...items, ...vals]);
@@ -10443,19 +10446,19 @@ class ModBaseListenCacheNest extends ModBaseListenCache {
         this.disable(valToArr(this.options.disable));
     }
     getReadonlys() {
-        return (this.flatData || this.treeData).filter((k) => k.readonly);
+        return (this.flatData || this.treeData).filter((k) => attrValBool(k.readonly));
     }
     getDisableds() {
-        return (this.flatData || this.treeData).filter((k) => k.disabled);
+        return (this.flatData || this.treeData).filter((k) => attrValBool(k.disabled));
     }
     getExpandeds() {
-        return (this.flatData || this.treeData).filter((k) => k.expanded);
+        return (this.flatData || this.treeData).filter((k) => attrValBool(k.expanded));
     }
     getCheckeds() {
-        return (this.flatData || this.treeData).filter((k) => k.checked);
+        return (this.flatData || this.treeData).filter((k) => attrValBool(k.checked));
     }
     getUncheckeds() {
-        return (this.flatData || this.treeData).filter((k) => !k.checked);
+        return (this.flatData || this.treeData).filter((k) => !attrValBool(k.checked));
     }
     getArrowEl(item) {
         if (!this.options.arrow.enable)
@@ -10464,8 +10467,8 @@ class ModBaseListenCacheNest extends ModBaseListenCache {
         this.updateArrowEl(item);
     }
     toggleArrow(val, item) {
-        let map = val ? { new: 'show', old: 'hide', action: 'add' } : { new: 'hide', old: 'show', action: 'remove' };
-        item.headEl.toggleAttribute('expanded', val);
+        let tmp = attrValBool(val), map = tmp ? { new: 'show', old: 'hide', action: 'add' } : { new: 'hide', old: 'show', action: 'remove' };
+        item.headEl.toggleAttribute('expanded', tmp);
         if (this.options.arrow.type === 'image') {
             item.arrowEl.style.backgroundImage = `url("${this.options.arrow[map.new]}")`;
         }
@@ -10510,7 +10513,7 @@ class ModBaseListenCacheNest extends ModBaseListenCache {
         if (this.destroyed)
             return;
         for (let k of this.flatData) {
-            k.children && !k.expanded && this.eachExpand(k);
+            !attrValBool(k.expanded) && this.eachExpand(k);
         }
         this.listen({ name: 'expandedAll', cb });
         return this;
@@ -10570,7 +10573,7 @@ class ModBaseListenCacheNest extends ModBaseListenCache {
     enable(data, cb) {
         if (this.destroyed)
             return;
-        let tmp = isNull(data) ? this.flatData : (Array.isArray(data) ? data : [data]), items = tmp.map((k) => findItem(k, this.flatData)).filter((k) => k && (k.disabled || k.readonly));
+        let tmp = isNull(data) ? this.flatData : (Array.isArray(data) ? data : [data]), items = tmp.map((k) => findItem(k, this.flatData)).filter((k) => k && (attrValBool(k.disabled) || attrValBool(k.readonly)));
         for (let k of items) {
             k.hasOwnProperty('disabled') && (k.disabled = false);
             k.hasOwnProperty('readonly') && (k.readonly = false);
@@ -10586,7 +10589,7 @@ class ModBaseListenCacheNest extends ModBaseListenCache {
         return this;
     }
     toggleCheck(item) {
-        item.checked ? this.check(item, false) : this.check(item, true);
+        attrValBool(item.checked) ? this.check(item, false) : this.check(item, true);
     }
     uncheckAll(cb) {
         if (this.destroyed || !this.options.check.enable)
@@ -15683,7 +15686,7 @@ class Tree extends ModBaseListenCacheNest {
             let item = findItem(this, _this.flatData, 'labelEl');
             _this.toggleSelected(item);
             if (item && item.toolsEl && _this.options.tools.trigger === 'click') {
-                if (item.selected) {
+                if (attrValBool(item.selected)) {
                     show({ el: item.toolsEl });
                 }
                 else {
@@ -15959,22 +15962,23 @@ class Tree extends ModBaseListenCacheNest {
                 }
                 else if (obj.key === 'atEnd') ;
                 else if (obj.key === 'expanded' && obj.proxy.children) {
-                    obj.proxy.arrowEl && super.toggleArrow(obj.value, obj.proxy);
+                    obj.proxy.arrowEl && super.toggleArrow(attrValBool(obj.value), obj.proxy);
                     this.toggleParentLegend(obj.proxy);
                 }
                 else if (obj.key === 'selected') {
-                    obj.proxy.headEl.toggleAttribute('selected', obj.value);
+                    obj.proxy.headEl.toggleAttribute('selected', attrValBool(obj.value));
                     this.updateSeqItems(obj, 'selected');
                 }
                 else if (obj.key === 'disabled') {
-                    obj.proxy.headEl.toggleAttribute('disabled', obj.value);
+                    obj.proxy.headEl.toggleAttribute('disabled', attrValBool(obj.value));
                 }
                 else if (obj.key === 'readonly') {
-                    obj.proxy.headEl.toggleAttribute('readonly', obj.value);
+                    obj.proxy.headEl.toggleAttribute('readonly', attrValBool(obj.value));
                 }
                 else if (obj.key === 'checked') {
-                    obj.proxy.headEl.toggleAttribute('checked', obj.value);
-                    obj.proxy.checkEl && obj.proxy.checkEl.setAttribute('check', obj.value ? 'ed' : '');
+                    let tmp = attrValBool(obj.value);
+                    obj.proxy.headEl.toggleAttribute('checked', tmp);
+                    obj.proxy.checkEl && obj.proxy.checkEl.setAttribute('check', tmp ? 'ed' : '');
                     this.updateSeqItems(obj, 'checked');
                 }
                 else if (obj.key === 'children') {
@@ -15999,7 +16003,7 @@ class Tree extends ModBaseListenCacheNest {
                 if (this.options.check.enable && this.options.check.max) {
                     let checkeds = super.getCheckeds(), uncheckeds = super.getUncheckeds(), setDisabled = (data) => {
                         for (let k of data) {
-                            !k.disabled && k.checkEl.toggleAttribute('disabled', true);
+                            !attrValBool(k.disabled) && k.checkEl.toggleAttribute('disabled', true);
                             k.headEl.toggleAttribute('exceeded', true);
                         }
                     };
@@ -16043,7 +16047,7 @@ class Tree extends ModBaseListenCacheNest {
         }
     }
     initExpandeds() {
-        let vals = valToArr(this.options.expand.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => k.expanded && k.children), tmp = [...items, ...vals];
+        let vals = valToArr(this.options.expand.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => attrValBool(k.expanded) && k.children), tmp = [...items, ...vals];
         for (let k of items)
             k.expanded = false;
         if (this.options.expand.all) {
@@ -16072,13 +16076,13 @@ class Tree extends ModBaseListenCacheNest {
     initSelecteds() {
         if (!this.options.select.enable)
             return;
-        let vals = valToArr(this.options.select.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => k.selected), tmp = [...items, ...vals];
+        let vals = valToArr(this.options.select.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => attrValBool(k.selected)), tmp = [...items, ...vals];
         for (let k of items)
             k.selected = false;
         this.select(this.options.select.only ? tmp[0] : tmp);
     }
     getSelecteds() {
-        return this.flatData.filter((k) => k.selected);
+        return this.flatData.filter((k) => attrValBool(k.selected));
     }
     getParentsGroupBy(items, key = 'pId') {
         if (isEmpty(items))
@@ -16195,7 +16199,7 @@ class Tree extends ModBaseListenCacheNest {
     toggleParentLegend(item) {
         if (!this.options.legend.enable || item.legend || !Array.isArray(this.options.legend.parent) || !this.options.legend.parent[1])
             return;
-        this.setLegendVal(item.legendEl, this.options.legend.parent[item.expanded ? 1 : 0], this.options.legend.type);
+        this.setLegendVal(item.legendEl, this.options.legend.parent[attrValBool(item.expanded) ? 1 : 0], this.options.legend.type);
     }
     updateLegendEl(item) {
         if (!this.options.legend.enable)
@@ -16205,7 +16209,7 @@ class Tree extends ModBaseListenCacheNest {
         }
         else {
             if (item.hasOwnProperty('children')) {
-                this.setLegendVal(item.legendEl, this.options.legend.parent[item.expanded ? 1 : 0], this.options.legend.type);
+                this.setLegendVal(item.legendEl, this.options.legend.parent[attrValBool(item.expanded) ? 1 : 0], this.options.legend.type);
             }
             else {
                 this.setLegendVal(item.legendEl, this.options.legend.child, this.options.legend.type);
@@ -16262,11 +16266,11 @@ class Tree extends ModBaseListenCacheNest {
         if (!item.customEl) {
             item.customEl = item.custom ? createEl('div', { [ax.alias]: 'custom' }, item.custom) : null;
         }
-        item.expanded && item.headEl.toggleAttribute('expanded', true);
-        item.selected && item.headEl.toggleAttribute('selected', true);
-        item.disabled && item.headEl.toggleAttribute('disabled', true);
-        item.readonly && item.headEl.toggleAttribute('readonly', true);
-        item.checked && item.headEl.toggleAttribute('checked', true);
+        attrValBool(item.expanded) && item.headEl.toggleAttribute('expanded', true);
+        attrValBool(item.selected) && item.headEl.toggleAttribute('selected', true);
+        attrValBool(item.disabled) && item.headEl.toggleAttribute('disabled', true);
+        attrValBool(item.readonly) && item.headEl.toggleAttribute('readonly', true);
+        attrValBool(item.checked) && item.headEl.toggleAttribute('checked', true);
         this.options.drag.enable && item.headEl.toggleAttribute([this.dropTag], true);
         if (this.options.check.enable) {
             item.checkType = this.getCheckType(parent);
@@ -16444,7 +16448,7 @@ class Tree extends ModBaseListenCacheNest {
         this.options.select.enable ? this.targetEl.setAttribute('select', this.options.select.span) : this.targetEl.removeAttribute('select');
     }
     setDragDrop(item) {
-        if (!this.options.drag.enable || item.disabled || this.excludeDrags.includes(item))
+        if (!this.options.drag.enable || attrValBool(item.disabled) || this.excludeDrags.includes(item))
             return;
         item.dragIns = new Drag(item.wrapEl, extend({
             target: {
@@ -16518,30 +16522,31 @@ class Tree extends ModBaseListenCacheNest {
         k.labelEl.removeEventListener('click', this.selectEvt);
         k.labelEl.addEventListener('click', this.selectEvt, false);
         if (k.toolsEl) {
+            let tmp = attrValBool(k.readonly);
             if (k.removeEl) {
                 k.removeEl.onclick = () => {
-                    if (k.readonly)
+                    if (tmp)
                         return;
                     this.remove(k);
                 };
             }
             if (k.editEl) {
                 k.editEl.onclick = () => {
-                    if (k.readonly)
+                    if (tmp)
                         return;
                     this.inputLabel(k);
                 };
             }
             if (k.addfileEl) {
                 k.addfileEl.onclick = () => {
-                    if (k.readonly)
+                    if (tmp)
                         return;
                     this.add({ target: k, isChild: true, expand: true });
                 };
             }
             if (k.addfolderEl) {
                 k.addfolderEl.onclick = () => {
-                    if (k.readonly)
+                    if (tmp)
                         return;
                     this.add({ target: k, isChild: true, isLeaf: false, expand: true });
                 };
@@ -16556,11 +16561,12 @@ class Tree extends ModBaseListenCacheNest {
             k.headEl.removeEventListener('click', this.lineEvt);
             k.headEl.addEventListener('click', this.lineEvt, false);
         }
-        k.disabled && k.headEl.toggleAttribute('disabled', true);
-        k.readonly && k.headEl.toggleAttribute('readonly', true);
+        attrValBool(k.disabled) && k.headEl.toggleAttribute('disabled', true);
+        attrValBool(k.readonly) && k.headEl.toggleAttribute('readonly', true);
         if (this.options.check.enable) {
             k.checkEl.on('check', async (val) => {
-                !this.chainChecking && val.checked !== k.checked && await this.check(k, val.checked);
+                let tmp = attrValBool(val.checked);
+                !this.chainChecking && tmp !== attrValBool(k.checked) && await this.check(k, tmp);
             });
         }
         if (this.options.drag.enable) {
@@ -16596,18 +16602,18 @@ class Tree extends ModBaseListenCacheNest {
         }
     }
     getDrops() {
-        return isEmpty(this.options.drag.drops) ? this.flatData.map((k) => !k.disabled ? k.headEl : null).filter(Boolean) :
-            this.options.drag.value.map((k) => findItem(k, this.flatData)).filter((k) => k && !k.disabled).map((k) => k.headEl);
+        return isEmpty(this.options.drag.drops) ? this.flatData.map((k) => !attrValBool(k.disabled) ? k.headEl : null).filter(Boolean) :
+            this.options.drag.value.map((k) => findItem(k, this.flatData)).filter((k) => k && !attrValBool(k.disabled)).map((k) => k.headEl);
     }
     getReadonly() {
-        return this.flatData.find((k) => k.readonly);
+        return this.flatData.find((k) => attrValBool(k.readonly));
     }
     getTriggerEl(item) {
         return (item.href && item.arrowEl ? item.arrowEl : item.headEl);
     }
     addTrigger(item, target) {
         if (item.children) {
-            if (!item.disabled) {
+            if (!attrValBool(item.disabled)) {
                 let triggerEl = target || this.getTriggerEl(item);
                 if (this.options.arrow.trigger === 'click') {
                     triggerEl.removeEventListener('click', this.expandEvt);
@@ -16628,7 +16634,7 @@ class Tree extends ModBaseListenCacheNest {
             }
         }
         else {
-            if (!item.disabled) {
+            if (!attrValBool(item.disabled)) {
                 item.headEl.removeEventListener('click', this.selectEvt);
                 item.headEl.addEventListener('click', this.selectEvt, false);
             }
@@ -16636,7 +16642,7 @@ class Tree extends ModBaseListenCacheNest {
     }
     removeTrigger(item, target) {
         if (item.children) {
-            if (!item.disabled) {
+            if (!attrValBool(item.disabled)) {
                 let triggerEl = target || this.getTriggerEl(item);
                 if (this.options.arrow.trigger === 'click') {
                     triggerEl.removeEventListener('click', this.expandEvt);
@@ -16647,7 +16653,7 @@ class Tree extends ModBaseListenCacheNest {
             }
         }
         else {
-            if (!item.disabled) {
+            if (!attrValBool(item.disabled)) {
                 item.headEl.removeEventListener('click', this.selectEvt);
             }
         }
@@ -16658,19 +16664,20 @@ class Tree extends ModBaseListenCacheNest {
         let item = findItem(data, this.flatData);
         if (!item || !item.children)
             return;
-        item.expanded ? super.collapse(item) : super.expand(item);
+        attrValBool(item.expanded) ? super.collapse(item) : super.expand(item);
         super.listen({ name: 'trigger', params: [item] });
     }
     toggleSelected(data) {
         let item = findItem(data, this.flatData);
         if (!item || item.headEl.hasAttribute('editing') || !this.options.select.enable)
             return;
-        if (item.selected) {
+        let tmp = attrValBool(item.selected);
+        if (tmp) {
             this.deselect(item);
         }
         else {
             this.select(item);
-            this.options.select.only && this.deselect(this.flatData.filter((k) => k !== item && k.selected));
+            this.options.select.only && this.deselect(this.flatData.filter((k) => k !== item && tmp));
         }
     }
     async eachCollapse(data, cb) {
@@ -16737,7 +16744,7 @@ class Tree extends ModBaseListenCacheNest {
             }
         });
         if (this.options.expand.only) {
-            let others = this.flatData.filter((k) => (k !== item && k.expanded && k.floor === item.floor && k.children));
+            let others = this.flatData.filter((k) => (k !== item && attrValBool(k.expanded) && k.floor === item.floor && k.children));
             for (let k of others)
                 super.collapse(k);
         }
@@ -16745,9 +16752,9 @@ class Tree extends ModBaseListenCacheNest {
     floatDown(obj) {
         if (!obj.hasOwnProperty('children') || !Array.isArray(obj.children))
             return;
-        let enables = obj.children.filter((k) => !k.disabled), type = this.getCheckType(obj);
+        let enables = obj.children.filter((k) => !attrValBool(k.disabled)), type = this.getCheckType(obj);
         for (let k of enables) {
-            if (obj.checked) {
+            if (attrValBool(obj.checked)) {
                 type === 'checkbox' && (k.checked = true);
             }
             else {
@@ -16761,11 +16768,11 @@ class Tree extends ModBaseListenCacheNest {
             return;
         let parents = treeTools.getParentsFromPath({ path: obj.path, flatData: this.flatData, pathHyphen: this.options.pathHyphen, pop: true }).parents.reverse(), setCheck = (item, enables, type) => {
             if (type === 'checkbox') {
-                if (enables.every((k) => !k.checked)) {
+                if (enables.every((k) => !attrValBool(k.checked))) {
                     item.checked = false;
                     item.checkEl.setAttribute('check', '');
                 }
-                else if (enables.every((k) => k.checked)) {
+                else if (enables.every((k) => attrValBool(k.checked))) {
                     item.checked = true;
                     item.checkType === 'radio' && this.uncheckSibings(item);
                 }
@@ -16775,7 +16782,7 @@ class Tree extends ModBaseListenCacheNest {
                 }
             }
             else if (type === 'radio') {
-                if (enables.some((k) => k.checked)) {
+                if (enables.some((k) => attrValBool(k.checked))) {
                     item.checked = true;
                     item.checkType === 'radio' && this.uncheckSibings(item);
                 }
@@ -16786,7 +16793,7 @@ class Tree extends ModBaseListenCacheNest {
             }
         };
         for (let i of parents) {
-            let enables = i.children.filter((k) => !k.disabled), type = this.getCheckType(i);
+            let enables = i.children.filter((k) => !attrValBool(k.disabled)), type = this.getCheckType(i);
             setCheck(i, enables, type);
         }
     }
@@ -16801,7 +16808,7 @@ class Tree extends ModBaseListenCacheNest {
     }
     uncheckSibings(item) {
         this.chainChecking = true;
-        let siblings = super.getSiblings(item).filter((k) => k.checked);
+        let siblings = super.getSiblings(item).filter((k) => attrValBool(k.checked));
         for (let k of siblings) {
             k.checked = false;
             this.options.check.linkage && this.floatDown(k);
@@ -16826,8 +16833,8 @@ class Tree extends ModBaseListenCacheNest {
     select(data, flag = true, cb) {
         if (this.destroyed || !this.options.select.enable || isNull(data))
             return;
-        let tmp = findItems(data, this.flatData), items = tmp.map((k) => findItem(k, this.flatData)).filter((k) => !k.selected === flag && (this.options.select.span === 'leaf' ? !k.children : this.options.select.span === 'branch' ? k.children : true)), param = items, fn = (obj) => {
-            if (obj.headEl.hasAttribute('editing') || obj.headEl.hasAttribute('unselectable') || obj.selected)
+        let tmp = findItems(data, this.flatData), items = tmp.map((k) => findItem(k, this.flatData)).filter((k) => !attrValBool(k.selected) === flag && (this.options.select.span === 'leaf' ? !k.children : this.options.select.span === 'branch' ? k.children : true)), param = items, fn = (obj) => {
+            if (obj.headEl.hasAttribute('editing') || obj.headEl.hasAttribute('unselectable') || attrValBool(obj.selected))
                 return;
             obj.selected = true;
         };
@@ -16838,7 +16845,7 @@ class Tree extends ModBaseListenCacheNest {
                 let item = items[0];
                 if (item) {
                     fn(item);
-                    this.deselect(this.flatData.filter((k) => k !== item && k.selected));
+                    this.deselect(this.flatData.filter((k) => k !== item && attrValBool(k.selected)));
                 }
                 param = [item];
             }
@@ -16873,7 +16880,7 @@ class Tree extends ModBaseListenCacheNest {
         if (isNull(data))
             return;
         let items = Array.isArray(data) ? data : [data], fn = (obj) => {
-            if (!obj.selected)
+            if (!attrValBool(obj.selected))
                 return;
             obj.selected = false;
         };
@@ -16895,7 +16902,7 @@ class Tree extends ModBaseListenCacheNest {
     async check(data, flag = true, cb) {
         if (this.destroyed)
             return;
-        let filters = findItems(data, this.flatData), items = filters.filter((k) => !k.checked === flag && (flag ? (this.options.check.span === 'leaf' ? !k.children : this.options.check.span === 'branch' ? !!k.children : true) : true)), fn = (obj) => {
+        let filters = findItems(data, this.flatData), items = filters.filter((k) => !attrValBool(k.checked) === flag && (flag ? (this.options.check.span === 'leaf' ? !k.children : this.options.check.span === 'branch' ? !!k.children : true) : true)), fn = (obj) => {
             obj.checked = flag;
             flag && obj.checkType === 'radio' && this.uncheckSibings(obj);
             this.options.check.linkage && this.eachCheck(obj);
@@ -17892,7 +17899,7 @@ class Tab extends ModBaseListenCacheNest {
         return this;
     }
     initActive() {
-        let activeItem = this.treeData.findIndex((k) => k.selected);
+        let activeItem = this.treeData.findIndex((k) => attrValBool(k.selected));
         if (this.options.active === 0 || this.options.active) {
             this.activate(this.options.active);
         }
@@ -17974,7 +17981,7 @@ class Tab extends ModBaseListenCacheNest {
                     obj.target.badgeEl.setAttribute('label', obj.value);
                 }
                 else if (obj.key === 'selected') {
-                    if (obj.value === true) {
+                    if (attrValBool(obj.value)) {
                         obj.target.headEl.setAttribute('selected', '');
                         obj.target.bodyEl.setAttribute('selected', '');
                         !obj.target.bodyEl.innerHTML && this.fillContent(obj.target);
@@ -17985,7 +17992,7 @@ class Tab extends ModBaseListenCacheNest {
                     }
                 }
                 else if (obj.key === 'disabled') {
-                    obj.target.headEl.toggleAttribute('disabled', obj.value);
+                    obj.target.headEl.toggleAttribute('disabled', attrValBool(obj.value));
                 }
                 else if (obj.key === 'content') {
                     this.fillContent(obj.target);
@@ -18054,7 +18061,7 @@ class Tab extends ModBaseListenCacheNest {
         };
         data = headsArr.map((k, i) => {
             let tmp = getPropsFromHead(k), bodyEl = bodiesArr[i];
-            bodyEl.toggleAttribute('selected', !!tmp.selected);
+            bodyEl.toggleAttribute('selected', attrValBool(tmp.selected));
             this.options.tools.enable && this.getTools(tmp);
             return { ...tmp, bodyEl, content: bodyEl.innerHTML };
         });
@@ -18089,8 +18096,8 @@ class Tab extends ModBaseListenCacheNest {
         item.bodyEl = createEl('li');
         item.badgeEl = item.badge ? createEl('ax-badge', { [ax.alias]: 'badge' }, item?.badge?.trim()) : null;
         item.tipsEl = item.tips ? createEl('i', { [ax.alias]: 'tips' }, item.tips) : null;
-        item.selected && (item.headEl.toggleAttribute('selected', true), item.bodyEl.toggleAttribute('selected', true));
-        item.disabled && item.headEl.toggleAttribute('disabled', true);
+        attrValBool(item.selected) && (item.headEl.toggleAttribute('selected', true), item.bodyEl.toggleAttribute('selected', true));
+        attrValBool(item.disabled) && item.headEl.toggleAttribute('disabled', true);
         item.headEl.append(...[item.iconEl, item.diskEl, item.cubeEl, item.imageEl, item.labelEl, item.tipsEl, item.badgeEl].filter(Boolean));
         this.options.tools.enable && this.getTools(item);
     }
@@ -18165,6 +18172,7 @@ class Tab extends ModBaseListenCacheNest {
     }
     updateEvt(k) {
         this.addTrigger(k);
+        let tmp = attrValBool(k.disabled);
         if (k.toolsEl) {
             if (k.closeEl) {
                 k.closeEl.onclick = () => {
@@ -18179,14 +18187,14 @@ class Tab extends ModBaseListenCacheNest {
             }
             if (k.addEl) {
                 k.addEl.onclick = debounce(() => {
-                    if (k.disabled)
+                    if (tmp)
                         return;
                     this.add({ data: {}, isFront: false, target: k });
                 });
             }
             if (k.updateEl) {
                 k.updateEl.onclick = debounce(() => {
-                    if (k.disabled)
+                    if (tmp)
                         return;
                     this.updateItemCont({ content: k.content, target: k });
                 });
@@ -18197,7 +18205,7 @@ class Tab extends ModBaseListenCacheNest {
                 tool.action && tool.action.call(refer, tool);
             }
         }
-        k.disabled && k.headEl.toggleAttribute('disabled', true);
+        tmp && k.headEl.toggleAttribute('disabled', true);
         k.action && k.action.call(this, k);
     }
     renderFinish() {
@@ -18207,16 +18215,16 @@ class Tab extends ModBaseListenCacheNest {
         }
     }
     getSelected() {
-        return this.treeData.find((k) => k.selected);
+        return this.treeData.find((k) => attrValBool(k.selected));
     }
     addTrigger(item) {
-        if (!item.disabled) {
+        if (!attrValBool(item.disabled)) {
             item.headEl.removeEventListener(this.trigger, this.actEvt);
             item.headEl.addEventListener(this.trigger, this.actEvt, false);
         }
     }
     removeTrigger(item) {
-        if (item.disabled) {
+        if (attrValBool(item.disabled)) {
             item.headEl.removeEventListener(this.trigger, this.actEvt);
         }
     }
@@ -18267,10 +18275,10 @@ class Tab extends ModBaseListenCacheNest {
     async activate(data, cb) {
         if (this.destroyed || isNull(data))
             return;
-        let item = findItem(data, this.treeData), other = this.treeData.find((k) => k !== item && k.selected);
+        let item = findItem(data, this.treeData), other = this.treeData.find((k) => k !== item && attrValBool(k.selected));
         if (!item)
             return;
-        if (item.selected) {
+        if (attrValBool(item.selected)) {
             !item.bodyEl.innerHTML && this.fillContent(item);
         }
         else {
@@ -18396,10 +18404,10 @@ class Tab extends ModBaseListenCacheNest {
                     item[k] = val.call({ ins: this, item: k }, item);
                 }
                 else if (['icon', 'disk', 'cube', 'image', 'label', 'tips', 'badge', 'disabled', 'content', 'contType', 'contData', 'ajaxType'].includes(k)) {
-                    item[k] = val;
+                    item[k] = k === 'disabled' ? attrValBool(val) : val;
                 }
                 else if (k === 'selected') {
-                    val === true ? this.activate(item) : item[k] = val;
+                    attrValBool(val) ? this.activate(item) : item[k] = val;
                 }
             }
             catch (err) {
@@ -28546,17 +28554,18 @@ class Accordion extends ModBaseListenCacheNest {
                     obj.proxy.labelEl.target = obj.value;
                 }
                 else if (obj.key === 'expanded') {
-                    super.toggleArrow(obj.value, obj.proxy);
+                    super.toggleArrow(attrValBool(obj.value), obj.proxy);
                 }
                 else if (obj.key === 'disabled') {
-                    obj.proxy.wrapEl.toggleAttribute('disabled', obj.value);
+                    obj.proxy.wrapEl.toggleAttribute('disabled', attrValBool(obj.value));
                 }
                 else if (obj.key === 'readonly') {
-                    obj.proxy.headEl.toggleAttribute('readonly', obj.value);
+                    obj.proxy.headEl.toggleAttribute('readonly', attrValBool(obj.value));
                 }
                 else if (obj.key === 'checked') {
-                    obj.proxy.headEl.toggleAttribute('checked', obj.value);
-                    obj.proxy.checkEl.setAttribute('check', obj.value ? 'ed' : '');
+                    let tmp = attrValBool(obj.value);
+                    obj.proxy.headEl.toggleAttribute('checked', tmp);
+                    obj.proxy.checkEl.setAttribute('check', tmp ? 'ed' : '');
                 }
                 else if (obj.key === 'children') {
                     if (!obj.raw && obj.value) ;
@@ -28585,11 +28594,11 @@ class Accordion extends ModBaseListenCacheNest {
         return this.observeIns;
     }
     initExpandeds() {
-        let vals = valToArr(this.options.expand.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => k.expanded), tmp = [...items, ...vals];
+        let vals = valToArr(this.options.expand.value).map((k) => findItem(k, this.flatData)).filter(Boolean), items = this.flatData.filter((k) => attrValBool(k.expanded)), tmp = [...items, ...vals];
         for (let k of items)
             k.expanded = false;
         if (this.options.expand.all) {
-            this.expandAll();
+            super.expandAll();
         }
         else {
             super.expand(tmp);
@@ -28660,10 +28669,10 @@ class Accordion extends ModBaseListenCacheNest {
         if (!item.customEl) {
             item.customEl = item.custom ? createEl('div', { [ax.alias]: 'custom' }, item.custom) : null;
         }
-        item.expanded && item.headEl.toggleAttribute('expanded', true);
-        item.disabled && item.headEl.toggleAttribute('disabled', true);
-        item.readonly && item.headEl.toggleAttribute('readonly', true);
-        item.checked && item.headEl.toggleAttribute('checked', true);
+        attrValBool(item.expanded) && item.headEl.toggleAttribute('expanded', true);
+        attrValBool(item.disabled) && item.headEl.toggleAttribute('disabled', true);
+        attrValBool(item.readonly) && item.headEl.toggleAttribute('readonly', true);
+        attrValBool(item.checked) && item.headEl.toggleAttribute('checked', true);
         if (this.options.check.enable) {
             item.checkEl = createEl(`ax-${this.options.check.type}`, { [ax.alias]: 'check' });
         }
@@ -28747,21 +28756,21 @@ class Accordion extends ModBaseListenCacheNest {
         if (k.toolsEl) {
             if (k.removeEl) {
                 k.removeEl.onclick = () => {
-                    if (k.readonly)
+                    if (attrValBool(k.readonly))
                         return;
                     this.remove(k);
                 };
             }
             if (k.editEl) {
                 k.editEl.onclick = () => {
-                    if (k.readonly)
+                    if (attrValBool(k.readonly))
                         return;
                     this.inputLabelCont(k);
                 };
             }
             if (k.addEl) {
                 k.addEl.onclick = () => {
-                    if (k.readonly)
+                    if (attrValBool(k.readonly))
                         return;
                     this.add({ target: k });
                 };
@@ -28776,11 +28785,12 @@ class Accordion extends ModBaseListenCacheNest {
             k.headEl.removeEventListener('click', this.lineEvt);
             k.headEl.addEventListener('click', this.lineEvt, false);
         }
-        k.disabled && k.headEl.toggleAttribute('disabled', true);
-        k.readonly && k.headEl.toggleAttribute('readonly', true);
+        attrValBool(k.disabled) && k.headEl.toggleAttribute('disabled', true);
+        attrValBool(k.readonly) && k.headEl.toggleAttribute('readonly', true);
         if (this.options.check.enable) {
             k.checkEl.on('check', (val) => {
-                !this.chainChecking && val.checked !== k.checked && this.check(k, val.checked);
+                let tmp = attrValBool(val.checked);
+                !this.chainChecking && tmp !== attrValBool(k.checked) && this.check(k, tmp);
             });
         }
         if (this.options.drag.enable) ;
@@ -28795,7 +28805,7 @@ class Accordion extends ModBaseListenCacheNest {
         return (item.href && item.arrowEl ? item.arrowEl : item.headEl);
     }
     addTrigger(item, target) {
-        if (item.disabled)
+        if (attrValBool(item.disabled))
             return;
         let triggerEl = target || this.getTriggerEl(item);
         if (this.options.arrow.trigger === 'click') {
@@ -28816,7 +28826,7 @@ class Accordion extends ModBaseListenCacheNest {
         }
     }
     removeTrigger(item, target) {
-        if (item.disabled)
+        if (attrValBool(item.disabled))
             return;
         let triggerEl = target || this.getTriggerEl(item);
         if (this.options.arrow.trigger === 'click') {
@@ -28832,7 +28842,7 @@ class Accordion extends ModBaseListenCacheNest {
         let item = findItem(data, this.flatData);
         if (!item)
             return;
-        item.expanded ? super.collapse(item) : super.expand(item);
+        attrValBool(item.expanded) ? super.collapse(item) : super.expand(item);
         super.listen({ name: 'trigger', params: [item] });
     }
     async setContExtra(item, force = false) {
@@ -28924,14 +28934,14 @@ class Accordion extends ModBaseListenCacheNest {
             }
         });
         if (this.options.expand.only) {
-            let others = this.flatData.filter((k) => k !== item && k.expanded);
+            let others = this.flatData.filter((k) => k !== item && attrValBool(k.expanded));
             for (let k of others)
                 super.collapse(k);
         }
     }
     uncheckSibings(item) {
         this.chainChecking = true;
-        let siblings = super.getSiblings(item).filter((k) => k.checked);
+        let siblings = super.getSiblings(item).filter((k) => attrValBool(k.checked));
         for (let k of siblings)
             k.checked = false;
         this.chainChecking = false;
@@ -28939,7 +28949,7 @@ class Accordion extends ModBaseListenCacheNest {
     check(data, flag = true, cb) {
         if (this.destroyed)
             return;
-        let tmp = Array.isArray(data) ? data : [data], filters = tmp.map((k) => findItem(k, this.flatData)), items = filters.filter((k) => k && !k.checked === flag), fn = (obj) => {
+        let tmp = Array.isArray(data) ? data : [data], filters = tmp.map((k) => findItem(k, this.flatData)), items = filters.filter((k) => k && !attrValBool(k.checked) === flag), fn = (obj) => {
             obj.checked = flag;
             flag && this.options.check.type === 'radio' && this.uncheckSibings(obj);
         };
@@ -28957,7 +28967,7 @@ class Accordion extends ModBaseListenCacheNest {
             this.check(this.flatData, true);
         }
         else {
-            let checkedItem = this.flatData.find((k) => k.checked);
+            let checkedItem = this.flatData.find((k) => attrValBool(k.checked));
             !checkedItem && this.check(this.flatData[0], true);
         }
         super.listen({ name: 'checkedAll', cb });
@@ -33368,6 +33378,9 @@ class CompBaseCommField extends CompBaseComm {
         this.listen({ name: 'check', params: [{ value: opt.newVal, checked: this.checked }] });
         oldChecked !== this.checked && this.listen({ name: 'changed', params: [{ newVal: this.checked, oldVal: !this.checked }] });
     }
+    changedAttrs(opt) {
+        opt.newVal && (this.inputEl || this.ins?.inputEl) && setAttrs(this.inputEl, strToJson(opt.newVal));
+    }
 }
 
 class CompBaseCommFieldMixin extends CompBaseCommField {
@@ -33620,7 +33633,7 @@ class RadioElem extends CompBaseCommField {
             this.setAttribute('check', val);
         };
     }
-    static custAttrs = ['size', 'value', 'name', 'type', 'check', ...this.evtsArr];
+    static custAttrs = ['size', 'value', 'name', 'type', 'check', 'attrs', ...this.evtsArr];
     static boolAttrs = ['disabled'];
     static get observedAttributes() {
         return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
@@ -33662,6 +33675,7 @@ class RadioElem extends CompBaseCommField {
         value: this.changedSingleValue,
         label: this.changedSingleLabel,
         check: this.changedSingleCheck,
+        attrs: this.changedAttrs,
     };
 }
 
@@ -33683,7 +33697,7 @@ class CheckboxElem extends CompBaseCommField {
             this.setAttribute('check', val);
         };
     }
-    static custAttrs = ['size', 'value', 'type', 'name', 'check', ...this.evtsArr];
+    static custAttrs = ['size', 'value', 'type', 'name', 'check', 'attrs', ...this.evtsArr];
     static boolAttrs = ['disabled'];
     static get observedAttributes() {
         return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
@@ -33728,6 +33742,7 @@ class CheckboxElem extends CompBaseCommField {
         label: this.changedSingleLabel,
         check: this.changedSingleCheck,
         lang: this.changedLang,
+        attrs: this.changedAttrs,
     };
     changedLang(opt) {
         if (this.propsProxy.type !== 'switch')
@@ -34811,7 +34826,7 @@ class FileElem extends CompBaseCommField {
         };
         this.zeroEvt = new Event('change');
     }
-    static custAttrs = ['name', 'value', 'accept', 'size', 'label', 'show', 'tools', ...this.evtsArr];
+    static custAttrs = ['name', 'value', 'accept', 'size', 'label', 'show', 'tools', 'attrs', ...this.evtsArr];
     static boolAttrs = ['disabled', 'readonly', 'multiple', 'full'];
     static get observedAttributes() {
         return ['placeholder', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
@@ -34888,6 +34903,7 @@ class FileElem extends CompBaseCommField {
         placeholder: this.changedHolder,
         label: this.changedLabel,
         show: this.changedShow,
+        attrs: this.changedAttrs,
     };
     changedBool(opt) {
         this.inputEl[opt.name === 'readonly' ? 'readOnly' : opt.name] = this.propsProxy[opt.name];
@@ -34991,7 +35007,7 @@ class InputElem extends CompBaseCommField {
             (tmp !== this.inputEl.value) && this.listen({ name: 'changed', params: [data] });
         }, false);
     }
-    static custAttrs = ['name', 'placeholder', 'type', 'size', 'limit', 'tools', 'icon', 'cube', 'disk', 'image', 'btn', 'action', 'label', 'unit', 'custom', 'mean', 'task', ...this.evtsArr];
+    static custAttrs = ['name', 'placeholder', 'type', 'size', 'limit', 'tools', 'icon', 'cube', 'disk', 'image', 'btn', 'action', 'label', 'unit', 'custom', 'mean', 'task', 'attrs', ...this.evtsArr];
     static boolAttrs = ['disabled', 'readonly', 'blocked', 'full'];
     static get observedAttributes() {
         return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
@@ -35071,6 +35087,7 @@ class InputElem extends CompBaseCommField {
         mean: this.changedMean,
         limit: this.changedLimit,
         tools: this.changedTools,
+        attrs: this.changedAttrs,
     };
     changedBool(opt) {
         if (opt.name === 'blocked') {
@@ -35237,7 +35254,7 @@ class TextareaElem extends CompBaseCommField {
             (tmp !== this.inputEl.value) && this.listen({ name: 'changed', params: [data] });
         }, false);
     }
-    static custAttrs = ['name', 'placeholder', 'size', 'tools', 'limit', 'label', 'mean', 'task', ...this.evtsArr];
+    static custAttrs = ['name', 'placeholder', 'size', 'tools', 'limit', 'label', 'mean', 'task', 'attrs', ...this.evtsArr];
     static boolAttrs = ['disabled', 'readonly', 'single', 'full'];
     static get observedAttributes() {
         return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
@@ -35301,6 +35318,7 @@ class TextareaElem extends CompBaseCommField {
         mean: this.changedMean,
         single: this.changedSingle,
         task: this.changedTask,
+        attrs: this.changedAttrs,
     };
     changedBool(opt) {
         this.inputEl[opt.name === 'readonly' ? 'readOnly' : opt.name] = this.propsProxy[opt.name];
@@ -35782,7 +35800,7 @@ class NumberElem extends CompBaseCommField {
             }
         });
     }
-    static custAttrs = ['name', 'placeholder', 'layout', 'size', 'max', 'min', 'step', 'label', 'on-exceeded', ...this.evtsArr];
+    static custAttrs = ['name', 'placeholder', 'layout', 'size', 'max', 'min', 'step', 'label', 'attrs', 'on-exceeded', ...this.evtsArr];
     static boolAttrs = ['tips', 'disabled', 'readonly', 'full'];
     static get observedAttributes() {
         return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
@@ -35790,38 +35808,7 @@ class NumberElem extends CompBaseCommField {
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        this.saveProps(name, newVal, NumberElem);
-        if (NumberElem.boolAttrs.includes(name)) {
-            this.inputEl[name === 'readonly' ? 'readOnly' : name] = this.propsProxy[name];
-            this[name === 'readonly' ? 'readOnly' : name] = this.propsProxy[name];
-            if (name === 'tips') {
-                if (this.propsProxy.tips) {
-                    elState(this.tipsEl).isVirtual && this.appendChild(this.tipsEl);
-                }
-                else {
-                    this.tipsEl.remove();
-                }
-            }
-        }
-        else if (['value', 'max', 'min', 'step'].includes(name)) {
-            this.inputEl[name] = newVal;
-            this.value = newVal;
-            (name === 'max' || name === 'min') && this.updateTips();
-        }
-        else if (['name', 'placeholder'].includes(name)) {
-            this.inputEl.setAttribute(name, newVal);
-            name === 'name' && (this.name = newVal);
-        }
-        else if (name === 'label') {
-            if (newVal) {
-                this.labelEl.innerHTML = newVal;
-                elState(this.labelEl).isVirtual && this.wrapEl.insertAdjacentElement('afterbegin', this.labelEl);
-                this.setAttribute('layout', 'embed');
-            }
-            else {
-                this.labelEl.remove();
-            }
-        }
+        this.savePropsToListen(name, oldVal, newVal, NumberElem);
         if (oldVal !== newVal) {
             this.listen({ name: 'changed', params: [{ oldVal, newVal }] });
         }
@@ -35915,6 +35902,51 @@ class NumberElem extends CompBaseCommField {
             this.listen({ name: 'input', params: [this.inputEl.value] });
         }, false);
     }
+    changedMaps = {
+        disabled: this.changedBool,
+        readonly: this.changedBool,
+        blocked: this.changedBool,
+        tips: this.changedBool,
+        name: this.changedName,
+        placeholder: this.changedName,
+        value: this.changedValue,
+        min: this.changedValue,
+        max: this.changedValue,
+        step: this.changedValue,
+        label: this.changedLabel,
+        attrs: this.changedAttrs,
+    };
+    changedBool(opt) {
+        this.inputEl[opt.name === 'readonly' ? 'readOnly' : opt.name] = this.propsProxy[opt.name];
+        this[opt.name === 'readonly' ? 'readOnly' : opt.name] = this.propsProxy[opt.name];
+        if (opt.name === 'tips') {
+            if (this.propsProxy.tips) {
+                elState(this.tipsEl).isVirtual && this.appendChild(this.tipsEl);
+            }
+            else {
+                this.tipsEl.remove();
+            }
+        }
+    }
+    changedValue(opt) {
+        this.inputEl[opt.name] = opt.newVal;
+        this.value = opt.newVal;
+        (opt.name === 'max' || opt.name === 'min') && this.updateTips();
+    }
+    changedName(opt) {
+        this.inputEl.setAttribute(opt.name, opt.newVal);
+        opt.name === 'name' && (this.name = opt.newVal);
+    }
+    changedLabel(opt) {
+        if (opt.newVal) {
+            this.labelEl.innerHTML = opt.newVal;
+            elState(this.labelEl).isVirtual && this.wrapEl.insertAdjacentElement('afterbegin', this.labelEl);
+            this.setAttribute('layout', 'embed');
+        }
+        else {
+            this.labelEl.remove();
+        }
+    }
 }
 
 class RangeElem extends CompBaseCommFieldMixin {
@@ -35923,7 +35955,7 @@ class RangeElem extends CompBaseCommFieldMixin {
         super();
         this.type = 'range-comp';
     }
-    static custAttrs = ['name', 'step', 'max', 'min', 'axis', 'size', 'classes', 'separator', 'hyphen', 'fence', 'button', 'ruler', 'result'];
+    static custAttrs = ['name', 'step', 'max', 'min', 'axis', 'size', 'classes', 'separator', 'hyphen', 'fence', 'button', 'ruler', 'result', 'lang', 'attrs'];
     static boolAttrs = ['async', 'disabled', 'full', 'limit-show', 'tip-show', 'multiple', 'locked', 'rtl'];
     
     attributeChangedCallback(name, oldVal, newVal) {
@@ -35987,6 +36019,7 @@ class RangeElem extends CompBaseCommFieldMixin {
         disabled: this.changedDisabled,
         name: this.changedName,
         value: this.changedValue,
+        attrs: this.changedAttrs,
     };
     changedName(opt) {
         let tmp = opt.newVal || '';
@@ -36520,7 +36553,7 @@ class DatetimeElem extends CompBaseCommFieldMixin {
         { tag: 'ax-checkbox', comp: CheckboxElem }
     ];
     static custAttrs = ['name', 'value', 'size', 'format', 'classes', 'mode', 'feature', 'display', 'placeholder', 'label', 'tools',
-        'max-selection', 'min-date', 'max-date', 'datespan', 'timespan', 'rows', 'cols', 'week-start', 'separator', 'btn-sel', 'pos-sel', 'input-sel', 'child-sel', 'lunar', 'events', 'menu', 'bubble', 'footer'];
+        'max-selection', 'min-date', 'max-date', 'datespan', 'timespan', 'rows', 'cols', 'week-start', 'separator', 'btn-sel', 'pos-sel', 'input-sel', 'child-sel', 'lunar', 'events', 'menu', 'bubble', 'footer', 'lang', 'attrs'];
     static boolAttrs = ['async', 'disabled', 'to-drawer', 'full', 'multiline', 'now-hide', 'now-show', 'clear-show', 'close-show', 'cancel-show', 'confirm-hide', 'auto-fill', 'manual', 'auto-correct', 'required', 'fill-now', 'rtl'];
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
@@ -36577,6 +36610,7 @@ class DatetimeElem extends CompBaseCommFieldMixin {
         size: this.changedSize,
         name: this.changedName,
         value: this.changedValue,
+        attrs: this.changedAttrs,
     };
     changedDisabled(opt) {
         this.disabled = this.propsProxy[opt.name];
@@ -36611,7 +36645,7 @@ class RateElem extends CompBaseComm {
         this.fillWrap(this.propsProxy);
     }
     static get observedAttributes() {
-        return [...optRate.map((k) => k.attr), 'options', 'async'];
+        return [...optRate.map((k) => k.attr), 'options', 'async', 'attrs'];
     }
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
@@ -36726,7 +36760,7 @@ class EditorElem extends CompBaseCommFieldMixin {
         this.select = () => this.ins.inputEl.select();
     }
     static custAttrs = ['name', 'value', 'delay', 'classes', 'content', 'cont-type',
-        'cont-data', 'ajax', 'appear', 'header', 'mode', 'min-height', 'max-height', 'feature'];
+        'cont-data', 'ajax', 'appear', 'header', 'mode', 'min-height', 'max-height', 'feature', 'lang',];
     static boolAttrs = ['async', 'disabled', 'readonly', 'deferred'];
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
@@ -36830,7 +36864,7 @@ class SelectElem extends CompBaseCommFieldMixin {
         super();
         this.type = 'select-comp';
     }
-    static custAttrs = ['name', 'value', 'field', 'type', 'exclude', 'min', 'max', 'span', 'content', 'cont-type', 'cont-Data', 'ajax', 'size', 'max-height', 'search', 'tools', 'popup'];
+    static custAttrs = ['name', 'value', 'field', 'type', 'exclude', 'min', 'max', 'span', 'content', 'cont-type', 'cont-Data', 'ajax', 'size', 'max-height', 'search', 'tools', 'popup', 'lang', 'attrs'];
     static boolAttrs = ['async', 'manual', 'disabled', 'readonly', 'full', 'multiple', 'sliced', 'removable', 'unique', 'collapse', 'status', 'auto-width'];
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
@@ -36884,6 +36918,7 @@ class SelectElem extends CompBaseCommFieldMixin {
         disabled: this.changedDisabled,
         name: this.changedName,
         value: this.changedValue,
+        attrs: this.changedAttrs,
     };
     changedName(opt) {
         let tmp = opt.newVal || '';
@@ -36913,7 +36948,7 @@ class UploadElem extends CompBaseCommFieldMixin {
         super();
         this.type = 'upload-comp';
     }
-    static custAttrs = ['name', 'value', 'url', 'content', 'cont-type', 'cont-data', 'ajax', 'limit', 'accept', 'type', 'feature', 'size', 'table', 'classes', 'status', 'choose-btn', 'upload-btn', 'clear-btn', 'cloud'];
+    static custAttrs = ['name', 'value', 'url', 'content', 'cont-type', 'cont-data', 'ajax', 'limit', 'accept', 'type', 'feature', 'size', 'table', 'classes', 'status', 'choose-btn', 'upload-btn', 'clear-btn', 'cloud', 'attrs'];
     static boolAttrs = ['async', 'disabled', 'readonly', 'multiple', 'manual', 'pastable'];
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
@@ -36967,6 +37002,7 @@ class UploadElem extends CompBaseCommFieldMixin {
         disabled: this.changedDisabled,
         name: this.changedName,
         value: this.changedValue,
+        attrs: this.changedAttrs,
     };
     changedName(opt) {
         let tmp = opt.newVal || '';
@@ -37577,7 +37613,7 @@ class StepElem extends CompBaseComm {
                     content: firstChild.textContent,
                     type: 'array',
                     error: (err) => {
-                        console.info(config.error.parse, err);
+                        console.info(config.warn.parse, err);
                     }
                 });
             }
@@ -37606,7 +37642,7 @@ class StepElem extends CompBaseComm {
                 content,
                 type: 'array',
                 error: (err) => {
-                    console.info(config.error.parse, err);
+                    console.info(config.warn.parse, err);
                 }
             });
         }

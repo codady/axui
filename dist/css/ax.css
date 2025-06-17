@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-6-3 16:13:16
+ * @since Last modified: 2025-6-17 17:14:4
  * @name AXUI front-end framework.
- * @version 3.1.23
+ * @version 3.1.24
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,10 +15,10 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-06-03 16:11:22
+ * @since Last modified: 2025-06-17 17:10:56
  */
 /*
- *Last modified: 2025-06-01 17:23:53
+ *Last modified: 2025-06-12 17:08:26
  */
 :root {
   /*Stage colors*/
@@ -224,7 +224,7 @@
   --_c-issue-fg: hsla(var(--_h-issue), var(--_s-issue), var(--_l-issue), 0.8);
   /*Other colors*/
   --_c-divide: rgba(0, 0, 0, 0.12);
-  --_c-text-static: hsl(var(--_h-text), var(--_s-text), var(--_l-text));
+  --_c-text-sta: hsl(var(--_h-text), var(--_s-text), var(--_l-text));
   --_c-black: hsl(0, 0%, 0%);
   --_c-black-0: hsla(0, 0%, 0%, 0);
   --_c-black-4: hsla(0, 0%, 0%, 0.04);
@@ -334,9 +334,10 @@
   --_num-lead: calc(16 + var(--_num-step));
   --_num-subtitle: calc(18 + var(--_num-step));
   --_num-list: calc(var(--_num-lead) + 8);
+  --_num-title: calc(var(--_num-body)*2);
   --_num-display: calc(var(--_num-lead) + 16);
   --_num-input: calc(var(--_num-lead) + 24);
-  --_num-hitbox: calc(var(--_num-lead) + 32);
+  --_num-hero: calc(var(--_num-lead) + 32);
   --_num-max: calc(var(--_num-lead) + 40);
   /*Font size*/
   --_fs-root: calc(1px*var(--_num-root)*16/14);
@@ -349,9 +350,10 @@
   --_rem-lead: calc((var(--_num-lead)/var(--_num-root))*1rem);
   --_rem-subtitle: calc((var(--_num-subtitle)/var(--_num-root))*1rem);
   --_rem-list: calc((var(--_num-list)/var(--_num-root))*1rem);
+  --_rem-title: calc((var(--_num-title)/var(--_num-root))*1rem);
   --_rem-display: calc((var(--_num-display)/var(--_num-root))*1rem);
   --_rem-input: calc((var(--_num-input)/var(--_num-root))*1rem);
-  --_rem-hitbox: calc((var(--_num-hitbox)/var(--_num-root))*1rem);
+  --_rem-hero: calc((var(--_num-hero)/var(--_num-root))*1rem);
   --_rem-max: calc((var(--_num-max)/var(--_num-root))*1rem);
   /*Em of size*/
   --_em-min: calc((var(--_num-min)/var(--_num-body))*1em);
@@ -362,9 +364,10 @@
   --_em-lead: calc((var(--_num-lead)/var(--_num-body))*1em);
   --_em-subtitle: calc((var(--_num-subtitle)/var(--_num-body))*1em);
   --_em-list: calc((var(--_num-list)/var(--_num-body))*1em);
+  --_em-title: calc((var(--_num-title)/var(--_num-body))*1em);
   --_em-display: calc((var(--_num-display)/var(--_num-body))*1em);
   --_em-input: calc((var(--_num-input)/var(--_num-body))*1em);
-  --_em-hitbox: calc((var(--_num-hitbox)/var(--_num-body))*1em);
+  --_em-hero: calc((var(--_num-hero)/var(--_num-body))*1em);
   --_em-max: calc((var(--_num-max)/var(--_num-body))*1em);
   /*Em of small size (base --_px-caption)*/
   --_em-min-dec: calc((var(--_num-min)/var(--_num-caption))*1em);
@@ -375,9 +378,10 @@
   --_em-lead-dec: calc((var(--_num-lead)/var(--_num-caption))*1em);
   --_em-subtitle-dec: calc((var(--_num-subtitle)/var(--_num-caption))*1em);
   --_em-list-dec: calc((var(--_num-list)/var(--_num-caption))*1em);
+  --_em-title-dec: calc((var(--_num-title)/var(--_num-caption))*1em);
   --_em-display-dec: calc((var(--_num-display)/var(--_num-caption))*1em);
   --_em-input-dec: calc((var(--_num-input)/var(--_num-caption))*1em);
-  --_em-hitbox-dec: calc((var(--_num-hitbox)/var(--_num-caption))*1em);
+  --_em-hero-dec: calc((var(--_num-hero)/var(--_num-caption))*1em);
   --_em-max-dec: calc((var(--_num-max)/var(--_num-caption))*1em);
   /*Em of title size (base --_px-lead)*/
   --_em-min-inc: calc((var(--_num-min)/var(--_num-lead))*1em);
@@ -388,9 +392,10 @@
   --_em-lead-inc: 1em;
   --_em-subtitle-inc: calc((var(--_num-subtitle)/var(--_num-lead))*1em);
   --_em-list-inc: calc((var(--_num-list)/var(--_num-lead))*1em);
+  --_em-title-inc: calc((var(--_num-title)/var(--_num-lead))*1em);
   --_em-display-inc: calc((var(--_num-display)/var(--_num-lead))*1em);
   --_em-input-inc: calc((var(--_num-input)/var(--_num-lead))*1em);
-  --_em-hitbox-inc: calc((var(--_num-hitbox)/var(--_num-lead))*1em);
+  --_em-hero-inc: calc((var(--_num-hero)/var(--_num-lead))*1em);
   --_em-max-inc: calc((var(--_num-max)/var(--_num-lead))*1em);
   /*Px of size*/
   --_px-min: calc(var(--_num-min)*1px);
@@ -401,18 +406,19 @@
   --_px-lead: calc(var(--_num-lead)*1px);
   --_px-subtitle: calc(var(--_num-subtitle)*1px);
   --_px-list: calc(var(--_num-list)*1px);
+  --_px-title: calc(var(--_num-title)*1px);
   --_px-display: calc(var(--_num-display)*1px);
   --_px-input: calc(var(--_num-input)*1px);
-  --_px-hitbox: calc(var(--_num-hitbox)*1px);
+  --_px-hero: calc(var(--_num-hero)*1px);
   --_px-max: calc(var(--_num-max)*1px);
   /*Font size*/
   --_fs-caption: var(--_rem-caption);
   --_fs-body: var(--_rem-body);
   --_fs-lead: var(--_rem-lead);
   --_fs-subtitle: var(--_rem-subtitle);
-  --_fs-title: calc(var(--_rem-body)*2);
+  --_fs-title: var(--_rem-title);
   --_fs-display: var(--_rem-display);
-  --_fs-huge: var(--_rem-hitbox);
+  --_fs-hero: var(--_rem-hero);
   --_fs-h1: calc(var(--_rem-lead)*2);
   --_fs-h2: calc(var(--_rem-body)*2);
   --_fs-h3: var(--_rem-list);
@@ -424,14 +430,14 @@
   --_lh-lead: calc(var(--_rem-body)*2);
   --_lh-subtitle: calc(var(--_rem-body)*2);
   --_lh-title: var(--_rem-input);
-  --_lh-display: var(--_rem-hitbox);
-  --_lh-huge: calc(var(--_fs-huge)*1.5);
-  --_lh-h1: calc(var(--_num-hitbox)/(var(--_num-lead)*2));
-  --_lh-h2: calc(var(--_num-input)/(var(--_num-body)*2));
-  --_lh-h3: calc(var(--_num-display)/var(--_num-list));
-  --_lh-h4: calc(var(--_num-list)/var(--_num-subtitle));
-  --_lh-h5: calc(var(--_num-list)/var(--_num-lead));
-  --_lh-h6: calc(var(--_num-subtitle)/var(--_num-body));
+  --_lh-display: calc(var(--_rem-input) + var(--_rem-min));
+  --_lh-hero: calc(var(--_rem-max) + var(--_rem-min));
+  --_lh-h1: 1.25;
+  --_lh-h2: calc(36/28);
+  --_lh-h3: calc(32/24);
+  --_lh-h4: calc(26/18);
+  --_lh-h5: calc(24/16);
+  --_lh-h6: calc(22/14);
   --_lh-sm: 1.286;
   --_lh-md: 1.5;
   --_lh-lg: 1.78;
@@ -2300,7 +2306,7 @@
   scale: -1 1;
 }
 /*
- *Last modified: 2025-05-21 11:19:43
+ *Last modified: 2025-06-14 20:32:08
  */
 html {
   font-size: var(--_fs-root);
@@ -2612,7 +2618,7 @@ address {
 }
 time {
   font-size: var(--_rem-caption);
-  color: var(--_c-caption);
+  color: var(--_c-brief);
   line-height: var(--_lh-md);
   display: inline-block;
 }
@@ -2638,8 +2644,8 @@ article span {
   display: inline;
 }
 article img {
-  height: auto !important;
-  width: auto !important;
+  /*  height: auto !important;
+        width: auto !important; */
 }
 form {
   position: relative;
@@ -3161,6 +3167,7 @@ table {
   --_table-c-foc: var(--_c-prim);
   --_table-c-sel: var(--_c-prim-bg);
   --_table-bc: var(--_table-wrap-bd, var(--_c-text-bd));
+  --_table-a: start;
   --_xxs-w: var(--_table-w);
   --_xs-w: var(--_table-w);
   --_sm-w: var(--_table-w);
@@ -3196,6 +3203,7 @@ table th,
 table td {
   box-sizing: border-box;
   position: relative;
+  text-align: var(--_table-a);
 }
 table td {
   padding: 1rem;
@@ -3233,7 +3241,7 @@ table td[focused] {
   color: var(--_table-c-foc);
   box-shadow: inset 0 0 0 2px var(--_table-c-foc);
 }
-table:where([stripe]) tbody tr:nth-child(odd),
+table:where([stripe]:not([stripe=even])) tbody tr:nth-child(odd),
 table:where([stripe=odd]) tbody tr:nth-child(odd) {
   background-color: var(--_table-c-stp);
 }
@@ -3283,8 +3291,23 @@ table ._ell,
 table [class*=_ell-] {
   max-width: var(--_table-ell);
 }
+table:where([align=start]) {
+  --_table-a: start;
+}
+table:where([align=center]) {
+  --_table-a: center;
+}
+table:where([align=end]) {
+  --_table-a: end;
+}
+table:where([align=left]) {
+  --_table-a: left;
+}
+table:where([align=right]) {
+  --_table-a: right;
+}
 /*
-Last modified: 2025-06-03 16:10:23
+Last modified: 2025-06-12 22:31:45
 */
 /*Button*/
 AX-BTN {
@@ -3591,7 +3614,7 @@ AX-BTN:is([theme]):where(:not([type=seal], [type=plain])):where([disabled]) > [r
   opacity: var(--_o-disabled);
 }
 AX-BTN[theme=warn]:where(:not([type=seal], [type=plain])) {
-  --_btn-c: var(--_c-text-static);
+  --_btn-c: var(--_c-text-sta);
   --_btn-c-act: var(--_c-text-aj);
 }
 AX-BTN[theme=brief]:where(:not([type=seal], [type=plain])),
@@ -3710,7 +3733,7 @@ AX-BTN[theme=issue]:where([gradient]:not([type=seal], [type=plain])) > [rep=wrap
   background: linear-gradient(45deg, var(--_c-issue), var(--_c-issue-aj));
 }
 AX-BTN[theme=text]:where([gradient]:not([type=seal], [type=plain])) > [rep=wrap] {
-  background: linear-gradient(45deg, var(--_c-text-static), var(--_c-text-aj));
+  background: linear-gradient(45deg, var(--_c-text-sta), var(--_c-text-aj));
 }
 AX-BTN[shaded]:where(:not([type=seal], [type=plain])) {
   --_btn-sd: var(--_c-black-12);
@@ -3855,7 +3878,7 @@ AX-BTN:where([check=ing]:not([type=seal], [type=plain])):where([theme=prim], [th
   --_spin-c: var(--_c-white);
 }
 AX-BTN:where([check=ing]:not([type=seal], [type=plain])):where([theme=warn]) > [rep=wrap]:before {
-  --_spin-c: var(--_c-text-static);
+  --_spin-c: var(--_c-text-sta);
   --_spin-bg: var(--_c-black-20);
 }
 AX-BTN:where([check=ed]:not([type=seal], [type=plain], [theme=prim], [theme=succ], [theme=error], [theme=info], [theme=warn], [theme=issue])) > [rep=wrap]:before {
@@ -3977,7 +4000,7 @@ AX-BTN[inverted][type=seal]:where([theme=caption]) {
   content: 'left';
 }
 /*
- *Last modified: 2025-06-01 17:25:15
+ *Last modified: 2025-06-12 18:18:09
  */
 /*rtl & ltr*/
 [dir=rtl],
@@ -4790,11 +4813,11 @@ AX-BTN[inverted][type=seal]:where([theme=caption]) {
   --_sd: rgba(0, 0, 0, 0.12);
   box-shadow: 0 0.2rem 1rem var(--_sd);
 }
-._sd-pm {
+._sd-soft {
   --_sd: rgba(0, 0, 0, 0.1);
   box-shadow: 0 0.5rem 2rem var(--_sd);
 }
-._sd-pt {
+._sd-hard {
   --_sd: rgba(0, 0, 0, 0.4);
   box-shadow: 0 0.1rem 0.3rem var(--_sd);
 }
@@ -5656,8 +5679,8 @@ AX-DIVIDER[size=lg] {
 ._fs-display {
   font-size: var(--_fs-display);
 }
-._fs-huge {
-  font-size: var(--_fs-huge);
+._fs-hero {
+  font-size: var(--_fs-hero);
 }
 ._fs-h1 {
   font-size: var(--_fs-h1);
@@ -5695,8 +5718,8 @@ AX-DIVIDER[size=lg] {
 ._lh-display {
   line-height: var(--_lh-display);
 }
-._lh-huge {
-  line-height: var(--_lh-huge);
+._lh-hero {
+  line-height: var(--_lh-hero);
 }
 ._lh-h1 {
   line-height: var(--_lh-h1);
@@ -5715,6 +5738,15 @@ AX-DIVIDER[size=lg] {
 }
 ._lh-h6 {
   line-height: var(--_lh-h6);
+}
+._lh-sm {
+  line-height: 1.268;
+}
+._lh-md {
+  line-height: 1.5;
+}
+._lh-lg {
+  line-height: 1.78;
 }
 ._ff-body {
   font-family: var(--_ff-body);
@@ -5855,9 +5887,9 @@ AX-DIVIDER[size=lg] {
 ._t-blank-xxl {
   --_bk-g: 2.8em;
 }
-._t-huge {
-  font-size: var(--_fs-huge);
-  line-height: var(--_lh-huge);
+._t-hero {
+  font-size: var(--_fs-hero);
+  line-height: var(--_lh-hero);
 }
 ._t-display {
   font-size: var(--_fs-dispay);
@@ -6207,7 +6239,7 @@ img[rep=image] {
 }
 ._empty {
   --_emp-c: var(--_c-caption);
-  --_emp-h-icon: var(--_px-hitbox);
+  --_emp-h-icon: var(--_px-hero);
   --_emp-h-img: 300px;
   font-size: var(--_px-body);
   color: var(--_emp-c);
@@ -8577,7 +8609,7 @@ AX-CHECKBOX[type=switch]:where([contained]) {
   --_switch-btn-r: var(--_r);
 }
 AX-CHECKBOX[type=switch]:where([contained]:has(u[on][off])) {
-  --_switch-w: var(--_rem-hitbox);
+  --_switch-w: var(--_rem-hero);
   --_switch-btn-w: calc(var(--_rem-lead)*2);
 }
 AX-CHECKBOX[type=switch]:where([contained]) u:before {
@@ -8672,7 +8704,7 @@ AX-CHECKBOXES[type=btn][size=lg] {
 /*Group button*/
 /*Header*/
 AX-HEADER {
-  --_header-h: calc(var(--_rem-hitbox) + 1rem);
+  --_header-h: calc(var(--_rem-hero) + 1rem);
   --_header-m: var(--_m);
   --_header-bw: 1px;
   --_header-bc: var(--_c-text-bd);
@@ -8875,7 +8907,7 @@ AX-HEADER[justify] ._header-head {
 }
 /* 
 ._header {
-  --_header-h: calc(var(--_rem-hitbox) + 1.0rem);
+  --_header-h: calc(var(--_rem-hero) + 1.0rem);
   --_header-m: var(--_m);
   --_header-g: var(--_rem-display);
   background-color: var(--_c-stage);
@@ -8906,11 +8938,12 @@ AX-HEADER[justify] ._header-head {
 }
  */
 /*Footer*/
-._footer a {
-  color: var(--_c-text);
+._footer {
+  line-height: var(--_lh-subtitle);
 }
-._footer a:hover {
-  color: var(--_c-prim);
+._footer a {
+  --_link-c: var(--_c-text);
+  --_link-c-hov: var(--_c-prim);
 }
 ._footer [rep=signs] {
   display: inline-flex;
@@ -8973,6 +9006,7 @@ AX-HEADER[justify] ._header-head {
 ._footer [rep=nav] {
   display: inline-flex;
   flex-wrap: wrap;
+  align-items: center;
 }
 ._footer [rep=nav] > *:where(:not(:last-child)) {
   margin-inline-end: var(--_rem-display);
@@ -9441,8 +9475,7 @@ AX-SPIN[theme=caption] {
   --_spin-c: var(--_c-caption);
   --_spin-bg: var(--_c-caption-sd);
 }
-AX-SPIN[dark],
-AX-SPIN[theme=dark] {
+AX-SPIN[inverted] {
   --_spin-bg: rgba(255, 255, 255, 0.2);
   --_spin-c: var(--_c-white);
 }
@@ -10616,7 +10649,7 @@ AX-FORMAT [rep=wrap] {
   display: inline-flex;
 }
 /*
-Last modified: 2025-05-19 20:45:10
+Last modified: 2025-06-12 15:49:11
 */
 /*Ellipsis*/
 ._ell,
@@ -10681,7 +10714,7 @@ Last modified: 2025-05-19 20:45:10
 ._ell-lead,
 ._ell-subtitle,
 ._ell-title,
-._ell-huge {
+._ell-hero {
   font-size: var(--_ell-fs);
   line-height: var(--_ell-lh);
 }
@@ -10733,9 +10766,9 @@ Last modified: 2025-05-19 20:45:10
   --_ell-fs: var(--_fs-display);
   --_ell-lh: var(--_lh-display);
 }
-._ell-huge {
-  --_ell-fs: var(--_fs-huge);
-  --_ell-lh: var(--_lh-huge);
+._ell-hero {
+  --_ell-fs: var(--_fs-hero);
+  --_ell-lh: var(--_lh-hero);
 }
 /*Flag Element*/
 AX-FLAG {
@@ -11482,12 +11515,12 @@ AX-GOOD[increased] [rep=icon] {
   margin-inline-end: var(--_rem-space);
 }
 /*
-Last modified: 2025-05-23 06:36:10
+Last modified: 2025-06-12 16:07:34
 */
 /*Anchors*/
 AX-ANCHORS {
   --_anch-end: var(--_m);
-  --_anch-top: calc(var(--_rem-hitbox) + var(--_rem-display));
+  --_anch-top: calc(var(--_rem-hero) + var(--_rem-display));
   --_anch-p: var(--_p);
   --_anch-bg: var(--_c-stage-80);
   --_anch-r: var(--_r);
@@ -11755,7 +11788,7 @@ AX-ANCHORS li [rep=label]:hover {
   opacity: 1;
 }
 /*
-Last modified: 2025-05-20 18:10:18
+Last modified: 2025-06-12 16:07:35
 */
 /*Card*/
 ._card {
@@ -11817,7 +11850,7 @@ Last modified: 2025-05-20 18:10:18
   border-block-start: 1px solid var(--_c-text-bd);
   margin-block-end: calc(-1*var(--_card-p));
   text-align: center;
-  line-height: var(--_rem-hitbox);
+  line-height: var(--_rem-hero);
   display: flex;
 }
 ._card [rep=btns] > * {
@@ -13128,6 +13161,7 @@ AX-PAGINATION {
   --_pgn-p-child: 0.9rem;
   --_pgn-m-child: 0.2rem;
   --_pgn-bc: var(--_c-text-bd);
+  --_pgn-bc-sel: var(--_c-prim);
   --_pgn-bc-hov: var(--_c-prim);
   --_pgn-bw: 1px;
   --_pgn-r: var(--_r);
@@ -13213,6 +13247,7 @@ AX-PAGINATION {
   font-size: 1rem;
 }
 ._pagination a,
+._pagination span:where([selected]),
 ._pagination[type=group] [rep=main] > span:where(:not([rep=pages])),
 ._pagination[type=group] [rep=pages] > span {
   color: var(--_pgn-c);
@@ -13878,7 +13913,7 @@ AX-FILTER[bordered] section {
   padding: var(--_rem-display) 0;
 }
 /*
-Last modified: 2025-05-21 19:26:22
+Last modified: 2025-06-12 16:07:35
 */
 /*Panel*/
 AX-PANEL {
@@ -14092,7 +14127,7 @@ AX-PANEL {
   --_panel-d: none;
 }
 ._panel[feature=loose] {
-  --_panel-h: calc(var(--_rem-hitbox) + 1rem);
+  --_panel-h: calc(var(--_rem-hero) + 1rem);
   --_panel-fs: var(--_fs-lead);
   --_panel-p: var(--_rem-list);
 }
@@ -14103,7 +14138,7 @@ AX-PANEL {
   margin-inline-end: var(--_rem-space);
 }
 ._panel[feature=loose]:where(:not([lamp=bottom]):has(._panel-brief)) {
-  --_panel-h-legend: var(--_rem-hitbox);
+  --_panel-h-legend: var(--_rem-hero);
 }
 ._panel[feature=loose][lamp=bottom] ._panel-brief {
   margin-block-start: var(--_rem-list);
@@ -14244,7 +14279,7 @@ AX-PANEL {
   --_group-h: var(--_rem-input);
 }
 ._group-lamp[size=lg] {
-  --_group-h: var(--_rem-hitbox);
+  --_group-h: var(--_rem-hero);
 }
 ul:where(._group-lamp),
 ol:where(._group-lamp) {
@@ -14378,7 +14413,7 @@ ol:where(._group-lamp) li:before {
   --_group-h: var(--_rem-input);
 }
 ._group-page[size=lg] {
-  --_group-h: var(--_rem-hitbox);
+  --_group-h: var(--_rem-hero);
 }
 ul:where(._group-page),
 ol:where(._group-page) {
@@ -14528,7 +14563,7 @@ ol:where(._group-page) li:before {
   --_group-h: var(--_rem-input);
 }
 ._group-flex[size=lg] {
-  --_group-h: var(--_rem-hitbox);
+  --_group-h: var(--_rem-hero);
   --_group-p: var(--_rem-body);
 }
 ul:where(._group-flex),
@@ -20487,8 +20522,8 @@ AX-UPLOAD {
   align-items: center;
 }
 ._upload[feature=gallery] [rep=choose] [rep=icon] {
-  font-size: calc(var(--_rem-hitbox));
-  line-height: calc(var(--_rem-hitbox));
+  font-size: calc(var(--_rem-hero));
+  line-height: calc(var(--_rem-hero));
 }
 ._upload[feature=gallery] [rep=choose]:hover,
 ._upload[feature=gallery] [rep=choose]:hover [rep=icon] {
@@ -21154,7 +21189,7 @@ AX-STEP[dir=v] ._step-item[active] ._step-head:before {
 }
 AX-STEP[dir=v][type=plain] ._step-item [rep=node] {
   padding: 0;
-  width: var(--_rem-hitbox);
+  width: var(--_rem-hero);
 }
 AX-STEP[dir=v][type=plain] ._step-item ._step-head,
 AX-STEP[dir=v][type=plain] ._step-item [rep=label] {
