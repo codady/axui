@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-6-17 17:13:37
+ * @since Last modified: 2025-7-1 19:14:30
  * @name AXUI front-end framework.
- * @version 3.1.24
+ * @version 3.1.25
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -1362,21 +1362,34 @@ const ajax = (options) => {
                 let resp = Object.assign({ status: xhr.status }, dftResp);
                 if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
                     if (!dft.respType || xhr.responseType === 'text') {
-                        let div = createEl('div', '', xhr.responseText), content = '', reg = /(<head\b[^<]*(?:(?!<\/head>)<[^<]*)*<\/head>)|(<\/?html.*?>)|(<\!DOCTYPE.*?html.*?>)|(<\/?body.*?>)/gi, strEnd = sliceStrEnd({ str: dft.url }), childSel = (typeof dft.data === 'string' ? dft.data : strEnd), childDom = getEl(childSel, div);
-                        if (childDom) {
-                            content = childDom.innerHTML;
+                        let trim = xhr.responseText.trim(), content = '';
+                        if ((trim.startsWith('[') && trim.endsWith(']')) || (trim.startsWith('{') && trim.endsWith('}'))) {
+                            try {
+                                content = JSON.parse(trim);
+                            }
+                            catch {
+                                console.warn('Failed to parse JSON data. Defaulting to default string.');
+                                content = xhr.responseText;
+                            }
                         }
-                        else if (!isEmpty(childSel) && !childDom) {
-                            console.warn(`The node of "${childSel}" is not exist!`);
-                            content = xhr.responseText.replace(reg, '').trim();
-                        }
-                        else {
-                            if (xhr.responseText.trim().startsWith('{') || xhr.responseText.trim().startsWith('[')) {
-                                content = JSON.parse(xhr.responseText.trim());
+                        else if (trim.endsWith('</html>')) {
+                            let reg = /(<head\b[^<]*(?:(?!<\/head>)<[^<]*)*<\/head>)|(<\/?html.*?>)|(<\!DOCTYPE.*?html.*?>)|(<\/?body.*?>)/gi, strEnd = sliceStrEnd({ str: dft.url }), childSel = (typeof dft.data === 'string' ? dft.data : strEnd);
+                            if (childSel) {
+                                let div = createEl('div', '', trim), childDom = getEl(childSel, div);
+                                if (childDom) {
+                                    content = childDom.innerHTML;
+                                }
+                                else {
+                                    console.warn(`Target node "${childSel}" does not exist, returning full HTML content instead.`);
+                                    content = trim.replace(reg, '').trim();
+                                }
                             }
                             else {
-                                content = xhr.responseText.replace(reg, '').trim();
+                                content = trim.replace(reg, '').trim();
                             }
+                        }
+                        else {
+                            content = xhr.responseText;
                         }
                         resp.content = content;
                     }
@@ -4232,8 +4245,8 @@ const validTools = {
         return strength;
     },
     
-    parseLength: (value) => {
-        let regex = '', text = '';
+    parseLength: (value, raw = '', label = '') => {
+        let regex = '', text = '', param = { value: raw, label: '' };
         if (value) {
             let arr = value.replace('{', '').replace('}', '').split(',').map((k) => ~~k);
             if (arr.length === 2) {
@@ -4241,19 +4254,19 @@ const validTools = {
                     (arr[1] && arr[1] === arr[0]) ? `{${arr[0]}}` : `{${arr[0]},}`;
                 if (arr[1]) {
                     if (arr[0] === 0) {
-                        text = renderTpl(config.lang.valid['length<='], { label: '', data: arr[1] });
+                        text = renderTpl(config.lang.valid['length<='], { ...param, data: arr[1] });
                     }
                     else {
-                        text = renderTpl(config.lang.valid['length>=<='], { label: '', data: arr });
+                        text = renderTpl(config.lang.valid['length>=<='], { ...param, data: arr });
                     }
                 }
                 else {
-                    text = renderTpl(config.lang.valid['length>='], { label: '', data: arr[0] });
+                    text = renderTpl(config.lang.valid['length>='], { ...param, data: arr[0] });
                 }
             }
             else {
                 regex = `{${arr[0]}}`;
-                text = renderTpl(config.lang.valid['length='], { label: '', data: arr[0] });
+                text = renderTpl(config.lang.valid['length='], { ...param, data: arr[0] });
             }
         }
         return { regex, text };
@@ -4281,8 +4294,8 @@ const validTools = {
                 strData[regTypes[val[0]]] = val[1] || 1;
             });
             tplData = { label: data?.label || '', name: data?.name || '', value: data?.value || '', data: strData };
-            regex += `.${this.parseLength(rangeStr).regex || '{0,}'}$`;
-            text = renderTpl(tplStr, tplData) + (rangeStr ? this.parseLength(rangeStr).text : '');
+            regex += `.${this.parseLength(rangeStr, tplData.value).regex || '{0,}'}$`;
+            text = renderTpl(tplStr, tplData) + (rangeStr ? this.parseLength(rangeStr, tplData.value).text : '');
         }
         return { regex, text };
     },
@@ -4315,8 +4328,8 @@ const validTools = {
             }
             strData.total = types;
             tplData = { label: data?.label || '', name: data?.name || '', value: data?.value || '', data: strData };
-            regex += `${this.parseLength(rangeStr).regex || '{0,}'}$`;
-            text = renderTpl(tplStr, tplData) + (rangeStr ? this.parseLength(rangeStr).text : '');
+            regex += `${this.parseLength(rangeStr, tplData.value).regex || '{0,}'}$`;
+            text = renderTpl(tplStr, tplData) + (rangeStr ? this.parseLength(rangeStr, tplData.value).text : '');
         }
         return { regex, text };
     },
@@ -4375,23 +4388,29 @@ const validTools = {
         }, usableItems = getItems().filter((k) => k?.parent?.nodeName === 'FORM'), result = { passed: true, fails: [] };
         if (usableItems.length > 0) {
             for (let k of usableItems) {
-                await this.validForm({
-                    el: k.parent,
-                    fail: (fails) => {
-                        fail && fail(k, fails);
-                    },
-                    succ: (fails) => {
-                        if (succ) {
-                            succ(k, fails);
+                if (k.parent?.ax?.hasSubmitListener)
+                    continue;
+                k.parent.addEventListener('submit', (e) => {
+                    preventDft(e);
+                    this.validForm({
+                        el: k.parent,
+                        fail: (fails) => {
+                            fail && fail(k, fails);
+                        },
+                        succ: (fails) => {
+                            if (succ) {
+                                succ(k, fails);
+                            }
+                            else {
+                                k.parent.submit();
+                            }
                         }
-                        else {
-                            k.parent.submit();
-                        }
-                    }
-                }).then((resp) => {
-                    result = resp;
-                    cb && cb(k, resp);
-                });
+                    }).then((resp) => {
+                        result = resp;
+                        cb && cb(k, resp);
+                    });
+                }, false);
+                storeNode(k.parent).addData('hasSubmitListener', true);
             }
         }
         return result;
@@ -9954,6 +9973,7 @@ class Dialog extends ModBaseListenCacheBubble {
         this.wings = getEls(this.options.wing.selector);
         this.renderBubble('dialog');
         this.setAttrs();
+        this.fixAni(this.options.placement);
         await getContent.call(this, {
             content: this.options.content,
             contType: this.options.contType,
@@ -9970,7 +9990,6 @@ class Dialog extends ModBaseListenCacheBubble {
                 this.renderContent(data);
             }
         });
-        this.fixAni(this.options.placement);
         this.lastPlace = '';
         this.handleFooter();
         this.handleTools();
@@ -10234,11 +10253,11 @@ class Dialog extends ModBaseListenCacheBubble {
     }
 }
 
-const confirm = ({ content, contType, contData, tplStr, tplEng, heading, yes, no }) => {
+const confirm = ({ content, contType, contData, tplStr, tplEng, heading, yes, no, dialog = {} }) => {
     if (isEmpty(content))
         return;
     return new Promise((resolve) => {
-        new Dialog(null, {
+        new Dialog(null, deepMerge({
             content,
             contType,
             contData,
@@ -10254,7 +10273,7 @@ const confirm = ({ content, contType, contData, tplStr, tplEng, heading, yes, no
                 no && no();
                 resolve(false);
             }
-        }).show();
+        }, dialog)).show();
     });
 };
 
@@ -11868,6 +11887,7 @@ class Popup extends ModBaseListenCacheBubble {
         this.wings = getEls(this.options.wing.selector);
         this.renderBubble('popup');
         this.setAttrs();
+        this.fixAni(this.options.placement);
         await getContent.call(this, {
             content: this.options.content,
             contType: this.options.contType,
@@ -11884,7 +11904,6 @@ class Popup extends ModBaseListenCacheBubble {
                 this.renderContent(data);
             }
         });
-        this.fixAni(this.options.placement);
         this.createPosition();
         this.handleFooter();
         this.handleTools();
@@ -12514,9 +12533,9 @@ class Valid extends ModBaseListenCache {
         this.createMsgEl();
         this.otherBox = getEl(this.options.placement);
         this.createObs();
-        this.checkFun = () => {
+        this.checkFun = debounce(() => {
             this.do();
-        };
+        });
         this.dftRules = {
             
             'required': (data) => {
@@ -12583,7 +12602,7 @@ class Valid extends ModBaseListenCache {
             },
             ...this.options.extend
         };
-        validTools.listenSubmit({ item: this.parentEl });
+        !this.parentEl?.ax?.hasSubmitListener && validTools.listenSubmit({ item: this.parentEl });
         super.listen({ name: 'constructed' });
         initial && this.init();
     }
@@ -12606,7 +12625,7 @@ class Valid extends ModBaseListenCache {
             this.targetEl.addEventListener(this.options.trigger, this.checkFun, false);
         }
         else if (this.options.trigger === 'load') {
-            this.do();
+            this.checkFun();
         }
         super.listen({ name: 'initiated', cb });
         return this;
@@ -12844,6 +12863,7 @@ class Valid extends ModBaseListenCache {
                         keepShow: true,
                         footer: false,
                         tools: false,
+                        padding: false,
                         arrow: {
                             enable: false,
                             gap: 0,
@@ -12865,7 +12885,7 @@ class Valid extends ModBaseListenCache {
                     this.msgIns.update({
                         content: this.msgText,
                         status: msg.passed ? 'succ' : 'error',
-                    }).show();
+                    }).then(() => this.msgIns.show());
                 }
             }
             else {
@@ -15258,12 +15278,15 @@ class Tags extends ModBaseListenCache {
                     };
                     super.updateCache(tmp);
                 }
-                this.output.value = this.getStrVals();
-                this.output.items = [...this.data];
-                super.listen({ name: 'output', params: [this.output] });
+                this.setOutput();
             }
         });
         this.data = this.dataObs.proxy;
+    }
+    setOutput() {
+        this.output.value = this.getStrVals();
+        this.output.items = [...this.data];
+        super.listen({ name: 'output', params: [this.output] });
     }
     async renderContent(data) {
         try {
@@ -15480,6 +15503,7 @@ class Tags extends ModBaseListenCache {
                 this.renderFinish();
                 super.updateCache({ content });
                 super.listen({ name: 'updatedCont', cb, params: [this.dataOrig] });
+                this.setOutput();
             }
         });
         return this;
@@ -21565,7 +21589,7 @@ class Progress extends ModBaseListenCache {
         }
         return result;
     }
-    async animateTo(val, opts) {
+    async animateTo(val, opts = { duration: this.options.duration }) {
         if (this.destroyed)
             return this;
         this.barEl.style.transitionDuration = null;
@@ -31445,6 +31469,7 @@ class Upload extends ModBaseListenCache {
     files;
     value;
     validItems;
+    fileInputEvt;
     static hostType = 'node';
     static optMaps = optUpload;
     constructor(elem, options = {}, initial = true) {
@@ -31476,11 +31501,15 @@ class Upload extends ModBaseListenCache {
             'file': `${ax.prefix}icon-file-text`,
         };
         let _this = this;
-        this.fileChangeEvt = function () {
+        this.fileChangeEvt = function (e) {
+            e.stopPropagation();
             let files = [...this.files];
             _this.renderList(files);
             this.value = '';
             _this.listen({ name: 'changed', params: [files] });
+        };
+        this.fileInputEvt = function (e) {
+            e.stopPropagation();
         };
         this.chooseEvt = () => {
             let globalValid = this.globalValid();
@@ -31743,6 +31772,7 @@ class Upload extends ModBaseListenCache {
         this.uploadBtn && this.uploadBtn.addEventListener('click', this.uploadEvt, false);
         this.clearBtn && this.clearBtn.addEventListener('click', this.clearEvt, false);
         this.fileEl.addEventListener('change', this.fileChangeEvt, false);
+        this.fileEl.addEventListener('input', this.fileInputEvt, true);
         this.targetEl.addEventListener("dragleave", this.dragLeaveEvt, false);
         this.targetEl.addEventListener("dragover", this.dragOverEvt, false);
         this.targetEl.addEventListener("dragenter", this.dragEnterEvt, false);
@@ -31753,6 +31783,7 @@ class Upload extends ModBaseListenCache {
         this.uploadBtn && this.uploadBtn.removeEventListener('click', this.uploadEvt);
         this.clearBtn && this.clearBtn.removeEventListener('click', this.clearEvt);
         this.fileEl.removeEventListener('change', this.fileChangeEvt);
+        this.fileEl.removeEventListener('input', this.fileInputEvt);
         this.targetEl.removeEventListener("dragleave", this.dragLeaveEvt);
         this.targetEl.removeEventListener("dragover", this.dragOverEvt);
         this.targetEl.removeEventListener("dragenter", this.dragEnterEvt);
@@ -33319,6 +33350,7 @@ class CompBaseCommField extends CompBaseComm {
         else if (isNull(data.value) && data.label) {
             el.value = data.label;
         }
+        this.propsProxy.value = this.value = (el.value || data.value);
     }
     changedMultiDisable(opt) {
         let tmp = getAttrArr(opt.newVal);
@@ -36501,10 +36533,11 @@ class ProgressElem extends CompBaseComm {
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this.canListen)
             return;
-        if (name === 'value') {
+        if (name === 'value' || name === 'duration') {
             if (!this.connected || !this.ins)
                 return;
             let duration = this.getAttribute('duration'), value = this.getVal(newVal);
+            duration && (this.ins.options.duration = ~~duration);
             if (duration == 0) {
                 this.ins.locateTo(value);
             }
@@ -37408,7 +37441,11 @@ class CalloutElem extends CompBaseComm {
             this.progEl.setAttribute('duration', opt.newVal || 3000);
             elState(this.progEl).isVirtual && this.wrapEl.appendChild(this.progEl);
             this.progEl?.ins?.on('zero', () => {
-                this.closeEl.click();
+                if (this.progEl.ins.vals.val === 0) {
+                    this.toggleAttribute('hidden', true);
+                }
+            }).on('updated', () => {
+                this.progEl.ins.vals.val = 0;
             });
             this.onmouseenter = () => {
                 this.progEl.ins.pause();

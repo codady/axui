@@ -2,6 +2,27 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-07-01更新
+### 发布v3.1.25版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.25/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.25/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.25/dist.zip
+### 更新内容
+* 添加6个新图标：reddit、reddit-f、telegram、telegram-f、login-f、logout-f。
+* 修复`Dialog`库，在异步加载内容和show同时进行时，入场动画失效问题。
+* 修复`confirm`工具函数，增加dialog参数，允许自定义窗口的属性。
+* 修改`button`组件相关样式，增加多个百分比宽度值。
+* 优化ajax函数，返回字符串型json数据时优先处理。
+* 修复line组件在dashed类型无法显示分割线的问题。
+* 修复`good`组件使用`increase`方法未能递增的问题。
+* 修复`callout`组件鼠标悬停时进度条反向进行的错误。
+* 修复`Valid`库悬浮提示的边距问题。
+* 修复`Valid`库对自定义表单域校验始终为fail的问题，改用了防抖校验，以确保所有操作结束之后才进行校验。
+* 修复`Upload`库，因为内置了file和text两个原生组件导致重复事件冒泡，阻止`file`组件的change和input事件传播。
+* 修复`validTools.parseLength`函数，新增`value`和`label`参数传递原值和别名。
+* 修复`validTools.listenSubmit`函数未能正确监听`submit`事件的问题。
+
+
 ## 2025-06-03更新
 ### 发布v3.1.23版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.23/dist/js/ax.js
