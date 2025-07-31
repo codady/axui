@@ -2,6 +2,43 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+
+
+## 2025-07-31更新
+### 发布v3.1.26版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.26/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.26/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.26/dist.zip
+### 更新内容
+* 修复`Range`组件使用`reset`方法无效的问题。
+* 将 `Range` 库的参数从 `aixs` 改为 `flow`，可选值为 `h/v`（水平/垂直）
+* 修复`Datetime`组件在手机端下拉年份和月份高度不正确的问题的。
+* 修复`Select`组件的工具箱颜色问题
+* 修复`Search`组件，使用`shape`属性时报错的问题。
+* 修复`Search`组件，使用`shape`、`notable`和`size`属性失效的问题。
+* 修复`Swipe`模块中`findSnap`函数的错误。
+* `Swipe`模块增加`thumb`参数，用来与其他swipe实例关联。
+* 修复`Gesture`模块设置`step.value`无效的问题。
+* `Swipe`增加`toLocate`方法，用来直接定位滑块。
+* 修复`getEl`和`getEls`函数，允许从`template`节点中取得子节点。
+* 修改`Lazy`模块默认的触发时机，目标节点与视口部分交叉即触发。
+* 将`inset-`有关定位的样式改为`pos-`。
+* 为 `Swipe` 组件新增 `thumb` 参数，支持与其他滑动实例关联。  
+* 为 `Swipe` 组件新增 `toLocate` 方法，可直接定位到指定幻灯片位置。  
+* 新增多个与 `Viwer` 模块相关的图标，并删除不常用的图标，为图标库减负。  
+* 在 `createTools` 方法中新增内置工具名称。  
+* 新增 `isChildVisible` 工具函数，用于判断子节点在父容器内是否可见。  
+* 将 `Swipe` 和 `Scroll` 库中的参数 `aixs` 更名为 `flow`，可选值为 `h/v`（水平/垂直）。 
+* 修复了 `Gesture` 模块中设置 `step.value` 不生效的问题。  
+* 移除了 `Swipe` 模块中的 `total.hyphen` 参数，新增 `total.format` 参数以支持用户自定义数据总览的文本格式。  
+* 修复了 `Gesture` 模块，使其在水平或垂直翻转状态下仍支持缩放行为。   
+* 修复了 `Swipe` 模块在切换幻灯片时自动暂停其他滑动内容中的视频和音频。  
+* 优化了 `Swipe` 模块，使 `gap` 和 `divide` 参数在 `slides: 'auto'` 模式下依然生效。  
+* 修复了 `c-text-fg`、`c-text-tl`、`c-brief-sd` 和 `c-caption-sd` 的颜色错误问题
+* 新增 `Toast` 消息提示库，用于展示实时短消息。[了解更多 ↗](/v3/modules/426.php/)
+
+
+
 ## 2025-07-01更新
 ### 发布v3.1.25版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.25/dist/js/ax.js
