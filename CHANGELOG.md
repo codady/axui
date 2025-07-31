@@ -2,6 +2,13 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-08-01更新
+### 发布v3.1.27版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.27/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.27/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.27/dist.zip
+### 更新内容
+* 上一版本打包出错，重新打包。
 
 
 ## 2025-07-31更新
