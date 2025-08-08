@@ -2,6 +2,30 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+
+## 2025-08-08更新
+### 发布v3.1.28版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.28/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.28/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.28/dist.zip
+### 更新内容
+- 修改`Stats`组件，增加`--_stats-bg-icon`、`--_stats-c-unit`和`--_stats-c-tips`变量，便于改变主题颜色;
+- 修改`rep=image`标签，增加对svg图片的支持。
+- 对主要颜色增加`-bs`后缀，意为`background solid`即浅色的非透明背景。
+- 对`card`增加`covered`属性。
+- 修复`Message`库的`content`参数传递双引号内容时的错误。
+- 修复`Fields`组件，同时使用`size`和`shape`时，圆角失效的问题。
+- 解决`_ell-hold`无效的问题。
+- 新增`--_sd-*`相关的CSS变量。
+- 将`_sd-*`相关样式类中的`--_sd`变量改为`--_sd-base`。
+- 修复`_tag`对`size`属性无效的问题。
+- 修复input组件`size=lg`时`padding`无效问题。
+- 对`input`组件增加`shape`属性，可使用方角或圆角的input。
+- 修改`Accordion`模块，增加`appear.filled`参数。
+- 对`Bullet`组件增加`rep=no`节点，用来表达列表序号。
+- 修改`Flag`组件，增加`type=ribbon`和`type=diamond`类型。
+
+
 ## 2025-08-01更新
 ### 发布v3.1.27版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.27/dist/js/ax.js

@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-8-1 1:5:49
+ * @since Last modified: 2025-8-8 11:2:56
  * @name AXUI front-end framework.
- * @version 3.1.27
+ * @version 3.1.28
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -4152,14 +4152,18 @@ class Message extends ModBaseListen {
     };
     createSection() {
         this.template = `
-        <ax-callout size="lg" opaque hidden content="${this.options.content === true || this.options.content === '' ? this.options.lang.content[this.options.status] : this.options.content}"
-        ${this.options.notable ? 'notable' : ''}
-        ${this.options.iconShow ? 'result' : ''}
-        ${this.options.closable ? 'closable' : ''}
-        ${this.options.status ? 'theme="' + (this.options.status || 'info') + '"' : ''}
-        ${this.options.heading ? 'label="' + (this.options.heading === true ? this.options.lang.heading[this.options.status] : this.options.heading) + '"' : ''}
-        ${!this.options.progress ? 'noprogress' : ''}
+        <ax-callout 
+            size="lg" 
+            opaque 
+            hidden
+            ${this.options.notable ? 'notable' : ''}
+            ${this.options.iconShow ? 'result' : ''}
+            ${this.options.closable ? 'closable' : ''}
+            ${this.options.status ? 'theme="' + (this.options.status || 'info') + '"' : ''}
+            ${this.options.heading ? 'label="' + (this.options.heading === true ? this.options.lang.heading[this.options.status] : this.options.heading) + '"' : ''}
+            ${!this.options.progress ? 'noprogress' : ''}
         >
+        ${this.options.content === true || this.options.content === '' ? this.options.lang.content[this.options.status] : this.options.content}
         </ax-callout>
         `;
         this.targetEl = tplToEl(this.template);

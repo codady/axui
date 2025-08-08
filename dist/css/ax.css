@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-8-1 1:6:30
+ * @since Last modified: 2025-8-8 11:3:25
  * @name AXUI front-end framework.
- * @version 3.1.27
+ * @version 3.1.28
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,10 +15,10 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-08-01 00:56:53
+ * @since Last modified: 2025-08-08 11:01:39
  */
 /*
- *Last modified: 2025-06-12 17:08:26
+ *Last modified: 2025-08-05 17:34:21
  */
 :root {
   /*Stage colors*/
@@ -90,6 +90,7 @@
   --_a-prim: 1;
   --_c-prim: hsla(var(--_h-prim), var(--_s-prim), var(--_l-prim), var(--_a-prim));
   --_c-prim-bg: hsla(var(--_h-prim), var(--_s-prim), var(--_l-prim), 0.04);
+  --_c-prim-bs: hsl(var(--_h-prim), 60%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-prim-bd: hsl(var(--_h-prim), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-prim-fc: hsl(var(--_h-prim), 62%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
   --_c-prim-ht: hsl(var(--_h-prim), 70%, calc(var(--_l-stage) - 30%*var(--_c-coef)));
@@ -111,6 +112,7 @@
   --_a-text: 1;
   --_c-text: hsla(var(--_h-text), var(--_s-text), var(--_l-text), var(--_a-text));
   --_c-text-bg: hsla(var(--_h-text), var(--_s-text), var(--_l-text), 0.04);
+  --_c-text-bs: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 3%*var(--_c-coef)));
   --_c-text-bd: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 12%*var(--_c-coef)));
   --_c-text-fc: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 16%*var(--_c-coef)));
   --_c-text-ht: hsl(var(--_h-text), var(--_s-text), 60%);
@@ -142,6 +144,7 @@
   --_a-succ: 1;
   --_c-succ: hsla(var(--_h-succ), var(--_s-succ), var(--_l-succ), var(--_a-succ));
   --_c-succ-bg: hsla(var(--_h-succ), var(--_s-succ), var(--_l-succ), 0.04);
+  --_c-succ-bs: hsl(var(--_h-succ), 33%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-succ-bd: hsl(var(--_h-succ), 33%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-succ-fc: hsl(var(--_h-succ), 38%, calc(var(--_l-stage) - 13%*var(--_c-coef)));
   --_c-succ-ht: hsl(var(--_h-succ), 23%, 74%);
@@ -159,6 +162,7 @@
   --_a-error: 1;
   --_c-error: hsla(var(--_h-error), var(--_s-error), var(--_l-error), var(--_a-error));
   --_c-error-bg: hsla(var(--_h-error), var(--_s-error), var(--_l-error), 0.04);
+  --_c-error-bs: hsl(var(--_h-error), 39%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-error-bd: hsl(var(--_h-error), 39%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-error-fc: hsl(var(--_h-error), 42%, calc(var(--_l-stage) - 14%*var(--_c-coef)));
   --_c-error-ht: hsl(var(--_h-error), 23%, 74%);
@@ -176,6 +180,7 @@
   --_a-warn: 1;
   --_c-warn: hsla(var(--_h-warn), var(--_s-warn), var(--_l-warn), var(--_a-warn));
   --_c-warn-bg: hsla(var(--_h-warn), var(--_s-warn), var(--_l-warn), 0.04);
+  --_c-warn-bs: hsl(var(--_h-warn), 60%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-warn-bd: hsl(var(--_h-warn), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-warn-fc: hsl(var(--_h-warn), 49%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
   --_c-warn-ht: hsl(var(--_h-warn), 23%, 74%);
@@ -193,6 +198,7 @@
   --_a-info: 1;
   --_c-info: hsla(var(--_h-info), var(--_s-info), var(--_l-info), var(--_a-info));
   --_c-info-bg: hsla(var(--_h-info), var(--_s-info), var(--_l-info), 0.04);
+  --_c-info-bs: hsl(var(--_h-info), 60%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-info-bd: hsl(var(--_h-info), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-info-fc: hsl(var(--_h-info), 62%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
   --_c-info-ht: hsl(var(--_h-info), 75%, 67%);
@@ -210,6 +216,7 @@
   --_a-issue: 1;
   --_c-issue: hsla(var(--_h-issue), var(--_s-issue), var(--_l-issue), var(--_a-issue));
   --_c-issue-bg: hsla(var(--_h-issue), var(--_s-issue), var(--_l-issue), 0.04);
+  --_c-issue-bs: hsl(var(--_h-issue), 60%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-issue-bd: hsl(var(--_h-issue), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-issue-fc: hsl(var(--_h-issue), 49%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
   --_c-issue-ht: hsl(var(--_h-issue), 23%, 74%);
@@ -477,6 +484,20 @@
   --_r-input-lg: calc(var(--_r)*3);
   --_r-bubble: calc(var(--_r)*3);
   --_r-full: 99999px;
+  --_sd: 0 0.5rem 1rem var(--_c-black-12);
+  --_sd-bd: 1px 0 0 var(--_c-text-bd), -1px 0 0 var(--_c-text-bd), 0 1px 0 var(--_c-text-bd), 0 -1px 0 var(--_c-text-bd), 0 .2rem .6rem var(--_c-black-8);
+  --_sd-bd-in: 0 0 0 1px var(--_c-text-bd) inset, 0 .2rem .6rem var(--_c-black-8);
+  --_sd-ring: 0 0 0 2px var(--_c-prim-sd);
+  --_sd-lt: 1px 1px 0.5rem var(--_c-black-8);
+  --_sd-dk: 0 0.2rem 1rem var(--_c-black-12);
+  --_sd-soft: 0 0.5rem 2rem var(--_c-black-12);
+  --_sd-hard: 0 0.1rem 0.3rem var(--_c-black-40);
+  --_sd-prim: 1px 2px 1rem var(--_c-prim-sd);
+  --_sd-issue: 1px 2px 1rem var(--_c-issue-sd);
+  --_sd-error: 1px 2px 1rem var(--_c-error-sd);
+  --_sd-info: 1px 2px 1rem var(--_c-info-sd);
+  --_sd-warn: 1px 2px 1rem var(--_c-warn-sd);
+  --_sd-succ: 1px 2px 1rem var(--_c-succ-sd);
   /*Other*/
   --_dir-coef: 1;
   --_dir-coef-alt: 0;
@@ -3712,7 +3733,7 @@ AX-BTN[inverted][type=seal]:where([theme=caption]) {
   content: 'left';
 }
 /*
- *Last modified: 2025-08-01 00:59:02
+ *Last modified: 2025-08-05 17:29:20
  */
 /*rtl & ltr*/
 [dir=rtl],
@@ -4509,53 +4530,62 @@ AX-BTN[inverted][type=seal]:where([theme=caption]) {
 }
 /*Shadow */
 ._sd {
-  --_sd: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0.5rem 1rem var(--_sd);
+  --_sd-base: var(--_c-black-12);
+  box-shadow: 0 0.5rem 1rem var(--_sd-base);
 }
 ._sd-bd {
+  --_sd-base: var(--_c-text-bd);
+  --_sd-refer: var(--_c-black-8);
+  box-shadow: 1px 0 0 var(--_sd-base), -1px 0 0 var(--_sd-base), 0 1px 0 var(--_sd-base), 0 -1px 0 var(--_sd-base), 0 0.2rem 0.6rem var(--_sd-refer);
+}
+._sd-bd-in {
   --_sd: var(--_c-text-bd);
-  --_sd-refer: rgba(0, 0, 0, 0.08);
-  box-shadow: 1px 0 0 var(--_sd), -1px 0 0 var(--_sd), 0 1px 0 var(--_sd), 0 -1px 0 var(--_sd), 0 0.2rem 0.6rem var(--_sd-refer);
+  --_sd-refer: var(--_c-black-8);
+  box-shadow: 0 0 0 1px var(--_sd-base) inset, 0 0.2rem 0.6rem var(--_sd-refer);
+}
+._sd-ring {
+  --_sd-base: var(--_c-prim-sd);
+  box-shadow: 0 0 0 2px var(--_sd-base);
 }
 ._sd-lt {
-  --_sd: rgba(0, 0, 0, 0.06);
-  box-shadow: 1px 1px 0.5rem var(--_sd);
+  --_sd-base: var(--_c-black-8);
+  box-shadow: 1px 1px 0.5rem var(--_sd-base);
 }
 ._sd-dk {
-  --_sd: rgba(0, 0, 0, 0.12);
-  box-shadow: 0 0.2rem 1rem var(--_sd);
+  --_sd-base: var(--_c-black-12);
+  box-shadow: 0 0.2rem 1rem var(--_sd-base);
 }
 ._sd-soft {
-  --_sd: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0.5rem 2rem var(--_sd);
+  --_sd-base: var(--_c-black-12);
+  box-shadow: 0 0.5rem 2rem var(--_sd-base);
 }
 ._sd-hard {
-  --_sd: rgba(0, 0, 0, 0.4);
-  box-shadow: 0 0.1rem 0.3rem var(--_sd);
+  --_sd-base: var(--_c-black-40);
+  box-shadow: 0 0.1rem 0.3rem var(--_sd-base);
 }
 ._sd-prim {
-  --_sd: var(--_c-prim-sd);
-  box-shadow: 1px 2px 1rem var(--_sd);
+  --_sd-base: var(--_c-prim-sd);
+  box-shadow: 1px 2px 1rem var(--_sd-base);
 }
 ._sd-error {
-  --_sd: var(--_c-error-sd);
-  box-shadow: 1px 2px 1rem var(--_sd);
+  --_sd-base: var(--_c-error-sd);
+  box-shadow: 1px 2px 1rem var(--_sd-base);
 }
 ._sd-succ {
-  --_sd: var(--_c-succ-sd);
-  box-shadow: 1px 2px 1rem var(--_sd);
+  --_sd-base: var(--_c-succ-sd);
+  box-shadow: 1px 2px 1rem var(--_sd-base);
 }
 ._sd-info {
-  --_sd: var(--_c-info-sd);
-  box-shadow: 1px 2px 1rem var(--_sd);
+  --_sd-base: var(--_c-info-sd);
+  box-shadow: 1px 2px 1rem var(--_sd-base);
 }
 ._sd-warn {
-  --_sd: var(--_c-warn-sd);
-  box-shadow: 1px 2px 1rem var(--_sd);
+  --_sd-base: var(--_c-warn-sd);
+  box-shadow: 1px 2px 1rem var(--_sd-base);
 }
 ._sd-issue {
-  --_sd: var(--_c-issue-sd);
-  box-shadow: 1px 2px 1rem var(--_sd);
+  --_sd-base: var(--_c-issue-sd);
+  box-shadow: 1px 2px 1rem var(--_sd-base);
 }
 /*Padding*/
 ._p,
@@ -5738,6 +5768,9 @@ AX-DIVIDER[size=lg] {
         pointer-events: none;
     } */
 }
+[rep=disk] svg,
+[rep=cube] svg,
+[rep=image] svg,
 [rep=disk] img,
 [rep=cube] img,
 [rep=image] img {
@@ -8308,7 +8341,7 @@ AX-CHECKBOX[type=switch] u:before {
   line-height: var(--_switch-btn-h);
   border-radius: var(--_switch-btn-r);
   background-color: var(--_c-white);
-  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0.1rem 0.3rem var(--_c-black-40);
   transition: all var(--_dur-2) var(--_bez-eo);
   display: inline-flex;
   justify-content: center;
@@ -10039,7 +10072,7 @@ AX-CALLOUT:where([feature=plain]) {
 }
 ._message AX-CALLOUT {
   margin: var(--_m) var(--_m) 0 var(--_m);
-  box-shadow: 1px 1px 0.5rem rgba(0, 0, 0, 0.06);
+  box-shadow: 1px 1px 0.5rem var(--_c-black-8);
   display: none;
 }
 ._message AX-CALLOUT[noprogress] AX-PROGRESS {
@@ -10361,7 +10394,7 @@ AX-FORMAT [rep=wrap] {
   display: inline-flex;
 }
 /*
-Last modified: 2025-06-12 15:49:11
+Last modified: 2025-08-05 16:22:34
 */
 /*Ellipsis*/
 ._ell,
@@ -10374,7 +10407,8 @@ Last modified: 2025-06-12 15:49:11
   overflow: hidden;
 }
 ._ell-hold {
-  height: calc(var(--_ell-lh)*var(--_ell-num));
+  height: calc(var(--_ell-lh) * 1em * var(--_ell-num));
+  height: calc(var(--_ell-lh) * var(--_ell-num));
 }
 ._ell-2,
 ._ell-3,
@@ -10495,7 +10529,7 @@ AX-FLAG {
   z-index: 3;
 }
 AX-FLAG [rep=wrap] {
-  display: block;
+  display: flex;
   border-radius: inherit;
   overflow: hidden;
   width: 100%;
@@ -10506,11 +10540,11 @@ AX-FLAG [rep=label] {
   background-color: var(--_flag-bg);
   overflow: hidden;
 }
-AX-FLAG:where(:not([type=circle], [type=horn])) {
+AX-FLAG:where(:not([type=circle], [type=horn],[type=ribbon],[type=diamond])) {
   width: 42px;
   aspect-ratio: 1/1;
 }
-AX-FLAG:where(:not([type=circle], [type=horn])) [rep=label] {
+AX-FLAG:where(:not([type=circle], [type=horn],[type=ribbon],[type=diamond])) [rep=label] {
   width: 60px;
   aspect-ratio: 1/1;
   line-height: 100px;
@@ -10520,12 +10554,12 @@ AX-FLAG:where(:not([type=circle], [type=horn])) [rep=label] {
   inset-block-start: -30px;
   inset-inline-start: -30px;
 }
-AX-FLAG[placement=right]:where(:not([type=circle], [type=horn])) {
+AX-FLAG[placement=right]:where(:not([type=circle], [type=horn],[type=ribbon],[type=diamond])) {
   inset-inline-start: auto;
   inset-inline-end: 0;
   inset-block-start: 0;
 }
-AX-FLAG[placement=right]:where(:not([type=circle], [type=horn])) [rep=label] {
+AX-FLAG[placement=right]:where(:not([type=circle], [type=horn],[type=ribbon],[type=diamond])) [rep=label] {
   inset-block-start: -30px;
   inset-inline-start: auto;
   inset-inline-end: -30px;
@@ -10599,6 +10633,71 @@ AX-FLAG[type=horn][placement=right]:before {
 AX-FLAG[type=horn][placement=right]:after {
   border-color: transparent var(--_flag-bg) var(--_flag-bg) transparent;
 }
+AX-FLAG[type=ribbon] {
+  height: 100px;
+  aspect-ratio: 1/1;
+}
+AX-FLAG[type=ribbon] [rep=label] {
+  height: var(--_px-list);
+  width: 200%;
+  line-height: var(--_px-list);
+  text-align: center;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  position: absolute;
+  left: calc(50% - var(--_px-root));
+  top: calc(50% - var(--_px-root));
+}
+AX-FLAG[type=ribbon][placement=right] {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+AX-FLAG[type=ribbon][placement=right] [rep=label] {
+  transform: translate(0, -12px) rotate(45deg);
+  left: calc(-50% + var(--_px-root));
+  top: calc(50% - var(--_px-root));
+}
+AX-FLAG[type=diamond] {
+  width: fit-content;
+  height: fit-content;
+}
+AX-FLAG[type=diamond]:before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  border-radius: 0 0 calc(var(--_px-title)/2) 0;
+  background-color: var(--_flag-bg);
+  transform: skew(-18deg);
+  transform-origin: 0 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+AX-FLAG[type=diamond] [rep=label] {
+  background-color: transparent;
+  height: var(--_px-title);
+  line-height: var(--_px-title);
+  color: var(--_flag-c);
+  padding-inline-start: var(--_px-body);
+  padding-inline-end: var(--_px-subtitle);
+  font-size: var(--_px-caption);
+  position: relative;
+  z-index: 2;
+}
+AX-FLAG[type=diamond][placement=right] {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+AX-FLAG[type=diamond][placement=right][placement=right]:before {
+  border-radius: 0 0 0 calc(var(--_px-title)/2);
+  transform: skew(18deg);
+  transform-origin: 100% 0;
+  left: auto;
+  right: 0;
+}
+AX-FLAG[type=diamond][placement=right] [rep=label] {
+  padding-inline-end: var(--_px-body);
+  padding-inline-start: var(--_px-subtitle);
+}
 AX-FLAG[theme=prim] {
   --_flag-bg: var(--_c-prim);
 }
@@ -10630,10 +10729,10 @@ AX-FLAG[theme=caption] {
   --_flag-c: var(--_c-caption);
   --_flag-bg: var(--_c-caption-bg);
 }
-[dir=rtl] AX-FLAG:where(:not([type=circle], [type=horn])) [rep=label] {
+[dir=rtl] AX-FLAG:where(:not([type=circle], [type=horn],[type=ribbon],[type=diamond])) [rep=label] {
   rotate: 45deg;
 }
-[dir=rtl] AX-FLAG[placement=right]:where(:not([type=circle], [type=horn])) [rep=label] {
+[dir=rtl] AX-FLAG[placement=right]:where(:not([type=circle], [type=horn],[type=ribbon],[type=diamond])) [rep=label] {
   rotate: -45deg;
 }
 [dir=rtl] AX-FLAG[type=horn]:before {
@@ -10647,6 +10746,18 @@ AX-FLAG[theme=caption] {
 }
 [dir=rtl] AX-FLAG[type=horn][placement=right]:after {
   border-color: transparent transparent var(--_flag-bg) var(--_flag-bg);
+}
+[dir=rtl] AX-FLAG[type=ribbon] {
+  rotate: 90deg;
+}
+[dir=rtl] AX-FLAG[type=ribbon][placement] {
+  rotate: -90deg;
+}
+[dir=rtl] AX-FLAG[type=diamond] {
+  scale: -1 1;
+}
+[dir=rtl] AX-FLAG[type=diamond] [rep=label] {
+  scale: -1 1;
 }
 /*Bulletin*/
 ._bullet {
@@ -10722,6 +10833,23 @@ AX-FLAG[theme=caption] {
   color: var(--_c-white);
   background-color: var(--_c-prim);
   border-color: var(--_c-prim-dp);
+}
+._bullet [rep=no] {
+  font-weight: bold;
+  min-width: var(--_rem-body);
+  margin-inline-end: var(--_rem-space);
+}
+._bullet [rep=no]:before {
+  content: attr(data-value);
+}
+._bullet [rep=no][data-value="1"] {
+  color: var(--_c-error);
+}
+._bullet [rep=no][data-value="2"] {
+  color: var(--_c-issue);
+}
+._bullet [rep=no][data-value="3"] {
+  color: var(--_c-warn);
 }
 ._bullet [rep=arrow],
 ._bullet [rep=tips] {
@@ -11500,11 +11628,12 @@ AX-ANCHORS li [rep=label]:hover {
   opacity: 1;
 }
 /*
-Last modified: 2025-06-12 16:07:35
+Last modified: 2025-08-02 23:16:17
 */
 /*Card*/
 ._card {
   --_card-p: var(--_p);
+  --_card-p-body: var(--_rem-list);
   --_card-g: var(--_rem-space);
   --_card-bg: var(--_c-stage);
   --_card-bd: 1px;
@@ -11513,6 +11642,7 @@ Last modified: 2025-06-12 16:07:35
   --_card-scale: 1.05;
   --_card-fw: bold;
   --_card-m: var(--_rem-body);
+  --_link-c: inherit;
   background-color: var(--_card-bg);
   border: var(--_card-bd) solid var(--_c-text-bd);
   border-radius: var(--_card-r);
@@ -11603,10 +11733,27 @@ Last modified: 2025-06-12 16:07:35
   transform: scale(var(--_card-scale));
 }
 ._card:where(:not([unpadded])):hover {
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
 }
 ._card:where(:not([unpadded])):hover [rep=poster] > img {
   transform: scale(var(--_card-scale));
+}
+._card[covered] {
+  --_card-p: 0;
+  --_card-bd: 0;
+  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
+}
+._card[covered] [rep=poster] {
+  border-top-left-radius: var(--_card-r);
+  border-top-right-radius: var(--_card-r);
+}
+._card[covered] ._card-body {
+  padding: 0 var(--_card-p-body) var(--_card-p-body) var(--_card-p-body);
+}
+@media (max-width: calc(600px - 1px)) {
+  ._card[covered] {
+    --_card-p-body: var(--_rem-body);
+  }
 }
 /*Grade*/
 ._grade {
@@ -12514,6 +12661,9 @@ AX-STATS {
   --_stats-fs: var(--_rem-display);
   --_stats-lh: var(--_rem-input);
   --_stats-h-legend: calc(var(--_rem-input) + var(--_rem-subtitle));
+  --_stats-c-unit: var(--_c-brief);
+  --_stats-c-tips: var(--_stats-c-unit);
+  --_stats-bg-icon: var(--_c-text-bg);
   display: inline-flex;
   vertical-align: middle;
 }
@@ -12538,13 +12688,13 @@ AX-STATS [rep=label] AX-BADGE {
   transform: translate(calc(100% * var(--_dir-coef)), 0);
 }
 AX-STATS [rep=unit] {
-  color: var(--_c-brief);
+  color: var(--_stats-c-unit);
   font-size: var(--_rem-caption);
   line-height: var(--_rem-caption);
   margin-inline-start: var(--_rem-space);
 }
 AX-STATS [rep=tips] {
-  color: var(--_c-brief);
+  color: var(--_stats-c-tips);
 }
 AX-STATS [rep=icon],
 AX-STATS [rep=disk],
@@ -12560,7 +12710,7 @@ AX-STATS [rep=icon] {
   aspect-ratio: 1/1;
   font-size: var(--_rem-list);
   border-radius: 100%;
-  background-color: var(--_c-text-bg);
+  background-color: var(--_stats-bg-icon);
 }
 AX-STATS:where([dir=v]):where(:not(:has([rep=unit]))) {
   text-align: center;
@@ -13188,11 +13338,27 @@ AX-PAGINATION {
 ._tag[disabled] {
   opacity: var(--_o-disabled);
 }
+._tag[size=sm] {
+  --_tag-h: var(--_rem-list);
+  --_tag-m: var(--_rem-min);
+  --_tag-fs: var(--_rem-caption);
+  --_tag-p: var(--_rem-min);
+  --_tag-h-img: var(--_rem-body);
+}
+._tag[size=lg] {
+  --_tag-h: var(--_rem-input);
+  --_tag-m: var(--_rem-body);
+  --_tag-p: var(--_rem-body);
+}
 ._tags[theme=prim] ._tag,
 ._tag[theme=prim] {
   --_tag-c: var(--_c-prim-dp);
   --_tag-bc: var(--_c-prim-bd);
   --_tag-bg: var(--_c-prim-bg);
+}
+._tags[theme=prim]:where([type=borderless]) ._tag,
+._tag[theme=prim]:where([type=borderless]) {
+  --_tag-bg: var(--_c-prim-ac);
 }
 ._tags[theme=succ] ._tag,
 ._tag[theme=succ] {
@@ -13200,11 +13366,19 @@ AX-PAGINATION {
   --_tag-bc: var(--_c-succ-bd);
   --_tag-bg: var(--_c-succ-bg);
 }
+._tags[theme=succ]:where([type=borderless]) ._tag,
+._tag[theme=succ]:where([type=borderless]) {
+  --_tag-bg: var(--_c-succ-ac);
+}
 ._tags[theme=error] ._tag,
 ._tag[theme=error] {
   --_tag-c: var(--_c-error-dp);
   --_tag-bc: var(--_c-error-bd);
   --_tag-bg: var(--_c-error-bg);
+}
+._tags[theme=error]:where([type=borderless]) ._tag,
+._tag[theme=error]:where([type=borderless]) {
+  --_tag-bg: var(--_c-error-ac);
 }
 ._tags[theme=warn] ._tag,
 ._tag[theme=warn] {
@@ -13212,11 +13386,19 @@ AX-PAGINATION {
   --_tag-bc: var(--_c-warn-bd);
   --_tag-bg: var(--_c-warn-bg);
 }
+._tags[theme=warn]:where([type=borderless]) ._tag,
+._tag[theme=warn]:where([type=borderless]) {
+  --_tag-bg: var(--_c-warn-ac);
+}
 ._tags[theme=issue] ._tag,
 ._tag[theme=issue] {
   --_tag-c: var(--_c-issue-dp);
   --_tag-bc: var(--_c-issue-bd);
   --_tag-bg: var(--_c-issue-bg);
+}
+._tags[theme=issue]:where([type=borderless]) ._tag,
+._tag[theme=issue]:where([type=borderless]) {
+  --_tag-bg: var(--_c-issue-ac);
 }
 ._tags[theme=info] ._tag,
 ._tag[theme=info] {
@@ -13224,9 +13406,17 @@ AX-PAGINATION {
   --_tag-bc: var(--_c-info-bd);
   --_tag-bg: var(--_c-info-bg);
 }
+._tags[theme=info]:where([type=borderless]) ._tag,
+._tag[theme=info]:where([type=borderless]) {
+  --_tag-bg: var(--_c-info-ac);
+}
 ._tags[theme=text] ._tag,
 ._tag[theme=text] {
   --_tag-bg: var(--_c-text-bg);
+}
+._tags[theme=text]:where([type=borderless]) ._tag,
+._tag[theme=text]:where([type=borderless]) {
+  --_tag-bg: var(--_c-text-ac);
 }
 ._tags[theme=brief] ._tag,
 ._tag[theme=brief] {
@@ -13234,11 +13424,19 @@ AX-PAGINATION {
   --_tag-bc: var(--_c-brief-bd);
   --_tag-bg: var(--_c-brief-bg);
 }
+._tags[theme=brief]:where([type=borderless]) ._tag,
+._tag[theme=brief]:where([type=borderless]) {
+  --_tag-bg: var(--_c-brief-ac);
+}
 ._tags[theme=caption] ._tag,
 ._tag[theme=caption] {
   --_tag-c: var(--_c-caption);
   --_tag-bc: var(--_c-caption-bd);
   --_tag-bg: var(--_c-caption-bg);
+}
+._tags[theme=caption]:where([type=borderless]) ._tag,
+._tag[theme=caption]:where([type=borderless]) {
+  --_tag-bg: var(--_c-caption-ac);
 }
 ._tags[type=borderless] ._tag,
 ._tag[type=borderless] {
@@ -13262,7 +13460,7 @@ AX-PAGINATION {
 ._tags[size=lg] {
   --_tags-h: var(--_rem-input);
   --_tags-m: var(--_rem-body);
-  --_tag-p: var(--_rem-body);
+  --_tags-p: var(--_rem-body);
 }
 ._tags[compact] {
   --_tags-m: var(--_rem-min);
@@ -15114,7 +15312,7 @@ AX-TREE {
   border: 1px solid var(--_c-text-bd);
   border-radius: var(--_popup-r);
   box-sizing: border-box;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
   animation-duration: var(--_dur-1);
   animation-fill-mode: both;
   visibility: hidden;
@@ -15504,7 +15702,7 @@ AX-MENU {
   background-color: var(--_c-stage);
   border: 1px solid var(--_c-text-bd);
   border-radius: var(--_menu-r);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
 }
 ._menu[spill]:where(:not([nav])) > ul ul > li:first-child,
 ._menu[spill]:where(:not([nav])) > ul ul > li:first-child > :first-child {
@@ -15625,7 +15823,7 @@ AX-MENU {
   background-color: var(--_c-stage);
   border: 1px solid var(--_c-text-bd);
   border-radius: var(--_menu-r);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
 }
 ._menu[nav] > ul ul > li:first-child,
 ._menu[nav] > ul ul > li:first-child > :first-child {
@@ -16094,7 +16292,7 @@ AX-MENU {
   border-block-start: 1px solid var(--_c-text-bd);
 }
 ._drawer:not(:has(._drawer-mask)) ._drawer-wrap {
-  box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0.2rem 1rem var(--_c-black-12);
 }
 @media (max-width: 899px) {
   ._drawer {
@@ -16366,13 +16564,13 @@ AX-MENU {
 }
 ._dialog:not(:has(._dialog-mask)) ._dialog-wrap {
   border: 1px solid var(--_c-text-bd);
-  box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0.2rem 1rem var(--_c-black-12);
 }
 ._dialog[feature=confirm] ._dialog-wrap,
 ._dialog[feature=alert] ._dialog-wrap,
 ._dialog[feature=prompt] ._dialog-wrap {
   border: 1px solid var(--_c-text-bd);
-  box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0.2rem 1rem var(--_c-black-12);
 }
 /*ax tooltip*/
 ._tooltip {
@@ -16707,9 +16905,17 @@ AX-INPUT > [rep=wrap] > [rep=label] {
   background-color: var(--_input-bg-label);
   border-inline-end: var(--_input-bw-label) solid var(--_input-bc);
 }
+AX-INPUT > [rep=wrap] > [rep=label]:where(:first-child) {
+  border-start-start-radius: inherit;
+  border-end-start-radius: inherit;
+}
 AX-INPUT > [rep=wrap] > [rep=unit] {
   background-color: var(--_input-bg-unit);
   border-inline-start: var(--_input-bw-unit) solid var(--_input-bc);
+}
+AX-INPUT > [rep=wrap] > [rep=unit]:where(:last-child) {
+  border-end-end-radius: inherit;
+  border-start-end-radius: inherit;
 }
 AX-INPUT > [rep=wrap] > [rep=custom] {
   display: inline-flex;
@@ -16753,11 +16959,12 @@ AX-INPUT > [rep=wrap] > [rep=tools] {
   margin-inline-end: calc((var(--_rem-display) - var(--_rem-list))/2);
 }
 AX-INPUT > [rep=wrap] > input {
-  width: 100%;
+  --_field-p-se: var(--_input-p-se);
+  --_field-w: 100%;
+  --_field-r: var(--_input-r);
   min-width: auto;
   height: 100%;
   border-width: 0;
-  border-radius: var(--_input-r);
   outline: none;
   box-shadow: none;
   flex: auto;
@@ -16798,6 +17005,19 @@ AX-INPUT[size=lg] {
   --_input-h: var(--_em-max);
   --_input-p-se: var(--_em-body);
   --_input-r: var(--_r-input-lg);
+}
+AX-INPUT[shape=square] {
+  --_input-r: 0;
+}
+AX-INPUT[shape=round] {
+  --_input-r: var(--_input-h);
+  --_input-p-se: var(--_em-body);
+}
+AX-INPUT[shape=round]:where([size=sm]) {
+  --_input-p-se: var(--_em-root);
+}
+AX-INPUT[shape=round]:where([size=lg]) {
+  --_input-p-se: var(--_em-list);
 }
 AX-INPUT[feature=plain] {
   --_input-bg-label: transparent;
@@ -19055,6 +19275,10 @@ AX-ACCORDION > [rep=wrap] > ._accordion {
   --_acc-lh: var(--_rem-list);
   --_acc-g: var(--_rem-min);
   --_acc-r: var(--_r-input);
+  --_acc-bg: var(--_c-stage);
+  --_acc-br: var(--_rem-space);
+  --_acc-bw: 1px;
+  --_acc-p: var(--_rem-body);
 }
 ._accordion ._accordion-wrap {
   /*disabled禁止勾选*/
@@ -19249,25 +19473,25 @@ AX-ACCORDION > [rep=wrap] > ._accordion {
   border-radius: var(--_acc-r);
 }
 ._accordion:where([divided]:not([gapped])) > ._accordion-wrap > ._accordion-head {
-  border-block-end: 1px solid var(--_c-text-bd);
+  border-block-end: var(--_acc-bw) solid var(--_c-text-bd);
 }
 ._accordion:where([divided]) > ._accordion-wrap > ._accordion-body {
-  padding: var(--_rem-body) 0;
+  padding: var(--_acc-p) 0;
 }
 ._accordion:where([divided][bordered]:not([gapped])) > ._accordion-wrap:where(:last-child) > ._accordion-head:where(:not([expanded])) {
   border-width: 0;
 }
 ._accordion:where([divided][bordered]:not([gapped])) > ._accordion-wrap:where(:not(:last-child)) > ._accordion-body {
-  border-block-end: 1px solid var(--_c-text-bd);
+  border-block-end: var(--_acc-bw) solid var(--_c-text-bd);
 }
 ._accordion:where([divided][gapped]) > ._accordion-wrap > ._accordion-body {
-  border-block-start: 1px solid var(--_c-text-bd);
+  border-block-start: var(--_acc-bw) solid var(--_c-text-bd);
 }
 ._accordion:where([gapped]) > ._accordion-wrap:where(:not(:last-child)) {
-  margin-block-end: var(--_rem-space);
+  margin-block-end: var(--_acc-br);
 }
 ._accordion:where([bordered]) > ._accordion-wrap > ._accordion-head {
-  padding: 0 var(--_rem-body);
+  padding: 0 var(--_acc-p);
 }
 ._accordion:where([bordered]) > ._accordion-wrap > ._accordion-head > :last-child[rep=arrow] {
   margin-inline-end: calc(-1*var(--_rem-space));
@@ -19276,11 +19500,14 @@ AX-ACCORDION > [rep=wrap] > ._accordion {
   margin-inline-start: calc(-1*var(--_rem-space));
 }
 ._accordion:where([bordered]) > ._accordion-wrap > ._accordion-body {
-  padding: var(--_rem-body);
+  padding: var(--_acc-p);
 }
 ._accordion:where([bordered]:not([gapped])),
 ._accordion:where([bordered][gapped]) > ._accordion-wrap {
-  border: 1px solid var(--_c-text-bd);
+  border: var(--_acc-bw) solid var(--_c-text-bd);
+}
+._accordion:where([filled]) > section {
+  background-color: var(--_acc-bg);
 }
 ._accordion[tools-trigger=hover] > ._accordion-wrap > ._accordion-head > [rep=tools],
 ._accordion[tools-trigger=hover] > ._accordion-wrap > ._accordion-head > [rep=group] > [rep=tools] {
@@ -19908,7 +20135,7 @@ AX-UPLOAD {
   color: var(--_c-error);
 }
 ._upload[type=bullet] li:hover {
-  box-shadow: 1px 1px 0.5rem rgba(0, 0, 0, 0.06);
+  box-shadow: 1px 1px 0.5rem var(--_c-black-8);
 }
 ._upload[type=bullet] ._upload-list li:where(:not(:last-child)) {
   margin-block-end: var(--_rem-space);
@@ -20042,7 +20269,7 @@ AX-UPLOAD {
   font-size: var(--_rem-max);
 }
 ._upload[type=cube] li:hover {
-  box-shadow: 1px 1px 0.5rem rgba(0, 0, 0, 0.06);
+  box-shadow: 1px 1px 0.5rem var(--_c-black-8);
 }
 ._upload[type=cube] li[valid=failed] {
   color: var(--_c-error);
@@ -20109,7 +20336,7 @@ AX-UPLOAD {
   color: var(--_c-error);
 }
 ._upload[type=card] li:hover ._upload-file {
-  box-shadow: 1px 1px 0.5rem rgba(0, 0, 0, 0.06);
+  box-shadow: 1px 1px 0.5rem var(--_c-black-8);
 }
 ._upload[type=table] ._upload-file {
   max-width: calc(var(--_rem-display) * 2);
@@ -20293,12 +20520,6 @@ AX-FIELDS[full] {
   display: flex;
   width: 100%;
 }
-AX-FIELDS[shape=round] {
-  --_fields-r: var(--_fields-h);
-}
-AX-FIELDS[shape=square] {
-  --_fields-r: 0;
-}
 AX-FIELDS:where(:not([full])) {
   display: inline-flex;
   width: var(--_fields-w);
@@ -20469,6 +20690,12 @@ AX-FIELDS[size=sm] {
 AX-FIELDS[size=lg] {
   --_fields-h: var(--_em-max);
   --_fields-r: var(--_r-input-lg);
+}
+AX-FIELDS[shape=round] {
+  --_fields-r: var(--_fields-h);
+}
+AX-FIELDS[shape=square] {
+  --_fields-r: 0;
 }
 AX-FIELDS[disabled] {
   opacity: var(--_o-disabled);
@@ -21596,7 +21823,7 @@ AX-SKELETON[shape=square] {
 }
 ._viewer[mode=popup]:where([inverted]) {
   border: 1px solid var(--_c-text-bd);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
 }
 ._viewer[inverted] {
   --_viewer-bg: var(--_c-white-92);
@@ -22034,7 +22261,7 @@ AX-SKELETON[shape=square] {
 ._toast[feature=plain] {
   --_toast-bg: var(--_c-stage-80);
   border: 1px solid var(--_c-text-bd);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
 }
 ._dodge {
   position: relative;
@@ -29733,6 +29960,7 @@ AX-SKELETON[shape=square] {
   --_a-prim: 1;
   --_c-prim: hsla(var(--_h-prim), var(--_s-prim), var(--_l-prim), var(--_a-prim));
   --_c-prim-bg: hsla(var(--_h-prim), var(--_s-prim), var(--_l-prim), 0.04);
+  --_c-prim-bs: hsl(var(--_h-prim), 60%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-prim-bd: hsl(var(--_h-prim), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-prim-fc: hsl(var(--_h-prim), 62%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
   --_c-prim-ht: hsl(var(--_h-prim), 70%, calc(var(--_l-stage) - 30%*var(--_c-coef)));
@@ -29754,6 +29982,7 @@ AX-SKELETON[shape=square] {
   --_a-text: 1;
   --_c-text: hsla(var(--_h-text), var(--_s-text), var(--_l-text), var(--_a-text));
   --_c-text-bg: hsla(var(--_h-text), var(--_s-text), var(--_l-text), 0.04);
+  --_c-text-bs: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 3%*var(--_c-coef)));
   --_c-text-bd: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 12%*var(--_c-coef)));
   --_c-text-fc: hsl(var(--_h-text), var(--_s-text), calc(var(--_l-stage) - 16%*var(--_c-coef)));
   --_c-text-ht: hsl(var(--_h-text), var(--_s-text), 60%);
@@ -29785,6 +30014,7 @@ AX-SKELETON[shape=square] {
   --_a-succ: 1;
   --_c-succ: hsla(var(--_h-succ), var(--_s-succ), var(--_l-succ), var(--_a-succ));
   --_c-succ-bg: hsla(var(--_h-succ), var(--_s-succ), var(--_l-succ), 0.04);
+  --_c-succ-bs: hsl(var(--_h-succ), 33%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-succ-bd: hsl(var(--_h-succ), 33%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-succ-fc: hsl(var(--_h-succ), 38%, calc(var(--_l-stage) - 13%*var(--_c-coef)));
   --_c-succ-ht: hsl(var(--_h-succ), 23%, 74%);
@@ -29802,6 +30032,7 @@ AX-SKELETON[shape=square] {
   --_a-error: 1;
   --_c-error: hsla(var(--_h-error), var(--_s-error), var(--_l-error), var(--_a-error));
   --_c-error-bg: hsla(var(--_h-error), var(--_s-error), var(--_l-error), 0.04);
+  --_c-error-bs: hsl(var(--_h-error), 39%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-error-bd: hsl(var(--_h-error), 39%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-error-fc: hsl(var(--_h-error), 42%, calc(var(--_l-stage) - 14%*var(--_c-coef)));
   --_c-error-ht: hsl(var(--_h-error), 23%, 74%);
@@ -29819,6 +30050,7 @@ AX-SKELETON[shape=square] {
   --_a-warn: 1;
   --_c-warn: hsla(var(--_h-warn), var(--_s-warn), var(--_l-warn), var(--_a-warn));
   --_c-warn-bg: hsla(var(--_h-warn), var(--_s-warn), var(--_l-warn), 0.04);
+  --_c-warn-bs: hsl(var(--_h-warn), 60%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-warn-bd: hsl(var(--_h-warn), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-warn-fc: hsl(var(--_h-warn), 49%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
   --_c-warn-ht: hsl(var(--_h-warn), 23%, 74%);
@@ -29836,6 +30068,7 @@ AX-SKELETON[shape=square] {
   --_a-info: 1;
   --_c-info: hsla(var(--_h-info), var(--_s-info), var(--_l-info), var(--_a-info));
   --_c-info-bg: hsla(var(--_h-info), var(--_s-info), var(--_l-info), 0.04);
+  --_c-info-bs: hsl(var(--_h-info), 60%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-info-bd: hsl(var(--_h-info), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-info-fc: hsl(var(--_h-info), 62%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
   --_c-info-ht: hsl(var(--_h-info), 75%, 67%);
@@ -29853,6 +30086,7 @@ AX-SKELETON[shape=square] {
   --_a-issue: 1;
   --_c-issue: hsla(var(--_h-issue), var(--_s-issue), var(--_l-issue), var(--_a-issue));
   --_c-issue-bg: hsla(var(--_h-issue), var(--_s-issue), var(--_l-issue), 0.04);
+  --_c-issue-bs: hsl(var(--_h-issue), 60%, calc(var(--_l-stage) - 2%*var(--_c-coef)));
   --_c-issue-bd: hsl(var(--_h-issue), 60%, calc(var(--_l-stage) - 10%*var(--_c-coef)));
   --_c-issue-fc: hsl(var(--_h-issue), 49%, calc(var(--_l-stage) - 15%*var(--_c-coef)));
   --_c-issue-ht: hsl(var(--_h-issue), 23%, 74%);
