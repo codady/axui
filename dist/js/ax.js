@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-8-8 11:2:56
+ * @since Last modified: 2025-8-12 11:20:35
  * @name AXUI front-end framework.
- * @version 3.1.28
+ * @version 3.1.29
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -37459,19 +37459,22 @@
         tipsEl;
         labelEl;
         unitEl;
+        suffixEl;
+        prefixEl;
         iconEl;
         cubeEl;
         diskEl;
         headEl;
         imageEl;
+        coreEl;
         constructor() {
             super();
             this.getRawData();
             this.fillWrap(this.propsProxy);
         }
         static dependencies = [{ tag: 'ax-badge', comp: BadgeElem }];
-        static custAttrs = ['unit', 'tips', 'icon', 'disk', 'cube', 'image', 'badge', 'dir', ...this.baseAttrs];
-        static boolAttrs = ['inverted', 'disabled'];
+        static custAttrs = ['unit', 'tips', 'icon', 'disk', 'cube', 'image', 'badge', 'prefix', 'suffix', 'flow', ...this.baseAttrs];
+        static boolAttrs = ['flipped', 'disabled'];
         static get observedAttributes() {
             return ['label', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
         }
@@ -37493,16 +37496,19 @@
             this.cubeEl = createEl('span', { [ax.alias]: 'cube' }, `<img src="${data.cube}"/>`);
             this.imageEl = createEl('span', { [ax.alias]: 'image' }, `<img src="${data.image}"/>`);
             this.labelEl = createEl('i', { [ax.alias]: 'label' }, data.label);
-            this.headEl = createEl('div', { [ax.alias]: 'head' }, this.labelEl);
+            this.coreEl = createEl('span', { [ax.alias]: 'core' }, this.labelEl);
+            this.headEl = createEl('div', { [ax.alias]: 'head' }, this.coreEl);
             this.tipsEl = createEl('div', { [ax.alias]: 'tips' }, data.tips);
             this.unitEl = createEl('i', { [ax.alias]: 'unit' }, data.unit);
+            this.suffixEl = createEl('i', { [ax.alias]: 'suffix' }, data.suffix);
+            this.prefixEl = createEl('i', { [ax.alias]: 'prefix' }, data.prefix);
             this.badgeEl = createEl('ax-badge', { [ax.alias]: 'badge', label: data?.badge?.trim() });
             this.mainEl.appendChild(this.headEl);
             this.wrapEl.appendChild(this.mainEl);
         }
         render() {
             this.insertSource();
-            !this.hasAttribute('dir') && this.setAttribute('dir', 'v');
+            !this.hasAttribute('flow') && this.setAttribute('flow', 'v');
             this.append(this.wrapEl);
         }
         changedMaps = {
@@ -37514,6 +37520,8 @@
             image: this.changedImage,
             tips: this.changedTips,
             unit: this.changedUnit,
+            suffix: this.changedSuffix,
+            prefix: this.changedPrefix,
         };
         changedBadge(opt) {
             if (opt.newVal === null) {
@@ -37521,7 +37529,7 @@
             }
             else {
                 this.badgeEl.setAttribute('label', opt.newVal.trim());
-                elState(this.badgeEl).isVirtual && this.labelEl.appendChild(this.badgeEl);
+                elState(this.badgeEl).isVirtual && this.coreEl.appendChild(this.badgeEl);
             }
         }
         changedIcon(opt) {
@@ -37596,6 +37604,24 @@
             else {
                 this.unitEl.innerHTML = opt.newVal;
                 this.headEl.appendChild(this.unitEl);
+            }
+        }
+        changedPrefix(opt) {
+            if (opt.newVal === null) {
+                this.prefixEl.remove();
+            }
+            else {
+                this.prefixEl.innerHTML = opt.newVal;
+                elState(this.prefixEl).isVirtual && this.coreEl.insertAdjacentElement('afterbegin', this.prefixEl);
+            }
+        }
+        changedSuffix(opt) {
+            if (opt.newVal === null) {
+                this.suffixEl.remove();
+            }
+            else {
+                this.suffixEl.innerHTML = opt.newVal;
+                elState(this.suffixEl).isVirtual && this.coreEl.insertAdjacentElement('beforeend', this.suffixEl);
             }
         }
         changedLabel(opt) {

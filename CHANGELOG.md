@@ -2,6 +2,19 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-08-12更新
+### 发布v3.1.29版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.29/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.29/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.29/dist.zip
+### 更新内容
+- 修改`Stats`组件，将属性`dir`改为`flow`,`inverted`属性改为`flipped`，并增加`prefix`和`suffix`属性;
+- 修改`--_fs-`开头的大字号变量和`--_lh-`开头的大字号行高，在手机端强制为`24px`。
+- 修改`Textarea`、`Input`、`Number`组件中的内置`input`节点背景色为透明。
+- 发布了`Marquee`插件v1.0.0，详见NPM：https://www.npmjs.com/package/ax-marquee（CDN地址：https://unpkg.com/ax-marquee@1.0.0/examples/index.html）
+- 修改`Line`和`Divider`组件，增加`inverted`属性，可将组件用在深色背景容器中。
+- 修改`footer`组件，增加若干`CSS`变量，以便于定制风格。
+
 
 ## 2025-08-08更新
 ### 发布v3.1.28版本
