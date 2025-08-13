@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-8-12 11:20:35
+ * @since Last modified: 2025-8-13 17:32:46
  * @name AXUI front-end framework.
- * @version 3.1.29
+ * @version 3.1.30
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -36882,7 +36882,7 @@
         }
         static dependencies = [{ tag: 'ax-radio', comp: RadioElem }];
         static custAttrs = ['size', 'name', 'type', 'layout', 'cols', 'checked', 'disable', 'content', 'wrap-classes', 'item-classes', 'input-classes', 'on-checked', ...this.evtsArr];
-        static boolAttrs = ['disabled'];
+        static boolAttrs = ['disabled', 'inverted'];
         static get observedAttributes() {
             return ['content', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
         }
@@ -36946,6 +36946,7 @@
         changedMaps = {
             content: this.changedMultiCont,
             disabled: this.changedMultiDisabled,
+            inverted: this.changedInverted,
             name: this.changedMultiName,
             type: this.changedMultiName,
             size: this.changedMultiName,
@@ -36960,6 +36961,11 @@
                 else {
                     k.check(k.propsProxy.value === opt.newVal ? 'ed' : '');
                 }
+            }
+        }
+        changedInverted(opt) {
+            for (let k of this.inputs) {
+                k.toggleAttribute('inverted', this.propsProxy.inverted);
             }
         }
     }
@@ -37054,7 +37060,7 @@
         static custAttrs = [
             'size', 'name', 'type', 'layout', 'cols', 'checked', 'disable', 'content', 'switch', 'wrap-classes', 'item-classes', 'input-classes', 'on-checkedall', ...this.evtsArr
         ];
-        static boolAttrs = ['disabled'];
+        static boolAttrs = ['disabled', 'inverted'];
         static get observedAttributes() {
             return ['content', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
         }
@@ -37149,6 +37155,7 @@
         changedMaps = {
             content: this.changedMultiCont,
             disabled: this.changedMultiDisabled,
+            inverted: this.changedInverted,
             name: this.changedMultiName,
             type: this.changedMultiName,
             size: this.changedMultiName,
@@ -37173,6 +37180,11 @@
                 this.switchType = this.switch.nodeName;
                 this.switch.removeEventListener('change', this.switchEvt);
                 this.switch.addEventListener('change', this.switchEvt, false);
+            }
+        }
+        changedInverted(opt) {
+            for (let k of this.inputs) {
+                k.toggleAttribute('inverted', this.propsProxy.inverted);
             }
         }
     }

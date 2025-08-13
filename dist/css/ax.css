@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-8-12 11:21:11
+ * @since Last modified: 2025-8-13 17:33:14
  * @name AXUI front-end framework.
- * @version 3.1.29
+ * @version 3.1.30
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,7 +15,7 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-08-12 11:20:19
+ * @since Last modified: 2025-08-13 17:32:16
  */
 /*
  *Last modified: 2025-08-05 17:34:21
@@ -7903,6 +7903,15 @@ AX-CHECKBOX {
   --_chk-d: inline-flex;
   --_chk-g-l: var(--_g);
   --_chk-g-r: var(--_rem-list);
+  --_chk-c: inherit;
+  --_chk-bc: var(--_c-text-bd);
+  --_chk-bg: var(--_c-stage);
+  --_chk-bg-ing: var(--_c-prim-bg);
+  --_chk-c-disable: var(--_c-disable);
+  --_chk-bg-disable: var(--_c-disable-bg);
+  --_chk-c-caption: var(--_c-caption);
+  --_chk-c-brief: var(--_c-brief);
+  color: var(--_chk-c);
   line-height: var(--_chk-lh);
   height: var(--_chk-h);
   display: var(--_chk-d);
@@ -7929,6 +7938,17 @@ AX-CHECKBOX:has(i:empty) {
 AX-RADIO:has(i:empty) i,
 AX-CHECKBOX:has(i:empty) i {
   display: none;
+}
+AX-RADIO[inverted],
+AX-CHECKBOX[inverted] {
+  --_chk-c: var(--_c-white);
+  --_chk-bc: var(--_c-white-32);
+  --_chk-bg: var(--_c-white-12);
+  --_chk-bg-ing: var(--_c-prim-sd);
+  --_chk-c-disable: var(--_c-white-32);
+  --_chk-bg-disable: var(--_c-white-12);
+  --_chk-c-caption: var(--_c-white-32);
+  --_chk-c-brief: var(--_c-white-56);
 }
 AX-RADIO:where(:not([type=chera], [type=switch])) i,
 AX-CHECKBOX:where(:not([type=chera], [type=switch])) i {
@@ -7962,7 +7982,7 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch])) input:where(:focus) ~ u:bef
 }
 AX-RADIO:where(:not([type=chera], [type=switch])) input:where(:disabled) ~ i,
 AX-CHECKBOX:where(:not([type=chera], [type=switch])) input:where(:disabled) ~ i {
-  color: var(--_c-disable);
+  color: var(--_chk-c-disable);
   cursor: not-allowed;
 }
 AX-RADIO:where(:not([type=chera], [type=switch])) input:where(:disabled:checked) ~ u:before,
@@ -8003,8 +8023,8 @@ AX-RADIO:where(:not([type=chera], [type=switch])) u:before {
   height: inherit;
   box-sizing: border-box;
   border-radius: 100%;
-  border: 1px solid var(--_c-text-bd);
-  background-color: var(--_c-stage);
+  border: 1px solid var(--_chk-bc);
+  background-color: var(--_chk-bg);
   transition: all var(--_dur-2) ease-out;
 }
 AX-RADIO:where(:not([type=chera], [type=switch])) u:after {
@@ -8031,18 +8051,18 @@ AX-RADIO:where(:not([type=chera], [type=switch])):where([check=ing]:not(:has(inp
   border-color: var(--_c-prim);
 }
 AX-RADIO:where(:not([type=chera], [type=switch])):where([check=ing]:not(:has(input:checked))) input ~ u:after {
-  background-color: var(--_c-prim-bd);
+  background-color: var(--_c-prim-sd);
   transform: scale(1);
 }
 AX-RADIO:where(:not([type=chera], [type=switch])) input:where(:disabled) ~ u:before {
-  border-color: var(--_c-text-bd);
+  border-color: var(--_chk-bc);
   cursor: not-allowed;
 }
 AX-RADIO:where(:not([type=chera], [type=switch])) input:where(:disabled) ~ u:after {
   cursor: not-allowed;
 }
 AX-RADIO:where(:not([type=chera], [type=switch])) input:where(:disabled:checked) ~ u:after {
-  background-color: var(--_c-disable-bg);
+  background-color: var(--_chk-bg-disable);
   transform: scale(1);
 }
 /*Checkbox*/
@@ -8068,14 +8088,14 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch])) u:before {
   height: inherit;
   box-sizing: border-box;
   border-radius: var(--_r);
-  border: 1px solid var(--_c-text-bd);
-  background-color: var(--_c-stage);
+  border: 1px solid var(--_chk-bc);
+  background-color: var(--_chk-bg);
   transition: all var(--_dur-2) ease-out;
 }
 AX-CHECKBOX:where(:not([type=chera], [type=switch])) u:after {
   font-family: var(--_ff-icon);
   content: 'check';
-  color: var(--_c-stage);
+  color: var(--_c-white);
   font-size: var(--_rem-caption);
   width: inherit;
   height: inherit;
@@ -8100,7 +8120,7 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch])):where([check=ing]:not(:has(
   content: '';
   width: 1rem;
   height: 1rem;
-  background-color: var(--_c-prim-bd);
+  background-color: var(--_c-prim-sd);
   transform: none;
   inset-block-start: 0.3rem;
   inset-inline-start: 0.3rem;
@@ -8110,12 +8130,12 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch])) input:where(:focus) ~ u:bef
   border-color: var(--_c-prim);
 }
 AX-CHECKBOX:where(:not([type=chera], [type=switch])) input:where(:disabled) ~ u:before {
-  border-color: var(--_c-text-bd);
-  background-color: var(--_c-disable-bg);
+  border-color: var(--_chk-bc);
+  background-color: var(--_chk-bg-disable);
   cursor: not-allowed;
 }
 AX-CHECKBOX:where(:not([type=chera], [type=switch])) input:where(:disabled:checked) ~ u:after {
-  color: var(--_c-disable);
+  color: var(--_chk-c-disable);
   transform: scale(0.8);
   cursor: not-allowed;
 }
@@ -8136,9 +8156,9 @@ AX-RADIO[type=chera] i {
   padding-block: 0;
   padding-inline-end: calc(var(--_p) * 2);
   padding-inline-start: 1rem;
-  background-color: var(--_c-stage);
+  background-color: var(--_chk-bg);
   box-sizing: border-box;
-  border: 1px solid var(--_c-text-bd);
+  border: 1px solid var(--_chk-bc);
   border-radius: var(--_r);
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -8149,7 +8169,7 @@ AX-RADIO[type=chera] i {
 AX-CHECKBOX[type=chera] u,
 AX-RADIO[type=chera] u {
   font-size: var(--_rem-caption);
-  color: var(--_c-caption);
+  color: var(--_chk-c-caption);
   transform: translate(0, -50%);
   transition: all var(--_dur-2) ease-out;
   position: absolute;
@@ -8177,7 +8197,7 @@ AX-RADIO[type=chera] input:where(:checked) ~ u {
 }
 AX-CHECKBOX[type=chera]:where([check=ing]:not(:has(input:checked))) input ~ i,
 AX-RADIO[type=chera]:where([check=ing]:not(:has(input:checked))) input ~ i {
-  background-color: var(--_c-prim-bg);
+  background-color: var(--_chk-bg-ing);
 }
 AX-CHECKBOX[type=chera] input:where(:focus) ~ u,
 AX-RADIO[type=chera] input:where(:focus) ~ u {
@@ -8186,13 +8206,13 @@ AX-RADIO[type=chera] input:where(:focus) ~ u {
 AX-CHECKBOX[type=chera] input:where(:disabled) ~ i,
 AX-RADIO[type=chera] input:where(:disabled) ~ i {
   color: var(--_c-disable);
-  border-color: var(--_c-text-bd);
+  border-color: var(--_chk-bc);
   background-color: var(--_c-disable-bg);
 }
 AX-CHECKBOX[type=chera] input:where(:disabled:checked) ~ i,
 AX-RADIO[type=chera] input:where(:disabled:checked) ~ i {
   color: var(--_c-disable);
-  border-color: var(--_c-text-bd);
+  border-color: var(--_chk-bc);
   background-color: var(--_c-prim-sd);
 }
 AX-CHECKBOX[type=chera] input:where(:disabled:checked) ~ u,
@@ -8262,9 +8282,9 @@ AX-RADIO[type=text] u {
 AX-CHECKBOX[type=btn],
 AX-RADIO[type=btn] {
   --_chk-lh: calc(var(--_chk-h) - 2px);
-  border: 1px solid var(--_c-text-bd);
+  border: 1px solid var(--_chk-bc);
   border-radius: var(--_r-input);
-  background-color: var(--_c-stage);
+  background-color: var(--_chk-bg);
   padding-inline: 1em;
   padding-block: 0;
   box-sizing: border-box;
@@ -8277,7 +8297,7 @@ AX-RADIO[type=btn] label {
 AX-CHECKBOX[type=btn]:hover,
 AX-RADIO[type=btn]:hover {
   border-color: var(--_c-prim);
-  background-color: var(--_c-prim-bg);
+  background-color: var(--_chk-bg-ing);
 }
 AX-CHECKBOX[type=btn]:has(:checked),
 AX-RADIO[type=btn]:has(:checked) {
@@ -8329,17 +8349,17 @@ AX-CHECKBOX[type=switch] u {
   width: var(--_switch-w);
   height: var(--_switch-h);
   box-sizing: border-box;
-  border: 1px solid var(--_c-text-bd);
+  border: 1px solid var(--_chk-bc);
   border-radius: var(--_switch-r);
   margin: calc((var(--_chk-h) - var(--_switch-h))/2) 0;
-  background-color: var(--_c-text-bg);
+  background-color: var(--_chk-bg);
   transition: all var(--_dur-2) linear;
   position: relative;
 }
 AX-CHECKBOX[type=switch] u:before {
   content: '';
   font-size: var(--_rem-space);
-  color: var(--_c-brief);
+  color: var(--_chk-c-brief);
   height: var(--_switch-btn-h);
   width: var(--_switch-btn-w);
   line-height: var(--_switch-btn-h);
@@ -8366,7 +8386,7 @@ AX-CHECKBOX[type=switch]:where([contained]) u:before {
 }
 AX-CHECKBOX[type=switch]:where(:not([contained])) u:after {
   content: attr(off);
-  color: var(--_c-caption);
+  color: var(--_chk-c-caption);
   font-size: var(--_rem-space);
   height: calc(var(--_switch-h) - 2px);
   aspect-ratio: 1/1;
@@ -8398,7 +8418,7 @@ AX-CHECKBOX[type=switch]:where(:not([contained])) input:where(:checked) ~ u:afte
   inset-inline-start: 0;
 }
 AX-CHECKBOX[type=switch]:where([check=ing]:not(:has(input:checked))) input ~ u {
-  background-color: var(--_c-prim-bg);
+  background-color: var(--_chk-bg-ing);
   border-color: var(--_c-prim);
 }
 AX-CHECKBOX[type=switch] input:where(:checked) + i {
@@ -8408,7 +8428,7 @@ AX-CHECKBOX[type=switch] input:where(:disabled) ~ i {
   color: var(--_c-disable);
 }
 AX-CHECKBOX[type=switch] input:where(:disabled) ~ u {
-  border-color: var(--_c-text-bd);
+  border-color: var(--_chk-bc);
   background-color: var(--_c-disable-bg);
 }
 AX-CHECKBOX[type=switch] input:where(:disabled:checked) ~ u {
@@ -8456,10 +8476,15 @@ AX-HEADER {
   --_header-h: calc(var(--_rem-hero) + 1rem);
   --_header-m: var(--_m);
   --_header-bw: 1px;
+  --_header-c: var(--_c-text);
+  --_header-c-hov: var(--_c-prim);
+  --_header-c-caption: var(--_c-caption);
   --_header-bc: var(--_c-text-bd);
   --_header-bg: var(--_c-stage);
+  --_header-bg-filter: var(--_c-stage-88);
   --_header-filter: none;
   --_header-g: var(--_rem-display);
+  color: var(--_header-c);
   display: block;
   width: 100%;
   position: relative;
@@ -8478,7 +8503,7 @@ AX-HEADER ._header-wrap {
   flex: auto;
 }
 AX-HEADER[feature=blur] {
-  --_header-bg: var(--_c-stage-88);
+  --_header-bg: var(--_header-bg-filter);
   --_header-filter: blur(10px);
 }
 AX-HEADER[feature=transparent] {
@@ -8592,11 +8617,11 @@ AX-HEADER [rep=btns] {
   margin-inline-start: var(--_header-g);
 }
 AX-HEADER [rep=link] {
-  color: var(--_c-text);
+  color: var(--_header-c);
   margin-inline-start: var(--_header-g);
 }
 AX-HEADER [rep=link]:hover {
-  color: var(--_c-prim);
+  color: var(--_header-c-hov);
 }
 AX-HEADER [rep=icons] {
   margin-inline-start: var(--_header-g);
@@ -8605,7 +8630,7 @@ AX-HEADER [rep=icons] {
   align-items: center;
 }
 AX-HEADER [rep=icons] > * {
-  color: var(--_c-text);
+  color: var(--_header-c);
   height: var(--_rem-input);
   text-align: center;
   transition: all var(--_dur-2) linear;
@@ -8635,7 +8660,7 @@ AX-HEADER [rep=dropdown]:after {
   content: 'down';
   font-family: var(--_ff-icon);
   font-size: var(--_px-root);
-  color: var(--_c-caption);
+  color: var(--_header-c-caption);
   margin-inline-start: var(--_g);
   transition: all var(--_dur-2) linear;
 }
@@ -8654,38 +8679,6 @@ AX-HEADER [rep=avatar] {
 AX-HEADER[justify] ._header-head {
   text-align: start;
 }
-/* 
-._header {
-  --_header-h: calc(var(--_rem-hero) + 1.0rem);
-  --_header-m: var(--_m);
-  --_header-g: var(--_rem-display);
-  background-color: var(--_c-stage);
-  border: 1px solid var(--_c-text-bd);
-  .v3-trans-all();
-  width: 100%;
-  display: flex;
-  align-items: center;
-  z-index: 610;
-  ._header-wrap {
-    display: flex;
-    align-items: center;
-    flex: auto;
-  }
-  &:where(:not([inherit])) {
-    position: fixed;
-    inset-inline-start: 0;
-    inset-block-start: 0;
-  }
-  &:where([inherit]) {
-    position: inherit;
-    inset-inline-start: auto;
-    inset-block-start: auto;
-    &+._header-holder {
-      display: none;
-    }
-  }
-}
- */
 /*Footer*/
 ._footer {
   --_footer-c: var(--_c-text);
@@ -8695,6 +8688,7 @@ AX-HEADER[justify] ._header-head {
   --_footer-c-caption: var(--_c-caption);
   --_footer-lh: var(--_rem-title);
   --_footer-lh-alt: var(--_rem-list);
+  color: var(--_footer-c);
   line-height: var(--_footer-lh);
 }
 ._footer a {
@@ -11777,18 +11771,32 @@ Last modified: 2025-08-02 23:16:17
 ._grade {
   --_grade-w: var(--_w-list);
   --_grade-r: var(--_r-input);
+  --_grade-theme: var(--_c-prim);
+  --_grade-c: var(--_c-text);
+  --_grade-c-sel: var(--_c-white);
+  --_grade-c-hov: var(--_grade-theme);
+  --_grade-bg: var(--_c-stage);
+  --_grade-bg-sel: var(--_c-prim);
+  --_grade-bg-hov: var(--_c-prim-bg);
+  --_grade-c-caption: var(--_c-caption);
+  --_grade-c-1st: var(--_grade-c);
+  --_grade-c-hov-1st: var(--_grade-c-1st);
+  --_grade-c-sel-1st: var(--_grade-c-hov-1st);
+  color: var(--_grade-c);
   position: relative;
 }
 ._grade > [rep=host] {
+  color: var(--_grade-c-1st);
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  transition: all var(--_dur-2) linear;
 }
 ._grade > [rep=host] [rep=label] {
   position: relative;
 }
 ._grade > [rep=host] [rep=arrow] {
-  color: var(--_c-caption);
+  color: var(--_grade-c-caption);
   font-family: var(--_ff-icon);
   font-size: var(--_px-root);
   margin-inline-start: var(--_rem-min);
@@ -11801,7 +11809,7 @@ Last modified: 2025-08-02 23:16:17
   content: '';
   height: 2px;
   width: 2em;
-  background-color: var(--_c-prim);
+  background-color: var(--_grade-theme);
   transform: translate(calc(-50% * var(--_dir-coef)), 0) scaleX(0);
   transition: all var(--_dur-2) linear;
   position: absolute;
@@ -11811,6 +11819,9 @@ Last modified: 2025-08-02 23:16:17
 ._grade:where(:not([expanded])) > [rep=host] [rep=arrow] {
   margin-inline-start: var(--_rem-min);
 }
+._grade:where([expanded]) > [rep=host] {
+  color: var(--_grade-c-sel-1st);
+}
 ._grade:where([expanded]) > [rep=host] [rep=arrow] {
   order: -10;
   margin-inline-end: var(--_rem-min);
@@ -11819,7 +11830,7 @@ Last modified: 2025-08-02 23:16:17
   box-sizing: border-box;
 }
 ._grade:where(:not([expanded])) > ._grade-wrap {
-  background-color: var(--_c-stage);
+  background-color: var(--_grade-bg);
   transform: translateX(calc(-50% * var(--_dir-coef)));
   display: none;
   position: absolute;
@@ -11870,7 +11881,7 @@ Last modified: 2025-08-02 23:16:17
 }
 ._grade:where(:not([expanded])) ul._grade-wrap li ul {
   box-sizing: border-box;
-  background-color: var(--_c-stage);
+  background-color: var(--_grade-bg);
   transform: translate(calc(100% * var(--_dir-coef)), 0%);
   position: absolute;
   width: 100%;
@@ -11882,6 +11893,7 @@ Last modified: 2025-08-02 23:16:17
   margin-inline-start: 2em;
 }
 ._grade ul._grade-wrap [rep=head] {
+  --_link-c: var(--_grade-c);
   line-height: var(--_rem-subtitle);
   min-height: var(--_rem-input);
   padding: calc((var(--_rem-input) - var(--_rem-subtitle))/2) var(--_p);
@@ -11894,7 +11906,7 @@ Last modified: 2025-08-02 23:16:17
 ._grade ul._grade-wrap li [rep=arrow] {
   font-family: var(--_ff-icon);
   font-size: var(--_px-root);
-  color: var(--_c-caption);
+  color: var(--_grade-c-caption);
   height: 1em;
   width: 1em;
   line-height: 1em;
@@ -11924,7 +11936,8 @@ Last modified: 2025-08-02 23:16:17
   content: 'down';
 }
 ._grade ul._grade-wrap [rep=label] {
-  color: var(--_c-text);
+  --_link-c: var(--_grade-c);
+  color: var(--_grade-c);
   box-sizing: border-box;
   flex: auto;
   width: 0;
@@ -11965,35 +11978,38 @@ Last modified: 2025-08-02 23:16:17
   rotate: 180deg;
 }
 ._grade > [rep=host][selected] {
-  color: var(--_c-prim);
+  color: var(--_grade-c-sel-1st);
+}
+._grade > [rep=host]:hover {
+  color: var(--_grade-c-hov-1st);
 }
 ._grade:where(:not([expanded])) > [rep=host][selected] [rep=label]:after {
   transform: translate(calc(-50% * var(--_dir-coef)), 0) scaleX(1);
 }
 ._grade ul._grade-wrap [rep=head]:where(:not([selected], [disabled])):hover {
-  color: var(--_c-prim);
-  background-color: var(--_c-prim-bg);
+  color: var(--_grade-c-hov);
+  background-color: var(--_grade-bg-hov);
 }
 ._grade ul._grade-wrap [rep=head]:where(:not([selected], [disabled])):hover [rep=label] {
-  color: var(--_c-prim);
+  color: var(--_grade-c-hov);
 }
 ._grade ul._grade-wrap [rep=head][selected] [rep=arrow] {
   color: rgba(255, 255, 255, var(--_o-active));
 }
 ._grade ul._grade-wrap [rep=head][selected],
 ._grade ul._grade-wrap [rep=head][selected]:hover {
-  color: var(--_c-white);
-  background-color: var(--_c-prim);
+  color: var(--_grade-c-sel);
+  background-color: var(--_grade-bg-sel);
 }
 ._grade ul._grade-wrap [rep=head][selected] [rep=label],
 ._grade ul._grade-wrap [rep=head][selected]:hover [rep=label] {
-  color: v var(--_c-white);
+  color: var(--_grade-c-sel);
 }
 ._grade ul._grade-wrap [rep=head][disabled] {
-  color: var(--_c-caption);
+  color: var(--_grade-c-caption);
 }
 ._grade ul._grade-wrap [rep=head][disabled] [rep=label] {
-  color: var(--_c-caption);
+  color: var(--_grade-c-caption);
 }
 [dir=rtl] ._grade:where(:not([expanded])) ul._grade-wrap li [rep=arrow]:before {
   content: 'left';
@@ -14728,7 +14744,9 @@ AX-TREE {
   --_tree-theme-sd: var(--_c-prim-sd);
   --_tree-c-hl: var(--_c-white);
   --_tree-bg-hl: var(--_tree-theme);
-  --_tree-c-arrow: var(--_c-brief);
+  --_tree-c-brief: var(--_c-brief);
+  --_tree-c-arrow: var(--_tree-c-brief);
+  --_tree-c-caption: var(--_c-caption);
   content-visibility: auto;
   /*line节点连线*/
 }
@@ -14736,7 +14754,7 @@ AX-TREE {
   display: none;
 }
 ._tree ._tree-empty {
-  color: var(--_c-caption);
+  color: var(--_tree-c-caption);
 }
 ._tree ._tree-head {
   display: flex;
@@ -14768,7 +14786,7 @@ AX-TREE {
   background-size: var(--_rem-body);
   position: relative;
 }
-._tree ._tree-head > [rep=arrow][type=icon] {
+._tree ._tree-head > [rep=arrow]:where([type=icon]) {
   font-size: var(--_rem-root);
 }
 ._tree ._tree-head > [rep=arrow]:not(._none) {
@@ -14790,7 +14808,7 @@ AX-TREE {
   align-items: center;
 }
 ._tree ._tree-head > [rep=legend] {
-  color: var(--_c-brief);
+  color: var(--_tree-c-brief);
   width: var(--_tree-lh);
   height: var(--_tree-lh);
   line-height: var(--_tree-lh);
@@ -14801,7 +14819,7 @@ AX-TREE {
 }
 ._tree ._tree-head > [rep=group] > [rep=icon],
 ._tree ._tree-head > [rep=icon] {
-  color: var(--_c-brief);
+  color: var(--_tree-c-brief);
   width: var(--_tree-lh);
   text-align: center;
   margin-inline-end: var(--_tree-g);
@@ -14848,7 +14866,7 @@ AX-TREE {
 ._tree ._tree-head > [rep=group] > [rep=tips],
 ._tree ._tree-head > [rep=tips] {
   font-size: var(--_rem-caption);
-  color: var(--_c-caption);
+  color: var(--_tree-c-caption);
   margin-inline-start: var(--_tree-g);
 }
 ._tree ._tree-head > [rep=group] > [rep=badge],
@@ -14885,8 +14903,8 @@ AX-TREE {
   position: absolute;
   inset-inline-start: -100000px;
 }
-._tree ._tree-head[expanded] > [rep=group] > [rep=arrow][type=icon],
-._tree ._tree-head[expanded] > [rep=arrow][type=icon] {
+._tree ._tree-head[expanded] > [rep=group] > [rep=arrow]:where([type=icon]),
+._tree ._tree-head[expanded] > [rep=arrow]:where([type=icon]) {
   color: var(--_tree-theme);
 }
 ._tree ._tree-head:where([selected]:not([editing])) > [rep=group] > [rep=label],
@@ -15033,7 +15051,7 @@ AX-TREE {
       background-color: var(--_c-text-sd);*/
   font-family: var(--_ff-icon);
   font-size: var(--_px-root);
-  color: var(--_c-caption);
+  color: var(--_tree-c-caption);
   position: absolute;
   inset-inline-start: calc(var(--_p)*-1 + var(--_tree-g));
   inset-block-start: 0;
@@ -15052,7 +15070,7 @@ AX-TREE {
   display: none;
 }
 ._tree ._tree-foot [rep=info] {
-  color: var(--_c-brief);
+  color: var(--_tree-c-brief);
 }
 ._tree ._tree-foot [rep=more],
 ._tree ._tree-foot [rep=next],
@@ -15076,7 +15094,7 @@ AX-TREE {
   box-sizing: border-box;
 }
 ._tree ._tree-result [rep=holder] {
-  color: var(--_c-caption);
+  color: var(--_tree-c-caption);
 }
 ._tree ._tree-page {
   padding-inline-start: var(--_rem-space);
@@ -15255,7 +15273,7 @@ AX-TREE {
   margin-inline-start: 0;
 }
 ._tree[feature=list] ._tree-head [rep=custom] {
-  color: var(--_c-brief);
+  color: var(--_tree-c-brief);
 }
 ._tree[chain] ._tree-head [rep=arrow]._none:before,
 ._tree[chain] ._tree-head [rep=arrow]._none:after {
@@ -15496,6 +15514,13 @@ AX-MENU {
   --_menu-theme-bg: var(--_c-prim-bg);
   --_menu-bg: transparent;
   --_menu-fw: bold;
+  --_menu-c-1st: var(--_menu-c);
+  --_menu-theme-1st: var(--_menu-theme);
+  --_menu-bg-1st: var(--_menu-theme-bg);
+  --_menu-c-hov-1st: var(--_menu-c-hov);
+  --_menu-c-sel-1st: var(--_menu-c-sel);
+  --_menu-c-caption-1st: var(--_c-caption);
+  --_menu-c-brief-1st: var(--_c-brief);
   --_tree-h: var(--_menu-h-item);
   --_tree-g: var(--_menu-g);
   --_tree-c: var(--_menu-c);
@@ -15557,6 +15582,12 @@ AX-MENU {
 ._menu > ul > li:where(:has(>._tree-head[expanded])):before {
   height: 100%;
 }
+._menu > ul > li > ._tree-head {
+  height: var(--_menu-h-1st);
+}
+._menu > ul > li > ._tree-head > [rep=label] {
+  font-weight: var(--_menu-fw);
+}
 ._menu:where(:not([lamp], [unpadded])) > ul > li:before {
   display: block;
 }
@@ -15583,12 +15614,6 @@ AX-MENU {
   flex: auto;
   border-radius: 0;
   text-align: start;
-}
-._menu > ul > li > ._tree-head > [rep=label] {
-  font-weight: var(--_menu-fw);
-}
-._menu > ._tree-head {
-  height: var(--_menu-h-1st);
 }
 ._menu[trigger=hover] ._tree-head > [rep=arrow],
 ._menu[trigger=hover] ._tree-head > [rep=group] > [rep=arrow] {
@@ -15757,27 +15782,27 @@ AX-MENU {
 ._menu[spill]:where(:not([nav])) > ul > li li:hover > :first-child:where(:not([disabled], [selected])) {
   background-color: var(--_c-text-bg);
 }
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])),
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover {
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])),
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover {
   background-color: var(--_menu-theme);
 }
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=tips],
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=tips],
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=tips],
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=tips] {
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=tips],
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=tips],
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=group] > [rep=tips],
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=group] > [rep=tips] {
   color: rgba(255, 255, 255, 0.5);
 }
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=label],
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=label],
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=icon],
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=icon],
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=label],
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=label],
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=icon],
-._menu[spill]:where(:not([nav])) > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=icon] {
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=label],
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=label],
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=icon],
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=icon],
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=group] > [rep=label],
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=group] > [rep=label],
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=group] > [rep=icon],
+._menu[spill]:where(:not([nav])) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=group] > [rep=icon] {
   color: var(--_c-white);
 }
-._menu[nav] {
+._menu:where([nav]) {
   --_menu-w: auto;
   --_menu-fw: normal;
   display: inline-flex;
@@ -15786,20 +15811,17 @@ AX-MENU {
   position: relative;
   z-index: 610;
 }
-._menu[nav] > ul > li {
+._menu:where([nav]) > ul > li {
   display: inline-flex;
 }
-._menu[nav] > ul > li:before {
+._menu:where([nav]) > ul > li:before {
   display: none;
 }
-._menu[nav] > ul > li > ._tree-head {
-  height: var(--_menu-h-1st);
-}
-._menu[nav] > ul > li > ._tree-head [rep=indent] {
+._menu:where([nav]) > ul > li > ._tree-head [rep=indent] {
   display: none;
 }
-._menu[nav] > ul > li > ._tree-head > [rep=label],
-._menu[nav] > ul > li > ._tree-head > [rep=group] > [rep=label] {
+._menu:where([nav]) > ul > li > ._tree-head > [rep=label],
+._menu:where([nav]) > ul > li > ._tree-head > [rep=group] > [rep=label] {
   height: var(--_menu-h-1st);
   position: relative;
   flex: none;
@@ -15807,44 +15829,44 @@ AX-MENU {
   display: inline-flex;
   align-items: center;
 }
-._menu[nav] > ul > li > ._tree-head > [rep=label]:after,
-._menu[nav] > ul > li > ._tree-head > [rep=group] > [rep=label]:after {
+._menu:where([nav]) > ul > li > ._tree-head > [rep=label]:after,
+._menu:where([nav]) > ul > li > ._tree-head > [rep=group] > [rep=label]:after {
   content: '';
   height: 2px;
   width: 2em;
-  background-color: var(--_c-prim);
+  background-color: var(--_menu-theme);
   transform: translate(calc(-50% * var(--_dir-coef)), 0) scaleX(0);
   transition: all var(--_dur-2) linear;
   position: absolute;
   inset-inline-start: 50%;
   inset-block-end: 0;
 }
-._menu[nav] > ul > li > ._tree-head[expanded] > [rep=label],
-._menu[nav] > ul > li > ._tree-head[expanded] > [rep=group] > [rep=label] {
+._menu:where([nav]) > ul > li > ._tree-head[expanded] > [rep=label],
+._menu:where([nav]) > ul > li > ._tree-head[expanded] > [rep=group] > [rep=label] {
   color: var(--_menu-theme);
 }
-._menu[nav] > ul > li > ._tree-head[expanded] > [rep=label]:after,
-._menu[nav] > ul > li > ._tree-head[expanded] > [rep=group] > [rep=label]:after {
+._menu:where([nav]) > ul > li > ._tree-head[expanded] > [rep=label]:after,
+._menu:where([nav]) > ul > li > ._tree-head[expanded] > [rep=group] > [rep=label]:after {
   transform: translate(calc(-50% * var(--_dir-coef)), 0) scaleX(1);
 }
-._menu[nav] > ul > li > [selected],
-._menu[nav] > ul > li > [disabled] {
+._menu:where([nav]) > ul > li > [selected],
+._menu:where([nav]) > ul > li > [disabled] {
   background: transparent;
 }
-._menu[nav] > ul > li > [expanded] > [rep=label],
-._menu[nav] > ul > li > [expanded] > [rep=group] > [rep=label] {
+._menu:where([nav]) > ul > li > [expanded] > [rep=label],
+._menu:where([nav]) > ul > li > [expanded] > [rep=group] > [rep=label] {
   color: var(--_menu-theme);
 }
-._menu[nav] > ul > li > ._tree-head > [rep=arrow],
-._menu[nav] > ul > li > ._tree-head > [rep=grou] > [rep=arrow] {
+._menu:where([nav]) > ul > li > ._tree-head > [rep=arrow],
+._menu:where([nav]) > ul > li > ._tree-head > [rep=grou] > [rep=arrow] {
   width: var(--_rem-body);
   margin-inline-end: 0;
 }
-._menu[nav] > ul > li > ul {
+._menu:where([nav]) > ul > li > ul {
   inset-inline-start: -0.1rem;
   inset-block-start: calc(100% + 0.6rem);
 }
-._menu[nav] > ul ul {
+._menu:where([nav]) > ul ul {
   width: var(--_w-list);
   position: absolute;
   background-color: var(--_c-stage);
@@ -15852,65 +15874,114 @@ AX-MENU {
   border-radius: var(--_menu-r);
   box-shadow: 0 0.5rem 1rem var(--_c-black-12);
 }
-._menu[nav] > ul ul > li:first-child,
-._menu[nav] > ul ul > li:first-child > :first-child {
+._menu:where([nav]) > ul ul > li:first-child,
+._menu:where([nav]) > ul ul > li:first-child > :first-child {
   border-start-start-radius: inherit;
   border-start-end-radius: inherit;
 }
-._menu[nav] > ul ul > li:last-child,
-._menu[nav] > ul ul > li:last-child > :first-child {
+._menu:where([nav]) > ul ul > li:last-child,
+._menu:where([nav]) > ul ul > li:last-child > :first-child {
   border-end-start-radius: inherit;
   border-end-end-radius: inherit;
 }
-._menu[nav] > ul ul [rep=indent] {
+._menu:where([nav]) > ul ul [rep=indent] {
   display: none;
 }
-._menu[nav] > ul > li > ul > li ul {
+._menu:where([nav]) > ul > li > ul > li ul {
   inset-inline-end: calc(-100% - 0.1rem - 0.6rem);
   inset-block-start: -0.1rem;
 }
-._menu[nav] > ul > li li {
+._menu:where([nav]) > ul > li li {
   border-block-end: 1px solid var(--_c-text-bd);
 }
-._menu[nav] > ul > li ul li:last-child {
+._menu:where([nav]) > ul > li ul li:last-child {
   border-block-end: 0;
 }
-._menu[nav] > ul > li li:hover > :first-child:where(:not([disabled], [selected])) {
+._menu:where([nav]) > ul > li li:hover > :first-child:where(:not([disabled], [selected])) {
   background-color: var(--_c-text-bg);
 }
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])),
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover {
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])),
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover {
   background-color: var(--_menu-theme);
 }
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=tips],
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=tips],
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=tips],
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=tips] {
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=tips],
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=tips],
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=group] > [rep=tips],
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=group] > [rep=tips] {
   color: rgba(255, 255, 255, 0.5);
 }
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=label],
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=label],
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=icon],
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=icon],
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=label],
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=label],
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])) > [rep=group] > [rep=icon],
-._menu[nav] > ul > li ul [selected]:where(:not([disabled])):hover > [rep=group] > [rep=icon] {
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=label],
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=label],
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=icon],
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=icon],
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=group] > [rep=label],
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=group] > [rep=label],
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])) > [rep=group] > [rep=icon],
+._menu:where([nav]) > ul > li ul ._tree-head[selected]:where(:not([disabled])):hover > [rep=group] > [rep=icon] {
   color: var(--_c-white);
 }
-._menu[nav] > ul > li > ul li > :first-child > [rep=arrow] {
+._menu:where([nav]) > ul > li > ul li > :first-child > [rep=arrow] {
   rotate: -90deg;
 }
-._menu[nav] > ul > li > ul li > :first-child:where([expanded]) > [rep=arrow] {
+._menu:where([nav]) > ul > li > ul li > :first-child:where([expanded]) > [rep=arrow] {
   rotate: 90deg;
 }
-._menu[align=center] > ul > li ul ._tree-head > [rep=arrow],
-._menu[align=center] > ul > li ul ._tree-head > [rep=group] > [rep=arrow] {
+._menu:where([align=center]) > ul > li ul ._tree-head > [rep=arrow],
+._menu:where([align=center]) > ul > li ul ._tree-head > [rep=group] > [rep=arrow] {
   margin-inline-start: calc(var(--_p) - var(--_rem-display));
 }
-._menu[align=center]:where(:not([nav])) > ul > li > ._tree-head > [rep=arrow],
-._menu[align=center]:where(:not([nav])) > ul > li > ._tree-head > [rep=group] > [rep=arrow] {
+._menu:where([align=center]):where(:not([nav])) > ul > li > ._tree-head > [rep=arrow],
+._menu:where([align=center]):where(:not([nav])) > ul > li > ._tree-head > [rep=group] > [rep=arrow] {
   margin-inline-start: calc(var(--_p) - var(--_rem-display));
+}
+._menu > ul > li > ._tree-head {
+  color: var(--_menu-c-1st);
+}
+._menu > ul > li > ._tree-head > [rep=label],
+._menu > ul > li > ._tree-head > [rep=group] > [rep=label] {
+  color: var(--_menu-c-1st);
+}
+._menu > ul > li > ._tree-head > [rep=icon],
+._menu > ul > li > ._tree-head > [rep=group] > [rep=icon] {
+  color: var(--_menu-c-brief-1st);
+}
+._menu > ul > li > ._tree-head > [rep=tips],
+._menu > ul > li > ._tree-head > [rep=group] > [rep=tips] {
+  color: var(--_menu-c-ignore-1st);
+}
+._menu > ul > li > ._tree-head[selected],
+._menu > ul > li > ._tree-head:hover {
+  background-color: var(--_menu-bg-1st);
+}
+._menu > ul > li > ._tree-head[selected]:where(:not([disabled])) > [rep=label],
+._menu > ul > li > ._tree-head[selected]:where(:not([disabled])) > [rep=icon],
+._menu > ul > li > ._tree-head[selected]:where(:not([disabled])) > [rep=group] > [rep=label],
+._menu > ul > li > ._tree-head[selected]:where(:not([disabled])) > [rep=group] > [rep=icon] {
+  color: var(--_menu-c-sel-1st);
+}
+._menu > ul > li > ._tree-head[expanded] > [rep=label],
+._menu > ul > li > ._tree-head[expanded] > [rep=group] > [rep=label],
+._menu > ul > li > ._tree-head[expanded] > [rep=arrow],
+._menu > ul > li > ._tree-head[expanded] > [rep=group] > [rep=arrow],
+._menu > ul > li > ._tree-head[expanded] > [rep=icon],
+._menu > ul > li > ._tree-head[expanded] > [rep=group] > [rep=icon] {
+  color: var(--_menu-theme-1st);
+}
+._menu > ul > li > ._tree-head[expanded] > [rep=label]:after,
+._menu > ul > li > ._tree-head[expanded] > [rep=group] > [rep=label]:after,
+._menu > ul > li > ._tree-head[expanded] > [rep=arrow]:after,
+._menu > ul > li > ._tree-head[expanded] > [rep=group] > [rep=arrow]:after,
+._menu > ul > li > ._tree-head[expanded] > [rep=icon]:after,
+._menu > ul > li > ._tree-head[expanded] > [rep=group] > [rep=icon]:after {
+  background-color: var(--_menu-theme-1st);
+}
+._menu > ul > li:hover > ._tree-head:where(:not([disabled])) > [rep=label],
+._menu > ul > li:hover > ._tree-head:where(:not([disabled])) > [rep=icon],
+._menu > ul > li:hover > ._tree-head:where(:not([disabled])) > [rep=arrow],
+._menu > ul > li:hover > ._tree-head:where(:not([disabled])) > [rep=group] > [rep=label],
+._menu > ul > li:hover > ._tree-head:where(:not([disabled])) > [rep=group] > [rep=icon],
+._menu > ul > li:hover > ._tree-head:where(:not([disabled])) > [rep=group] > [rep=arrow] {
+  color: var(--_menu-c-hov-1st);
 }
 /*Tab & Panel*/
 ._tab {

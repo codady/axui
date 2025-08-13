@@ -2,6 +2,16 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-08-13更新
+### 发布v3.1.30版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.30/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.30/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.30/dist.zip
+### 更新内容
+- 修改`Tree`、`Menu`、`Grade`组件样式，增加若干`CSS`变量，以便于定制风格。
+- 修改`Checkbox`、`Radio`、`Checkboxes`、`Radios`组件样式，增加若干`CSS`变量，并增加`inverted`属性，以便于定制风格。
+
+
 ## 2025-08-12更新
 ### 发布v3.1.29版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.29/dist/js/ax.js
