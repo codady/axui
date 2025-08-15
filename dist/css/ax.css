@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-8-13 17:33:14
+ * @since Last modified: 2025-8-15 18:14:17
  * @name AXUI front-end framework.
- * @version 3.1.30
+ * @version 3.1.31
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -15,10 +15,10 @@
  */
 @charset "utf-8";
 /**
- * @since Last modified: 2025-08-13 17:32:16
+ * @since Last modified: 2025-08-15 18:13:39
  */
 /*
- *Last modified: 2025-08-05 17:34:21
+ *Last modified: 2025-08-15 12:10:12
  */
 :root {
   /*Stage colors*/
@@ -332,91 +332,107 @@
   --_dur-90: 9000ms;
   --_dur-100: 10000ms;
   --_num-step: 0;
-  --_num-root: 10;
-  --_num-min: calc(4 + var(--_num-step));
-  --_num-space: calc(8 + var(--_num-step));
-  --_num-caption: calc(12 + var(--_num-step));
-  --_num-body: calc(14 + var(--_num-step));
-  --_num-lead: calc(16 + var(--_num-step));
-  --_num-subtitle: calc(18 + var(--_num-step));
-  --_num-list: calc(var(--_num-lead) + 8);
-  --_num-title: calc(var(--_num-body)*2);
-  --_num-display: calc(var(--_num-lead) + 16);
-  --_num-input: calc(var(--_num-lead) + 24);
-  --_num-hero: calc(var(--_num-lead) + 32);
-  --_num-max: calc(var(--_num-lead) + 40);
+  --_num-base: 10;
+  --_num-scale: 1;
+  --_num-min-raw: calc(0.4 * var(--_num-base));
+  --_num-min: calc(var(--_num-min-raw) + var(--_num-step));
+  --_num-space-raw: calc(0.8 * var(--_num-base));
+  --_num-space: calc(var(--_num-space-raw) + var(--_num-step));
+  --_num-root-raw: var(--_num-base);
+  --_num-root: calc(var(--_num-base) + var(--_num-step));
+  --_num-caption-raw: calc(1.2 * var(--_num-base));
+  --_num-caption: calc(var(--_num-caption-raw) + var(--_num-step));
+  --_num-body-raw: calc(1.4 * var(--_num-base));
+  --_num-body: calc(var(--_num-body-raw) + var(--_num-step));
+  --_num-lead-raw: calc(1.6 * var(--_num-base));
+  --_num-lead: calc(var(--_num-lead-raw) + var(--_num-step));
+  --_num-subtitle-raw: calc(1.8 * var(--_num-base));
+  --_num-subtitle: calc(var(--_num-subtitle-raw) + var(--_num-step));
+  --_num-list-raw: calc(var(--_num-lead-raw) + 0.8 * var(--_num-base));
+  --_num-list: calc(var(--_num-lead) + 0.8 * var(--_num-base));
+  --_num-title-raw: calc(var(--_num-lead-raw) + 1.2 * var(--_num-base));
+  --_num-title: calc(var(--_num-lead) + 1.2 * var(--_num-base));
+  --_num-display-raw: calc(var(--_num-lead-raw) + 1.6 * var(--_num-base));
+  --_num-display: calc(var(--_num-lead) + 1.6 * var(--_num-base));
+  --_num-input-raw: calc(var(--_num-lead-raw) + 2.4 * var(--_num-base));
+  --_num-input: calc(var(--_num-lead) + 2.4 * var(--_num-base));
+  --_num-hero-raw: calc(var(--_num-lead-raw) + 3.2 * var(--_num-base));
+  --_num-hero: calc(var(--_num-lead) + 3.2 * var(--_num-base));
+  --_num-max-raw: calc(var(--_num-lead-raw) + 4 * var(--_num-base));
+  --_num-max: calc(var(--_num-lead) + 4 * var(--_num-base));
   /*Font size*/
-  --_fs-root: calc(1px*var(--_num-root)*16/14);
+  --_fs-base: calc(1px * var(--_num-base) * 16 / 14);
   /*Rem of size*/
-  --_rem-min: calc((var(--_num-min)/var(--_num-root))*1rem);
-  --_rem-space: calc((var(--_num-space)/var(--_num-root))*1rem);
-  --_rem-root: 1rem;
-  --_rem-caption: calc((var(--_num-caption)/var(--_num-root))*1rem);
-  --_rem-body: calc((var(--_num-body)/var(--_num-root))*1rem);
-  --_rem-lead: calc((var(--_num-lead)/var(--_num-root))*1rem);
-  --_rem-subtitle: calc((var(--_num-subtitle)/var(--_num-root))*1rem);
-  --_rem-list: calc((var(--_num-list)/var(--_num-root))*1rem);
-  --_rem-title: calc((var(--_num-title)/var(--_num-root))*1rem);
-  --_rem-display: calc((var(--_num-display)/var(--_num-root))*1rem);
-  --_rem-input: calc((var(--_num-input)/var(--_num-root))*1rem);
-  --_rem-hero: calc((var(--_num-hero)/var(--_num-root))*1rem);
-  --_rem-max: calc((var(--_num-max)/var(--_num-root))*1rem);
+  --_rem-1px: calc(1rem*var(--_num-scale)/var(--_num-base));
+  --_rem-min: calc((var(--_num-min) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-space: calc((var(--_num-space) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-root: calc((var(--_num-root) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-caption: calc((var(--_num-caption) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-body: calc((var(--_num-body) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-lead: calc((var(--_num-lead) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-subtitle: calc((var(--_num-subtitle) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-list: calc((var(--_num-list) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-title: calc((var(--_num-title) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-display: calc((var(--_num-display) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-input: calc((var(--_num-input) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-hero: calc((var(--_num-hero) / var(--_num-base)) * 1rem * var(--_num-scale));
+  --_rem-max: calc((var(--_num-max) / var(--_num-base)) * 1rem * var(--_num-scale));
   /*Em of size*/
-  --_em-min: calc((var(--_num-min)/var(--_num-body))*1em);
-  --_em-space: calc((var(--_num-space)/var(--_num-body))*1em);
-  --_em-root: calc((var(--_num-root)/var(--_num-body))*1em);
-  --_em-caption: calc((var(--_num-caption)/var(--_num-body))*1em);
+  --_em-min: calc((var(--_num-min-raw) / var(--_num-body-raw)) * 1em);
+  --_em-space: calc((var(--_num-space-raw) / var(--_num-body-raw)) * 1em);
+  --_em-root: calc((var(--_num-root-raw) / var(--_num-body-raw)) * 1em);
+  --_em-caption: calc((var(--_num-caption-raw) / var(--_num-body-raw)) * 1em);
   --_em-body: 1em;
-  --_em-lead: calc((var(--_num-lead)/var(--_num-body))*1em);
-  --_em-subtitle: calc((var(--_num-subtitle)/var(--_num-body))*1em);
-  --_em-list: calc((var(--_num-list)/var(--_num-body))*1em);
-  --_em-title: calc((var(--_num-title)/var(--_num-body))*1em);
-  --_em-display: calc((var(--_num-display)/var(--_num-body))*1em);
-  --_em-input: calc((var(--_num-input)/var(--_num-body))*1em);
-  --_em-hero: calc((var(--_num-hero)/var(--_num-body))*1em);
-  --_em-max: calc((var(--_num-max)/var(--_num-body))*1em);
+  --_em-lead: calc((var(--_num-lead-raw) / var(--_num-body-raw)) * 1em);
+  --_em-subtitle: calc((var(--_num-subtitle-raw) / var(--_num-body-raw)) * 1em);
+  --_em-list: calc((var(--_num-list-raw) / var(--_num-body-raw)) * 1em);
+  --_em-title: calc((var(--_num-title-raw) / var(--_num-body-raw)) * 1em);
+  --_em-display: calc((var(--_num-display-raw) / var(--_num-body-raw)) * 1em);
+  --_em-input: calc((var(--_num-input-raw) / var(--_num-body-raw)) * 1em);
+  --_em-hero: calc((var(--_num-hero-raw) / var(--_num-body-raw)) * 1em);
+  --_em-max: calc((var(--_num-max-raw) / var(--_num-body-raw)) * 1em);
   /*Em of small size (base --_px-caption)*/
-  --_em-min-dec: calc((var(--_num-min)/var(--_num-caption))*1em);
-  --_em-space-dec: calc((var(--_num-space)/var(--_num-caption))*1em);
-  --_em-root-dec: calc((var(--_num-root)/var(--_num-caption))*1em);
+  --_em-min-dec: calc((var(--_num-min-raw-raw) / var(--_num-caption-raw)) * 1em);
+  --_em-space-dec: calc((var(--_num-space-raw) / var(--_num-caption-raw)) * 1em);
+  --_em-root-dec: calc((var(--_num-root-raw) / var(--_num-caption-raw)) * 1em);
   --_em-caption-dec: 1em;
-  --_em-body-dec: calc((var(--_num-body)/var(--_num-caption))*1em);
-  --_em-lead-dec: calc((var(--_num-lead)/var(--_num-caption))*1em);
-  --_em-subtitle-dec: calc((var(--_num-subtitle)/var(--_num-caption))*1em);
-  --_em-list-dec: calc((var(--_num-list)/var(--_num-caption))*1em);
-  --_em-title-dec: calc((var(--_num-title)/var(--_num-caption))*1em);
-  --_em-display-dec: calc((var(--_num-display)/var(--_num-caption))*1em);
-  --_em-input-dec: calc((var(--_num-input)/var(--_num-caption))*1em);
-  --_em-hero-dec: calc((var(--_num-hero)/var(--_num-caption))*1em);
-  --_em-max-dec: calc((var(--_num-max)/var(--_num-caption))*1em);
+  --_em-body-dec: calc((var(--_num-body-raw) / var(--_num-caption-raw)) * 1em);
+  --_em-lead-dec: calc((var(--_num-lead-raw) / var(--_num-caption-raw)) * 1em);
+  --_em-subtitle-dec: calc((var(--_num-subtitle-raw) / var(--_num-caption-raw)) * 1em);
+  --_em-list-dec: calc((var(--_num-list-raw) / var(--_num-caption-raw)) * 1em);
+  --_em-title-dec: calc((var(--_num-title-raw) / var(--_num-caption-raw)) * 1em);
+  --_em-display-dec: calc((var(--_num-display-raw) / var(--_num-caption-raw)) * 1em);
+  --_em-input-dec: calc((var(--_num-input-raw) / var(--_num-caption-raw)) * 1em);
+  --_em-hero-dec: calc((var(--_num-hero-raw) / var(--_num-caption-raw)) * 1em);
+  --_em-max-dec: calc((var(--_num-max-raw) / var(--_num-caption-raw)) * 1em);
   /*Em of title size (base --_px-lead)*/
-  --_em-min-inc: calc((var(--_num-min)/var(--_num-lead))*1em);
-  --_em-space-inc: calc((var(--_num-space)/var(--_num-lead))*1em);
-  --_em-root-inc: calc((var(--_num-root)/var(--_num-lead))*1em);
-  --_em-caption-inc: calc((var(--_num-caption)/var(--_num-lead))*1em);
-  --_em-body-inc: calc((var(--_num-body)/var(--_num-lead))*1em);
+  --_em-min-inc: calc((var(--_num-min-raw-raw) / var(--_num-lead-raw)) * 1em);
+  --_em-space-inc: calc((var(--_num-space-raw) / var(--_num-lead-raw)) * 1em);
+  --_em-root-inc: calc((var(--_num-root-raw) / var(--_num-lead-raw)) * 1em);
+  --_em-caption-inc: calc((var(--_num-caption-raw) / var(--_num-lead-raw)) * 1em);
+  --_em-body-inc: calc((var(--_num-body-raw) / var(--_num-lead-raw)) * 1em);
   --_em-lead-inc: 1em;
-  --_em-subtitle-inc: calc((var(--_num-subtitle)/var(--_num-lead))*1em);
-  --_em-list-inc: calc((var(--_num-list)/var(--_num-lead))*1em);
-  --_em-title-inc: calc((var(--_num-title)/var(--_num-lead))*1em);
-  --_em-display-inc: calc((var(--_num-display)/var(--_num-lead))*1em);
-  --_em-input-inc: calc((var(--_num-input)/var(--_num-lead))*1em);
-  --_em-hero-inc: calc((var(--_num-hero)/var(--_num-lead))*1em);
-  --_em-max-inc: calc((var(--_num-max)/var(--_num-lead))*1em);
+  --_em-subtitle-inc: calc((var(--_num-subtitle-raw) / var(--_num-lead-raw)) * 1em);
+  --_em-list-inc: calc((var(--_num-list-raw) / var(--_num-lead-raw)) * 1em);
+  --_em-title-inc: calc((var(--_num-title-raw) / var(--_num-lead-raw)) * 1em);
+  --_em-display-inc: calc((var(--_num-display-raw) / var(--_num-lead-raw)) * 1em);
+  --_em-input-inc: calc((var(--_num-input-raw) / var(--_num-lead-raw)) * 1em);
+  --_em-hero-inc: calc((var(--_num-hero-raw) / var(--_num-lead-raw)) * 1em);
+  --_em-max-inc: calc((var(--_num-max-raw) / var(--_num-lead-raw)) * 1em);
   /*Px of size*/
-  --_px-min: calc(var(--_num-min)*1px);
-  --_px-space: calc(var(--_num-space)*1px);
-  --_px-root: calc(var(--_num-root)*1px);
-  --_px-caption: calc(var(--_num-caption)*1px);
-  --_px-body: calc(var(--_num-body)*1px);
-  --_px-lead: calc(var(--_num-lead)*1px);
-  --_px-subtitle: calc(var(--_num-subtitle)*1px);
-  --_px-list: calc(var(--_num-list)*1px);
-  --_px-title: calc(var(--_num-title)*1px);
-  --_px-display: calc(var(--_num-display)*1px);
-  --_px-input: calc(var(--_num-input)*1px);
-  --_px-hero: calc(var(--_num-hero)*1px);
-  --_px-max: calc(var(--_num-max)*1px);
+  --_px-min: calc(var(--_num-min) * 1px);
+  --_px-space: calc(var(--_num-space) * 1px);
+  --_px-root: calc(var(--_num-root) * 1px);
+  --_px-caption: calc(var(--_num-caption) * 1px);
+  --_px-body: calc(var(--_num-body) * 1px);
+  --_px-lead: calc(var(--_num-lead) * 1px);
+  --_px-subtitle: calc(var(--_num-subtitle) * 1px);
+  --_px-list: calc(var(--_num-list) * 1px);
+  --_px-title: calc(var(--_num-title) * 1px);
+  --_px-display: calc(var(--_num-display) * 1px);
+  --_px-input: calc(var(--_num-input) * 1px);
+  --_px-hero: calc(var(--_num-hero) * 1px);
+  --_px-max: calc(var(--_num-max) * 1px);
   /*Font size*/
   --_fs-caption: var(--_rem-caption);
   --_fs-body: var(--_rem-body);
@@ -425,25 +441,25 @@
   --_fs-title: var(--_rem-title);
   --_fs-display: var(--_rem-display);
   --_fs-hero: var(--_rem-hero);
-  --_fs-h1: calc(var(--_rem-lead)*2);
-  --_fs-h2: calc(var(--_rem-body)*2);
+  --_fs-h1: calc(var(--_rem-display));
+  --_fs-h2: calc(var(--_rem-title));
   --_fs-h3: var(--_rem-list);
   --_fs-h4: var(--_rem-subtitle);
   --_fs-h5: var(--_rem-lead);
   --_fs-h6: var(--_rem-body);
   --_lh-caption: var(--_rem-subtitle);
   --_lh-body: var(--_rem-list);
-  --_lh-lead: calc(var(--_rem-body)*2);
-  --_lh-subtitle: calc(var(--_rem-body)*2);
+  --_lh-lead: calc(var(--_rem-title));
+  --_lh-subtitle: calc(var(--_rem-title));
   --_lh-title: var(--_rem-input);
   --_lh-display: calc(var(--_rem-input) + var(--_rem-min));
   --_lh-hero: calc(var(--_rem-max) + var(--_rem-min));
   --_lh-h1: 1.25;
-  --_lh-h2: calc(36/28);
-  --_lh-h3: calc(32/24);
-  --_lh-h4: calc(26/18);
-  --_lh-h5: calc(24/16);
-  --_lh-h6: calc(22/14);
+  --_lh-h2: calc(36 / 28);
+  --_lh-h3: calc(32 / 24);
+  --_lh-h4: calc(26 / 18);
+  --_lh-h5: calc(24 / 16);
+  --_lh-h6: calc(22 / 14);
   --_lh-sm: 1.286;
   --_lh-md: 1.5;
   --_lh-lg: 1.78;
@@ -458,7 +474,7 @@
   --_m: var(--_rem-body);
   /*Gap*/
   --_g: var(--_rem-min);
-  --_g-full: 1.4rem;
+  --_g-full: var(--_rem-body);
   /*Width & Height*/
   --_h-input: var(--_rem-input);
   --_w-input: min(calc(var(--_rem-input)*10), 100%);
@@ -477,27 +493,27 @@
   --_w-aside: calc(var(--_rem-body)*20);
   --_w-drawer: calc(var(--_rem-input)*10);
   /*Radius*/
-  --_r: 0.3rem;
+  --_r: calc(var(--_rem-root)*0.3);
   --_r-input-sm: var(--_r);
   --_r-input: calc(var(--_r)*2);
   --_r-input-md: calc(var(--_r)*2);
   --_r-input-lg: calc(var(--_r)*3);
   --_r-bubble: calc(var(--_r)*3);
   --_r-full: 99999px;
-  --_sd: 0 0.5rem 1rem var(--_c-black-12);
-  --_sd-bd: 1px 0 0 var(--_c-text-bd), -1px 0 0 var(--_c-text-bd), 0 1px 0 var(--_c-text-bd), 0 -1px 0 var(--_c-text-bd), 0 .2rem .6rem var(--_c-black-8);
-  --_sd-bd-in: 0 0 0 1px var(--_c-text-bd) inset, 0 .2rem .6rem var(--_c-black-8);
+  --_sd: 0 calc(var(--_rem-root)/2) var(--_rem-root) var(--_c-black-12);
+  --_sd-bd: 1px 0 0 var(--_c-text-bd), -1px 0 0 var(--_c-text-bd), 0 1px 0 var(--_c-text-bd), 0 -1px 0 var(--_c-text-bd), 0 calc(var(--_rem-root)*0.4) calc(var(--_rem-root)*0.6) var(--_c-black-8);
+  --_sd-bd-in: 0 0 0 1px var(--_c-text-bd) inset, 0 calc(var(--_rem-root)*0.4) calc(var(--_rem-root)*0.6) var(--_c-black-8);
   --_sd-ring: 0 0 0 2px var(--_c-prim-sd);
-  --_sd-lt: 1px 1px 0.5rem var(--_c-black-8);
-  --_sd-dk: 0 0.2rem 1rem var(--_c-black-12);
-  --_sd-soft: 0 0.5rem 2rem var(--_c-black-12);
-  --_sd-hard: 0 0.1rem 0.3rem var(--_c-black-40);
-  --_sd-prim: 1px 2px 1rem var(--_c-prim-sd);
-  --_sd-issue: 1px 2px 1rem var(--_c-issue-sd);
-  --_sd-error: 1px 2px 1rem var(--_c-error-sd);
-  --_sd-info: 1px 2px 1rem var(--_c-info-sd);
-  --_sd-warn: 1px 2px 1rem var(--_c-warn-sd);
-  --_sd-succ: 1px 2px 1rem var(--_c-succ-sd);
+  --_sd-lt: 1px 1px calc(var(--_rem-root)/2) var(--_c-black-8);
+  --_sd-dk: 0 calc(var(--_rem-root)*0.6) var(--_rem-root) var(--_c-black-12);
+  --_sd-soft: 0 calc(var(--_rem-root)/2) calc(var(--_rem-root)*2) var(--_c-black-12);
+  --_sd-hard: 0 var(--_rem-1px) calc(var(--_rem-root)*0.3) var(--_c-black-40);
+  --_sd-prim: 1px 2px var(--_rem-root) var(--_c-prim-sd);
+  --_sd-issue: 1px 2px var(--_rem-root) var(--_c-issue-sd);
+  --_sd-error: 1px 2px var(--_rem-root) var(--_c-error-sd);
+  --_sd-info: 1px 2px var(--_rem-root) var(--_c-info-sd);
+  --_sd-warn: 1px 2px var(--_rem-root) var(--_c-warn-sd);
+  --_sd-succ: 1px 2px var(--_rem-root) var(--_c-succ-sd);
   /*Other*/
   --_dir-coef: 1;
   --_dir-coef-alt: 0;
@@ -2023,10 +2039,10 @@
   scale: -1 1;
 }
 /*
- *Last modified: 2025-08-01 00:58:15
+ *Last modified: 2025-08-15 17:37:48
  */
 html {
-  font-size: var(--_fs-root);
+  font-size: var(--_fs-base);
   width: 100%;
   padding: 0;
   margin: 0;
@@ -2230,7 +2246,7 @@ kbd {
 *:where(ol) {
   --_ul-p-se: 2em;
   --_ul-m-tb: 0;
-  --_ul-dot-sz: 0.4rem;
+  --_ul-dot-sz: var(--_rem-min);
   --_ul-dot-bg: var(--_c-text-sd);
   margin-block: var(--_ul-m-tb);
   box-sizing: border-box;
@@ -2270,7 +2286,7 @@ kbd {
   display: none;
 }
 *:where(dl) {
-  --_dl-dot-sz: 0.4rem;
+  --_dl-dot-sz: var(--_rem-min);
   --_dl-dot-bg: var(--_c-text-sd);
   --_dl-m: var(--_m);
   --_dl-p-tb: var(--_p);
@@ -2578,7 +2594,7 @@ input:where([type=datetime-local], [type=date], [type=month], [type=week])::-web
   opacity: 1;
 }
 input:where([type=range]) {
-  --_range-h: 0.3rem;
+  --_range-h: calc(var(--_rem-root)*0.3);
   height: var(--_range-h);
   width: var(--_field-w);
   background-color: var(--_c-text-bd);
@@ -2587,9 +2603,9 @@ input:where([type=range]) {
   transition: all var(--_dur-1) linear;
 }
 input:where([type=range])::-webkit-slider-thumb {
-  width: 1.6rem;
-  height: 1.6rem;
-  border: 0.2rem solid var(--_c-prim);
+  width: var(--_rem-lead);
+  height: var(--_rem-lead);
+  border: calc(var(--_rem-root)*0.4) solid var(--_c-prim);
   border-radius: 50%;
   background-color: var(--_c-stage);
   cursor: pointer;
@@ -2597,9 +2613,9 @@ input:where([type=range])::-webkit-slider-thumb {
   transition: all var(--_dur-1) linear;
 }
 input:where([type=range])::-moz-range-thumb {
-  width: 1.2rem;
-  height: 1.2rem;
-  border: 0.2rem solid var(--_c-prim);
+  width: var(--_rem-caption);
+  height: var(--_rem-caption);
+  border: calc(var(--_rem-root)*0.4) solid var(--_c-prim);
   border-radius: 50%;
   background-color: var(--_c-stage);
   cursor: pointer;
@@ -2614,10 +2630,10 @@ input:where([type=range]:not([disabled])):hover {
   background-color: var(--_c-prim-bd);
 }
 input:where([type=range]:not([disabled]))::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 0 0.3rem var(--_c-prim-sd);
+  box-shadow: 0 0 0 calc(var(--_rem-root)*0.3) var(--_c-prim-sd);
 }
 input:where([type=range]:not([disabled]))::-moz-range-thumb:hover {
-  box-shadow: 0 0 0 0.3rem var(--_c-prim-sd);
+  box-shadow: 0 0 0 calc(var(--_rem-root)*0.3) var(--_c-prim-sd);
 }
 input:where([type=range][disabled])::-webkit-slider-thumb {
   border-color: var(--_c-caption);
@@ -2709,7 +2725,7 @@ button {
   background-color: var(--_btn-bg);
   color: var(--_btn-c);
   border: var(--_btn-bw) solid var(--_btn-bc);
-  box-shadow: 0.2rem 0.2rem 1rem 0 var(--_btn-sd);
+  box-shadow: calc(var(--_rem-root)*0.4) calc(var(--_rem-root)*0.4) var(--_rem-root) 0 var(--_btn-sd);
 }
 input:where([type=submit])[size=xs],
 input:where([type=reset], [type=button])[size=xs],
@@ -2907,7 +2923,7 @@ table {
 }
 table tr {
   border-block-end: 1px solid var(--_table-bc);
-  padding: 0.5rem;
+  padding: calc(var(--_rem-root)/2);
   transition: background-color var(--_dur-1) linear;
 }
 table tfoot tr {
@@ -2923,7 +2939,7 @@ table td {
   text-align: var(--_table-a);
 }
 table td {
-  padding: 1rem;
+  padding: var(--_rem-root);
   font-size: var(--_table-fs);
   line-height: var(--_rem-subtitle);
 }
@@ -2931,7 +2947,7 @@ table thead td,
 table th {
   color: var(--_c-brief);
   font-weight: normal;
-  padding: var(--_px-space) 1rem;
+  padding: var(--_px-space) var(--_rem-root);
   font-size: var(--_px-caption);
   line-height: var(--_px-subtitle);
 }
@@ -3024,7 +3040,7 @@ table:where([align=right]) {
   --_table-a: right;
 }
 /*
-Last modified: 2025-08-01 01:00:42
+Last modified: 2025-08-15 18:02:46
 */
 /*Button*/
 AX-BTN {
@@ -3085,7 +3101,7 @@ AX-BTN:where(:not([disabled])) > [rep=wrap]:hover {
   color: var(--_btn-c-hov);
   background-color: var(--_btn-bg-hov);
   border-color: var(--_btn-bc-hov);
-  box-shadow: 0.2rem 0.2rem 1rem 0 var(--_btn-sd);
+  box-shadow: calc(var(--_rem-root)*0.4) calc(var(--_rem-root)*0.4) var(--_rem-root) 0 var(--_btn-sd);
 }
 AX-BTN:where(:not([disabled])) > [rep=wrap]:focus {
   color: var(--_btn-c-foc);
@@ -3473,7 +3489,7 @@ AX-BTN[shaded]:where(:not([type=seal], [type=plain])) {
 }
 AX-BTN[shaded]:where(:not([type=seal], [type=plain])) > [rep=wrap] {
   outline-color: transparent;
-  box-shadow: 1px 1px 0.5rem var(--_btn-sd);
+  box-shadow: 1px 1px calc(var(--_rem-root)*0.5) var(--_btn-sd);
 }
 AX-BTN[shaded]:where([theme=prim]> [rep=wrap],
     [theme=error] >[rep=wrap],
@@ -3482,7 +3498,7 @@ AX-BTN[shaded]:where([theme=prim]> [rep=wrap],
     [theme=issue] >[rep=wrap],
     [theme=warn] >[rep=wrap],
     [theme=text]) > [rep=wrap] {
-  box-shadow: 0.5rem 0.5rem 2rem var(--_btn-sd);
+  box-shadow: calc(var(--_rem-root)*0.5) calc(var(--_rem-root)*0.5) calc(var(--_rem-root)*2) var(--_btn-sd);
 }
 AX-BTN[shaded]:where([theme=prim]) {
   --_btn-sd: hsla(var(--_h-prim), var(--_s-prim), var(--_l-prim), 0.4);
@@ -3584,7 +3600,7 @@ AX-BTN:where([check=ing]) > [rep=wrap]:before {
   animation: _rotate360 1s linear infinite;
   background: transparent;
   box-sizing: border-box;
-  border: 0.2rem solid var(--_spin-bg);
+  border: calc(var(--_rem-root)*0.4) solid var(--_spin-bg);
   border-block-end-color: var(--_spin-c);
   border-radius: 50%;
   aspect-ratio: 1 / 1;
@@ -3733,7 +3749,7 @@ AX-BTN[inverted][type=seal]:where([theme=caption]) {
   content: 'left';
 }
 /*
- *Last modified: 2025-08-12 11:08:48
+ *Last modified: 2025-08-15 17:49:43
  */
 /*rtl & ltr*/
 [dir=rtl],
@@ -4531,17 +4547,17 @@ AX-BTN[inverted][type=seal]:where([theme=caption]) {
 /*Shadow */
 ._sd {
   --_sd-base: var(--_c-black-12);
-  box-shadow: 0 0.5rem 1rem var(--_sd-base);
+  box-shadow: 0 calc(var(--_rem-root)*0.5) var(--_rem-root) var(--_sd-base);
 }
 ._sd-bd {
   --_sd-base: var(--_c-text-bd);
   --_sd-refer: var(--_c-black-8);
-  box-shadow: 1px 0 0 var(--_sd-base), -1px 0 0 var(--_sd-base), 0 1px 0 var(--_sd-base), 0 -1px 0 var(--_sd-base), 0 0.2rem 0.6rem var(--_sd-refer);
+  box-shadow: 1px 0 0 var(--_sd-base), -1px 0 0 var(--_sd-base), 0 1px 0 var(--_sd-base), 0 -1px 0 var(--_sd-base), 0 calc(var(--_rem-root)*0.2) calc(var(--_rem-root)*0.6) var(--_sd-refer);
 }
 ._sd-bd-in {
   --_sd: var(--_c-text-bd);
   --_sd-refer: var(--_c-black-8);
-  box-shadow: 0 0 0 1px var(--_sd-base) inset, 0 0.2rem 0.6rem var(--_sd-refer);
+  box-shadow: 0 0 0 1px var(--_sd-base) inset, 0 calc(var(--_rem-root)*0.2) calc(var(--_rem-root)*0.6) var(--_sd-refer);
 }
 ._sd-ring {
   --_sd-base: var(--_c-prim-sd);
@@ -4549,43 +4565,43 @@ AX-BTN[inverted][type=seal]:where([theme=caption]) {
 }
 ._sd-lt {
   --_sd-base: var(--_c-black-8);
-  box-shadow: 1px 1px 0.5rem var(--_sd-base);
+  box-shadow: 1px 1px calc(var(--_rem-root)*0.5) var(--_sd-base);
 }
 ._sd-dk {
   --_sd-base: var(--_c-black-12);
-  box-shadow: 0 0.2rem 1rem var(--_sd-base);
+  box-shadow: 0 calc(var(--_rem-root)*0.2) var(--_rem-root) var(--_sd-base);
 }
 ._sd-soft {
   --_sd-base: var(--_c-black-12);
-  box-shadow: 0 0.5rem 2rem var(--_sd-base);
+  box-shadow: 0 calc(var(--_rem-root)*0.5) calc(var(--_rem-root)*2) var(--_sd-base);
 }
 ._sd-hard {
   --_sd-base: var(--_c-black-40);
-  box-shadow: 0 0.1rem 0.3rem var(--_sd-base);
+  box-shadow: 0 var(--_rem-1px) calc(var(--_rem-root)*0.3) var(--_sd-base);
 }
 ._sd-prim {
   --_sd-base: var(--_c-prim-sd);
-  box-shadow: 1px 2px 1rem var(--_sd-base);
+  box-shadow: 1px 2px var(--_rem-root) var(--_sd-base);
 }
 ._sd-error {
   --_sd-base: var(--_c-error-sd);
-  box-shadow: 1px 2px 1rem var(--_sd-base);
+  box-shadow: 1px 2px var(--_rem-root) var(--_sd-base);
 }
 ._sd-succ {
   --_sd-base: var(--_c-succ-sd);
-  box-shadow: 1px 2px 1rem var(--_sd-base);
+  box-shadow: 1px 2px var(--_rem-root) var(--_sd-base);
 }
 ._sd-info {
   --_sd-base: var(--_c-info-sd);
-  box-shadow: 1px 2px 1rem var(--_sd-base);
+  box-shadow: 1px 2px var(--_rem-root) var(--_sd-base);
 }
 ._sd-warn {
   --_sd-base: var(--_c-warn-sd);
-  box-shadow: 1px 2px 1rem var(--_sd-base);
+  box-shadow: 1px 2px var(--_rem-root) var(--_sd-base);
 }
 ._sd-issue {
   --_sd-base: var(--_c-issue-sd);
-  box-shadow: 1px 2px 1rem var(--_sd-base);
+  box-shadow: 1px 2px var(--_rem-root) var(--_sd-base);
 }
 /*Padding*/
 ._p,
@@ -5689,7 +5705,7 @@ AX-DIVIDER[size=lg] {
   animation: _rotate360 1s linear infinite;
   background: transparent;
   box-sizing: border-box;
-  border: 0.2rem solid var(--_spin-bg);
+  border: calc(var(--_rem-root)*0.4) solid var(--_spin-bg);
   border-block-end-color: var(--_spin-c);
   border-radius: 50%;
   aspect-ratio: 1 / 1;
@@ -5706,7 +5722,7 @@ AX-DIVIDER[size=lg] {
   animation: _rotate360 1s linear infinite;
   background: transparent;
   box-sizing: border-box;
-  border: 0.2rem solid var(--_spin-bg);
+  border: calc(var(--_rem-root)*0.4) solid var(--_spin-bg);
   border-block-end-color: var(--_spin-c);
   border-radius: 50%;
   aspect-ratio: 1 / 1;
@@ -5741,7 +5757,7 @@ AX-DIVIDER[size=lg] {
   animation: _rotate360 1s linear infinite;
   background: transparent;
   box-sizing: border-box;
-  border: 0.2rem solid var(--_spin-bg);
+  border: calc(var(--_rem-root)*0.4) solid var(--_spin-bg);
   border-block-end-color: var(--_spin-c);
   border-radius: 50%;
   aspect-ratio: 1 / 1;
@@ -6316,7 +6332,7 @@ img[rep=image] {
   justify-content: center;
 }
 ._box-qr [rep=media] img {
-  min-width: 8rem;
+  min-width: calc(var(--_rem-root)*8);
 }
 /*Bubble footer*/
 ._bubble-footer {
@@ -6377,7 +6393,7 @@ img[rep=image] {
 }
 ._bubble-footer [rep=tips] {
   font-size: var(--_rem-body);
-  line-height: 1.8rem;
+  line-height: var(--_rem-subtitle);
   height: var(--_rem-input);
   display: flex;
   align-items: center;
@@ -6463,7 +6479,7 @@ img[rep=image] {
 }
 ._field > ._field-cont > ._field-input input:where([type=file]:not([embed]))::file-selector-button,
 ._field > ._field-cont > ._field-input input:where([type=file]:not([embed]))::-webkit-file-upload-button {
-  line-height: calc(var(--_form-h) - 0.2rem);
+  line-height: calc(var(--_form-h) - var(--_rem-root)*0.2);
 }
 ._field > ._field-cont > ._field-input input:where([type=range]:not([embed])) {
   margin: calc((var(--_form-h) - var(--_range-h))/2) 0;
@@ -6540,7 +6556,7 @@ img[rep=image] {
   font-size: var(--_px-caption);
   color: var(--_c-brief);
   background-color: var(--_c-stage);
-  line-height: calc(var(--_rem-list) + 0.2rem);
+  line-height: calc(var(--_rem-list) + var(--_rem-root)*0.2);
   height: var(--_rem-list);
   position: absolute;
   inset-inline-end: var(--_rem-space);
@@ -7885,10 +7901,10 @@ img[rep=image] {
     box-shadow: 0 0 0 0 var(--_c-prim-sd);
   }
   50% {
-    box-shadow: 0 0 0 0.3rem var(--_c-prim-sd);
+    box-shadow: 0 0 0 calc(var(--_rem-root)*0.3) var(--_c-prim-sd);
   }
   99% {
-    box-shadow: 0 0 0 0.6rem var(--_c-prim-tp);
+    box-shadow: 0 0 0 calc(var(--_rem-root)*0.6) var(--_c-prim-tp);
   }
   100% {
     box-shadow: none;
@@ -8029,16 +8045,16 @@ AX-RADIO:where(:not([type=chera], [type=switch])) u:before {
 }
 AX-RADIO:where(:not([type=chera], [type=switch])) u:after {
   content: '';
-  width: 1rem;
-  height: 1rem;
+  width: var(--_rem-root);
+  height: var(--_rem-root);
   border-radius: 100%;
   background-color: var(--_c-prim);
   display: inline-block;
   transform: scale(0);
   transition: all var(--_dur-2) ease-out;
   position: absolute;
-  inset-block-start: 0.4rem;
-  inset-inline-start: 0.4rem;
+  inset-block-start: var(--_rem-min);
+  inset-inline-start: var(--_rem-min);
 }
 AX-RADIO:where(:not([type=chera], [type=switch])) input:where(:checked) ~ u:before {
   border-color: var(--_c-prim);
@@ -8076,9 +8092,9 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch])) {
   } */
 }
 AX-CHECKBOX:where(:not([type=chera], [type=switch])) u {
-  width: calc(var(--_rem-subtitle) - 0.2rem);
+  width: calc(var(--_rem-subtitle) - var(--_rem-root)*0.2);
   aspect-ratio: 1/1;
-  line-height: calc(var(--_rem-subtitle) - 0.2rem);
+  line-height: calc(var(--_rem-subtitle) - var(--_rem-root)*0.2);
   position: relative;
   display: inline-flex;
 }
@@ -8118,12 +8134,12 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch])):where([check=ing]:not(:has(
 }
 AX-CHECKBOX:where(:not([type=chera], [type=switch])):where([check=ing]:not(:has(input:checked))) input ~ u:after {
   content: '';
-  width: 1rem;
-  height: 1rem;
+  width: var(--_rem-root);
+  height: var(--_rem-root);
   background-color: var(--_c-prim-sd);
   transform: none;
-  inset-block-start: 0.3rem;
-  inset-inline-start: 0.3rem;
+  inset-block-start: calc(var(--_rem-root)*0.3);
+  inset-inline-start: calc(var(--_rem-root)*0.3);
 }
 AX-CHECKBOX:where(:not([type=chera], [type=switch])) input:where(:focus) ~ u:before {
   outline: none;
@@ -8143,7 +8159,7 @@ AX-CHECKBOX:where(:not([type=chera], [type=switch])) input:where(:disabled:check
 AX-CHECKBOX[type=chera],
 AX-RADIO[type=chera] {
   --_chk-d: block;
-  --_chera-h: calc(var(--_chk-h) - 0.6rem);
+  --_chera-h: calc(var(--_chk-h) - var(--_rem-root)*0.6);
 }
 AX-CHECKBOX[type=chera] label,
 AX-RADIO[type=chera] label {
@@ -8152,10 +8168,10 @@ AX-RADIO[type=chera] label {
 AX-CHECKBOX[type=chera] i,
 AX-RADIO[type=chera] i {
   height: var(--_chera-h);
-  line-height: calc(var(--_chera-h) - 0.2rem);
+  line-height: calc(var(--_chera-h) - var(--_rem-root)*0.2);
   padding-block: 0;
   padding-inline-end: calc(var(--_p) * 2);
-  padding-inline-start: 1rem;
+  padding-inline-start: var(--_rem-root);
   background-color: var(--_chk-bg);
   box-sizing: border-box;
   border: 1px solid var(--_chk-bc);
@@ -8173,7 +8189,7 @@ AX-RADIO[type=chera] u {
   transform: translate(0, -50%);
   transition: all var(--_dur-2) ease-out;
   position: absolute;
-  inset-inline-end: 1rem;
+  inset-inline-end: var(--_rem-root);
   inset-block-start: 50%;
 }
 AX-CHECKBOX[type=chera] u:after,
@@ -8226,13 +8242,13 @@ AX-RADIO[type=chera][size=xs] {
 }
 AX-CHECKBOX[type=chera][size=xs] i,
 AX-RADIO[type=chera][size=xs] i {
-  height: calc(var(--_chk-h) - 0.2rem);
-  line-height: calc(var(--_chk-h) - 0.2rem - 0.2rem);
-  padding-inline-start: 0.4rem;
+  height: calc(var(--_chk-h) - var(--_rem-root)*0.2);
+  line-height: calc(var(--_chk-h) - var(--_rem-min));
+  padding-inline-start: var(--_rem-min);
 }
 AX-CHECKBOX[type=chera][size=xs] u,
 AX-RADIO[type=chera][size=xs] u {
-  inset-inline-end: 0.4rem;
+  inset-inline-end: var(--_rem-min);
 }
 AX-CHECKBOX[type=chera][size=sm],
 AX-RADIO[type=chera][size=sm] {
@@ -8241,8 +8257,8 @@ AX-RADIO[type=chera][size=sm] {
 }
 AX-CHECKBOX[type=chera][size=sm] i,
 AX-RADIO[type=chera][size=sm] i {
-  height: calc(var(--_chk-h) - 0.2rem);
-  line-height: calc(var(--_chk-h) - 0.2rem - 0.2rem);
+  height: calc(var(--_chk-h) - var(--_rem-root)*0.2);
+  line-height: calc(var(--_chk-h) - var(--_rem-min));
 }
 AX-CHECKBOX[type=chera][size=lg],
 AX-RADIO[type=chera][size=lg] {
@@ -8251,7 +8267,7 @@ AX-RADIO[type=chera][size=lg] {
 AX-CHECKBOX[type=chera][size=lg] i,
 AX-RADIO[type=chera][size=lg] i {
   height: var(--_rem-input);
-  line-height: calc(var(--_rem-input) - 0.2rem);
+  line-height: calc(var(--_rem-input) - var(--_rem-root)*0.2);
 }
 /*Text of checkbox & radio*/
 AX-CHECKBOX[type=text],
@@ -8273,7 +8289,7 @@ AX-RADIO[type=text] i {
   flex-wrap: wrap;
 }
 AX-CHECKBOX[type=text] u {
-  margin-block-start: calc((var(--_chk-lh) - var(--_rem-subtitle) + 0.2rem)/2);
+  margin-block-start: calc((var(--_chk-lh) - var(--_rem-subtitle) + var(--_rem-root)*0.2)/2);
 }
 AX-RADIO[type=text] u {
   margin-block-start: calc((var(--_chk-lh) - var(--_rem-subtitle))/2);
@@ -8365,7 +8381,7 @@ AX-CHECKBOX[type=switch] u:before {
   line-height: var(--_switch-btn-h);
   border-radius: var(--_switch-btn-r);
   background-color: var(--_c-white);
-  box-shadow: 0 0.1rem 0.3rem var(--_c-black-40);
+  box-shadow: 0 1px calc(var(--_rem-root)*0.3) var(--_c-black-40);
   transition: all var(--_dur-2) var(--_bez-eo);
   display: inline-flex;
   justify-content: center;
@@ -8473,7 +8489,7 @@ AX-CHECKBOXES[type=btn][size=lg] {
 /*Group button*/
 /*Header*/
 AX-HEADER {
-  --_header-h: calc(var(--_rem-hero) + 1rem);
+  --_header-h: calc(var(--_rem-hero) + var(--_rem-root));
   --_header-m: var(--_m);
   --_header-bw: 1px;
   --_header-c: var(--_c-text);
@@ -8548,8 +8564,8 @@ AX-HEADER ._header-r > :where(:not(AX-DEFORM)) > [class*=icon] {
 AX-HEADER ._header-l > :where(:not(AX-DEFORM)) > AX-BADGE,
 AX-HEADER ._header-r > :where(:not(AX-DEFORM)) > AX-BADGE {
   position: absolute;
-  inset-block-end: calc(100% - 1.4rem);
-  inset-inline-start: calc(100% - 1.4rem);
+  inset-block-end: calc(100% - var(--_rem-body));
+  inset-inline-start: calc(100% - var(--_rem-body));
 }
 AX-HEADER ._header-c {
   box-sizing: border-box;
@@ -8647,8 +8663,8 @@ AX-HEADER [rep=icons] > *[class*=icon] {
 }
 AX-HEADER [rep=icons] > *[class*=icon] AX-BADGE {
   position: absolute;
-  inset-block-end: calc(100% - 1.6rem);
-  inset-inline-start: calc(100% - 1.2rem);
+  inset-block-end: calc(100% - var(--_rem-lead));
+  inset-inline-start: calc(100% - var(--_rem-caption));
 }
 AX-HEADER [rep=dropdown] {
   display: inline-flex;
@@ -8866,8 +8882,8 @@ AX-HEADER[justify] ._header-head {
 /*Deform*/
 AX-DEFORM {
   --_deform-sz: var(--_rem-input);
-  --_deform-w-line: 1.6rem;
-  --_deform-h-line: 0.2rem;
+  --_deform-w-line: var(--_rem-lead);
+  --_deform-h-line: calc(var(--_rem-root)*0.2);
   --_deform-c: var(--_c-text);
   --_deform-bc: var(--_c-text-bd);
   --_deform-bg: transparent;
@@ -8928,7 +8944,7 @@ AX-DEFORM[type=left],
 AX-DEFORM[type=right],
 AX-DEFORM[type=up],
 AX-DEFORM[type=down] {
-  --_deform-w-line: 1rem;
+  --_deform-w-line: var(--_rem-root);
 }
 AX-DEFORM[type=left] [rep=wrap] > :nth-child(1),
 AX-DEFORM[type=right] [rep=wrap] > :nth-child(1),
@@ -8949,58 +8965,58 @@ AX-DEFORM[type=down] [rep=wrap] > :nth-child(3) {
   opacity: 0;
 }
 AX-DEFORM[type=left] [rep=wrap] > :nth-child(1) {
-  inset-block-start: calc(50% - 0.3rem);
+  inset-block-start: calc(50% - var(--_rem-min)*0.75);
 }
 AX-DEFORM[type=left] [rep=wrap] > :nth-child(2) {
-  inset-block-start: calc(50% + 0.3rem);
+  inset-block-start: calc(50% + var(--_rem-min)*0.75);
 }
 AX-DEFORM[type=left]._opened [rep=wrap] > :nth-child(1) {
-  inset-block-start: calc(50% + 0.3rem);
+  inset-block-start: calc(50% + var(--_rem-min)*0.75);
 }
 AX-DEFORM[type=left]._opened [rep=wrap] > :nth-child(2) {
-  inset-block-start: calc(50% - 0.3rem);
+  inset-block-start: calc(50% - var(--_rem-min)*0.75);
 }
 AX-DEFORM[type=right] [rep=wrap] > :nth-child(1) {
-  inset-block-start: calc(50% + 0.3rem);
+  inset-block-start: calc(50% + var(--_rem-min)*0.75);
 }
 AX-DEFORM[type=right] [rep=wrap] > :nth-child(2) {
-  inset-block-start: calc(50% - 0.3rem);
+  inset-block-start: calc(50% - var(--_rem-min)*0.75);
 }
 AX-DEFORM[type=right]._opened [rep=wrap] > :nth-child(1) {
-  inset-block-start: calc(50% - 0.3rem);
+  inset-block-start: calc(50% - var(--_rem-min)*0.75);
 }
 AX-DEFORM[type=right]._opened [rep=wrap] > :nth-child(2) {
-  inset-block-start: calc(50% + 0.3rem);
+  inset-block-start: calc(50% + var(--_rem-min)*0.75);
 }
 AX-DEFORM[type=up] [rep=wrap] > :nth-child(1) {
-  inset-inline-start: calc(50% - 0.8rem);
+  inset-inline-start: calc(50% - var(--_rem-space));
 }
 AX-DEFORM[type=up] [rep=wrap] > :nth-child(2) {
-  inset-inline-start: calc(50% - 0.2rem);
+  inset-inline-start: calc(50% - var(--_rem-root)*0.2);
 }
 AX-DEFORM[type=up]._opened [rep=wrap] > :nth-child(1) {
-  inset-inline-start: calc(50% - 0.2rem);
+  inset-inline-start: calc(50% - var(--_rem-root)*0.2);
 }
 AX-DEFORM[type=up]._opened [rep=wrap] > :nth-child(2) {
-  inset-inline-start: calc(50% - 0.8rem);
+  inset-inline-start: calc(50% - var(--_rem-space));
 }
 AX-DEFORM[type=down] [rep=wrap] > :nth-child(1) {
-  inset-inline-start: calc(50% - 0.2rem);
+  inset-inline-start: calc(50% - var(--_rem-root)*0.2);
 }
 AX-DEFORM[type=down] [rep=wrap] > :nth-child(2) {
-  inset-inline-start: calc(50% - 0.8rem);
+  inset-inline-start: calc(50% - var(--_rem-space));
 }
 AX-DEFORM[type=down]._opened [rep=wrap] > :nth-child(1) {
-  inset-inline-start: calc(50% - 0.8rem);
+  inset-inline-start: calc(50% - var(--_rem-space));
 }
 AX-DEFORM[type=down]._opened [rep=wrap] > :nth-child(2) {
-  inset-inline-start: calc(50% - 0.2rem);
+  inset-inline-start: calc(50% - var(--_rem-root)*0.2);
 }
 AX-DEFORM[type*=menu]:where(:not(._opened)) [rep=wrap] > :nth-child(1) {
   inset-block-start: calc(50% - 0.6rem);
 }
 AX-DEFORM[type*=menu]:where(:not(._opened)) [rep=wrap] > :nth-child(3) {
-  inset-block-start: calc(50% + 0.4rem);
+  inset-block-start: calc(50% + var(--_rem-min));
 }
 AX-DEFORM[type=menustart]:where(:not(._opened)) [rep=wrap] > :nth-child(1),
 AX-DEFORM[type=menuend]:where(:not(._opened)) [rep=wrap] > :nth-child(1) {
@@ -9063,7 +9079,7 @@ AX-DEFORM[size=lg] {
   --_deform-sz: var(--_rem-max);
 }
 AX-DEFORM[size=sm] {
-  --_deform-w-line: 1.2rem;
+  --_deform-w-line: var(--_rem-caption);
   --_deform-r: var(--_r-input-sm);
   --_deform-sz: var(--_rem-display);
 }
@@ -9071,34 +9087,34 @@ AX-DEFORM[size=sm]:where([type*=menu]) [rep=wrap] > :nth-child(1) {
   inset-block-start: calc(50% - 0.5rem);
 }
 AX-DEFORM[size=sm]:where([type*=menu]) [rep=wrap] > :nth-child(3) {
-  inset-block-start: calc(50% + 0.3rem);
+  inset-block-start: calc(50% + var(--_rem-min)*0.75);
 }
 AX-DEFORM[size=sm]:where([type=left]),
 AX-DEFORM[size=sm]:where([type=right]),
 AX-DEFORM[size=sm]:where([type=up]),
 AX-DEFORM[size=sm]:where([type=down]) {
-  --_deform-w-line: 0.8rem;
+  --_deform-w-line: var(--_rem-space);
 }
 AX-DEFORM[size=sm]:where([type=left]) [rep=wrap] > :nth-child(1) {
-  inset-block-start: calc(50% - 0.2rem);
+  inset-block-start: calc(50% - var(--_rem-root)*0.2);
 }
 AX-DEFORM[size=sm]:where([type=left]) [rep=wrap] > :nth-child(2) {
-  inset-block-start: calc(50% + 0.2rem);
+  inset-block-start: calc(50% + var(--_rem-root)*0.2);
 }
 AX-DEFORM[size=sm]:where([type=right]) [rep=wrap] > :nth-child(1) {
-  inset-block-start: calc(50% + 0.2rem);
+  inset-block-start: calc(50% + var(--_rem-root)*0.2);
 }
 AX-DEFORM[size=sm]:where([type=right]) [rep=wrap] > :nth-child(2) {
-  inset-block-start: calc(50% - 0.2rem);
+  inset-block-start: calc(50% - var(--_rem-root)*0.2);
 }
 AX-DEFORM[size=sm]:where([type=up]) [rep=wrap] > :nth-child(1) {
   inset-inline-start: calc(50% - 0.6rem);
 }
 AX-DEFORM[size=sm]:where([type=up]) [rep=wrap] > :nth-child(2) {
-  inset-inline-start: calc(50% - 0.1rem);
+  inset-inline-start: calc(50% - var(--_rem-1px));
 }
 AX-DEFORM[size=sm]:where([type=down]) [rep=wrap] > :nth-child(1) {
-  inset-inline-start: calc(50% - 0.1rem);
+  inset-inline-start: calc(50% - var(--_rem-1px));
 }
 AX-DEFORM[size=sm]:where([type=down]) [rep=wrap] > :nth-child(2) {
   inset-inline-start: calc(50% - 0.6rem);
@@ -9184,7 +9200,7 @@ AX-SPIN {
   animation: _rotate360 1s linear infinite;
   background: transparent;
   box-sizing: border-box;
-  border: 0.2rem solid var(--_spin-bg);
+  border: calc(var(--_rem-root)*0.4) solid var(--_spin-bg);
   border-block-end-color: var(--_spin-c);
   border-radius: 50%;
   aspect-ratio: 1 / 1;
@@ -9294,7 +9310,7 @@ AX-LINE[type=dashed] [rep=end] {
 AX-LINE[type=slash] [rep=start],
 AX-LINE[type=slash] [rep=end] {
   background: linear-gradient(45deg, var(--_line-bg) 0, var(--_line-bg) 25%, transparent 25%, transparent 50%, var(--_line-bg) 50%, var(--_line-bg) 75%, transparent 75%, transparent);
-  background-size: 0.6rem 0.6rem;
+  background-size: calc(var(--_rem-root)*0.6) calc(var(--_rem-root)*0.6);
 }
 AX-LINE[size=sm] [rep=start],
 AX-LINE[size=sm] [rep=end] {
@@ -9437,7 +9453,7 @@ AX-BADGE:where([glassy]) {
   --_badge-bg: var(--_c-error-tl);
 }
 AX-BADGE:where([shadowed]) [rep=wrap] {
-  box-shadow: 0 0 0 0.2rem var(--_c-stage);
+  box-shadow: 0 0 0 calc(var(--_rem-root)*0.2) var(--_c-stage);
 }
 AX-BADGE[theme=prim] {
   --_badge-bg: var(--_c-prim);
@@ -9584,8 +9600,8 @@ AX-AVATAR AX-BADGE {
   inset-block-start: calc(-1*var(--_rem-space));
 }
 AX-AVATAR AX-BADGE:has([rep=wrap]:empty) {
-  inset-inline-end: -0.2rem;
-  inset-block-start: -0.2rem;
+  inset-inline-end: calc(-0.2*var(--_rem-root));
+  inset-block-start: calc(-0.2*var(--_rem-root));
 }
 AX-AVATAR [rep=tips] {
   font-size: var(--_rem-caption);
@@ -9733,7 +9749,7 @@ AX-AVATAR[theme=text-lt] {
   animation: _rotate360 1s linear infinite;
   background: transparent;
   box-sizing: border-box;
-  border: 0.2rem solid var(--_spin-bg);
+  border: calc(var(--_rem-root)*0.4) solid var(--_spin-bg);
   border-block-end-color: var(--_spin-c);
   border-radius: 50%;
   aspect-ratio: 1 / 1;
@@ -10084,7 +10100,7 @@ AX-CALLOUT:where([feature=plain]) {
 }
 ._message AX-CALLOUT {
   margin: var(--_m) var(--_m) 0 var(--_m);
-  box-shadow: 1px 1px 0.5rem var(--_c-black-8);
+  box-shadow: 1px 1px calc(var(--_rem-root)/2) var(--_c-black-8);
   display: none;
 }
 ._message AX-CALLOUT[noprogress] AX-PROGRESS {
@@ -10147,7 +10163,7 @@ AX-CALLOUT:where([feature=plain]) {
 }
 /*Result component*/
 AX-RESULT {
-  --_result-w: 5.4rem;
+  --_result-w: calc(var(--_rem-root)*5.4);
   --_result-ani: _draw-waiting;
   --_result-bg: var(--_c-text-sd);
   --_result-c-icon: var(--_c-info);
@@ -10269,7 +10285,7 @@ AX-RESULT[to=info] [rep=icon] ._in-1 {
   animation: _draw-line 400ms ease-out 1200ms forwards;
 }
 AX-RESULT[to=info] [rep=icon] ._in-2 {
-  transform-origin: 4.33492rem 2.35856rem;
+  transform-origin: calc(var(--_rem-root)*4.33492) calc(var(--_rem-root)*2.35856);
   animation: _draw-circle 400ms ease-out 800ms forwards;
 }
 AX-RESULT[to=info] [rep=icon] ._bg {
@@ -10291,7 +10307,7 @@ AX-RESULT[to=warn] [rep=icon] ._in-1 {
   animation: _draw-line 400ms ease-out 800ms forwards;
 }
 AX-RESULT[to=warn] [rep=icon] ._in-2 {
-  transform-origin: 4.33492rem 6.43337rem;
+  transform-origin: calc(var(--_rem-root)*4.33492) calc(var(--_rem-root)*6.43337);
   animation: _draw-circle 400ms ease-out 1200ms forwards;
 }
 AX-RESULT[to=warn] [rep=icon] ._bg {
@@ -10315,7 +10331,7 @@ AX-RESULT[to=issue] [rep=icon] ._in-1 {
   animation: _draw-line 400ms ease-out 800ms forwards;
 }
 AX-RESULT[to=issue] [rep=icon] ._in-2 {
-  transform-origin: 4.46612rem 6.05502rem;
+  transform-origin: calc(var(--_rem-root)*4.46612) calc(var(--_rem-root)*6.05502);
   animation: _draw-circle 400ms ease-out 1200ms forwards;
 }
 AX-RESULT[to=issue] [rep=icon] ._bg {
@@ -11011,7 +11027,7 @@ AX-FLAG[theme=caption] {
   --_post-g: var(--_rem-space);
   --_post-ar: 4/3;
   --_post-m-img: var(--_m);
-  --_post-h-img: 11rem;
+  --_post-h-img: calc(var(--_rem-root)*11);
   box-sizing: border-box;
   transition: all var(--_dur-1) linear;
   position: relative;
@@ -11745,7 +11761,7 @@ Last modified: 2025-08-02 23:16:17
   transform: scale(var(--_card-scale));
 }
 ._card:where(:not([unpadded])):hover {
-  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
+  box-shadow: 0 calc(var(--_rem-root)/2) var(--_rem-root) var(--_c-black-12);
 }
 ._card:where(:not([unpadded])):hover [rep=poster] > img {
   transform: scale(var(--_card-scale));
@@ -11753,7 +11769,7 @@ Last modified: 2025-08-02 23:16:17
 ._card[covered] {
   --_card-p: 0;
   --_card-bd: 0;
-  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
+  box-shadow: 0 calc(var(--_rem-root)/2) var(--_rem-root) var(--_c-black-12);
 }
 ._card[covered] [rep=poster] {
   border-top-left-radius: var(--_card-r);
@@ -11846,10 +11862,10 @@ Last modified: 2025-08-02 23:16:17
 }
 ._grade[placement=right]:where(:not([expanded])) ._grade-wrap:before {
   content: '';
-  width: 1rem;
+  width: var(--_rem-root);
   height: var(--_rem-input);
   position: absolute;
-  inset-inline-start: -1rem;
+  inset-inline-start: calc(-1*var(--_rem-root));
   inset-block-start: 0;
 }
 ._grade[placement=bottom-start]:where(:not([expanded])) ._grade-wrap {
@@ -11885,7 +11901,7 @@ Last modified: 2025-08-02 23:16:17
   transform: translate(calc(100% * var(--_dir-coef)), 0%);
   position: absolute;
   width: 100%;
-  inset-block-start: -0.1rem;
+  inset-block-start: calc(-1*var(--_rem-1px));
   inset-inline-end: 0;
   display: none;
 }
@@ -11914,7 +11930,7 @@ Last modified: 2025-08-02 23:16:17
   transition: all var(--_dur-2) linear;
 }
 ._grade:where(:not([expanded])) ul._grade-wrap li [rep=arrow] {
-  margin-inline-end: -1rem;
+  margin-inline-end: calc(-1*var(--_rem-root));
   margin-inline-start: calc(-1em + 1rem);
 }
 ._grade:where(:not([expanded])) ul._grade-wrap li [rep=arrow]:before {
@@ -11928,8 +11944,8 @@ Last modified: 2025-08-02 23:16:17
   width: auto;
 }
 ._grade:where([expanded]) ul._grade-wrap li [rep=arrow] {
-  margin-inline-start: -1.4rem;
-  margin-inline-end: calc(1.4rem - 1em);
+  margin-inline-start: calc(-1*var(--_rem-body));
+  margin-inline-end: calc(var(--_rem-body) - 1em);
   order: -10;
 }
 ._grade:where([expanded]) ul._grade-wrap li [rep=arrow]:before {
@@ -12182,7 +12198,7 @@ Last modified: 2025-08-02 23:16:17
   display: block;
 }
 /*
-Last modified: 2025-05-21 05:26:10
+Last modified: 2025-08-15 00:33:47
 */
 /*Infinite Scroll*/
 ._infinite ._infinite-item {
@@ -12191,7 +12207,7 @@ Last modified: 2025-05-21 05:26:10
 }
 ._infinite ._infinite-status {
   text-align: center;
-  padding: 1.4rem 0;
+  padding: var(--_rem-body) 0;
 }
 ._infinite ._infinite-status [rep=tips] {
   color: var(--_c-caption);
@@ -12269,11 +12285,11 @@ Last modified: 2025-05-21 05:26:10
   margin: auto 0;
   border-color: transparent transparent var(--_c-caption) transparent;
   border-style: solid;
-  border-width: 0 0.4rem 0.4rem 0.4rem;
+  border-width: 0 var(--_rem-min) var(--_rem-min) var(--_rem-min);
   transition: all var(--_dur-2) linear;
   position: absolute;
-  inset-block-start: calc(var(--_rem-subtitle) / 2 - 0.1rem - 0.4rem);
-  inset-inline-start: calc(var(--_rem-subtitle) / 2 - 0.4rem);
+  inset-block-start: calc(var(--_rem-subtitle) / 2 - var(--_rem-1px) - var(--_rem-min));
+  inset-inline-start: calc(var(--_rem-subtitle) / 2 - var(--_rem-min));
 }
 ._table-wrap ._sort-arrow:after {
   content: '';
@@ -12282,11 +12298,11 @@ Last modified: 2025-05-21 05:26:10
   margin: auto 0;
   border-color: var(--_c-text-bd) transparent transparent transparent;
   border-style: solid;
-  border-width: 0.4rem 0.4rem 0 0.4rem;
+  border-width: var(--_rem-min) var(--_rem-min) 0 var(--_rem-min);
   transition: all var(--_dur-2) linear;
   position: absolute;
-  inset-block-start: calc(var(--_rem-subtitle) / 2 + 0.1rem);
-  inset-inline-start: calc(var(--_rem-subtitle) / 2 - 0.4rem);
+  inset-block-start: calc(var(--_rem-subtitle) / 2 + var(--_rem-1px));
+  inset-inline-start: calc(var(--_rem-subtitle) / 2 - var(--_rem-min));
 }
 ._table-wrap label ~ * {
   font-size: var;
@@ -12324,7 +12340,7 @@ Last modified: 2025-05-21 05:26:10
   }
   ._operate [class*=icon] {
     color: var(--_c-caption);
-    font-size: 1.4rem;
+    font-size: var(--_rem-body);
     height: var(--_rem-list);
     line-height: var(--_rem-list);
     width: var(--_rem-list);
@@ -12348,12 +12364,12 @@ Last modified: 2025-05-21 05:26:10
   ._operate [class*=icon]:hover {
     background-color: var(--_c-stage);
     border: 1px solid var(--_c-text-bd);
-    line-height: calc(var(--_rem-list) - .2rem);
+    line-height: calc(var(--_rem-list) - calc(var(--_rem-root)*0.2));
     border-radius: var(--_r);
   } 
   ._operate [class*=icon]:hover ._badge {
-    inset-inline-end: -0.1rem;
-    inset-block-start: -0.1rem
+    inset-inline-end: -1px;
+    inset-block-start: -1px
   }
 */
 }
@@ -12370,18 +12386,18 @@ Last modified: 2025-05-21 05:26:10
   margin-block-end: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
 }
 ._table ._select._xs + span {
-  margin-block-start: calc(((-1*var(--_rem-list) + var(--_rem-biref))/2) - 0.4rem);
+  margin-block-start: calc(((-1*var(--_rem-list) + var(--_rem-biref))/2) - var(--_rem-min));
   margin-block-end: calc((-1*var(--_rem-list) + var(--_rem-biref))/2);
 }
 ._table ._select,
 ._table select {
-  width: 12rem;
+  width: calc(var(--_rem-root)*12);
 }
 ._table th > input[type=text],
 ._table td > input[type=text],
 ._table th > input[type=password],
 ._table td > input[type=password] {
-  width: 12rem;
+  width: calc(var(--_rem-root)*12);
   max-width: 100%;
 }
 ._table td > input[type=text][editing] {
@@ -12398,7 +12414,7 @@ Last modified: 2025-05-21 05:26:10
 ._table td > textarea[editing] {
   background: transparent;
   width: calc(100% + 2rem);
-  margin: -1rem;
+  margin: calc(-1*var(--_rem-root));
   box-shadow: inset 0 0 0 2px var(--_c-prim);
   border-radius: 0;
   border: none;
@@ -12515,10 +12531,10 @@ Last modified: 2025-05-21 05:26:10
 }
 ._table-tools [toolsright] > a,
 ._table-tools [toolsright] > ._btn-group {
-  margin-inline-start: 0.8rem;
+  margin-inline-start: var(--_rem-space);
 }
 ._table-tools ._table-search {
-  width: 20rem;
+  width: calc(var(--_rem-root)*20);
 }
 ._table-tools ._table-search ._form-input,
 ._table-tools ._table-search ._form-con {
@@ -13046,7 +13062,7 @@ AX-ICON[dir=v][bg] [rep=disk] img {
   font-size: var(--_rem-caption);
 }
 ._crumb [rep=hyphen][class*=icon] {
-  font-size: 1rem;
+  font-size: var(--_rem-root);
 }
 /*Pagination*/
 AX-PAGINATION {
@@ -13063,8 +13079,8 @@ AX-PAGINATION {
   --_pgn-c-sel: var(--_c-white);
   --_pgn-h: var(--_rem-display);
   --_pgn-fs: var(--_rem-caption);
-  --_pgn-p-child: 0.9rem;
-  --_pgn-m-child: 0.2rem;
+  --_pgn-p-child: calc(var(--_rem-root)*0.9);
+  --_pgn-m-child: calc(var(--_rem-root)*0.2);
   --_pgn-bc: var(--_c-text-bd);
   --_pgn-bc-sel: var(--_c-prim);
   --_pgn-bc-hov: var(--_c-prim);
@@ -13149,7 +13165,7 @@ AX-PAGINATION {
   justify-content: flex-end;
 }
 ._pagination [class*=icon] {
-  font-size: 1rem;
+  font-size: var(--_rem-root);
 }
 ._pagination a,
 ._pagination span:where([selected]),
@@ -13254,11 +13270,11 @@ AX-PAGINATION {
 }
 ._pagination[size=sm] {
   --_pgn-h: var(--_rem-list);
-  --_pgn-p-child: 0.6rem;
+  --_pgn-p-child: calc(var(--_rem-root)*0.6);
 }
 ._pagination[size=lg] {
   --_pgn-h: var(--_rem-input);
-  --_pgn-p-child: 1.4rem;
+  --_pgn-p-child: var(--_rem-body);
   --_pgn-r: var(--_r-input);
 }
 /*Tag & Tags*/
@@ -13866,7 +13882,7 @@ AX-FILTER[bordered] section {
   padding: var(--_rem-display) 0;
 }
 /*
-Last modified: 2025-06-12 16:07:35
+Last modified: 2025-08-15 00:24:08
 */
 /*Panel*/
 AX-PANEL {
@@ -14008,8 +14024,8 @@ AX-PANEL {
 ._panel > [rep=arrow][spinning]:before {
   content: "";
   display: inline-block;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: var(--_rem-body);
+  height: var(--_rem-body);
   background: var(--_spin) no-repeat scroll center;
   background-size: cover;
 }
@@ -14329,7 +14345,7 @@ ol:where(._group-lamp) li:before {
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
-  box-shadow: 0 -0.1rem 0 0 var(--_c-text-bd) inset;
+  box-shadow: 0 calc(-1*var(--_rem-1px)) 0 0 var(--_c-text-bd) inset;
   border-start-start-radius: inherit;
   border-start-end-radius: inherit;
 }
@@ -14796,8 +14812,8 @@ AX-TREE {
 ._tree ._tree-head > [rep=arrow][spinning]:before {
   content: "";
   display: inline-block;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: var(--_rem-body);
+  height: var(--_rem-body);
   background: var(--_spin) no-repeat scroll center;
   background-size: cover;
 }
@@ -14890,10 +14906,10 @@ AX-TREE {
   margin-inline-start: var(--_tree-g);
 }
 ._tree ._tree-head input[type=text] {
-  width: 9.2rem;
+  width: calc(var(--_rem-root)*9.2);
   height: var(--_tree-lh);
   line-height: var(--_tree-lh);
-  padding: 0 0.4rem;
+  padding: 0 var(--_rem-min);
 }
 ._tree ._tree-head[editing] > [rep=group] > [rep=label],
 ._tree ._tree-head[editing] > [rep=label] {
@@ -15357,7 +15373,7 @@ AX-TREE {
   border: 1px solid var(--_c-text-bd);
   border-radius: var(--_popup-r);
   box-sizing: border-box;
-  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
+  box-shadow: 0 calc(var(--_rem-root)/2) var(--_rem-root) var(--_c-black-12);
   animation-duration: var(--_dur-1);
   animation-fill-mode: both;
   visibility: hidden;
@@ -15380,8 +15396,8 @@ AX-TREE {
   width: calc(var(--_popup-w)*4);
 }
 ._popup:where(:not(._plain)) > [rep=arrow] {
-  width: 1rem;
-  height: 1rem;
+  width: var(--_rem-root);
+  height: var(--_rem-root);
   box-shadow: 1px 1px 0 var(--_c-text-bd);
   background-color: inherit;
 }
@@ -15494,7 +15510,7 @@ AX-TREE {
   display: block;
 }
 ._popup:where(:not(._plain)) iframe {
-  min-height: 40rem;
+  min-height: calc(var(--_rem-root)*40);
 }
 /*menu*/
 AX-MENU {
@@ -15570,7 +15586,7 @@ AX-MENU {
 }
 ._menu > ul > li:before {
   content: '';
-  width: 0.3rem;
+  width: calc(var(--_rem-root)*0.3);
   height: 0;
   background-color: var(--_menu-theme);
   position: absolute;
@@ -15691,22 +15707,22 @@ AX-MENU {
   display: none;
 }
 ._menu[lamp=dot] ._tree-head[selected]:before {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: calc(var(--_rem-root)*0.5);
+  height: calc(var(--_rem-root)*0.5);
   border-radius: 100%;
   background-color: var(--_menu-theme);
   content: '';
   position: absolute;
-  inset-block-start: calc((100% - 0.5rem)/2);
+  inset-block-start: calc((100% - var(--_rem-root)*0.5)/2);
 }
 ._menu[lamp=dot] > ul > li > ._tree-head[selected]:before {
   inset-inline-start: var(--_rem-min);
 }
 ._menu[lamp=dot][unpadded] > ul > li li > ._tree-head[selected]:before {
-  inset-inline-start: calc(var(--_rem-body) - 0.4rem);
+  inset-inline-start: calc(var(--_rem-body) - var(--_rem-min));
 }
 ._menu[lamp=dot]:where(:not([unpadded])) > ul > li li > ._tree-head[selected]:before {
-  inset-inline-start: calc(var(--_rem-body)*2 - 0.4rem);
+  inset-inline-start: calc(var(--_rem-body)*2 - var(--_rem-min));
 }
 ._menu[lamp=line] ._tree-head[selected]:before {
   position: absolute;
@@ -15746,7 +15762,7 @@ AX-MENU {
 }
 ._menu[spill]:where(:not([nav])) > ul > li > ul {
   inset-inline-end: calc(var(--_w-list)*-1 - 0.6rem);
-  inset-block-start: -1px;
+  inset-block-start: calc(-1*var(--_rem-1px));
 }
 ._menu[spill]:where(:not([nav])) > ul ul {
   width: var(--_w-list);
@@ -15754,7 +15770,7 @@ AX-MENU {
   background-color: var(--_c-stage);
   border: 1px solid var(--_c-text-bd);
   border-radius: var(--_menu-r);
-  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
+  box-shadow: 0 calc(var(--_rem-root)/2) var(--_rem-root) var(--_c-black-12);
 }
 ._menu[spill]:where(:not([nav])) > ul ul > li:first-child,
 ._menu[spill]:where(:not([nav])) > ul ul > li:first-child > :first-child {
@@ -15770,8 +15786,8 @@ AX-MENU {
   display: none;
 }
 ._menu[spill]:where(:not([nav])) > ul > li > ul > li ul {
-  inset-inline-end: calc(-100% - 0.1rem - 0.6rem);
-  inset-block-start: -0.1rem;
+  inset-inline-end: calc(-100% - 1px - var(--_rem-min)*1.5);
+  inset-block-start: -1px;
 }
 ._menu[spill]:where(:not([nav])) > ul > li li {
   border-block-end: 1px solid var(--_c-text-bd);
@@ -15863,7 +15879,7 @@ AX-MENU {
   margin-inline-end: 0;
 }
 ._menu:where([nav]) > ul > li > ul {
-  inset-inline-start: -0.1rem;
+  inset-inline-start: -1px;
   inset-block-start: calc(100% + 0.6rem);
 }
 ._menu:where([nav]) > ul ul {
@@ -15872,7 +15888,7 @@ AX-MENU {
   background-color: var(--_c-stage);
   border: 1px solid var(--_c-text-bd);
   border-radius: var(--_menu-r);
-  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
+  box-shadow: 0 calc(var(--_rem-root)/2) var(--_rem-root) var(--_c-black-12);
 }
 ._menu:where([nav]) > ul ul > li:first-child,
 ._menu:where([nav]) > ul ul > li:first-child > :first-child {
@@ -15888,8 +15904,8 @@ AX-MENU {
   display: none;
 }
 ._menu:where([nav]) > ul > li > ul > li ul {
-  inset-inline-end: calc(-100% - 0.1rem - 0.6rem);
-  inset-block-start: -0.1rem;
+  inset-inline-end: calc(-100% - 1px - var(--_rem-min)*1.5);
+  inset-block-start: -1px;
 }
 ._menu:where([nav]) > ul > li li {
   border-block-end: 1px solid var(--_c-text-bd);
@@ -16052,7 +16068,7 @@ AX-MENU {
 ._tab ._panel-body > ._tab-body iframe,
 ._tab ._panel-body > ._panel-inner > ._tab-body iframe {
   width: 100%;
-  min-height: 40rem;
+  min-height: calc(var(--_rem-root)*40);
 }
 ._tab:where([embed]) > ._tab-body,
 ._tab:where([embed]) ._panel-body > ._tab-body,
@@ -16099,7 +16115,7 @@ AX-MENU {
   height: 100%;
   width: 100%;
   position: fixed;
-  inset-inline-start: -1000rem;
+  inset-inline-start: -10000px;
   inset-block-start: 0;
   z-index: 810;
   /*   &:where([placement=top][size=sm]) ._drawer-wrap ._drawer-body {
@@ -16346,7 +16362,7 @@ AX-MENU {
   display: block;
 }
 ._drawer iframe {
-  min-height: 40rem;
+  min-height: calc(var(--_rem-root)*40);
 }
 ._drawer ._menu {
   width: 100%;
@@ -16390,7 +16406,7 @@ AX-MENU {
   border-block-start: 1px solid var(--_c-text-bd);
 }
 ._drawer:not(:has(._drawer-mask)) ._drawer-wrap {
-  box-shadow: 0 0.2rem 1rem var(--_c-black-12);
+  box-shadow: 0 calc(var(--_rem-root)*0.4) var(--_rem-root) var(--_c-black-12);
 }
 @media (max-width: 899px) {
   ._drawer {
@@ -16416,7 +16432,7 @@ AX-MENU {
   justify-content: var(--_dialog-row);
   align-items: var(--_dialog-col);
   position: fixed;
-  inset-inline-start: -10000rem;
+  inset-inline-start: -100000px;
   inset-block-start: 0;
   z-index: 840;
 }
@@ -16634,7 +16650,7 @@ AX-MENU {
   display: block;
 }
 ._dialog iframe {
-  min-height: 40rem;
+  min-height: calc(var(--_rem-root)*40);
   width: 100%;
 }
 ._dialog ._menu {
@@ -16662,13 +16678,13 @@ AX-MENU {
 }
 ._dialog:not(:has(._dialog-mask)) ._dialog-wrap {
   border: 1px solid var(--_c-text-bd);
-  box-shadow: 0 0.2rem 1rem var(--_c-black-12);
+  box-shadow: 0 calc(var(--_rem-root)*0.4) var(--_rem-root) var(--_c-black-12);
 }
 ._dialog[feature=confirm] ._dialog-wrap,
 ._dialog[feature=alert] ._dialog-wrap,
 ._dialog[feature=prompt] ._dialog-wrap {
   border: 1px solid var(--_c-text-bd);
-  box-shadow: 0 0.2rem 1rem var(--_c-black-12);
+  box-shadow: 0 calc(var(--_rem-root)*0.4) var(--_rem-root) var(--_c-black-12);
 }
 /*ax tooltip*/
 ._tooltip {
@@ -16683,7 +16699,7 @@ AX-MENU {
   color: var(--_tip-c);
   font-size: var(--_rem-caption);
   line-height: var(--_rem-subtitle);
-  padding: 0.5rem 1rem;
+  padding: calc(var(--_rem-root)*0.5) var(--_rem-root);
   box-sizing: border-box;
 }
 ._tooltip:where([theme*="-"]) > [rep=arrow] {
@@ -17526,12 +17542,12 @@ AX-RANGE > ._range {
 ._range {
   --_range-w: var(--_w-input);
   --_range-sz: var(--_rem-input);
-  --_range-sz-handle: 1.6rem;
+  --_range-sz-handle: var(--_rem-lead);
   --_range-sz-track: 5px;
   --_range-sz-major: var(--_rem-body);
   --_range-sz-minor: var(--_rem-space);
-  --_range-sz-h: 20rem;
-  --_range-sz-w: 9.4rem;
+  --_range-sz-h: calc(var(--_rem-root)*20);
+  --_range-sz-w: calc(var(--_rem-root)*9.4);
   user-select: none;
   font-size: var(--_rem-caption);
   height: var(--_range-sz);
@@ -17658,11 +17674,11 @@ AX-RANGE > ._range {
 ._range ._range-bubble > * {
   font-size: var(--_rem-caption);
   line-height: var(--_rem-subtitle);
-  padding: 0 0.5rem;
+  padding: 0 calc(var(--_rem-root)*0.5);
   border-radius: var(--_r);
   display: inline-flex;
   position: absolute;
-  inset-block-start: calc(-1*var(--_rem-subtitle) - (var(--_range-sz-handle) - var(--_range-sz-track))/2 - 0.6rem);
+  inset-block-start: calc(-1*var(--_rem-subtitle) - (var(--_range-sz-handle) - var(--_range-sz-track))/2 - var(--_rem-root)*0.6);
   z-index: 1;
 }
 ._range ._range-bubble [rep=from],
@@ -17745,15 +17761,15 @@ AX-RANGE > ._range {
   white-space: nowrap;
   text-align: center;
   position: absolute;
-  inset-block-start: calc(var(--_range-sz-major) + 0.2rem);
+  inset-block-start: calc(var(--_range-sz-major) + var(--_rem-root)*0.2);
   inset-inline-start: 0;
   transform: translateX(calc(-50% * var(--_dir-coef)));
 }
 ._range ._range-ruler div {
-  height: 0.2rem;
+  height: calc(var(--_rem-root)*0.2);
   background-color: var(--_c-text-bd);
   position: absolute;
-  inset-block-start: calc(var(--_range-sz-minor) - 0.2rem);
+  inset-block-start: calc(var(--_range-sz-minor) - var(--_rem-root)*0.2);
 }
 ._range:not([inert])[multiple] [rep=thumb]:hover {
   cursor: w-resize;
@@ -17894,14 +17910,14 @@ AX-RANGE > ._range {
 ._range[flow=v] ._range-ruler li:after {
   text-align: start;
   inset-block-start: 0;
-  inset-inline-start: calc(var(--_range-sz-major) + 0.2rem);
+  inset-inline-start: calc(var(--_range-sz-major) + var(--_rem-root)*0.2);
   transform: translateY(-50%);
 }
 ._range[flow=v] ._range-ruler [rep=fence] {
   height: 0;
-  width: 0.2rem;
+  width: calc(var(--_rem-root)*0.2);
   inset-block-start: auto;
-  inset-inline-start: calc(var(--_range-sz-minor) - 0.2rem);
+  inset-inline-start: calc(var(--_range-sz-minor) - var(--_rem-root)*0.2);
 }
 ._range[flow=v] ._range-btn[rep=increase],
 ._range[flow=v] ._range-btn[rep=decrease],
@@ -17930,8 +17946,8 @@ AX-RANGE > ._range {
   --_range-sz-track: 3px;
   --_range-sz-major: var(--_rem-space);
   --_range-sz-minor: var(--_rem-min);
-  --_range-sz-h: 20rem;
-  --_range-sz-w: 9.4rem;
+  --_range-sz-h: calc(var(--_rem-root)*20);
+  --_range-sz-w: calc(var(--_rem-root)*9.4);
 }
 ._range[size=lg] {
   --_range-sz: var(--_rem-max);
@@ -17939,8 +17955,8 @@ AX-RANGE > ._range {
   --_range-sz-track: var(--_rem-caption);
   --_range-sz-major: var(--_rem-subtitle);
   --_range-sz-minor: var(--_rem-space);
-  --_range-sz-h: 30rem;
-  --_range-sz-w: 12.4rem;
+  --_range-sz-h: calc(var(--_rem-root)*30);
+  --_range-sz-w: calc(var(--_rem-root)*12.4);
 }
 ._range[size=lg] ._range-btn {
   font-size: var(--_rem-subtitle);
@@ -18327,7 +18343,7 @@ AX-RANGE > ._range {
 }
 ._swipe > ._swipe-wrap > * > iframe {
   width: 100%;
-  min-height: 40rem;
+  min-height: calc(var(--_rem-root)*40);
 }
 ._swipe:where([gridded][flow=v]) {
   height: 100%;
@@ -18445,13 +18461,13 @@ AX-RANGE > ._range {
   font-size: var(--_rem-caption);
   width: var(--_rem-subtitle);
   height: var(--_rem-subtitle);
-  inset-inline-end: 1rem;
+  inset-inline-end: var(--_rem-root);
 }
 ._swipe[flow=v] > ._swipe-prev {
-  inset-block-start: 1rem;
+  inset-block-start: var(--_rem-root);
 }
 ._swipe[flow=v] > ._swipe-next {
-  inset-block-end: 1rem;
+  inset-block-end: var(--_rem-root);
 }
 ._swipe[flow=v] > ._swipe-pgn[type=lamp],
 ._swipe[flow=v] > ._swipe-pgn[type=dot],
@@ -18515,7 +18531,7 @@ AX-RANGE > ._range {
   background-size: auto min(var(--_rem-input),100%);
 }
 /*
-Last modified: 2025-08-01 01:02:05
+Last modified: 2025-08-15 17:50:05
 */
 /*Progress*/
 AX-PROGRESS {
@@ -18531,7 +18547,7 @@ AX-PROGRESS {
   --_prog-grad: var(--_c-prim-aj);
   --_prog-bg: var(--_c-text-bg);
   --_prog-w: calc(var(--_rem-input)*3);
-  --_prog-thk: 0.6rem;
+  --_prog-thk: calc(var(--_rem-root)*0.6);
   --_prog-fs: var(--_rem-body);
   --_prog-lh: var(--_rem-list);
   width: 100%;
@@ -18649,10 +18665,10 @@ AX-PROGRESS {
   inset-block-start: 60%;
 }
 ._progress[thk=xxs] {
-  --_prog-thk: 0.1rem;
+  --_prog-thk: var(--_rem-1px);
 }
 ._progress[thk=xs] {
-  --_prog-thk: 0.2rem;
+  --_prog-thk: calc(var(--_rem-root)*0.2);
 }
 ._progress[thk=sm] {
   --_prog-thk: var(--_rem-min);
@@ -18786,7 +18802,7 @@ AX-PROGRESS {
   scale: -1 1;
 }
 /*
-Last modified: 2025-08-01 00:59:38
+Last modified: 2025-08-15 18:04:10
 */
 /*Date and datetime picker*/
 ._datetime {
@@ -18842,21 +18858,21 @@ Last modified: 2025-08-01 00:59:38
 }
 ._datetime [rep=detail] {
   border-inline-start: 1px solid var(--_c-text-bd);
-  width: 24rem;
+  width: calc(var(--_rem-root)*24);
   padding: var(--_rem-space);
   box-sizing: border-box;
 }
 ._datetime [rep=detail] [rep=heading] {
-  padding-block-end: 0.8rem;
+  padding-block-end: var(--_rem-space);
   border-block-end: 1px solid var(--_c-text-bd);
 }
 ._datetime [rep=detail] [rep=lunar] {
-  padding-block-start: 0.8rem;
-  padding-block-end: 0.8rem;
+  padding-block-start: var(--_rem-space);
+  padding-block-end: var(--_rem-space);
   border-block-end: 1px solid var(--_c-text-bd);
 }
 ._datetime [rep=detail] [rep=event] {
-  padding-block-start: 0.8rem;
+  padding-block-start: var(--_rem-space);
 }
 ._datetime [rep=foot] {
   box-sizing: border-box;
@@ -18925,7 +18941,7 @@ Last modified: 2025-08-01 00:59:38
 }
 ._datetime [rep=result] {
   box-sizing: border-box;
-  padding: 0.8rem;
+  padding: var(--_rem-space);
 }
 ._datetime [rep=outer] {
   position: relative;
@@ -19016,21 +19032,21 @@ Last modified: 2025-08-01 00:59:38
   position: relative;
 }
 ._datetime [rep=main] [rep=body] {
-  min-height: 28rem;
+  min-height: calc(var(--_rem-root)*28);
   overflow: hidden;
   box-sizing: border-box;
   padding: 0 var(--_rem-space) var(--_rem-space) var(--_rem-space);
   position: relative;
 }
 ._datetime [rep=main] [rep=body] [rep=pages] {
-  width: calc(100% - 1.6rem);
+  width: calc(100% - var(--_rem-lead));
   text-align: center;
   position: absolute;
-  inset-inline-start: 0.8rem;
+  inset-inline-start: var(--_rem-space);
   inset-block-end: 0;
 }
 ._datetime [rep=main] [rep=body] [rep=pages] > * {
-  height: 4.8rem;
+  height: calc(var(--_rem-root)*4.8);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19073,8 +19089,8 @@ Last modified: 2025-08-01 00:59:38
 ._datetime [rep=main] [rep=column] > * {
   font-size: var(--_rem-caption);
   border-block-end: 1px solid var(--_c-text-bd);
-  padding-block-end: 0.8rem;
-  margin-block-end: 0.8rem;
+  padding-block-end: var(--_rem-space);
+  margin-block-end: var(--_rem-space);
 }
 ._datetime[full] {
   display: block;
@@ -19103,7 +19119,7 @@ Last modified: 2025-08-01 00:59:38
   position: absolute;
 }
 ._datetime:not([type=daytime]):has([layout=plain]) [rep=main] [panels=hms] {
-  inset-block-end: calc(var(--_rem-input) + 0.1rem);
+  inset-block-end: calc(var(--_rem-input) + var(--_rem-1px));
 }
 ._datetime [rep=list] [rep=content] {
   display: inline-flex;
@@ -19127,15 +19143,15 @@ Last modified: 2025-08-01 00:59:38
 }
 ._datetime [rep=list] [busy] > [rep=content]:after {
   content: '';
-  width: 0.4rem;
-  height: 0.4rem;
+  width: var(--_rem-min);
+  height: var(--_rem-min);
   border-radius: 100%;
   background-color: var(--_c-prim);
   display: inline-block;
   position: absolute;
   inset-inline-start: 50%;
   inset-block-end: 2px;
-  margin-inline-start: -0.2rem;
+  margin-inline-start: calc(-0.2*var(--_rem-root));
 }
 ._datetime [rep=list] [busy][selected] > [rep=content]:after {
   background-color: var(--_c-stage);
@@ -19161,13 +19177,13 @@ Last modified: 2025-08-01 00:59:38
 }
 ._datetime [panel=date] [rep=content] {
   width: var(--_date-label-h);
-  margin: 0.2rem;
+  margin: calc(var(--_rem-root)*0.2);
 }
 ._datetime [panel=lunar] [rep=content] {
   width: calc(var(--_rem-caption)*4);
   height: calc(var(--_rem-caption)*4);
   border-radius: var(--_r);
-  margin: 0.2rem 0;
+  margin: calc(var(--_rem-root)*0.2) 0;
 }
 ._datetime [panel=lunar] [rep=content] u {
   font-size: var(--_rem-caption);
@@ -19184,25 +19200,25 @@ Last modified: 2025-08-01 00:59:38
   inset-block-start: 1px;
 }
 ._datetime [panel=year] [rep=content] {
-  width: calc(26.6rem / 3);
-  margin: calc((4.8rem - var(--_date-label-h))/2) 0;
+  width: calc(var(--_rem-root)*26.6 / 3);
+  margin: calc((var(--_rem-root)*4.8 - var(--_date-label-h))/2) 0;
 }
 ._datetime [panel=month] [rep=content] {
-  width: calc(26.6rem / 3);
-  margin: calc((6.8rem - var(--_date-label-h))/2) 0;
+  width: calc(var(--_rem-root)*26.6 / 3);
+  margin: calc((var(--_rem-root)*6.8 - var(--_date-label-h))/2) 0;
 }
 ._datetime[lunar] [rep=main] [rep=body] {
-  min-height: 36.4rem;
+  min-height: calc(var(--_rem-root)*36.4);
 }
 ._datetime[lunar] [panel=year] [rep=content],
 ._datetime[lunar] [panel=month] [rep=content] {
-  width: calc(33.6rem / 3);
+  width: calc(var(--_rem-root)*33.6 / 3);
 }
 ._datetime[lunar] [panel=year] [rep=content] {
-  margin: 1.4rem 0;
+  margin: var(--_rem-body) 0;
 }
 ._datetime[lunar] [panel=month] [rep=content] {
-  margin: 2.7rem 0;
+  margin: calc(var(--_rem-root)*2.7) 0;
 }
 ._datetime [panel=daytime] [rep=content] {
   height: var(--_rem-display);
@@ -19211,7 +19227,7 @@ Last modified: 2025-08-01 00:59:38
   margin: 0;
 }
 ._datetime [panel=daytime] [rep=list] {
-  margin: 0.2rem 0;
+  margin: calc(var(--_rem-root)*0.2) 0;
 }
 ._datetime [panel=daytime] [rep=list] > * {
   height: calc(var(--_rem-display)*7 + var(--_rem-body));
@@ -19226,7 +19242,7 @@ Last modified: 2025-08-01 00:59:38
 }
 ._datetime [panel=daytime] [rep=list] > * > :nth-child(odd) {
   justify-content: flex-end;
-  padding-inline-start: 0.4rem;
+  padding-inline-start: var(--_rem-min);
 }
 ._datetime [panel=daytime] [rep=list] > * > :nth-child(even) {
   justify-content: flex-start;
@@ -19317,7 +19333,7 @@ AX-RATE > ._rate {
   --_rate-p: calc((var(--_em-input) - var(--_em-subtitle))/2);
   --_rate-sz: var(--_em-subtitle);
   --_rate-fs: var(--_em-body);
-  --_rate-g: 0.2rem;
+  --_rate-g: calc(var(--_rem-root)*0.2);
   padding: var(--_rate-p) 0;
   line-height: var(--_rate-sz);
   display: inline-flex;
@@ -19388,12 +19404,12 @@ AX-RATE > ._rate {
   --_rate-p: calc((var(--_em-display) - var(--_em-body))/2);
   --_rate-sz: var(--_em-body);
   --_rate-fs: var(--_em-caption);
-  --_rate-g: 0.1rem;
+  --_rate-g: var(--_rem-1px);
 }
 ._rate:where([size=lg]) {
   --_rate-p: calc((var(--_em-max) - var(--_em-input))/2);
   --_rate-sz: var(--_em-input);
-  --_rate-g: 0.4rem;
+  --_rate-g: var(--_rem-min);
 }
 ._rate [rep=clear] {
   font-size: var(--_rate-fs);
@@ -19503,8 +19519,8 @@ AX-ACCORDION > [rep=wrap] > ._accordion {
 ._accordion ._accordion-head > [rep=group] > [rep=arrow][spinning]:before {
   content: "";
   display: inline-block;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: var(--_rem-body);
+  height: var(--_rem-body);
   background: var(--_spin) no-repeat scroll center;
   background-size: cover;
 }
@@ -20245,7 +20261,7 @@ AX-UPLOAD {
   border: 1px solid var(--_c-text-bd);
   background-color: var(--_c-stage);
   border-radius: var(--_r);
-  height: calc(var(--_rem-subtitle) * 3 + 1.6rem);
+  height: calc(var(--_rem-subtitle) * 3 + var(--_rem-lead));
   overflow: hidden;
   padding: var(--_rem-space);
   justify-content: flex-start;
@@ -20289,7 +20305,7 @@ AX-UPLOAD {
   color: var(--_c-error);
 }
 ._upload[type=bullet] li:hover {
-  box-shadow: 1px 1px 0.5rem var(--_c-black-8);
+  box-shadow: 1px 1px calc(var(--_rem-root)/2) var(--_c-black-8);
 }
 ._upload[type=bullet] ._upload-list li:where(:not(:last-child)) {
   margin-block-end: var(--_rem-space);
@@ -20423,7 +20439,7 @@ AX-UPLOAD {
   font-size: var(--_rem-max);
 }
 ._upload[type=cube] li:hover {
-  box-shadow: 1px 1px 0.5rem var(--_c-black-8);
+  box-shadow: 1px 1px calc(var(--_rem-root)/2) var(--_c-black-8);
 }
 ._upload[type=cube] li[valid=failed] {
   color: var(--_c-error);
@@ -20465,7 +20481,7 @@ AX-UPLOAD {
 }
 @supports not (aspect-ratio: 1 / 1) {
   ._upload[type=card] li ._upload-file {
-    height: 14rem;
+    height: calc(var(--_rem-root)*14);
   }
 }
 ._upload[type=card] li ._upload-info {
@@ -20490,7 +20506,7 @@ AX-UPLOAD {
   color: var(--_c-error);
 }
 ._upload[type=card] li:hover ._upload-file {
-  box-shadow: 1px 1px 0.5rem var(--_c-black-8);
+  box-shadow: 1px 1px calc(var(--_rem-root)/2) var(--_c-black-8);
 }
 ._upload[type=table] ._upload-file {
   max-width: calc(var(--_rem-display) * 2);
@@ -20608,7 +20624,7 @@ AX-UPLOAD {
   color: var(--_c-caption);
   cursor: pointer;
   text-align: center;
-  padding: 1.4rem;
+  padding: var(--_rem-body);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -21015,13 +21031,13 @@ AX-STEP {
   --_step-c-tips: var(--_c-white);
   --_step-bg-track: var(--_c-prim);
   --_step-bg-node: transparent;
-  --_step-h-track: 0.2rem;
-  --_step-lh-track: 0.6rem;
+  --_step-h-track: calc(var(--_rem-root)*0.2);
+  --_step-lh-track: calc(var(--_rem-root)*0.6);
   --_step-fs-label: var(--_rem-lead);
   --_step-fs-tips: var(--_rem-caption);
   --_step-fs-node: var(--_rem-caption);
   --_step-fs-brief: var(--_rem-caption);
-  --_step-w-tips: 6rem;
+  --_step-w-tips: calc(var(--_rem-root)*6);
   text-align: center;
   box-sizing: border-box;
   display: block;
@@ -21041,10 +21057,10 @@ AX-STEP ._step-item ._step-head {
   color: var(--_step-c-head);
   font-size: var(--_step-fs-tips);
   line-height: var(--_rem-subtitle);
-  padding: 0.2rem 0.6rem;
+  padding: calc(var(--_rem-root)*0.2) calc(var(--_rem-root)*0.6);
   border-radius: var(--_r);
   position: relative;
-  margin-block-end: 0.8rem;
+  margin-block-end: var(--_rem-space);
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -21064,7 +21080,7 @@ AX-STEP ._step-item [rep=node] {
   width: var(--_step-lh-track);
   height: var(--_step-lh-track);
   border-radius: 100%;
-  border: 0.2rem solid var(--_step-bg-track);
+  border: calc(var(--_rem-root)*0.2) solid var(--_step-bg-track);
   background-color: var(--_step-bg-node);
   display: inline-flex;
   justify-content: center;
@@ -21121,13 +21137,13 @@ AX-STEP ._step-item[active] ._step-head:before {
   content: '';
   width: 0;
   height: 0;
-  border-inline-end: 0.5rem solid transparent;
-  border-inline-start: 0.5rem solid transparent;
-  border-block-start: 0.5rem solid var(--_step-bg-track);
-  margin-inline-start: -0.5rem;
+  border-inline-end: calc(var(--_rem-root)*0.5) solid transparent;
+  border-inline-start: calc(var(--_rem-root)*0.5) solid transparent;
+  border-block-start: calc(var(--_rem-root)*0.5) solid var(--_step-bg-track);
+  margin-inline-start: calc(-0.5*var(--_rem-root));
   position: absolute;
   inset-inline-start: 50%;
-  inset-block-end: -0.4rem;
+  inset-block-end: calc(-1*var(--_rem-min));
 }
 AX-STEP[justify]:not([dir=v]) ._step-item:first-child {
   text-align: start;
@@ -21159,7 +21175,7 @@ AX-STEP[justify]:not([dir=v]) ._step-item:last-child:not([active]) ._step-head {
   padding-inline-end: 0;
 }
 AX-STEP[justify]:not([dir=v]) ._step-item:first-child[active] ._step-head:before {
-  inset-inline-start: 0.5rem;
+  inset-inline-start: calc(var(--_rem-root)*0.5);
 }
 AX-STEP[justify]:not([dir=v]) ._step-item:last-child[active] ._step-head:before {
   inset-inline-start: auto;
@@ -21174,12 +21190,12 @@ AX-STEP[type=circle-fill] {
 }
 AX-STEP[type=circle][justify] ._step-item:first-child[active] ._step-head:before,
 AX-STEP[type=circle-fill][justify] ._step-item:first-child[active] ._step-head:before {
-  inset-inline-start: 1.1rem;
+  inset-inline-start: calc(var(--_rem-root)*1.1);
 }
 AX-STEP[type=circle][justify] ._step-item:last-child[active] ._step-head:before,
 AX-STEP[type=circle-fill][justify] ._step-item:last-child[active] ._step-head:before {
   inset-inline-start: auto;
-  inset-inline-end: 0.6rem;
+  inset-inline-end: calc(var(--_rem-root)*0.6);
 }
 AX-STEP[type=circle] ._step-item [rep=node] img,
 AX-STEP[type=circle-fill] ._step-item [rep=node] img {
@@ -21206,11 +21222,11 @@ AX-STEP[type=plain] ._step-item [rep=node] img {
   max-width: var(--_step-lh-track);
 }
 AX-STEP[type=plain][justify] ._step-item:first-child[active] ._step-head:before {
-  inset-inline-start: 2.2rem;
+  inset-inline-start: calc(var(--_rem-root)*2.2);
 }
 AX-STEP[type=plain][justify] ._step-item:last-child[active] ._step-head:before {
   inset-inline-start: auto;
-  inset-inline-end: 1.7rem;
+  inset-inline-end: calc(var(--_rem-root)*1.7);
 }
 AX-STEP[dir=v] [rep=wrap] {
   flex-direction: column;
@@ -21229,11 +21245,11 @@ AX-STEP[dir=v] ._step-item ._step-track {
   box-sizing: border-box;
 }
 AX-STEP[dir=v] ._step-item ._step-track div {
-  width: 0.2rem;
-  height: 6rem;
+  width: calc(var(--_rem-root)*0.2);
+  height: calc(var(--_rem-root)*6);
 }
 AX-STEP[dir=v] ._step-item ._step-track div:first-child {
-  height: 0.7rem;
+  height: calc(var(--_rem-root)*0.7);
 }
 AX-STEP[dir=v]:where([type*=circle], [type=plain]) ._step-item ._step-track div:first-child {
   height: 0;
@@ -21263,8 +21279,8 @@ AX-STEP[dir=v] ._step-body [rep=brief] {
 AX-STEP[dir=v] ._step-head {
   width: var(--_step-w-tips);
   margin-block-end: 0;
-  margin-inline-end: 0.8rem;
-  padding: 0.2rem 0;
+  margin-inline-end: var(--_rem-space);
+  padding: calc(var(--_rem-root)*0.2) 0;
   height: fit-content;
 }
 AX-STEP[dir=v] ._step-item[active] ._step-head:before {
@@ -21272,13 +21288,13 @@ AX-STEP[dir=v] ._step-item[active] ._step-head:before {
   height: 0;
   margin-inline-start: 0;
   border-inline-end: 0;
-  border-block-start: 0.5rem solid transparent;
-  border-block-end: 0.5rem solid transparent;
-  border-inline-start: 0.5rem solid var(--_step-bg-track);
+  border-block-start: calc(var(--_rem-root)*0.5) solid transparent;
+  border-block-end: calc(var(--_rem-root)*0.5) solid transparent;
+  border-inline-start: calc(var(--_rem-root)*0.5) solid var(--_step-bg-track);
   inset-inline-start: auto;
   inset-block-end: auto;
-  inset-block-start: 0.6rem;
-  inset-inline-end: -0.5rem;
+  inset-block-start: calc(var(--_rem-root)*0.6);
+  inset-inline-end: calc(-0.5*var(--_rem-root));
 }
 AX-STEP[dir=v][type=plain] ._step-item [rep=node] {
   padding: 0;
@@ -21643,7 +21659,7 @@ AX-SKELETON [rep=wrap] > section {
   flex-direction: var(--_skel-dir);
 }
 AX-SKELETON[type*=avatar] [rep=legend] {
-  height: 6rem;
+  height: calc(var(--_rem-root)*6);
   aspect-ratio: 1/1;
   border-radius: 100%;
   background-color: var(--_skel-bg);
@@ -21660,7 +21676,7 @@ AX-SKELETON[type*=avatar] [rep=text] * {
   margin-block-start: var(--_skel-m-sm);
 }
 AX-SKELETON[type*=avatar] [rep=text] *:first-child {
-  width: 8rem;
+  width: calc(var(--_rem-root)*8);
 }
 AX-SKELETON:where(:not([cols]))[type*=avatar] section:where(:not(:first-child)) {
   margin-block-start: var(--_skel-m-lg);
@@ -21672,7 +21688,7 @@ AX-SKELETON[type=avatar] [rep=text] {
   align-items: center;
 }
 AX-SKELETON[type=avatar] [rep=text] *:last-child {
-  width: 12rem;
+  width: calc(var(--_rem-root)*12);
 }
 AX-SKELETON[type=avatar-left] [rep=text],
 AX-SKELETON[type=avatar-right] [rep=text] {
@@ -21689,7 +21705,7 @@ AX-SKELETON[type=avatar-right] [rep=legend] {
   margin-inline-start: var(--_skel-m-md);
 }
 AX-SKELETON[type*=post] [rep=legend] {
-  height: 6rem;
+  height: calc(var(--_rem-root)*6);
   aspect-ratio: 4/3;
   border-radius: var(--_skel-r);
   background-color: var(--_skel-bg);
@@ -21746,7 +21762,7 @@ AX-SKELETON[type*=bullet] [rep=text] *:first-child {
   flex: auto;
 }
 AX-SKELETON[type*=bullet] [rep=text] *:last-child {
-  width: 6rem;
+  width: calc(var(--_rem-root)*6);
   margin-inline-start: var(--_skel-m-md);
 }
 AX-SKELETON:where(:not([cols]))[type*=bullet] section:where(:not(:first-child)) {
@@ -21977,7 +21993,7 @@ AX-SKELETON[shape=square] {
 }
 ._viewer[mode=popup]:where([inverted]) {
   border: 1px solid var(--_c-text-bd);
-  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
+  box-shadow: 0 calc(var(--_rem-root)/2) var(--_rem-root) var(--_c-black-12);
 }
 ._viewer[inverted] {
   --_viewer-bg: var(--_c-white-92);
@@ -22173,7 +22189,7 @@ AX-SKELETON[shape=square] {
 ._viewer ._viewer-thumb ._swipe-wrap > *:after {
   content: '';
   box-sizing: border-box;
-  border: 0.4rem solid transparent;
+  border: var(--_rem-min) solid transparent;
   transition: all var(--_dur-1) linear;
   display: block;
   width: 100%;
@@ -22415,7 +22431,7 @@ AX-SKELETON[shape=square] {
 ._toast[feature=plain] {
   --_toast-bg: var(--_c-stage-80);
   border: 1px solid var(--_c-text-bd);
-  box-shadow: 0 0.5rem 1rem var(--_c-black-12);
+  box-shadow: 0 calc(var(--_rem-root)/2) var(--_rem-root) var(--_c-black-12);
 }
 ._dodge {
   position: relative;
@@ -22446,7 +22462,7 @@ AX-SKELETON[shape=square] {
 ._dodge[dodged]:after {
   content: '';
   height: var(--_px-caption);
-  width: 18rem;
+  width: calc(var(--_rem-root)*18);
   background: transparent;
   position: absolute;
   inset-inline-start: 0;
@@ -23212,7 +23228,7 @@ AX-SKELETON[shape=square] {
 /* Tablet device (xs+sm+md) */
 @media (min-width: 600px) and (max-width: 899px) and (orientation: portrait), (min-width: 900px) and (max-width: 1199px), (min-width: 1200px) and (max-width: 1535px) and (hover: none) {
   :root {
-    --_fs-root: clamp(calc(1px*var(--_num-root)*16/14), 1vw, calc(180px/14));
+    --_fs-base: clamp(calc(1px*var(--_num-base)*16/14), 1vw, calc(180px/14));
     --_screen: tb;
   }
   *._split-tb,
@@ -23944,7 +23960,7 @@ AX-SKELETON[shape=square] {
 @media (min-width: 1200px) and (max-width: 1535px) and (hover: hover), (min-width: 1536px) {
   :root {
     --_ff-body: "microsoft yahei", "Microsoft JhengHei", "Arial", "Helvetica Neue", "sans-serif", "Yu Mincho", "simsun";
-    --_fs-root: calc(1px*var(--_num-root));
+    --_fs-base: calc(1px*var(--_num-base));
     --_l-text: 20%;
     --_screen: dt;
     --_isnarrow: 0;
@@ -24806,7 +24822,7 @@ AX-SKELETON[shape=square] {
 /* Phone+iPad rotate+iPad*/
 /* xxs->Phone (<600 | <900) */
 /*
- *Last modified: 2025-08-09 00:26:00
+ *Last modified: 2025-08-15 17:59:11
  */
 @media (max-width: 599px), (min-width: 600px) and (max-width: 899px) and (orientation: landscape) {
   :root {
@@ -24859,13 +24875,13 @@ AX-SKELETON[shape=square] {
     --_date-label-h: calc(var(--_rem-display) - var(--_rem-min));
   }
   ._datetime [rep=main] [rep=body] {
-    min-height: 24rem;
+    min-height: calc(var(--_rem-root)*24);
   }
   ._datetime [panel=year] [rep=content] {
-    margin: calc((3.8rem - var(--_date-label-h)) / 2) 0;
+    margin: calc((var(--_rem-root)*3.8 - var(--_date-label-h)) / 2) 0;
   }
   ._datetime [panel=month] [rep=content] {
-    margin: calc((5.6rem - var(--_date-label-h)) / 2) 0;
+    margin: calc((var(--_rem-root)*5.6 - var(--_date-label-h)) / 2) 0;
   }
   ._datetime [panel=daytime] [rep=list] {
     margin: 0;
@@ -25513,16 +25529,16 @@ AX-SKELETON[shape=square] {
     height: calc(var(--_rem-list)*3);
   }
   ._post [rep=poster] ax-badge {
-    inset-inline-start: 0.4rem;
-    inset-block-start: 0.4rem;
+    inset-inline-start: var(--_rem-min);
+    inset-block-start: var(--_rem-min);
   }
   ._post [rep=byline],
   ._post [rep=byline] > * {
     color: var(--_c-caption);
-    font-size: 1rem;
+    font-size: var(--_rem-root);
   }
   ._post [rep=type] {
-    font-size: 1rem;
+    font-size: var(--_rem-root);
   }
   ._post._split {
     display: block;
@@ -25532,7 +25548,7 @@ AX-SKELETON[shape=square] {
   }
   ._post._split [rep=poster] {
     width: 100%;
-    height: 16rem;
+    height: calc(var(--_rem-root)*16);
     margin-inline-start: 0;
     margin-inline-end: 0;
   }
@@ -29997,28 +30013,28 @@ AX-SKELETON[shape=square] {
 /* Other device except phone */
 @media (min-width: 600px) and (max-width: 899px) and (orientation: portrait), (min-width: 900px) {
   :root {
-    --_g-full: 2.8rem;
+    --_g-full: calc(var(--_rem-root)*2.8);
   }
   ._container-xxs {
-    --_container-w: 60rem;
+    --_container-w: calc(var(--_rem-root)*60);
   }
   ._container-xs {
-    --_container-w: 80rem;
+    --_container-w: calc(var(--_rem-root)*80);
   }
   ._container-sm {
-    --_container-w: 100rem;
+    --_container-w: calc(var(--_rem-root)*100);
   }
   ._container-md {
-    --_container-w: 120rem;
+    --_container-w: calc(var(--_rem-root)*120);
   }
   ._container-lg {
-    --_container-w: 140rem;
+    --_container-w: calc(var(--_rem-root)*140);
   }
   ._container-xl {
-    --_container-w: 160rem;
+    --_container-w: calc(var(--_rem-root)*160);
   }
   ._container-xxl {
-    --_container-w: 180rem;
+    --_container-w: calc(var(--_rem-root)*180);
   }
 }
 /* Dark mode */

@@ -2,6 +2,19 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+## 2025-08-15更新
+### 发布v3.1.31版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.31/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.31/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.31/dist.zip
+### 更新内容
+- 修改根节点`rem`值冲突解决办法，增加`--_num-scale`变量以解决rem单位冲突问题。
+- 增加`--_rem-1px`变量，默认与1px相同，当改变根字号之后会有变化。
+- 增加`--_num-base`变量代替原来的`--_num-root`的意义，而原--_num-root的意义将与--_num-space等变量相同。
+- 将原`--_fs-root`变量改为`--_fs-base`。
+- 增加`--_num-*-raw`系列CSS变量。
+- 为了确保页面缩放正常，将固定的`*rem`值改成与`--_rem-root`相对的值，例如0.7rem改写为calc(var(--_rem-root)*0.7)。
+
 ## 2025-08-13更新
 ### 发布v3.1.30版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.30/dist/js/ax.js
