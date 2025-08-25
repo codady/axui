@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-8-15 18:13:52
+ * @since Last modified: 2025-8-25 20:35:21
  * @name AXUI front-end framework.
- * @version 3.1.31
+ * @version 3.1.32
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -82,6 +82,35 @@ const ax = {
     valids: [],
     augment,
     tasks: [],
+    swatches: [
+        '#ff6b6b',
+        '#e83e8c',
+        '#f72585',
+        '#e64980',
+        '#ff922b',
+        '#feca57',
+        '#51cf66',
+        '#94d82d',
+        '#20c997',
+        '#0ca678',
+        '#4cc9f0',
+        '#228be6',
+        '#4263eb',
+        '#364fc7',
+        '#6d5dfc',
+        '#7209b7',
+        '#3a0ca3',
+        '#7950f2',
+        '#be4bdb',
+        '#343a40',
+        '#495057',
+        '#6c757d',
+        '#adb5bd',
+        '#e9ecef',
+        '#f8f9fa',
+        '#ffffff'
+    ],
+    colorStor: 'CUSTOM_COLOR',
 };
 
 const fieldTypes = ['input', 'file', 'textarea', 'range', 'number', 'datetime', 'upload', 'select', 'radio', 'checkbox', 'radios', 'checkboxes', 'editor'];
@@ -141,6 +170,39 @@ const lang = {
         limitNumber: '取值范围{{this.min}}~{{this.max}}。',
         exceed: '已超限。',
         range: '取值范围{{this.min}}~{{this.max}}。',
+    },
+    color: {
+        label: {
+            h: '色相 (H)',
+            s: '饱和度 (S)',
+            v: '明度 (V)',
+            l: '亮度 (L)',
+            a: '透明度 (A)',
+            hsv: 'HSV模式',
+            hsl: 'HSL模式',
+        },
+        btn: {
+            random: '随机位置',
+            change: '切换模式',
+            straw: '吸色',
+            restore: '重置',
+            clear: '清空',
+            save: '保存',
+            copy: '复制',
+            confirm: '确定',
+            add: '从拾色器自定义颜色',
+        },
+        message: {
+            preset: '是否存为所有拾色器实例共用的预设色值？',
+            copy: '复制成功！可Ctrl+V粘贴到文档中。',
+        },
+        regular: '常用颜色',
+        theme: '主题颜色',
+        history: '最近使用的颜色',
+        add: {
+            heading: '添加颜色',
+            content: '是否添加<code>{{this.value}}</code>颜色到调色盘？',
+        }
     },
     range: {
         result: `结果:{{this.multiple?this.range[0]+'-'+this.range[1]:this.value}}`,
@@ -3678,6 +3740,10 @@ const createTools = (data, parent, refer) => {
         edit: {
             name: 'edit',
             icon: `${ax.prefix}icon-edit`,
+        },
+        copy: {
+            name: 'copy',
+            icon: `${ax.prefix}icon-copy`,
         },
         update: {
             name: 'update',
@@ -7833,9 +7899,6 @@ class CompBase extends HTMLElement {
     createPropsObs() {
         this.propsObs = new Observe(this.properties, { deep: true });
         this.propsProxy = this.propsObs.proxy;
-        this.propsObs.on('completed', (resp) => {
-            this.ins && this.ins.initialized && resp.keys.set.length && this.completedEvt(resp);
-        });
     }
     updateProxy(name, newVal, map) {
         let value;
@@ -10341,7 +10404,7 @@ class Dialog extends ModBaseListenCacheBubble {
     }
 }
 
-const confirm = ({ content, contType, contData, tplStr, tplEng, heading, yes, no, dialog = {} }) => {
+const confirm = ({ content, contType, contData, tplStr, tplEng, heading, init, yes, no, dialog = {} }) => {
     if (isEmpty(content))
         return;
     return new Promise((resolve) => {
@@ -10353,12 +10416,15 @@ const confirm = ({ content, contType, contData, tplStr, tplEng, heading, yes, no
             tplStr,
             tplEng,
             feature: 'confirm',
-            onConfirmed: () => {
-                yes && yes();
+            onInitiated: function () {
+                init && init(this);
+            },
+            onConfirmed: function () {
+                yes && yes(this);
                 resolve(true);
             },
-            onCanceled: () => {
-                no && no();
+            onCanceled: function () {
+                no && no(this);
                 resolve(false);
             }
         }, dialog)).show();
@@ -10532,6 +10598,352 @@ const isChildVisible = (parent, child) => {
         return false;
     let pRect = pEl.getBoundingClientRect(), cRect = cEl.getBoundingClientRect();
     return !(cRect.right < pRect.left || cRect.left > pRect.right || cRect.bottom < pRect.top || cRect.top > pRect.bottom);
+};
+
+let drawColor = ({ el, hue = 0, mode = 'hsv', width, height }) => {
+    let canvas = getEl(el);
+    if (!canvas)
+        return;
+    let tmpW = width, tmpH = height, canvasStyle;
+    if (!tmpW || !tmpH) {
+        canvasStyle = style(canvas);
+    }
+    width = toPixel(tmpW || canvasStyle.width);
+    height = toPixel(tmpH || canvasStyle.height);
+    tmpW && canvas.setAttribute('width', width);
+    tmpH && canvas.setAttribute('height', height);
+    hue = hue === 360 ? 0 : hue;
+    let ctx = canvas.getContext('2d'), imageData = ctx.createImageData(width, height), data = imageData.data;
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            let s = x / width, vOrL = 1 - y / height, r, g, b;
+            if (mode === 'hsv') {
+                let c = vOrL * s, hPrime = hue / 60, x = c * (1 - Math.abs(hPrime % 2 - 1)), rgb = [0, 0, 0], m = vOrL - c;
+                if (hPrime >= 0 && hPrime < 1)
+                    rgb = [c, x, 0];
+                else if (hPrime >= 1 && hPrime < 2)
+                    rgb = [x, c, 0];
+                else if (hPrime >= 2 && hPrime < 3)
+                    rgb = [0, c, x];
+                else if (hPrime >= 3 && hPrime < 4)
+                    rgb = [0, x, c];
+                else if (hPrime >= 4 && hPrime < 5)
+                    rgb = [x, 0, c];
+                else if (hPrime >= 5 && hPrime < 6)
+                    rgb = [c, 0, x];
+                r = Math.round((rgb[0] + m) * 255);
+                g = Math.round((rgb[1] + m) * 255);
+                b = Math.round((rgb[2] + m) * 255);
+            }
+            else {
+                let c = (1 - Math.abs(2 * vOrL - 1)) * s, hPrime = hue / 60, x = c * (1 - Math.abs(hPrime % 2 - 1)), rgb = [0, 0, 0], m = vOrL - c / 2;
+                if (hPrime >= 0 && hPrime < 1)
+                    rgb = [c, x, 0];
+                else if (hPrime >= 1 && hPrime < 2)
+                    rgb = [x, c, 0];
+                else if (hPrime >= 2 && hPrime < 3)
+                    rgb = [0, c, x];
+                else if (hPrime >= 3 && hPrime < 4)
+                    rgb = [0, x, c];
+                else if (hPrime >= 4 && hPrime < 5)
+                    rgb = [x, 0, c];
+                else if (hPrime >= 5 && hPrime < 6)
+                    rgb = [c, 0, x];
+                r = Math.round((rgb[0] + m) * 255);
+                g = Math.round((rgb[1] + m) * 255);
+                b = Math.round((rgb[2] + m) * 255);
+            }
+            let index = (y * width + x) * 4;
+            data[index] = r;
+            data[index + 1] = g;
+            data[index + 2] = b;
+            data[index + 3] = 255;
+        }
+    }
+    ctx.putImageData(imageData, 0, 0);
+    return ctx;
+};
+
+const alpha2Hex = (alpha = 0) => typeof alpha === 'string' ? alpha : Math.round(alpha * 255).toString(16).padStart(2, '0');
+
+const hex2Alpha = (hex = 0) => {
+    if (typeof hex === 'number')
+        return Math.max(0, Math.min(1, hex));
+    hex = hex.replace(/^#|0x/gi, '').trim();
+    if (!hex)
+        return 0;
+    if (hex.length === 1)
+        hex += hex;
+    return Math.max(0, Math.min(1, parseInt(hex, 16) / 255));
+};
+
+const parseRgb = (value, alpha = true) => {
+    value = value.trim();
+    let result = { r: 0, g: 0, b: 0 };
+    if (!value.startsWith('rgb') && !value.startsWith('RGB'))
+        return result;
+    let parts = value.match(/(\d+\.?\d*)/g);
+    result.r = parseInt(parts[0]);
+    result.g = parseInt(parts[1]);
+    result.b = parseInt(parts[2]);
+    alpha && (result.a = parts[3] ? parseFloat(parts[3]) : 1);
+    return result;
+};
+
+const rgb2Hex = (data, alpha = true) => {
+    let tmp = (typeof data === 'string') ? parseRgb(data) : data, r = Math.max(0, Math.min(255, tmp.r)), g = Math.max(0, Math.min(255, tmp.g)), b = Math.max(0, Math.min(255, tmp.b)), a = tmp.a !== undefined ? Math.max(0, Math.min(1, tmp.a)) : 1, alphaHex = alpha2Hex(a);
+    let result = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+    alpha && (result += alphaHex);
+    return result;
+};
+
+const rgb2Hsl = (data, alpha = true) => {
+    let tmp = (typeof data === 'string') ? parseRgb(data) : data, r = tmp.r / 255, g = tmp.g / 255, b = tmp.b / 255, max = Math.max(r, g, b), min = Math.min(r, g, b), h = 0, s = 0, l = (max + min) / 2;
+    if (max === min) {
+        h = s = 0;
+    }
+    else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+        }
+        h /= 6;
+    }
+    let result = {
+        h: Math.round(h * 360),
+        s: Math.round(s * 100),
+        l: Math.round(l * 100)
+    };
+    alpha && (result.a = tmp.a);
+    return result;
+};
+
+const rgb2Hwb = (data, alpha = true) => {
+    let tmp = (typeof data === 'string') ? parseRgb(data) : data, r = tmp.r / 255, g = tmp.g / 255, b = tmp.b / 255, max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min, h = 0;
+    if (max === min) {
+        h = 0;
+    }
+    else {
+        switch (max) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+        }
+        h /= 6;
+    }
+    let w = min, blackness = 1 - max, result = {
+        h: Math.round(h * 360),
+        w: Math.round(w * 100),
+        b: Math.round(blackness * 100)
+    };
+    alpha && (result.a = tmp.a);
+    return result;
+};
+
+const hwb2Rgb = (data, alpha = true) => {
+    let tmp = {};
+    if (typeof data === 'string') {
+        let parts = data.match(/(\d+\.?\d*)/g);
+        tmp.h = parseInt(parts[0]);
+        tmp.w = parseInt(parts[1]);
+        tmp.b = parseInt(parts[2]);
+        tmp.a = parts[3] ? parseFloat(parts[3]) : 1;
+    }
+    else {
+        tmp = data;
+    }
+    let h = tmp.h, w = tmp.w / 100, b = tmp.b / 100, c = 1 - b - w, hPrime = h / 60, x = c * (1 - Math.abs(hPrime % 2 - 1)), rgb = [0, 0, 0];
+    if (c <= 0) {
+        const gray = 1 - b;
+        rgb = [gray, gray, gray];
+    }
+    else {
+        if (hPrime >= 0 && hPrime < 1)
+            rgb = [c, x, 0];
+        else if (hPrime >= 1 && hPrime < 2)
+            rgb = [x, c, 0];
+        else if (hPrime >= 2 && hPrime < 3)
+            rgb = [0, c, x];
+        else if (hPrime >= 3 && hPrime < 4)
+            rgb = [0, x, c];
+        else if (hPrime >= 4 && hPrime < 5)
+            rgb = [x, 0, c];
+        else if (hPrime >= 5 && hPrime < 6)
+            rgb = [c, 0, x];
+        rgb[0] += w;
+        rgb[1] += w;
+        rgb[2] += w;
+    }
+    let result = {
+        r: Math.round(rgb[0] * 255),
+        g: Math.round(rgb[1] * 255),
+        b: Math.round(rgb[2] * 255),
+    };
+    result.r = Math.max(0, Math.min(255, result.r));
+    result.g = Math.max(0, Math.min(255, result.g));
+    result.b = Math.max(0, Math.min(255, result.b));
+    alpha && (result.a = tmp.a);
+    return result;
+};
+
+const hsl2Rgb = (data, alpha = true) => {
+    let tmp = {};
+    if (typeof data === 'string') {
+        let parts = data.match(/(\d+\.?\d*)/g);
+        tmp.h = parseInt(parts[0]);
+        tmp.s = parseInt(parts[1]);
+        tmp.l = parseInt(parts[2]);
+        tmp.a = parts[3] ? parseFloat(parts[3]) : 1;
+    }
+    else {
+        tmp = data;
+    }
+    let h = tmp.h, s = tmp.s / 100, l = tmp.l / 100, c = (1 - Math.abs(2 * l - 1)) * s, hPrime = h / 60, x = c * (1 - Math.abs(hPrime % 2 - 1)), rgb = [0, 0, 0], m = l - c / 2;
+    if (hPrime >= 0 && hPrime < 1)
+        rgb = [c, x, 0];
+    else if (hPrime >= 1 && hPrime < 2)
+        rgb = [x, c, 0];
+    else if (hPrime >= 2 && hPrime < 3)
+        rgb = [0, c, x];
+    else if (hPrime >= 3 && hPrime < 4)
+        rgb = [0, x, c];
+    else if (hPrime >= 4 && hPrime < 5)
+        rgb = [x, 0, c];
+    else if (hPrime >= 5 && hPrime < 6)
+        rgb = [c, 0, x];
+    let result = {
+        r: Math.round((rgb[0] + m) * 255),
+        g: Math.round((rgb[1] + m) * 255),
+        b: Math.round((rgb[2] + m) * 255),
+    };
+    alpha && (result.a = tmp.a);
+    return result;
+};
+
+const hex2Rgb = (value, alpha = true) => {
+    let result = { r: 0, g: 0, b: 0 }, a;
+    if (value?.hasOwnProperty('hex')) {
+        value = value.hex;
+        a = value.a;
+    }
+    else {
+        value = value.trim();
+    }
+    if (typeof value !== 'string' || !value.startsWith('#') || value.length > 9)
+        return result;
+    let hex = value.substring(1);
+    if (hex.length === 3 || hex.length === 4) {
+        hex = hex.split('').map((k) => k + k).join('');
+    }
+    result.r = parseInt(hex.substring(0, 2), 16);
+    result.g = parseInt(hex.substring(2, 4), 16);
+    result.b = parseInt(hex.substring(4, 6), 16);
+    let tmp = (value?.hasOwnProperty('hex')) ? a : hex.substring(6, 8);
+    alpha && (result.a = tmp ? hex2Alpha(tmp) : 1);
+    return result;
+};
+
+const hwb2Hsl = (data, alpha = true) => {
+    let tmp = { h: 0, w: 0, b: 0, a: 1 };
+    if (typeof data === 'string') {
+        let parts = data.match(/(\d+\.?\d*)/g);
+        tmp.h = parseFloat(parts[0]);
+        tmp.w = parseFloat(parts[1]);
+        tmp.b = parseFloat(parts[2]);
+        tmp.a = parts[3] ? parseFloat(parts[3]) : 1;
+    }
+    else {
+        tmp = data;
+    }
+    let h = tmp.h, w = tmp.w / 100, bl = tmp.b / 100;
+    let c = 1 - w - bl;
+    let hPrime = h / 60;
+    let x = c * (1 - Math.abs(hPrime % 2 - 1));
+    let rgb = [0, 0, 0];
+    let gray = 1 - bl;
+    if (c <= 0) {
+        rgb = [gray, gray, gray];
+    }
+    else {
+        if (hPrime >= 0 && hPrime < 1)
+            rgb = [c, x, 0];
+        else if (hPrime >= 1 && hPrime < 2)
+            rgb = [x, c, 0];
+        else if (hPrime >= 2 && hPrime < 3)
+            rgb = [0, c, x];
+        else if (hPrime >= 3 && hPrime < 4)
+            rgb = [0, x, c];
+        else if (hPrime >= 4 && hPrime < 5)
+            rgb = [x, 0, c];
+        else if (hPrime >= 5 && hPrime < 6)
+            rgb = [c, 0, x];
+        rgb[0] += w;
+        rgb[1] += w;
+        rgb[2] += w;
+    }
+    let r = rgb[0], g = rgb[1], b = rgb[2], max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2, d = max - min, s = 0;
+    if (d !== 0) {
+        s = d / (1 - Math.abs(2 * l - 1));
+    }
+    let result = {
+        h,
+        s: ~~(s * 100),
+        l: ~~(l * 100),
+    };
+    alpha && (result.a = tmp.a);
+    return result;
+};
+
+const hsl2Hwb = (data, alpha = true) => {
+    let tmp = { h: 0, s: 0, l: 0, a: 1 };
+    if (typeof data === 'string') {
+        let parts = data.match(/(\d+\.?\d*)/g);
+        tmp.h = parseFloat(parts[0]);
+        tmp.s = parseFloat(parts[1]);
+        tmp.l = parseFloat(parts[2]);
+        tmp.a = parts[3] ? parseFloat(parts[3]) : 1;
+    }
+    else {
+        tmp = data;
+    }
+    let h = tmp.h, s = tmp.s / 100, l = tmp.l / 100;
+    let c = (1 - Math.abs(2 * l - 1)) * s, hPrime = h / 60, x = c * (1 - Math.abs(hPrime % 2 - 1)), rgb = [0, 0, 0];
+    if (hPrime >= 0 && hPrime < 1)
+        rgb = [c, x, 0];
+    else if (hPrime >= 1 && hPrime < 2)
+        rgb = [x, c, 0];
+    else if (hPrime >= 2 && hPrime < 3)
+        rgb = [0, c, x];
+    else if (hPrime >= 3 && hPrime < 4)
+        rgb = [0, x, c];
+    else if (hPrime >= 4 && hPrime < 5)
+        rgb = [x, 0, c];
+    else if (hPrime >= 5 && hPrime < 6)
+        rgb = [c, 0, x];
+    let m = l - c / 2, r = rgb[0] + m, g = rgb[1] + m, b = rgb[2] + m;
+    let w = Math.min(r, g, b) * 100, bl = (1 - Math.max(r, g, b)) * 100;
+    let result = {
+        h: h,
+        w: ~~w,
+        b: ~~bl,
+    };
+    alpha && (result.a = tmp.a);
+    return result;
 };
 
 class ModBaseListenCacheNest extends ModBaseListenCache {
@@ -11814,6 +12226,11 @@ const optPopup = [
         value: true,
     },
     {
+        attr: 'can-close',
+        prop: 'canClose',
+        value: null,
+    },
+    {
         attr: 'size',
         prop: 'size',
         value: 'md',
@@ -11946,11 +12363,16 @@ class Popup extends ModBaseListenCacheBubble {
                 }
             }
         };
-        this.clickOutHideEvt = (e) => {
-            !contains(e.target, [this.mainEl, this.targetEl, ...this.wings]) &&
+        this.clickOutHideEvt = (evt) => {
+            if (this.options.canClose) {
+                let target = getEvtTarget(evt), tmp = this.options.canClose.call(this, target, evt);
+                if (!tmp)
+                    return;
+            }
+            !contains(evt.target, [this.mainEl, this.targetEl, ...this.wings]) &&
                 this.state === 'shown' &&
                 !this.options.keepShow &&
-                elState(e.target).isVisible &&
+                elState(evt.target).isVisible &&
                 this.hide();
         };
         this.triggerClose = () => {
@@ -26441,8 +26863,12 @@ class Datetime extends ModBaseListenCache {
     }
     setValFromTgt(value) {
         value = value || '';
-        if ('value' in this.inputEl) {
-            ['INPUT', 'TEXTAREA'].includes(this.inputEl.nodeName) ? this.inputEl.value = value : this.inputEl.setAttribute('value', value);
+        
+        if (['INPUT', 'TEXTAREA'].includes(this.inputEl.nodeName)) {
+            this.inputEl.value = value;
+        }
+        else if (['AX-INPUT', 'AX-TEXTAREA'].includes(this.inputEl.nodeName)) {
+            this.inputEl.setAttribute('value', value);
         }
         else {
             this.childEl ? this.childEl.innerHTML = value : this.inputEl.innerHTML = value;
@@ -31053,6 +31479,7 @@ class Select extends ModBaseListenCache {
     output;
     rawHmtl;
     clearVals;
+    outputEvt;
     static hostType = 'node';
     static optMaps = optSelect;
     constructor(elem, options = {}, initial = true) {
@@ -31091,6 +31518,11 @@ class Select extends ModBaseListenCache {
         
         
         
+        this.outputEvt = debounce((data) => {
+            super.updateCache({ value: data.value });
+            this.output = data;
+            super.listen({ name: 'output', params: [this.output] });
+        });
         super.listen({ name: 'constructed' });
         initial && this.init();
     }
@@ -31269,9 +31701,7 @@ class Select extends ModBaseListenCache {
                 }
             },
             onOutput: (data) => {
-                super.updateCache({ value: data.value });
-                this.output = data;
-                super.listen({ name: 'output', params: [this.output] });
+                this.outputEvt(data);
             }
         };
         if (this.options.manual) {
@@ -34621,6 +35051,1049 @@ class Toast extends ModBaseListen {
     }
 }
 
+const optColor = [
+    {
+        attr: 'value',
+        prop: 'value',
+        value: '',
+    },
+    {
+        attr: 'layout',
+        prop: 'layout',
+        value: 'picker',
+    },
+    {
+        attr: 'classes',
+        prop: 'classes',
+        value: '',
+    },
+    {
+        attr: 'popup',
+        prop: 'popup',
+        value: {},
+    },
+    {
+        attr: 'canvas',
+        prop: 'canvas',
+        value: {
+            showLabel: true,
+            showTools: true,
+            width: 370,
+            height: 180,
+            mode: 'hsv',
+            hue: 0,
+        },
+    },
+    {
+        attr: 'output',
+        prop: 'output',
+        value: {
+            alpha: true,
+            mode: 'hsl',
+            format: 'hsla',
+            child: '',
+            manual: true,
+        },
+    },
+    {
+        attr: 'b4-assign',
+        prop: 'b4Assign',
+        value: null,
+    },
+    {
+        attr: 'b4-clear',
+        prop: 'b4Clear',
+        value: null,
+    },
+    {
+        attr: 'b4-fill',
+        prop: 'b4Fill',
+        value: null,
+    },
+    {
+        attr: 'b4-restore',
+        prop: 'b4Restore',
+        value: null,
+    },
+    {
+        attr: 'on-assigned',
+        prop: 'onAssigned',
+        value: null,
+    },
+    {
+        attr: 'on-cleared',
+        prop: 'onCleared',
+        value: null
+    },
+    {
+        attr: 'on-restored',
+        prop: 'onRestored',
+        value: null
+    },
+    {
+        attr: 'on-filled',
+        prop: 'onFilled',
+        value: null
+    },
+    {
+        attr: 'on-output',
+        prop: 'onOutput',
+        value: null
+    },
+    ...optBase
+];
+
+class Color extends ModBaseListenCache {
+    spaceEl;
+    outputEl;
+    toolsEl;
+    canvasEl;
+    canvasModeEl;
+    randomEl;
+    previewEl;
+    hRangeEl;
+    aRangeEl;
+    alphaEl;
+    strawEl;
+    restoreEl;
+    clearEl;
+    confirmEl;
+    copyEl;
+    indEl;
+    valueEl;
+    changeEl;
+    hexEl;
+    hexaEl;
+    rgbrEl;
+    rgbgEl;
+    rgbbEl;
+    rgbaEl;
+    hslhEl;
+    hslsEl;
+    hsllEl;
+    hslaEl;
+    hwbhEl;
+    hwbwEl;
+    hwbbEl;
+    hwbaEl;
+    wrapEl;
+    schemeEl;
+    pickerEl;
+    paletteEl;
+    outputHexEl;
+    outputRgbEl;
+    outputHwbEl;
+    outputHslEl;
+    outputBodyEl;
+    axisyEl;
+    canvasCtx;
+    curColors;
+    indCoord;
+    gestureIns;
+    canvasRect;
+    previewChildEl;
+    canvasMode;
+    canvasHue;
+    hRangeEvt;
+    aRangeEvt;
+    alphaEvt;
+    modeEvt;
+    showAlpha;
+    outputMode;
+    outputMap;
+    changeEvt;
+    randomEvt;
+    canvasWidth;
+    canvasHeight;
+    copyEvt;
+    previewEvt;
+    colorEvt;
+    coloraEvt;
+    colorhEvt;
+    eyeDropper;
+    strawEvt;
+    stopOutput;
+    themeColorsEl;
+    themeWrapEl;
+    historyColorsEl;
+    historyWrapEl;
+    presets1El;
+    presets2El;
+    colorEl;
+    popupIns;
+    fillEl;
+    value;
+    dialogEl;
+    static hostType = 'node';
+    static optMaps = optColor;
+    constructor(elem, options = {}, initial = true) {
+        super();
+        super.ready({
+            options,
+            host: elem,
+            maps: Color.optMaps,
+            component: true,
+            spread: ['output', 'arrow', 'check', 'lamp', 'tools', 'drag']
+        });
+        this.curColors = { rgb: { r: 255, g: 0, b: 0 }, hwb: { h: 0, w: 0, b: 0 }, hsl: { h: 0, s: 100, l: 50 }, hex: '#ff0000', a: 1, a16: 'ff' };
+        this.indCoord = { x: 0, y: 0 };
+        this.hRangeEvt = (e) => {
+            this.canvasHue = this.curColors.hsl.h = this.curColors.hwb.h = parseFloat(e.target.value);
+            this.curColors.rgb = hsl2Rgb(this.curColors.hsl, false);
+            this.curColors.hex = rgb2Hex(this.curColors.rgb, false);
+            this.updateReverse();
+            this.updatePreviewOutput();
+        };
+        this.aRangeEvt = (e) => {
+            this.curColors.a = parseFloat(e.target.value);
+            this.curColors.a16 = alpha2Hex(this.curColors.a);
+            this.updatePreviewOutput();
+        };
+        this.modeEvt = debounce((data) => {
+            this.canvasMode = data.newVal;
+            this.drawCanvas();
+            this.setAxisLabel();
+        });
+        this.alphaEvt = debounce((data) => {
+            this.showAlpha = data.newVal;
+            this.aRangeEl.toggleAttribute('disabled', !data.newVal);
+            this.hexaEl.toggleAttribute('disabled', !data.newVal);
+            this.rgbaEl.toggleAttribute('disabled', !data.newVal);
+            this.hslaEl.toggleAttribute('disabled', !data.newVal);
+            this.hwbaEl.toggleAttribute('disabled', !data.newVal);
+            this.updatePreviewOutput();
+        });
+        this.changeEvt = debounce(() => {
+            this.toggleOutputAct();
+        });
+        this.randomEvt = debounce(() => {
+            this.canvasRect = this.canvasEl.getBoundingClientRect();
+            this.setValFromCanvas({ x: Math.random() * this.canvasWidth, y: Math.random() * this.canvasHeight });
+        });
+        this.copyEvt = debounce(() => {
+            navigator.clipboard.writeText(this.valueEl.textContent).then(() => new Toast({ content: this.options.lang.message.copy, status: 'succ', eager: true }));
+        });
+        this.previewEvt = debounce(() => {
+            navigator.clipboard.writeText(this.previewChildEl.style.backgroundColor).then(() => new Toast({ content: this.options.lang.message.copy, status: 'succ', eager: true }));
+        });
+        let _this = this;
+        this.colorEvt = debounce(function (e) {
+            _this.stopOutput = true;
+            let value = {};
+            if (this === _this.hexEl) {
+                if (e.target.value.length !== 7)
+                    return;
+                value.hex = e.target.value;
+            }
+            else {
+                let tmp = parseFloat(e.target.value);
+                if (isNaN(tmp))
+                    return;
+                if (this === _this.rgbrEl) {
+                    value = { ..._this.curColors.rgb };
+                    value.r = tmp;
+                }
+                else if (this === _this.rgbgEl) {
+                    value = { ..._this.curColors.rgb };
+                    value.g = tmp;
+                }
+                else if (this === _this.rgbbEl) {
+                    value = { ..._this.curColors.rgb };
+                    value.b = tmp;
+                }
+                else if (this === _this.hslsEl) {
+                    value = { ..._this.curColors.hsl };
+                    value.s = tmp;
+                }
+                else if (this === _this.hsllEl) {
+                    value = { ..._this.curColors.hsl };
+                    value.l = tmp;
+                }
+                else if (this === _this.hwbwEl) {
+                    value = { ..._this.curColors.hwb };
+                    value.w = tmp;
+                }
+                else if (this === _this.hwbbEl) {
+                    value = { ..._this.curColors.hwb };
+                    value.b = tmp;
+                }
+            }
+            value.a = _this.curColors.a;
+            _this.assignVals(value);
+            _this.stopOutput = false;
+        }, 500);
+        this.coloraEvt = debounce((e) => {
+            _this.stopOutput = true;
+            let tmp = parseFloat(e.target.value);
+            if (isNaN(tmp))
+                return;
+            let value = this.outputMode === 'hex' ? { hex: this.curColors[this.outputMode] } : { ...this.curColors[this.outputMode] };
+            value.a = tmp;
+            this.assignVals(value);
+            _this.stopOutput = false;
+        }, 500);
+        this.colorhEvt = debounce((e) => {
+            _this.stopOutput = true;
+            let tmp = parseFloat(e.target.value);
+            if (isNaN(tmp))
+                return;
+            let value = { ...this.curColors[this.outputMode] };
+            value.a = this.curColors.a;
+            value.h = tmp;
+            this.assignVals(value);
+            _this.stopOutput = false;
+        }, 500);
+        this.strawEvt = async () => {
+            try {
+                let result = await this.eyeDropper.open(), hex = result.sRGBHex;
+                this.assignVals(hex);
+            }
+            catch { }
+        };
+        super.listen({ name: 'constructed' });
+        initial && this.init();
+    }
+    
+    async init(cb) {
+        super.listen({ name: 'initiate' });
+        try {
+            this.options.b4Init && await this.options.b4Init.call(this);
+        }
+        catch (err) {
+            err ? console.error(err) : console.warn(config.warn.init);
+            return this;
+        }
+        !['picker', 'full'].includes(this.options.layout) && (this.options.output.manual = false);
+        this.canvasMode = this.options.canvas.mode;
+        this.canvasHue = this.options.canvas.hue;
+        this.showAlpha = this.options.output.alpha;
+        this.outputMode = this.options.output.mode;
+        this.canvasWidth = toPixel(ax.screen === 'xxs' ? 300 : this.options.canvas.width);
+        this.canvasHeight = toPixel(ax.screen === 'xxs' ? 150 : this.options.canvas.height);
+        this.fillEl = getEl(this.options.fillEl, this.targetEl) || this.targetEl;
+        this.setAttrs();
+        this.createPanel();
+        this.drawCanvas();
+        this.setGesture();
+        this.setPopup();
+        this.canvasModeEl.on('changed', this.modeEvt);
+        this.alphaEl.on('changed', this.alphaEvt);
+        this.hRangeEl.addEventListener('input', this.hRangeEvt, false);
+        this.aRangeEl.addEventListener('input', this.aRangeEvt, false);
+        this.changeEl.addEventListener('click', this.changeEvt, false);
+        this.randomEl.addEventListener('click', this.randomEvt, false);
+        this.hexEl.addEventListener('input', this.colorEvt, false);
+        this.rgbrEl.addEventListener('input', this.colorEvt, false);
+        this.rgbgEl.addEventListener('input', this.colorEvt, false);
+        this.rgbbEl.addEventListener('input', this.colorEvt, false);
+        this.hslsEl.addEventListener('input', this.colorEvt, false);
+        this.hsllEl.addEventListener('input', this.colorEvt, false);
+        this.hwbwEl.addEventListener('input', this.colorEvt, false);
+        this.hwbbEl.addEventListener('input', this.colorEvt, false);
+        this.hexaEl.addEventListener('input', this.coloraEvt, false);
+        this.rgbaEl.addEventListener('input', this.coloraEvt, false);
+        this.hslaEl.addEventListener('input', this.coloraEvt, false);
+        this.hwbaEl.addEventListener('input', this.coloraEvt, false);
+        this.hwbhEl.addEventListener('input', this.colorhEvt, false);
+        this.hslhEl.addEventListener('input', this.colorhEvt, false);
+        this.copyEl.addEventListener('click', this.copyEvt, false);
+        this.previewEl.addEventListener('click', this.previewEvt, false);
+        this.eyeDropper = new window.EyeDropper();
+        this.strawEl.onclick = async () => {
+            try {
+                let result = await this.eyeDropper.open(), hex = result.sRGBHex;
+                this.assignVals(hex);
+            }
+            catch { }
+        };
+        this.restoreEl.onclick = () => {
+            this.restoreVals();
+        };
+        this.confirmEl.onclick = () => {
+            !this.value ? this.popupIns.hide() : this.fillVals();
+        };
+        this.clearEl.onclick = () => {
+            this.clearVals();
+        };
+        this.initVals();
+        super.listen({ name: 'initiated', cb });
+        return this;
+    }
+    updateReverse() {
+        this.canvasHue = this.curColors.hsl.h;
+        this.drawCanvas();
+        this.updateHueSlider();
+        this.updateAlphaSlider();
+    }
+    setAttrs() {
+        this.options.classes && this.colorEl && classes(this.colorEl).add(this.options.classes);
+    }
+    toggleOutputAct() {
+        let keys = Object.keys(this.outputMap), curKey = keys.find(key => this.outputMap[key].active), curIdx = keys.indexOf(curKey), nextIdx = (curIdx + 1) % keys.length;
+        for (let k in this.outputMap) {
+            if (keys[nextIdx] === k) {
+                this.outputMode = k;
+                this.outputBodyEl.innerHTML = '';
+                this.outputBodyEl.appendChild(this.outputMap[k].el);
+                this.setOutputStr();
+                this.setOutputVals();
+            }
+            this.outputMap[k].active = keys[nextIdx] === k ? true : false;
+        }
+    }
+    updateHueSlider() {
+        this.colorEl.style.setProperty(`--${ax.prefix}color-thumb`, `hsl(${this.curColors.hsl.h}, 100%, 50%)`);
+    }
+    updateAlphaSlider() {
+        this.colorEl.style.setProperty(`--${ax.prefix}color-from`, `hsla(${this.curColors.hsl.h}, 100%, 50%,0)`);
+        this.colorEl.style.setProperty(`--${ax.prefix}color-to`, `hsla(${this.curColors.hsl.h}, 100%, 50%,1)`);
+    }
+    drawCanvas(hue = this.canvasHue, mode = this.canvasMode) {
+        this.canvasCtx = drawColor({
+            el: this.canvasEl,
+            width: this.canvasWidth,
+            height: this.canvasHeight,
+            hue,
+            mode,
+        });
+    }
+    getColorFromCanvas(x, y) {
+        let pixel = this.canvasCtx.getImageData(x, y, 1, 1).data;
+        return {
+            r: pixel[0],
+            g: pixel[1],
+            b: pixel[2]
+        };
+    }
+    canvasInteraction(data) {
+        let x = data.x, y = data.y, boundedX = Math.max(0, Math.min(x, this.canvasEl.width - 1)), boundedY = Math.max(0, Math.min(y, this.canvasEl.height - 1)), rgb = this.getColorFromCanvas(boundedX, boundedY), hex = rgb2Hex(rgb, false), hsl = rgb2Hsl(rgb, false), hwb = rgb2Hwb(rgb, false), isInverted = (rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114) > 150 ? true : false;
+        if (rgb.r === rgb.g && rgb.g === rgb.b) {
+            hsl.h = hwb.h = this.curColors.hsl.h;
+        }
+        this.curColors.rgb = rgb;
+        this.curColors.hex = hex;
+        this.curColors.hsl = hsl;
+        this.curColors.hwb = hwb;
+        this.indEl.toggleAttribute('inverted', isInverted);
+        this.updatePreviewOutput();
+    }
+    updatePreview() {
+        this.previewChildEl.style.backgroundColor = this.valueEl.textContent;
+    }
+    updatePreviewOutput() {
+        this.setOutputStr();
+        this.setOutputVals();
+        this.updatePreview();
+    }
+    setOutputStr(mode = this.outputMode) {
+        let val, a, result;
+        if (mode === 'hex') {
+            val = this.curColors[mode];
+            a = this.curColors.a16;
+            result = `${val}${this.showAlpha ? a : ''}`;
+        }
+        else {
+            let tmp = deepClone(this.curColors[mode]);
+            if (mode !== 'rgb') {
+                tmp.hasOwnProperty('s') && (tmp.s += '%');
+                tmp.hasOwnProperty('l') && (tmp.l += '%');
+                tmp.hasOwnProperty('w') && (tmp.w += '%');
+                tmp.hasOwnProperty('b') && (tmp.b += '%');
+            }
+            val = Object.values(tmp).join(',');
+            a = this.curColors.a;
+            result = `${mode}${this.showAlpha ? 'a' : ''}(${val}${this.showAlpha ? ',' + a : ''})`;
+        }
+        this.valueEl.innerHTML = result;
+        this.value = this.getVals();
+        if (!this.options.output.manual)
+            this.fillVals();
+        super.listen({ name: 'output', params: [this.value] });
+    }
+    setOutputVals() {
+        for (let k in this.outputMap[this.outputMode].children) {
+            let item = this.outputMap[this.outputMode].children[k];
+            item.setAttribute('value', k === 'a' ? this.curColors.a : this.outputMode === 'hex' ? this.curColors[this.outputMode] : this.curColors[this.outputMode][k]);
+        }
+    }
+    setPopup() {
+        this.popupIns && this.popupIns.destroy();
+        let opts = deepMerge({
+            content: this.colorEl,
+            footer: false,
+            padding: false,
+            tools: false,
+            trigger: 'click',
+            size: '',
+            adaptive: false,
+            canClose: (target) => {
+                return this.dialogEl && this.dialogEl.contains(target) ? false : true;
+            },
+        }, this.options.popup);
+        this.popupIns = new Popup(this.targetEl, opts);
+    }
+    createPanel() {
+        this.wrapEl = createEl('div', { class: `${ax.prefix}color-wrap` });
+        this.colorEl = createEl('div', { class: `${ax.prefix}color` }, this.wrapEl);
+        this.pickerEl = createEl('div', { class: `${ax.prefix}color-picker`, style: `width:${this.canvasWidth}px` });
+        this.schemeEl = createEl('div', { class: `${ax.prefix}color-scheme` });
+        this.paletteEl = createEl('div', { class: `${ax.prefix}color-palette` }, `
+        <div class="${ax.prefix}color-presets">
+                    <div class="${ax.prefix}color-regular">
+                        <div ${ax.alias}="body">
+                            <ul class="${ax.prefix}color-preset-1 ${ax.prefix}grid ${ax.prefix}g-xs ${ax.prefix}avg-10">
+                            </ul>
+                        </div>
+                    </div>
+                    <ax-br></ax-br>
+                    <ul class="${ax.prefix}color-preset-2 ${ax.prefix}reset ${ax.prefix}grid ${ax.prefix}g-sm"></ul>
+                </div>
+        `);
+        this.presets1El = getEl(`.${ax.prefix}color-preset-1`, this.paletteEl);
+        this.presets2El = getEl(`.${ax.prefix}color-preset-2`, this.paletteEl);
+        this.presets1El.appendChild(this.getRegularPresets());
+        this.presets2El.append(this.getThemePresets(), this.getHistoryPresets());
+        if (this.options.layout === 'picker') {
+            this.wrapEl.append(this.pickerEl);
+        }
+        else if (this.options.layout === 'palette') {
+            this.wrapEl.append(this.paletteEl);
+        }
+        else if (this.options.layout === 'scheme') {
+            this.wrapEl.append(this.schemeEl);
+        }
+        else {
+            this.wrapEl.append(this.pickerEl, this.paletteEl);
+        }
+        let labelX = this.options.canvas.showLabel ? `<div class="${ax.prefix}color-canvas-x">${this.options.lang.label.s}</div>` : '', labelY = this.options.canvas.showLabel ? `<div class="${ax.prefix}color-canvas-y">${this.options.canvas.mode === 'hsv' ? this.options.lang.label.v : this.options.lang.label.h}</div>` : '', spaceTools = this.options.canvas.showTools ? `
+            <div class="${ax.prefix}color-mode">
+                <div class="${ax.prefix}flex">
+                    <ax-radios content="[{label:'${this.options.lang.label.hsv}',value:'hsv'},{label:'${this.options.lang.label.hsl}',value:'hsl'}]" checked="${this.options.canvas.mode}"></ax-radios>
+                </div>
+                <span ${ax.alias}="random" title="${this.options.lang.btn.random}"><i class="${ax.prefix}icon-random"></i></span>
+                <span ${ax.alias}="straw" title="${this.options.lang.btn.straw}"><i class="${ax.prefix}icon-straw"></i></span>
+            </div>` : '', spaceControl = `
+                <div class="${ax.prefix}color-control">
+                    <span class="${ax.prefix}color-preview"><i></i><s>${this.options.lang.btn.copy}</s></span>
+                    <div class="${ax.prefix}color-sliders">
+                        <div class="${ax.prefix}color-slider" title="${this.options.lang.label.h}">
+                            <input type="range" class="${ax.prefix}color-hue" min="0" max="360" value="0" step="1">
+                        </div>
+                        <div class="${ax.prefix}color-break"></div>
+                        <div class="${ax.prefix}color-slider" title="${this.options.lang.label.a}">
+                            <input type="range" class="${ax.prefix}color-alpha" min="0" max="1" value="1" step="0.01" ${!this.showAlpha ? 'disabled' : ''}>
+                        </div>
+                    </div>
+                </div>
+                `;
+        this.spaceEl = createEl('div', { class: `${ax.prefix}color-space` }, `
+                    <div class="${ax.prefix}color-canvas">
+                        <canvas></canvas>
+                        <i class="${ax.prefix}color-canvas-ind"></i>
+                        ${labelX}
+                        ${labelY}
+                    </div>
+                    ${spaceTools}
+                    <ax-br></ax-br>
+                    ${spaceControl}
+                    `);
+        this.canvasEl = getEl(`canvas`, this.spaceEl);
+        this.indEl = getEl(`.${ax.prefix}color-canvas-ind`, this.spaceEl);
+        this.canvasModeEl = getEl(`AX-RADIOS`, this.spaceEl);
+        this.randomEl = getEl(`[${ax.alias}="random"]`, this.spaceEl);
+        this.strawEl = getEl(`[${ax.alias}="straw"]`, this.spaceEl);
+        this.previewEl = getEl(`.${ax.prefix}color-preview`, this.spaceEl);
+        this.previewChildEl = getEl(`i`, this.previewEl);
+        this.hRangeEl = getEl(`.${ax.prefix}color-hue`, this.spaceEl);
+        this.aRangeEl = getEl(`.${ax.prefix}color-alpha`, this.spaceEl);
+        this.axisyEl = getEl(`.${ax.prefix}color-canvas-y`, this.spaceEl);
+        this.outputEl = createEl('div', { class: `${ax.prefix}color-output` }, `
+                    <div class="${ax.prefix}color-output-head">
+                        <div class="${ax.prefix}flex">
+                            <span ${ax.alias}="value">-</span><span ${ax.alias}="copy" class="${ax.prefix}icon-copy" title="${this.options.lang.btn.copy}"></span>
+                        </div>
+                        <span ${ax.alias}="change" title="${this.options.lang.btn.change}"><i class="${ax.prefix}icon-change"></i></span>
+                    </div>
+                    <div class="${ax.prefix}color-output-body"></div>
+        `);
+        this.outputBodyEl = getEl(`.${ax.prefix}color-output-body`, this.outputEl);
+        this.valueEl = getEl(`[${ax.alias}="value"]`, this.outputEl);
+        this.copyEl = getEl(`[${ax.alias}="copy"]`, this.outputEl);
+        this.changeEl = getEl(`[${ax.alias}="change"]`, this.outputEl);
+        this.outputHexEl = createEl('div', { class: `${ax.prefix}row ${ax.prefix}g-xs` }, `
+            <div class="${ax.prefix}flex">
+                <ax-input size="sm" full>${this.curColors.hex}</ax-input>
+                <div ${ax.alias}="label">HEX (000000~ffffff)</div>
+            </div>
+            <div style="width:fit-content">
+                <ax-number size="sm" step="0.01" min="0" max="1" full layout="embed"  ${!this.showAlpha ? 'disabled' : ''}>${this.curColors.a}</ax-number>
+                <div ${ax.alias}="label">A (0~1)</div>
+            </div>
+        `);
+        this.hexEl = getEl('AX-INPUT', this.outputHexEl);
+        this.hexaEl = getEl('AX-NUMBER', this.outputHexEl);
+        this.outputRgbEl = createEl('ul', { class: `${ax.prefix}grid ${ax.prefix}avg-4 ${ax.prefix}xxs-2 ${ax.prefix}g-xs` }, `
+        <li>
+            <ax-number size="sm" step="1" min="0" max="255" full layout="embed">${this.curColors.rgb.r}</ax-number>
+            <div ${ax.alias}="label">R (0~255)</div>
+        </li>
+        <li>
+            <ax-number size="sm" step="1" min="0" max="255" full layout="embed">${this.curColors.rgb.g}</ax-number>
+            <div ${ax.alias}="label">G (0~255)</div>
+        </li>
+        <li>
+            <ax-number size="sm" step="1" min="0" max="255" full layout="embed">${this.curColors.rgb.b}</ax-number>
+            <div ${ax.alias}="label">B (0~255)</div>
+        </li>
+        <li>
+            <ax-number size="sm" step="0.01" min="0" max="1" full layout="embed"  ${!this.showAlpha ? 'disabled' : ''}>${this.curColors.a}</ax-number>
+            <div ${ax.alias}="label">A (0~1)</div>
+        </li>
+        `);
+        this.rgbrEl = getEls('AX-NUMBER', this.outputRgbEl)[0];
+        this.rgbgEl = getEls('AX-NUMBER', this.outputRgbEl)[1];
+        this.rgbbEl = getEls('AX-NUMBER', this.outputRgbEl)[2];
+        this.rgbaEl = getEls('AX-NUMBER', this.outputRgbEl)[3];
+        this.outputHwbEl = createEl('ul', { class: `${ax.prefix}grid ${ax.prefix}avg-4 ${ax.prefix}xxs-2 ${ax.prefix}g-xs` }, `
+        <li>
+                                <ax-number size="sm" step="1" min="0" max="360" value="0" full layout="embed">${this.curColors.hwb.h}</ax-number>
+                                <div ${ax.alias}="label">H (0~360°)</div>
+                            </li>
+                            <li>
+                                <ax-number size="sm" step="1" min="0" max="100" full layout="embed">${this.curColors.hwb.w}</ax-number>
+                                <div ${ax.alias}="label">W (0~100%)</div>
+                            </li>
+                            <li>
+                                <ax-number size="sm" step="1" min="0" max="100" full layout="embed">${this.curColors.hwb.b}</ax-number>
+                                <div ${ax.alias}="label">B (0~100%)</div>
+                            </li>
+                            <li>
+                                <ax-number size="sm" step="0.01" min="0" max="1" full layout="embed"  ${!this.showAlpha ? 'disabled' : ''}>${this.curColors.a}</ax-number>
+                                <div ${ax.alias}="label">A (0~1)</div>
+                            </li>
+        `);
+        this.hwbhEl = getEls('AX-NUMBER', this.outputHwbEl)[0];
+        this.hwbwEl = getEls('AX-NUMBER', this.outputHwbEl)[1];
+        this.hwbbEl = getEls('AX-NUMBER', this.outputHwbEl)[2];
+        this.hwbaEl = getEls('AX-NUMBER', this.outputHwbEl)[3];
+        this.outputHslEl = createEl('ul', { class: `${ax.prefix}grid ${ax.prefix}avg-4 ${ax.prefix}xxs-2 ${ax.prefix}g-xs` }, `
+        <li>
+            <ax-number size="sm" step="1" min="0" max="360" full layout="embed">${this.curColors.hsl.h}</ax-number>
+            <div ${ax.alias}="label">H (0~360°)</div>
+        </li>
+        <li>
+            <ax-number size="sm" step="1" min="0" max="100" full layout="embed">${this.curColors.hsl.s}</ax-number>
+            <div ${ax.alias}="label">S (0~100%)</div>
+        </li>
+        <li>
+            <ax-number size="sm" step="1" min="0" max="100" full layout="embed">${this.curColors.hsl.l}</ax-number>
+            <div ${ax.alias}="label">L (0~100%)</div>
+        </li>
+        <li>
+            <ax-number size="sm" step="0.01" min="0" max="1" full layout="embed"  ${!this.showAlpha ? 'disabled' : ''}>${this.curColors.a}</ax-number>
+            <div ${ax.alias}="label">A (0~1)</div>
+        </li>
+        `);
+        this.hslhEl = getEls('AX-NUMBER', this.outputHslEl)[0];
+        this.hslsEl = getEls('AX-NUMBER', this.outputHslEl)[1];
+        this.hsllEl = getEls('AX-NUMBER', this.outputHslEl)[2];
+        this.hslaEl = getEls('AX-NUMBER', this.outputHslEl)[3];
+        
+        this.outputMap = {
+            hsl: {
+                el: this.outputHslEl,
+                active: this.outputMode === 'hsl',
+                children: {
+                    h: this.hslhEl,
+                    s: this.hslsEl,
+                    l: this.hsllEl,
+                    a: this.hslaEl,
+                }
+            },
+            hwb: {
+                el: this.outputHwbEl,
+                active: this.outputMode === 'hwb',
+                children: {
+                    h: this.hwbhEl,
+                    w: this.hwbwEl,
+                    b: this.hwbbEl,
+                    a: this.hwbaEl,
+                }
+            },
+            rgb: {
+                el: this.outputRgbEl,
+                active: this.outputMode === 'rgb',
+                children: {
+                    r: this.rgbrEl,
+                    g: this.rgbgEl,
+                    b: this.rgbbEl,
+                    a: this.rgbaEl,
+                }
+            },
+            hex: {
+                el: this.outputHexEl,
+                active: this.outputMode === 'hex',
+                children: {
+                    hex: this.hexEl,
+                    a: this.hexaEl,
+                }
+            },
+        };
+        
+        
+        this.outputBodyEl.appendChild(this.outputMap[this.outputMode].el);
+        this.toolsEl = createEl('div', { class: `${ax.prefix}color-tools` }, `
+                    <div class="${ax.prefix}flex"><ax-checkbox check="ed">${this.options.lang.label.a}</ax-checkbox></div>
+                    <ax-btn ${ax.alias}="restore" size="sm" type="plain">${this.options.lang.btn.restore}</ax-btn>
+                    <ax-btn ${ax.alias}="clear" size="sm" type="plain">${this.options.lang.btn.clear}</ax-btn>
+        `);
+        this.alphaEl = getEl(`AX-CHECKBOX`, this.toolsEl);
+        this.clearEl = getEl(`[${ax.alias}="clear"]`, this.toolsEl);
+        this.restoreEl = getEl(`[${ax.alias}="restore"]`, this.toolsEl);
+        this.confirmEl = createEl('ax-btn', { [ax.alias]: 'confirm', size: 'sm', theme: 'prim', label: this.options.lang.btn.confirm });
+        this.options.output.manual && this.toolsEl.appendChild(this.confirmEl);
+        this.pickerEl.appendChild(this.spaceEl);
+        this.pickerEl.appendChild(this.outputEl);
+        this.pickerEl.appendChild(this.toolsEl);
+    }
+    getThemePresets() {
+        this.themeColorsEl = createEl('li', '', `<div ${ax.alias}="head">${this.options.lang.theme}</div><div ${ax.alias}="body"><ul class="${ax.prefix}grid ${ax.prefix}g-xs ${ax.prefix}avg-10"></ul></div>`);
+        this.themeWrapEl = getEl('ul', this.themeColorsEl);
+        let arrSuffix = ['', '-dp', '-tl', '-fg', '-ht', '-aj', '-sd', '-fc', '-bd', '-bs'], arrTheme = ['prim', 'error', 'succ', 'issue', 'info', 'warn', 'text'], fragment = document.createDocumentFragment();
+        for (let k of arrTheme) {
+            for (let i of arrSuffix) {
+                let color = `var(--${ax.prefix}c-${k}${i})`, grid = this.createColorGrid(color);
+                i === '-bs' && grid.toggleAttribute('bordered', true);
+                fragment.appendChild(grid);
+            }
+        }
+        this.themeWrapEl.appendChild(fragment);
+        return this.themeColorsEl;
+    }
+    getHistoryPresets() {
+        this.historyColorsEl = createEl('li', '', `<div ${ax.alias}="head">${this.options.lang.history}</div><div ${ax.alias}="body"><ul class="${ax.prefix}grid ${ax.prefix}g-xs ${ax.prefix}avg-10"></ul></div>`);
+        this.historyWrapEl = getEl('ul', this.historyColorsEl);
+        return this.historyColorsEl;
+    }
+    addHistory(color) {
+        let grid = this.createColorGrid(color);
+        this.historyWrapEl.insertAdjacentElement('afterbegin', grid);
+        let children = this.historyWrapEl.children;
+        Array.from(children).slice(10).forEach((k) => k.remove());
+    }
+    storColor(color) {
+        let tmp = storage.get(ax.colorStor);
+        if (!tmp)
+            tmp = [];
+        tmp.unshift(color);
+        storage.set(ax.colorStor, tmp);
+    }
+    getRegularPresets() {
+        let fragment = document.createDocumentFragment(), addCustom = createEl('li', { title: this.options.lang.btn.add, class: `${ax.prefix}color-add`, bordered: '' }, `<i class="${ax.prefix}icon-plus"></i>`);
+        ['picker', 'full'].includes(this.options.layout) && fragment.appendChild(addCustom);
+        addCustom.onclick = debounce(() => {
+            let color = this.value, grid = this.createColorGrid(color);
+            ax.confirm({
+                heading: this.options.lang.add.heading,
+                content: `${renderTpl(this.options.lang.add.content, { value: color })}<ax-br></ax-br><div class="${ax.prefix}h-2 ${ax.prefix}r" style="background-color:${color}"></div>`,
+                dialog: {
+                    zIndex: 881,
+                },
+                init: (dialog) => {
+                    this.dialogEl = dialog.mainEl;
+                },
+                yes: () => {
+                    addCustom.insertAdjacentElement('afterend', grid);
+                    this.storColor(color);
+                }
+            });
+        });
+        let storColor = storage.get(ax.colorStor), colors = storColor ? [...storColor, ...ax.swatches] : ax.swatches;
+        for (let k of colors) {
+            let grid = this.createColorGrid(k);
+            k === '#ffffff' && grid.toggleAttribute('bordered', true);
+            fragment.appendChild(grid);
+        }
+        return fragment;
+    }
+    createColorGrid(color) {
+        let tmp = createEl('li', { title: color }, `<i style="background-color:${color}"></i>`);
+        tmp.onclick = () => {
+            this.assignVals(style(tmp.querySelector('i')).backgroundColor);
+        };
+        return tmp;
+    }
+    setAxisLabel(mode = this.canvasMode) {
+        this.axisyEl.innerHTML = mode === 'hsv' ? this.options.lang.label.v : this.options.lang.label.l;
+    }
+    getIndCoord(data) {
+        let x = Math.max(0, Math.min(data.x, this.canvasEl.width - 1)), y = Math.max(0, Math.min(data.y, this.canvasEl.height - 1));
+        return { x, y };
+    }
+    updateIndCoord() {
+        this.indEl.style.left = `${this.indCoord.x}px`;
+        this.indEl.style.top = `${this.indCoord.y}px`;
+    }
+    getCanvasPos(coord) {
+        return {
+            x: coord.x - this.canvasRect.left,
+            y: coord.y - this.canvasRect.top,
+        };
+    }
+    setValFromCanvas(data) {
+        this.canvasInteraction(data);
+        this.indCoord = this.getIndCoord(data);
+        this.updateIndCoord();
+    }
+    setGesture() {
+        this.gestureIns = new ax.Gesture(this.canvasEl, {
+            onTranslate: (data) => {
+                this.canvasRect = this.canvasEl.getBoundingClientRect();
+                this.setValFromCanvas(this.getCanvasPos(data.coord));
+            },
+            onTranslating: (data) => {
+                this.setValFromCanvas(this.getCanvasPos(data.coord));
+            },
+            onTranslated: (data) => {
+            }
+        });
+    }
+    parseVals(value = this.options.value) {
+        let result = {
+            rgb: {
+                r: 0,
+                g: 0,
+                b: 0,
+            },
+            hwb: {
+                h: 0,
+                w: 0,
+                b: 0,
+            },
+            hsl: {
+                h: 0,
+                s: 0,
+                l: 0,
+            },
+            hex: '#ffffff',
+            a: 1,
+            a16: 'ff'
+        };
+        if (typeof value === 'string') {
+            let rgba = value.startsWith('#') ? hex2Rgb(value) :
+                value.startsWith('rgb') ? parseRgb(value) :
+                    value.startsWith('hsl') ? hsl2Rgb(value) :
+                        value.startsWith('hwb') ? hwb2Rgb(value) : { r: 0, g: 0, b: 0, a: 1 };
+            result.rgb = { r: rgba.r, g: rgba.g, b: rgba.b };
+            result.a = rgba.a;
+            result.a16 = alpha2Hex(rgba.a);
+            result.hwb = rgb2Hwb(result.rgb, false);
+            result.hsl = rgb2Hsl(result.rgb, false);
+            result.hex = rgb2Hex(result.rgb, false);
+        }
+        else {
+            if (value.hasOwnProperty('hex')) {
+                result.hex = value.hex.trim().slice(0, 7);
+                if (typeof value.a === 'number') {
+                    result.a = value.a;
+                    result.a16 = alpha2Hex(result.a);
+                }
+                else {
+                    result.a16 = value.a;
+                    result.a = hex2Alpha(result.a16);
+                }
+                result.rgb = hex2Rgb(value, false);
+                result.hwb = rgb2Hwb(result.rgb, false);
+                result.hsl = rgb2Hsl(result.rgb, false);
+            }
+            else if (value.hasOwnProperty('r')) {
+                result.rgb = { r: value.r, g: value.g, b: value.b };
+                result.a = value.hasOwnProperty('a') ? value.a : 1;
+                result.a16 = alpha2Hex(result.a);
+                result.hwb = rgb2Hwb(result.rgb, false);
+                result.hsl = rgb2Hsl(result.rgb, false);
+                result.hex = rgb2Hex(result.rgb, false);
+            }
+            else if (value.hasOwnProperty('l')) {
+                result.hsl = { h: value.h, s: value.s, l: value.l };
+                result.hwb = hsl2Hwb(result.hsl, false);
+                result.a = value.hasOwnProperty('a') ? value.a : 1;
+                result.a16 = alpha2Hex(result.a);
+                result.rgb = hsl2Rgb(result.hsl, false);
+                result.hex = rgb2Hex(result.rgb, false);
+            }
+            else if (value.hasOwnProperty('w')) {
+                result.hwb = { h: value.h, w: value.w, b: value.b };
+                result.hsl = hwb2Hsl(result.hwb, false);
+                result.a = value.hasOwnProperty('a') ? value.a : 1;
+                result.a16 = alpha2Hex(result.a);
+                result.rgb = hwb2Rgb(result.hwb, false);
+                result.hex = rgb2Hex(result.rgb, false);
+            }
+        }
+        if (result.rgb.r === result.rgb.g && result.rgb.g === result.rgb.b) {
+            result.hsl.h = result.hwb.h = this.curColors.hsl.h;
+        }
+        return result;
+    }
+    getCoordFromVal(hsl) {
+        let x = hsl.s, y = hsl.l;
+        if (this.canvasMode === 'hsv') {
+            let tmpS = hsl.s / 100, tmpL = hsl.l / 100, tmpV = tmpL + tmpS * Math.min(tmpL, 1 - tmpL), tmpS2 = tmpV === 0 ? 0 : 2 * (1 - tmpL / tmpV);
+            x = Math.round(tmpS2 * 100);
+            y = Math.round(tmpV * 100);
+        }
+        return {
+            x: (x / 100) * this.canvasWidth,
+            y: (1 - y / 100) * this.canvasHeight
+        };
+    }
+    async assignVals(value = this.options.value, cb) {
+        if (this.destroyed)
+            return this;
+        if (!value)
+            return this;
+        if (this.options.b4Assign) {
+            let resp = await this.options.b4Assign.call(this, value);
+            resp && (value = resp);
+        }
+        let tmp = this.parseVals(value);
+        deepMerge(this.curColors, tmp);
+        this.hRangeEl.value = this.curColors.hsl.h;
+        this.aRangeEl.value = this.curColors.a;
+        this.updateReverse();
+        this.setOutputStr();
+        this.updatePreview();
+        !this.stopOutput && this.setOutputVals();
+        
+        let { x, y } = this.getCoordFromVal(this.curColors.hsl);
+        this.indCoord = {
+            x: Math.max(0, Math.min(x, this.canvasWidth - 1)),
+            y: Math.max(0, Math.min(y, this.canvasHeight - 1))
+        };
+        this.updateIndCoord();
+        super.listen({ name: 'assigned', cb, params: [value] });
+        return this;
+    }
+    initVals(value = this.options.value) {
+        if (value) {
+            this.assignVals(value);
+        }
+        else {
+            this.indCoord = { x: this.canvasWidth / 2, y: this.canvasHeight / 2 };
+            this.updateIndCoord();
+            this.canvasRect = this.canvasEl.getBoundingClientRect();
+            this.canvasInteraction({
+                x: this.canvasRect.left + this.canvasWidth / 2,
+                y: this.canvasRect.top + this.canvasHeight / 2,
+            });
+            this.updateHueSlider();
+            this.updateAlphaSlider();
+        }
+    }
+    getVals() {
+        if (this.destroyed)
+            return this;
+        let result = this.curColors.hex;
+        if (this.options.output.format.startsWith('hex')) {
+            result + (this.options.output.format.endsWith('a') ? this.curColors.a16 : '');
+        }
+        else {
+            let aVal = this.options.output.format.endsWith('a') ? ',' + this.curColors.a : '';
+            if (this.options.output.format.startsWith('rgb')) {
+                result = `${this.options.output.format}(${this.curColors.rgb.r},${this.curColors.rgb.g},${this.curColors.rgb.b}${aVal})`;
+            }
+            else if (this.options.output.format.startsWith('hwb')) {
+                result = `${this.options.output.format}(${this.curColors.hwb.h},${this.curColors.hwb.w}%,${this.curColors.hwb.b}%${aVal})`;
+            }
+            else {
+                result = `${this.options.output.format}(${this.curColors.hsl.h},${this.curColors.hsl.s}%,${this.curColors.hsl.l}%${aVal})`;
+            }
+        }
+        return result;
+    }
+    async fillVals(value = this.value, cb) {
+        if (this.destroyed)
+            return this;
+        if (this.options.b4Fill) {
+            let resp = await this.options.b4Fill.call(this, value);
+            resp && (value = resp);
+        }
+        if (['INPUT', 'TEXTAREA'].includes(this.fillEl.nodeName)) {
+            this.fillEl.value = value;
+        }
+        else if (['AX-INPUT', 'AX-TEXTAREA'].includes(this.fillEl.nodeName)) {
+            this.fillEl.setAttribute('value', value);
+        }
+        else {
+            this.fillEl.innerHTML = value;
+        }
+        this.addHistory(value);
+        super.listen({ name: 'filled', cb, params: [value] });
+        return this;
+    }
+    async clearVals(cb) {
+        if (this.destroyed)
+            return this;
+        this.options.b4Clear && await this.options.b4Clear.call(this);
+        this.value = '';
+        if (['INPUT', 'TEXTAREA'].includes(this.fillEl.nodeName)) {
+            this.fillEl.value = '';
+        }
+        else if (['AX-INPUT', 'AX-TEXTAREA'].includes(this.fillEl.nodeName)) {
+            this.fillEl.removeAttribute('value');
+        }
+        else {
+            this.fillEl.innerHTML = '';
+        }
+        super.listen({ name: 'cleared', cb });
+        return this;
+    }
+    async restoreVals(cb) {
+        if (this.destroyed)
+            return this;
+        this.options.b4Clear && await this.options.b4Clear.call(this);
+        this.assignVals(this.options.value);
+        super.listen({ name: 'restored', cb });
+        return this;
+    }
+    destroy(cb) {
+        if (this.destroyed)
+            return this;
+        this.canvasModeEl.off('changed', this.modeEvt);
+        this.alphaEl.off('changed', this.alphaEvt);
+        this.hRangeEl.removeEventListener('input', this.hRangeEvt);
+        this.aRangeEl.removeEventListener('input', this.aRangeEvt);
+        this.changeEl.removeEventListener('click', this.changeEvt);
+        this.randomEl.removeEventListener('click', this.randomEvt);
+        this.hexEl.removeEventListener('input', this.colorEvt);
+        this.rgbrEl.removeEventListener('input', this.colorEvt);
+        this.rgbgEl.removeEventListener('input', this.colorEvt);
+        this.rgbbEl.removeEventListener('input', this.colorEvt);
+        this.hslsEl.removeEventListener('input', this.colorEvt);
+        this.hsllEl.removeEventListener('input', this.colorEvt);
+        this.hwbwEl.removeEventListener('input', this.colorEvt);
+        this.hwbbEl.removeEventListener('input', this.colorEvt);
+        this.hexaEl.removeEventListener('input', this.coloraEvt);
+        this.rgbaEl.removeEventListener('input', this.coloraEvt);
+        this.hslaEl.removeEventListener('input', this.coloraEvt);
+        this.hwbaEl.removeEventListener('input', this.coloraEvt);
+        this.hwbhEl.removeEventListener('input', this.colorhEvt);
+        this.hslhEl.removeEventListener('input', this.colorhEvt);
+        this.copyEl.removeEventListener('click', this.copyEvt);
+        this.previewEl.removeEventListener('click', this.previewEvt);
+        this.strawEl.onclick = null;
+        this.restoreEl.onclick = null;
+        this.confirmEl.onclick = null;
+        this.clearEl.onclick = null;
+        this.popupIns.destroy();
+        this.gestureIns.destroy();
+        this.destroyed = true;
+        super.listen({ name: 'destroyed', cb });
+        return this;
+    }
+}
+
 class CompBaseCommField extends CompBaseComm {
     name;
     value;
@@ -34804,6 +36277,9 @@ class CompBaseCommFieldMixin extends CompBaseCommField {
         this.createShadow();
         this.getRawData();
         this.fillWrap(this.propsProxy);
+        this.propsObs.on('completed', (resp) => {
+            this.ins && this.ins.initialized && resp.keys.set.length && this.completedEvt(resp);
+        });
     }
     static get observedAttributes() {
         return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.evtsArr];
@@ -37189,20 +38665,21 @@ class CheckboxesElem extends CompBaseCommField {
 
 class NumberElem extends CompBaseCommField {
     labelEl;
-    inputEvt;
     tipsEl;
     incrEl;
     decrEl;
     type;
     select;
+    oldVal;
     constructor() {
         super();
         this.type = 'number-comp';
         this.getRawData();
         this.fillWrap(this.propsProxy);
         this.select = () => this.inputEl.select();
+        this.oldVal = this.value = '';
         this.on('input', (value) => {
-            let step = ~~this.propsProxy.step || 1, val = ~~value, max = ~~this.propsProxy.max, min = ~~this.propsProxy.min;
+            let step = parseFloat(this.propsProxy.step) || 1, val = parseFloat(value), max = parseFloat(this.propsProxy.max), min = parseFloat(this.propsProxy.min);
             if (!isNull(this.propsProxy.max)) {
                 if (val + step > max) {
                     this.incrEl.toggleAttribute('disabled', true);
@@ -37243,7 +38720,7 @@ class NumberElem extends CompBaseCommField {
     fillWrap(data) {
         this.wrapEl = createEl('div', { [ax.alias]: 'wrap' });
         this.inputEl = createEl('input', { type: 'number', name: data.name, placeholder: data.placeholder || config.lang.form.placeholder, [ax.embedSign]: '' });
-        data.value && (this.inputEl.value = data.value);
+        (data.value || data.value == 0) && (this.inputEl.value = data.value);
         this.decrEl = createEl('i', { [ax.alias]: 'decrease' }, 'minus');
         this.incrEl = createEl('i', { [ax.alias]: 'increase' }, 'plus');
         this.labelEl = createEl('span', { [ax.alias]: 'label' });
@@ -37251,55 +38728,51 @@ class NumberElem extends CompBaseCommField {
         this.tipsEl = createEl('div', { [ax.alias]: 'tips' });
     }
     updateTips() {
-        let max = isNull(this.propsProxy.max) ? '+∞' : this.propsProxy.max, min = isNull(this.propsProxy.min) ? '-∞' : this.propsProxy.min, val = this.propsProxy.value, old = ~~val, str = '';
+        let val = parseFloat(this.value);
+        if (isNaN(val))
+            return;
+        let max = isNull(this.propsProxy.max) ? '+∞' : parseFloat(this.propsProxy.max), min = isNull(this.propsProxy.min) ? '-∞' : parseFloat(this.propsProxy.min), old = this.oldVal === '' ? '' : parseFloat(this.oldVal), str = '';
         if (max === '+∞' && min === '-∞') {
             return this;
         }
         if (max !== '+∞' && min !== '-∞') {
             str = renderTpl(this.propsProxy.lang?.limit || config.lang.form.limitNumber, { max, min });
-            if (~~val >= ~~min && ~~val <= ~~max) {
+            if (val >= min && val <= max) {
                 this.removeAttribute('exceeded');
-                this.decrEl.removeAttribute('disabled');
-                this.incrEl.removeAttribute('disabled');
             }
             else {
                 this.setAttribute('exceeded', '');
                 str += (this.propsProxy.lang?.exceed || config.lang.form.exceed);
-                val = (~~val < ~~min) ? min : (~~val > ~~max) ? max : val;
-                ~~val > old ? this.decrEl.setAttribute('disabled', '') : this.incrEl.setAttribute('disabled', '');
+                val = (val < min) ? min : (val > max) ? max : val;
                 this.listen({ name: 'exceeded', params: [val, old] });
             }
         }
         else if (max !== '+∞') {
             str = renderTpl(this.propsProxy.lang?.max || config.lang.form.maxNumber, { max });
-            if (~~val > ~~max) {
+            if (val > max) {
                 val = max;
                 this.setAttribute('exceeded', '');
                 str += (this.propsProxy.lang?.exceed || config.lang.form.exceed);
-                this.incrEl.setAttribute('disabled', '');
                 this.listen({ name: 'exceeded', params: [val, old] });
             }
             else {
                 this.removeAttribute('exceeded');
-                this.incrEl.removeAttribute('disabled');
             }
         }
         else if (min !== '-∞') {
             str = renderTpl(this.propsProxy.lang?.min || config.lang.form.minNumber, { min });
-            if (~~val < ~~min) {
+            if (val < min) {
                 val = min;
                 this.setAttribute('exceeded', '');
                 str += (this.propsProxy.lang?.exceed || config.lang.form.exceed);
-                this.decrEl.setAttribute('disabled', '');
                 this.listen({ name: 'exceeded', params: [val, old] });
             }
             else {
                 this.removeAttribute('exceeded');
-                this.decrEl.removeAttribute('disabled');
             }
         }
-        if (val !== this.propsProxy.value) {
-            this.setAttribute('value', val);
+        if (val !== old) {
+            this.setAttribute('value', val + '');
         }
         this.tipsEl.innerHTML = str;
     }
@@ -37307,21 +38780,32 @@ class NumberElem extends CompBaseCommField {
         this.insertSource();
         this.appendChild(this.wrapEl);
         (this.propsProxy.tips && (this.propsProxy.max || this.propsProxy.min) && elState(this.tipsEl).isVirtual) ? this.appendChild(this.tipsEl) : null;
-        let evt = new Event('input');
+        let inputEvt = new Event('input', { bubbles: true });
         this.decrEl.onclick = () => {
             this.inputEl.stepDown();
-            this.inputEl.dispatchEvent(evt);
+            this.inputEl.dispatchEvent(inputEvt);
         };
         this.incrEl.onclick = () => {
             this.inputEl.stepUp();
-            this.inputEl.dispatchEvent(evt);
+            this.inputEl.dispatchEvent(inputEvt);
         };
-        this.inputEl.addEventListener('input', (e) => {
-            this.propsProxy.value = this.inputEl.value;
+        this.inputEl.addEventListener('input', debounce((e) => {
+            this.setBtnDisabled();
+            if (this.propsProxy.value == this.inputEl.value)
+                return;
             this.value = this.inputEl.value;
             this.updateTips();
+            this.oldVal = this.value;
             this.listen({ name: 'input', params: [this.inputEl.value] });
-        }, false);
+        }), false);
+        this.setBtnDisabled();
+    }
+    setBtnDisabled(value = this.inputEl.value) {
+        let tmp = parseFloat(value);
+        if (isNaN(tmp))
+            return;
+        this.decrEl.toggleAttribute('disabled', this.propsProxy.min && tmp <= parseFloat(this.propsProxy.min) ? true : false);
+        this.incrEl.toggleAttribute('disabled', this.propsProxy.max && tmp >= parseFloat(this.propsProxy.max) ? true : false);
     }
     changedMaps = {
         disabled: this.changedBool,
@@ -37351,8 +38835,10 @@ class NumberElem extends CompBaseCommField {
     }
     changedValue(opt) {
         this.inputEl[opt.name] = opt.newVal;
-        this.value = opt.newVal;
-        (opt.name === 'max' || opt.name === 'min') && this.updateTips();
+        if (opt.name === 'value') {
+            this.inputEl.dispatchEvent(new Event('input'));
+        }
+        ['min', 'max'].includes(opt.name) && this.updateTips();
     }
     changedName(opt) {
         this.inputEl.setAttribute(opt.name, opt.newVal);
@@ -39603,6 +41089,175 @@ class PillElem extends CompBaseComm {
     }
 }
 
+class ColorElem extends CompBaseCommField {
+    labelEl;
+    inputEvt;
+    meanEl;
+    colorIns;
+    type;
+    select;
+    updateEvt;
+    copyEl;
+    closeEl;
+    insOpts;
+    constructor() {
+        super();
+        this.type = 'color-comp';
+        this.getRawData();
+        this.fillWrap(this.propsProxy);
+        this.select = () => this.inputEl.inputEl.select();
+        this.updateEvt = debounce(() => {
+            this.ins.update(deepMerge(this.insOpts, this.propsProxy.color));
+        });
+        this.clear = (cb) => {
+            this.removeAttribute('value');
+            this.value = '';
+            this.setLamp();
+            this.inputEl.removeAttribute('value');
+            this.listen({ name: 'cleared', cb });
+        };
+        this.insOpts = {
+            output: {},
+        };
+    }
+    static dependencies = [
+        { tag: 'ax-input', comp: InputElem },
+        { tag: 'ax-btn', comp: BtnElem },
+        { tag: 'ax-textarea', comp: TextareaElem },
+        { tag: 'ax-checkbox', comp: CheckboxElem },
+        { tag: 'ax-radios', comp: RadiosElem }
+    ];
+    static custAttrs = ['name', 'value', 'size', 'format', 'layout', 'placeholder', 'label', ...this.evtsArr];
+    static boolAttrs = ['manual', 'disabled', 'readonly', 'full', 'detectable'];
+    static jsonAttrs = ['color', 'lang'];
+    static get observedAttributes() {
+        return ['value', ...this.custAttrs, ...this.boolAttrs, ...this.jsonAttrs];
+    }
+    attributeChangedCallback(name, oldVal, newVal) {
+        if (!this.canListen)
+            return;
+        this.savePropsToListen(name, oldVal, newVal, ColorElem);
+        if (oldVal !== newVal) {
+            this.listen({ name: 'changed', params: [{ oldVal, newVal }] });
+        }
+    }
+    getRawData() {
+        this.getRawProps(ColorElem);
+        this.propsRaw.value = this.value = this.getAttribute('value') || this.rawHtml;
+        this.getProxyProps();
+        this.setFieldProps(['name', 'value', 'disabled', 'readOnly']);
+    }
+    fillWrap(data) {
+        this.inputEl = createEl('ax-input', {
+            value: this.value,
+            icon: `${ax.prefix}color-lamp`,
+            tools: "['copy','close']"
+        });
+        this.propsProxy.placeholder && this.inputEl.setAttribute('placeholder', this.propsProxy.placeholder);
+        this.propsProxy.disabled && this.inputEl.setAttribute('disabled', '');
+        this.propsProxy.readonly && this.inputEl.setAttribute('readonly', '');
+        this.propsProxy.full && this.inputEl.setAttribute('full', '');
+        this.wrapEl = createEl('div', { [ax.alias]: 'wrap' }, this.inputEl);
+    }
+    createIns() {
+        if (this.ins)
+            return;
+        this.ins = new Color(this.inputEl, deepMerge({
+            value: this.value,
+            popup: {
+                canClick: (target) => {
+                    return this.copyEl.contains(target) || this.closeEl.contains(target) ? false : true;
+                },
+                b4Show: () => {
+                    return new Promise((resolve) => {
+                        !this.propsProxy.readonly && resolve();
+                    });
+                },
+                onShow: () => {
+                    this.propsProxy.detectable && this.value !== this.ins.value && this.ins.assignVals(this.value);
+                }
+            },
+            onCleared: () => {
+                this.clear();
+            },
+            onFilled: (val) => {
+                this.setAttribute('value', val);
+            }
+        }, this.propsProxy.color));
+    }
+    setLamp(value = this.value) {
+        this.style.setProperty(`--${ax.prefix}color-lamp`, value);
+    }
+    render() {
+        this.insertSource();
+        this.appendChild(this.wrapEl);
+        this.copyEl = getEl(`[${ax.alias}="copy"]`, this.inputEl.toolsEl);
+        this.closeEl = getEl(`[${ax.alias}="close"]`, this.inputEl.toolsEl);
+        this.closeEl.onclick = () => {
+            this.clear();
+        };
+        this.copyEl.onclick = () => {
+            if (!this.value)
+                return;
+            navigator.clipboard.writeText(this.value).then(() => new Toast({ content: this.ins.options.lang.message.copy, status: 'succ', eager: true }));
+        };
+        this.setLamp();
+        setTimeout(() => {
+            this.createIns();
+        }, 0);
+    }
+    changedMaps = {
+        disabled: this.changedDisabled,
+        readonly: this.changedReadonly,
+        size: this.changedSize,
+        label: this.changedSize,
+        name: this.changedName,
+        value: this.changedName,
+        format: this.changedFormat,
+        manual: this.changedManual,
+        layout: this.changedLayout,
+        color: this.changedColor,
+    };
+    changedDisabled(opt) {
+        this.disabled = this.propsProxy[opt.name];
+        this.inputEl.toggleAttribute(opt.name, this.propsProxy[opt.name]);
+    }
+    changedReadonly(opt) {
+        this.readOnly = this.propsProxy[opt.name];
+        this.inputEl.toggleAttribute(opt.name, this.propsProxy[opt.name]);
+    }
+    changedName(opt) {
+        this[opt.name] = opt.newVal || '';
+        this.inputEl.setAttribute(opt.name, this[opt.name]);
+        if (opt.name === 'value') {
+            this.setLamp();
+        }
+    }
+    changedSize(opt) {
+        if (opt.newVal) {
+            this.inputEl.setAttribute(opt.name, this[opt.name]);
+        }
+        else {
+            this.inputEl.removeAttribute(opt.name);
+        }
+    }
+    changedColor(opt) {
+        this.updateEvt();
+    }
+    changedFormat(opt) {
+        this.insOpts.output.format = opt.newVal;
+        this.updateEvt();
+    }
+    changedManual(opt) {
+        this.insOpts.output.manual = this.propsProxy.manual;
+        this.updateEvt();
+    }
+    changedLayout(opt) {
+        this.insOpts.layout = opt.newVal;
+        this.updateEvt();
+    }
+}
+
 var modules = {
     ax,
     config,
@@ -39766,6 +41421,18 @@ var modules = {
     getRtl,
     setRtl,
     isChildVisible,
+    drawColor,
+    alpha2Hex,
+    hex2Alpha,
+    rgb2Hex,
+    rgb2Hsl,
+    rgb2Hwb,
+    hwb2Rgb,
+    hsl2Rgb,
+    hex2Rgb,
+    parseRgb,
+    hsl2Hwb,
+    hwb2Hsl,
     ModBase,
     ModBaseListen,
     ModBaseListenCache,
@@ -39812,6 +41479,7 @@ var modules = {
     Flip,
     Viewer,
     Toast,
+    Color,
     CompBase,
     CompBaseComm,
     CompBaseCommField,
@@ -39860,6 +41528,7 @@ var modules = {
     CategoryElem,
     SkeletonElem,
     PillElem,
+    ColorElem,
     init,
 };
 
@@ -39876,6 +41545,8 @@ exports.CalloutElem = CalloutElem;
 exports.CategoryElem = CategoryElem;
 exports.CheckboxElem = CheckboxElem;
 exports.CheckboxesElem = CheckboxesElem;
+exports.Color = Color;
+exports.ColorElem = ColorElem;
 exports.CompBase = CompBase;
 exports.CompBaseComm = CompBaseComm;
 exports.CompBaseCommField = CompBaseCommField;
@@ -39962,6 +41633,7 @@ exports.addStyles = addStyles;
 exports.ajax = ajax;
 exports.alert = alert;
 exports.allToEls = allToEls;
+exports.alpha2Hex = alpha2Hex;
 exports.appendEls = appendEls;
 exports.arrSearch = arrSearch;
 exports.arrSort = arrSort;
@@ -39998,6 +41670,7 @@ exports.deepMerge = deepMerge;
 exports.default = modules;
 exports.delay = delay;
 exports.dl2Tree = dl2Tree;
+exports.drawColor = drawColor;
 exports.ease = ease;
 exports.easeHeight = easeHeight;
 exports.elState = elState;
@@ -40046,7 +41719,13 @@ exports.getStrFromTpl = getStrFromTpl;
 exports.getUTCTimestamp = getUTCTimestamp;
 exports.getValsFromAttrs = getValsFromAttrs;
 exports.getWidths = getWidths;
+exports.hex2Alpha = hex2Alpha;
+exports.hex2Rgb = hex2Rgb;
 exports.hide = hide;
+exports.hsl2Hwb = hsl2Hwb;
+exports.hsl2Rgb = hsl2Rgb;
+exports.hwb2Hsl = hwb2Hsl;
+exports.hwb2Rgb = hwb2Rgb;
 exports.icons = icons;
 exports.includes = includes;
 exports.increaseId = increaseId;
@@ -40065,6 +41744,7 @@ exports.moveItem = moveItem;
 exports.notice = notice;
 exports.offset = offset;
 exports.paramToJson = paramToJson;
+exports.parseRgb = parseRgb;
 exports.parseStr = parseStr;
 exports.parseUrlArr = parseUrlArr;
 exports.plan = plan;
@@ -40083,6 +41763,9 @@ exports.renderTpl = renderTpl;
 exports.repeatStr = repeatStr;
 exports.replaceFrag = replaceFrag;
 exports.requireTypes = requireTypes;
+exports.rgb2Hex = rgb2Hex;
+exports.rgb2Hsl = rgb2Hsl;
+exports.rgb2Hwb = rgb2Hwb;
 exports.scrollTo = scrollTo;
 exports.select2Tree = select2Tree;
 exports.setAttr = setAttr;
