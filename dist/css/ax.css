@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-8-25 20:35:55
+ * @since Last modified: 2025-8-29 7:3:9
  * @name AXUI front-end framework.
- * @version 3.1.32
+ * @version 3.1.33
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -22391,7 +22391,7 @@ AX-SKELETON[shape=square] {
   opacity: 0;
   transition: opacity var(--_dur-2) var(--_bez-eo);
   position: fixed;
-  z-index: 840;
+  z-index: 950;
 }
 ._toast > [rep=wrap] {
   display: flex;

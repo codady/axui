@@ -1,8 +1,8 @@
 
 /*!
- * @since Last modified: 2025-8-25 20:35:21
+ * @since Last modified: 2025-8-29 7:2:38
  * @name AXUI front-end framework.
- * @version 3.1.32
+ * @version 3.1.33
  * @author AXUI development team <3217728223@qq.com>
  * @description The AXUI front-end framework is built on HTML5, CSS3, and JavaScript standards, with TypeScript used for type management.
  * @see {@link https://www.axui.cn|Official website}
@@ -10427,7 +10427,7 @@ const confirm = ({ content, contType, contData, tplStr, tplEng, heading, init, y
     });
 };
 
-const alert = ({ content, contType, contData, heading, tplStr, tplEng, yes, dialog = {} }) => {
+const alert = ({ content, contType, contData, heading, tplStr, tplEng, init, yes, dialog = {} }) => {
     if (isEmpty(content))
         return;
     return new Promise((resolve) => {
@@ -10439,15 +10439,18 @@ const alert = ({ content, contType, contData, heading, tplStr, tplEng, yes, dial
             tplStr,
             tplEng,
             feature: 'alert',
-            onConfirmed: () => {
-                yes && yes();
+            onInitiated: function () {
+                init && init(this);
+            },
+            onConfirmed: function () {
+                yes && yes(this);
                 resolve(true);
             },
         }, dialog)).show();
     });
 };
 
-const notice = ({ content, contType = '', contData = {}, heading = '', label = '', tplStr, tplEng, yes, dialog = {} }) => {
+const notice = ({ content, contType = '', contData = {}, heading = '', label = '', tplStr, tplEng, init, yes, dialog = {} }) => {
     if (isEmpty(content))
         return;
     return new Promise((resolve) => {
@@ -10465,8 +10468,11 @@ const notice = ({ content, contType = '', contData = {}, heading = '', label = '
                         label,
                     }]
             },
-            onConfirmed: () => {
-                yes && yes();
+            onInitiated: function () {
+                init && init(this);
+            },
+            onConfirmed: function () {
+                yes && yes(this);
                 resolve(true);
             },
         }, dialog)).show();
@@ -15791,7 +15797,6 @@ class Tags extends ModBaseListenCache {
                     };
                     super.updateCache(tmp);
                 }
-                this.setOutput();
             }
         });
         this.data = this.dataObs.proxy;
@@ -16075,6 +16080,7 @@ class Tags extends ModBaseListenCache {
         this.render(arr);
         this.data.push(...arr);
         this.renderFinish();
+        this.setOutput();
         super.listen({ name: 'added', cb, params: [arr] });
         return this;
     }
@@ -16109,6 +16115,7 @@ class Tags extends ModBaseListenCache {
                 tmp.wrapEl.remove();
             }
         }
+        this.setOutput();
         super.listen({ name: 'removed', cb, params: [tags] });
         return this;
     }
@@ -16144,6 +16151,7 @@ class Tags extends ModBaseListenCache {
         this.maxIndex = 0;
         this.targetEl.innerHTML = '';
         this.options.editor.enable && this.targetEl.appendChild(this.editEl);
+        this.setOutput();
         super.listen({ name: 'cleared', cb });
         return this;
     }
@@ -31514,11 +31522,7 @@ class Select extends ModBaseListenCache {
         
         
         
-        this.outputEvt = debounce((data) => {
-            super.updateCache({ value: data.value });
-            this.output = data;
-            super.listen({ name: 'output', params: [this.output] });
-        });
+        
         super.listen({ name: 'constructed' });
         initial && this.init();
     }
@@ -31697,7 +31701,9 @@ class Select extends ModBaseListenCache {
                 }
             },
             onOutput: (data) => {
-                this.outputEvt(data);
+                super.updateCache({ value: data.value });
+                this.output = data;
+                super.listen({ name: 'output', params: [this.output] });
             }
         };
         if (this.options.manual) {
@@ -41121,6 +41127,7 @@ class ColorElem extends CompBaseCommField {
         { tag: 'ax-btn', comp: BtnElem },
         { tag: 'ax-textarea', comp: TextareaElem },
         { tag: 'ax-checkbox', comp: CheckboxElem },
+        { tag: 'ax-radio', comp: RadioElem },
         { tag: 'ax-radios', comp: RadiosElem }
     ];
     static custAttrs = ['name', 'value', 'size', 'format', 'layout', 'placeholder', 'label', ...this.evtsArr];

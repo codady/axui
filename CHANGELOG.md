@@ -2,6 +2,38 @@
 
 关于AXUI的新增、修改和删除记录均在本文档记录。
 
+
+## 2025-08-29更新
+### 发布v3.1.33版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.33/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.33/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.33/dist.zip
+### 更新内容
+- 发布了自定义主题颜色工具，可<a href="/list-80-0.php" target="_blank">点击查看</a>
+- 修复`Radios`组件加载失败的问题。
+- 修复`Tags`模块在`updateCont`方法后重复执行`output`事件的问题。
+- 修改`alert`和`notice`工具函数，增加`init`参数，同时对回调增加参数`dialog`。
+- 修改`Toast`组件的`zIndex`层级为`950`，高于`Popup`、`Dialog`和`Message`组件。
+
+## 2025-08-25更新
+### 发布v3.1.32版本
+* 核心js：https://unpkg.com/@codady/axui@3.1.32/dist/js/ax.js
+* 核心css：https://unpkg.com/@codady/axui@3.1.32/dist/css/ax.css
+* 打包文件：https://unpkg.com/@codady/axui@3.1.32/dist.zip
+### 更新内容
+- 修复`Number`组件`innerHTML=0`时无法正确显示的问题。
+- 修复`Number`组件到达极限值时按钮不能正确禁用的问题。
+- 修复`Number`组件通过`value`赋值超出极限值问题。
+- 修复`Number`组件点击按钮时未达极限却意外禁用问题。
+- 修改了`Number`组件在`size=sm`并且`layout=embed`状态时的样式，使之更合理。
+- 增加几个与`Color`组件相关的图标。
+- `createTools`函数增加内置`copy`按钮。
+- 增加若干与透明度通道马赛克样式相关的`CSS`变量。
+- 修改`confirm`工具函数，增加`init`参数，同时对yes和no回调增加参数`dialog`即confirm自身的dialog实例。
+- 修改`Popup`模块，增加`canClose`参数，允许在关闭前运行canClose参数(函数)，返回`false`则不允许关闭。
+- 修复`Select`模块和组件赋值是重复执行`output`事件的问题。
+
+
 ## 2025-08-15更新
 ### 发布v3.1.31版本
 * 核心js：https://unpkg.com/@codady/axui@3.1.31/dist/js/ax.js
